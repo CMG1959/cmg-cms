@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+{% if item %}
+    {{item.item_Number}} - {{item.item_Description}}
+{%  endif %}
+
+{% if different_shot_list %}
+    <ul>
+    {% for eachJob in different_shot_list %}
+        <li>Job: {{ eachJob.jobNumber }}</a></li>
+        <ul>
+            <li>Created: {{ eachJob.dateCreated }}</li>
+            <li>Weight: {{ eachJob.partWeight }}</li>
+            <li>Active Cavities: {{ eachJob.activeCavities }}</li>
+            <li>Head ID: {{ eachJob.headID }}</li>
+            <li>Cavity ID: {{ eachJob.cavityID }}</li>
+        </ul>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No jobs recorded.</p>
+{% endif %}
+
+</body>
+</html>

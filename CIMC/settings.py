@@ -89,17 +89,17 @@ DATABASES = {
             'driver': 'SQL Server Native Client 11.0',
         },
     },
-    'mattec': {
-        'NAME': 'MATTEC',
-        'ENGINE': 'sql_server.pyodbc',
-        'HOST': '127.0.0.1',
-        'PORT' :'1433',
-        'USER': 'mcaro',
-        'PASSWORD': '1959Cmg1',
-        'OPTIONS': {
-            'driver': 'SQL Server Native Client 11.0',
-        },
-    }
+    # 'mattec': {
+    #     'NAME': 'MATTEC',
+    #     'ENGINE': 'sql_server.pyodbc',
+    #     'HOST': '127.0.0.1',
+    #     'PORT' :'1433',
+    #     'USER': 'mcaro',
+    #     'PASSWORD': '1959Cmg1',
+    #     'OPTIONS': {
+    #         'driver': 'SQL Server Native Client 11.0',
+    #     },
+    # }
 }
 
 # Internationalization
