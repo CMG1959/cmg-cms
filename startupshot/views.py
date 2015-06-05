@@ -1,15 +1,33 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
+from django.shortcuts import render
 from .models import CIMC_Part, CIMC_Production
-
+from .forms import startupShotLookup, startupShotForm
 
 def index(request):
-    latest_startupshot = CIMC_Production.objects.last()
-    return HttpResponse("The last startup shot created is: Part:%s Job: %s" % \
-                        (latest_startupshot.item, latest_startupshot.jobNumber))
+    # template = loader.get_template('startupshot/index.html')
+    # return HttpResponse(template.render())
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = startupShotLookup(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            part_number = form.cleaned_data['part_Number']
+            redirect_url = '/startupshot/%s/viewCreated' % (part_number)
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = startupShotLookup()
+
+    return render(request, 'startupshot/index.html', {'form': form})
+
 
 def detailPart(request, part_number):
     currentPart = CIMC_Part.objects.get(item_Number=part_number)
@@ -26,5 +44,21 @@ def viewCreatedStartUpShot(request, part_number):
         })
     return HttpResponse(template.render(context))
 
-def createNewStartUpShot(request, part_number):
-    return HttpResponse("You're creating a new startup shot for %s." % part_number)
+def createNewStartUpShot(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = startupShotForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            part_number = form.cleaned_data['item']
+            form.save()
+            # process the data in form.cleaned_data as required
+            redirect_url = '/startupshot/%s/viewCreated' % (part_number)
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = startupShotForm()
+
+    return render(request, 'startupshot/createStartupShot.html', {'form': form})
