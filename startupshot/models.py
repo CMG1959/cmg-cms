@@ -17,6 +17,7 @@ class CIMC_Production(models.Model):
 	headID = models.CharField(max_length=5)
 	activeCavities = models.IntegerField()
 	dateCreated = models.DateTimeField('date published')
+	inProduction = models.BooleanField()
 
 	def __unicode__(self):
 		return self.jobNumber
