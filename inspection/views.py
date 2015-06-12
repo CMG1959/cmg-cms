@@ -5,33 +5,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.db.models import Q
 from startupshot.models import  CIMC_Part, CIMC_Production
-# from .forms import startupShotLookup, startupShotForm
-
-# def index(request):
-#     # template = loader.get_template('startupshot/index.html')
-#     # return HttpResponse(template.render())
-#     # if this is a POST request we need to process the form data
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = startupShotLookup(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             part_number = form.cleaned_data['part_Number']
-#             redirect_url = '/startupshot/%s/viewCreated' % (part_number)
-#             # redirect to a new URL:
-#             return HttpResponseRedirect(redirect_url)
-#
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = startupShotLookup()
-#
-#     return render(request, 'startupshot/index.html', {'form': form})
-
-
-# def detailPart(request, part_number):
-#     currentPart = CIMC_Part.objects.get(item_Number=part_number)
-#     return HttpResponse("Part Detail: You're looking %s: %s" % (currentPart.item_Number,currentPart.item_Description))
+from forms import partWeightForm, visualInspectionForm
 
 
 def index(request):
@@ -53,6 +27,56 @@ def detailJob(request, jobNumber):
         'active_job' : active_job,
         })
     return HttpResponse(template.render(context))
+
+
+def visualInspection(request, jobNumber):
+    active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = visualInspectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = visualInspectionForm(
+            initial={'jobID':CIMC_Production.objects.get(jobNumber=jobNumber).id}
+        )
+
+    return render(request, 'inspection/visualInspection.html' , {'form': form, 'active_job':active_job})
+
+def weightInspection(request, jobNumber):
+    active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = partWeightForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/weight/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = partWeightForm(
+            initial={'jobID':CIMC_Production.objects.get(jobNumber=jobNumber).id}
+        )
+
+    return render(request, 'inspection/visualInspection.html' , {'form': form, 'active_job':active_job})
+
+
+
 
 #
 # def createNewStartUpShot(request):

@@ -26,4 +26,3 @@ class visualInspection(models.Model):
 	inspectionResult = models.BooleanField()
 	defectType = models.ManyToManyField(visualInspectionCriteria)
 	cavityID = models.CharField(max_length=5)
-	partWeight = models.DecimalField(max_digits=12,decimal_places=3)

@@ -8,60 +8,17 @@
 <p> Welcome to the CIMC Inspection Page! Here is the start up shot information </p>
 
 
-
-<table>
-    <tr>
-        <td>Item #</td>
-        <td>Description</td>
-        <td>Job Number</td>
-        <td>Start up part Weight</td>
-        <td>Cavity ID</td>
-        <td>Head ID</td>
-        <td>Active Cavities</td>
-        <td>Machine Number</td>
-    </tr>
-    {%  for ep in active_job %}
-    <tr>
-        <td>
-            {{ ep.item.item_Number }}
-        </td>
-        <td>
-            {{ ep.item.item_Description }}
-        </td>
-        <td>
-            {{ ep.jobNumber }}
-        </td>
-        <td>
-            {{ ep.partWeight }}
-        </td>
-        <td>
-            {{ ep.cavityID }}
-        </td>
-        <td>
-            {{ ep.headID }}
-        </td>
-        <td>
-            {{ ep.activeCavities }}
-        </td>
-        <td>
-            {{ ep.machNo }}
-        </td>
-    </tr>
-{% endfor %}
-</table>
+{% include "inspection/subJobInfo.html" %}
 
 {%  for ep in active_job %}
     <ul>
         {% if ep.item.visual_inspection %}
-        <li>Click here to record visual inspection</li>
+        <li><a href="/inspection/{{ ep.jobNumber }}/visual">Click here to record visual inspection</a></li>
         {% endif %}
         {% if ep.item.weight_inspection %}
-        <li>Click here to record weight inspection</li>
+            <li><a href="/inspection/{{ ep.jobNumber }}/weight">Click here to record weight inspection</a></li>
         {% endif %}
     </ul>
-
-
-
 {% endfor %}
 
 
