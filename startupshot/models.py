@@ -5,7 +5,8 @@ from django.db import models
 class CIMC_Part(models.Model):
 	item_Number = models.CharField(max_length=15)
 	item_Description = models.CharField(max_length=75)
-
+	visual_inspection = models.BooleanField(default=True)
+	weight_inspection = models.BooleanField(default=True)
 	def __unicode__(self):
 		return self.item_Number
 
@@ -17,7 +18,8 @@ class CIMC_Production(models.Model):
 	headID = models.CharField(max_length=5)
 	activeCavities = models.IntegerField()
 	dateCreated = models.DateTimeField('date published')
-	inProduction = models.BooleanField()
+	inProduction = models.BooleanField(default=True)
+	machNo = models.CharField(max_length=6)
 
 	def __unicode__(self):
 		return self.jobNumber

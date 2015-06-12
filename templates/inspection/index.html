@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<p>Welcome to the CIMC Inspection Page! The following machines are active:</p>
+
+
+<ul>
+{%  for each_part in active_parts %}
+    <li><a href="/inspection/{{ each_part.jobNumber }}">{{each_part.machNo }} - {{ each_part.item.item_Description }}</a></li>
+{% endfor %}
+</ul>
+
+
+
+
+</body>
+</html>

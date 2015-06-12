@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<p> Welcome to the CIMC Inspection Page! Here is the start up shot information </p>
+
+
+
+<table>
+    <tr>
+        <td>Item #</td>
+        <td>Description</td>
+        <td>Job Number</td>
+        <td>Start up part Weight</td>
+        <td>Cavity ID</td>
+        <td>Head ID</td>
+        <td>Active Cavities</td>
+        <td>Machine Number</td>
+    </tr>
+    {%  for ep in active_job %}
+    <tr>
+        <td>
+            {{ ep.item.item_Number }}
+        </td>
+        <td>
+            {{ ep.item.item_Description }}
+        </td>
+        <td>
+            {{ ep.jobNumber }}
+        </td>
+        <td>
+            {{ ep.partWeight }}
+        </td>
+        <td>
+            {{ ep.cavityID }}
+        </td>
+        <td>
+            {{ ep.headID }}
+        </td>
+        <td>
+            {{ ep.activeCavities }}
+        </td>
+        <td>
+            {{ ep.machNo }}
+        </td>
+    </tr>
+{% endfor %}
+</table>
+
+{%  for ep in active_job %}
+    <ul>
+        {% if ep.item.visual_inspection %}
+        <li>Click here to record visual inspection</li>
+        {% endif %}
+        {% if ep.item.weight_inspection %}
+        <li>Click here to record weight inspection</li>
+        {% endif %}
+    </ul>
+
+
+
+{% endfor %}
+
+
+
+
+
+</body>
+</html>

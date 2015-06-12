@@ -21,4 +21,5 @@ urlpatterns = [
 	url(r'^$', 'home.views.index'),
     url(r'^startupshot/', include('startupshot.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^inspection/', include('inspection.urls')),
 ]
