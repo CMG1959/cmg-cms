@@ -6,14 +6,20 @@
 </head>
 <body>
 
-Visual Inspection.
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
 {% include "inspection/subJobInfo.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
+<form method="post" class="form">
+ {% csrf_token %}
+    {% bootstrap_form form layout='horizontal' %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "star" %} Submit
+        </button>
+    {% endbuttons %}
 </form>
 
 

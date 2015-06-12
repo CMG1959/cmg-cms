@@ -6,23 +6,36 @@
 </head>
 <body>
 
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
 {% if item %}
     {{item.item_Number}} - {{item.item_Description}}
 {%  endif %}
 
 {% if different_shot_list %}
-    <ul>
+    <div>
+    <table class="table table-bordered">
+    <tr>
+    <td>Job Number</td>
+    <td>Date Created</td>
+    <td>Part Weight</td>
+    <td>Active Cavities</td>
+    <td>Head ID</td>
+        <td>Cavity ID</td>
+    </tr>
     {% for eachJob in different_shot_list %}
-        <li>Job: {{ eachJob.jobNumber }}</a></li>
-        <ul>
-            <li>Created: {{ eachJob.dateCreated }}</li>
-            <li>Weight: {{ eachJob.partWeight }}</li>
-            <li>Active Cavities: {{ eachJob.activeCavities }}</li>
-            <li>Head ID: {{ eachJob.headID }}</li>
-            <li>Cavity ID: {{ eachJob.cavityID }}</li>
-        </ul>
+        <tr>
+        <td> {{ eachJob.jobNumber }}</td>
+            <td>{{ eachJob.dateCreated }}</td>
+            <td>{{ eachJob.partWeight }}</td>
+            <td>{{ eachJob.activeCavities }}</td>
+            <td>{{ eachJob.headID }}</td>
+            <td>{{ eachJob.cavityID }}</td>
+        </tr>
     {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>No jobs recorded.</p>
 {% endif %}

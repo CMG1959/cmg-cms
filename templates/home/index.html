@@ -1,25 +1,36 @@
 <html lang="en">
+{% load bootstrap3 %}
+
 <head>
-    <title>My Home Page</title>           
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" media="screen" />
- 
+    <title>My Home Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" media="screen" />
+
 </head>
 <body>
-<p>Welcome to the CIMC Webapp! Here are some useful links:</p>  
+<div style="text-align:center">
+    {%  load staticfiles %}
+    <img src="{%  static "images/CMGlogo-white-BG.jpg"%}" style="height:200px">
 
- <ul>
-  <li>Startup Shot</li>
-  	<ul>
-  		<li><a href="/startupshot/">View startup shots</a></li>
-  		<li><a href="/startupshot/create/">Create startup shots</a></li>
-  	</ul>
-  <li>Inspection DB</li>
-     <ul>
-         <li><a href="/inspection/">Go to part inspection page</a></li>
-     </ul>
-  <li>PHL</li>
-  <li>MML</li>
-</ul> 
+
+    <h1>Welcome to the CMG Intranet</h1>
+
+    <p> Still under construction.</p>
+</div>
+
+
+<ul>
+    <li>Startup Shot</li>
+    <ul>
+        <li><a href="/startupshot/">View startup shots</a></li>
+        <li><a href="/startupshot/create/">Create startup shots</a></li>
+    </ul>
+    <li>Inspection DB</li>
+    <ul>
+        <li><a href="/inspection/">Go to part inspection page</a></li>
+    </ul>
+    <li>PHL</li>
+    <li>MML</li>
+</ul>
 
 </body>
 </html>
