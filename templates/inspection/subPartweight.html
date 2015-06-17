@@ -1,0 +1,30 @@
+{% if partWeightInspection %}
+    <table class="table table-hover">
+        <tr>
+            <td>Date Created</td>
+            <td>Machine Operator</td>
+            <td>Inspector Name</td>
+            <td>Cavity ID</td>
+            <td>Part Weight</td>
+        </tr>
+        {% for ep in partWeightInspection %}
+            <tr>
+                <td>
+                    {{ ep.dateCreated }}
+                </td>
+                <td>
+                    {{ ep.machineOperator }}
+                </td>
+                <td>
+                    {{ ep.inspectorName }}
+                </td>
+                <td>
+                    {{ ep.cavityID }}
+                </td>
+                <td>
+                    {{ ep.partWeight }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}

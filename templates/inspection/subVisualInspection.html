@@ -1,0 +1,34 @@
+{% if visualInspection %}
+    <table class="table table-hover">
+        <tr>
+            <td>Date Created</td>
+            <td>Machine Operator</td>
+            <td>Inspector Name</td>
+            <td>Cavity ID</td>
+            <td>Inspection Result</td>
+            <td>Defect Codes</td>
+        </tr>
+        {% for ep in visualInspection %}
+            <tr>
+                <td>
+                    {{ ep.dateCreated }}
+                </td>
+                <td>
+                    {{ ep.machineOperator }}
+                </td>
+                <td>
+                    {{ ep.inspectorName }}
+                </td>
+                <td>
+                    {{ ep.cavityID }}
+                </td>
+                <td>
+                    {{ ep.inspectionResult }}
+                </td>
+                <td>
+                    {% for dt in ep.defectType.all %} {{ dt.defectType }}. {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
