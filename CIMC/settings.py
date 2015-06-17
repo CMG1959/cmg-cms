@@ -37,7 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'jquery',
     'bootstrap3',
+    'sitetree',
     'home',
     'employee',
     'inspection',
@@ -67,7 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
         },
     },
@@ -80,19 +82,28 @@ WSGI_APPLICATION = 'CIMC.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'NAME': 'CIMC_DB',
-        'ENGINE': 'sql_server.pyodbc',
+        'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
-        'PORT' :'1433',
+        'PORT': '',
         'USER': 'mcaro',
         'PASSWORD': '1959Cmg1',
-        'OPTIONS': {
-            'driver': 'SQL Server Native Client 11.0',
-        },
+
     },
+    # DATABASES = {
+    #     'default': {
+    #         'NAME': 'CIMC_DB',
+    #         'ENGINE': 'sql_server.pyodbc',
+    #         'HOST': '127.0.0.1',
+    #         'PORT' :'1433',
+    #         'USER': 'mcaro',
+    #         'PASSWORD': '1959Cmg1',
+    #         'OPTIONS': {
+    #             'driver': 'SQL Server Native Client 11.0',
+    #         },
+    #     },
     # 'mattec': {
     #     'NAME': 'MATTEC',
     #     'ENGINE': 'sql_server.pyodbc',

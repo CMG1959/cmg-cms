@@ -6,14 +6,14 @@
 </head>
 <body>
 
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
 
 <h1>Create a startup shot!</h1>
 <p> Type in a part number to view already created startup shots.</p>
 
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{# Display a form #}
 
 <form action="/startupshot/create/" method="post" class="form">
     {% csrf_token %}

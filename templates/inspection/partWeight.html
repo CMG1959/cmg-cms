@@ -5,11 +5,13 @@
     <title></title>
 </head>
 <body>
-<h1>Part Weight!</h1>
 
 {% load bootstrap3 %}
 {% bootstrap_css %}
-{% bootstrap_javascript %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+<h1>Part Weight!</h1>
 
 {% include "inspection/subJobInfo.html" %}
 

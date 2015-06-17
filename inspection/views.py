@@ -3,12 +3,14 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
-from django.db.models import Q
-from startupshot.models import  CIMC_Part, CIMC_Production
+
+from models import partWeightInspection, visualInspection
+from startupshot.models import CIMC_Production
+from employee.models import cimc_organizations, employee
 from forms import partWeightForm, visualInspectionForm
 
 
-def index(request):
+def view_index(request):
     # item_id = CIMC_Part.objects.get(item_Number = part_number)
     # different_shots = CIMC_Production.objects.filter(item_id = item_id.id)
     active_parts = CIMC_Production.objects.filter(inProduction = True).select_related('item')
@@ -19,7 +21,8 @@ def index(request):
         })
     return HttpResponse(template.render(context))
 
-def detailJob(request, jobNumber):
+
+def view_detailJob(request, jobNumber):
     active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
 
     template = loader.get_template('inspection/detailJob.html')
@@ -29,8 +32,24 @@ def detailJob(request, jobNumber):
     return HttpResponse(template.render(context))
 
 
-def visualInspection(request, jobNumber):
+def view_jobReport(request, jobNumber):
     active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
+
+    visualInspectionReport = visualInspection.objects.filter(jobID__jobNumber=jobNumber)
+    partWeightReport = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber)
+
+    template = loader.get_template('inspection/jobReport.html')
+    context = RequestContext(request, {
+        'active_job': active_job,
+        'visualInspection': visualInspectionReport,
+        'partWeightInspection': partWeightReport
+    })
+
+    return HttpResponse(template.render(context))
+
+
+def view_visualInspection(request, jobNumber):
+    active_job = CIMC_Production.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = visualInspectionForm(request.POST)
@@ -49,10 +68,17 @@ def visualInspection(request, jobNumber):
         form = visualInspectionForm(
             initial={'jobID':CIMC_Production.objects.get(jobNumber=jobNumber).id}
         )
+        ### Filter the machine operators
+        machOp = cimc_organizations.objects.get(org_name='Machine Operator')
+        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name=machOp.id)
+        ### Filter the QA ladies
+        QA = cimc_organizations.objects.get(org_name='QA')
+        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name=QA.id)
 
     return render(request, 'inspection/visualInspection.html' , {'form': form, 'active_job':active_job})
 
-def weightInspection(request, jobNumber):
+
+def view_weightInspection(request, jobNumber):
     active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -61,7 +87,7 @@ def weightInspection(request, jobNumber):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             # part_number = form.cleaned_data['jobID']
-            redirect_url = '/weight/%s/' % (jobNumber)
+            redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
             form.save()
             # redirect to a new URL:
@@ -72,28 +98,11 @@ def weightInspection(request, jobNumber):
         form = partWeightForm(
             initial={'jobID':CIMC_Production.objects.get(jobNumber=jobNumber).id}
         )
+        ### Filter the machine operators
+        machOp = cimc_organizations.objects.get(org_name='Machine Operator')
+        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name=machOp.id)
+        ### Filter the QA ladies
+        QA = cimc_organizations.objects.get(org_name='QA')
+        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name=QA.id)
 
-    return render(request, 'inspection/visualInspection.html' , {'form': form, 'active_job':active_job})
-
-
-
-
-#
-# def createNewStartUpShot(request):
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = startupShotForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             part_number = form.cleaned_data['item']
-#             form.save()
-#             # process the data in form.cleaned_data as required
-#             redirect_url = '/startupshot/%s/viewCreated' % (part_number)
-#             # redirect to a new URL:
-#             return HttpResponseRedirect(redirect_url)
-#
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = startupShotForm()
-#
-#     return render(request, 'startupshot/createStartupShot.html', {'form': form})
+    return render(request, 'inspection/weightInspection.html', {'form': form, 'active_job': active_job})
