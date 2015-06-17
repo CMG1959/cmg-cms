@@ -35,15 +35,17 @@ def view_detailJob(request, jobNumber):
 def view_jobReport(request, jobNumber):
     active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
 
-    visualInspectionReport = visualInspection.objects.filter(jobID__jobNumber=jobNumber)
-    partWeightReport = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber)
+    context_dic = {'active_job': active_job}
+
+    first_item = active_job[0]
+
+    if first_item.item.visual_inspection:
+        context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber)
+    if first_item.item.weight_inspection:
+        context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber)
 
     template = loader.get_template('inspection/jobReport.html')
-    context = RequestContext(request, {
-        'active_job': active_job,
-        'visualInspection': visualInspectionReport,
-        'partWeightInspection': partWeightReport
-    })
+    context = RequestContext(request, context_dic)
 
     return HttpResponse(template.render(context))
 
