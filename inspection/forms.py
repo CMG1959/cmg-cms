@@ -8,6 +8,10 @@ class jobReportSearch(forms.Form):
     job_Number = forms.CharField(label="Job Number:", max_length=15)
 
 
+class itemReportSearch(forms.Form):
+    item_Number = forms.CharField(label="Item Number:", max_length=15)
+
+
 
 class partWeightForm(forms.ModelForm):
     class Meta:

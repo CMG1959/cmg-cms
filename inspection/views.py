@@ -8,7 +8,7 @@ from django.db.models import Avg, Max, Min, StdDev
 from models import partWeightInspection, visualInspection
 from startupshot.models import CIMC_Production
 from employee.models import cimc_organizations, employee
-from forms import partWeightForm, visualInspectionForm, jobReportSearch
+from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
 
 
 def view_index(request):
@@ -41,8 +41,8 @@ def view_jobReportSearch(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            part_number = form.cleaned_data['job_Number']
-            redirect_url = '/inspection/jobReport/%s/' % (part_number)
+            job_number = form.cleaned_data['job_Number']
+            redirect_url = '/inspection/jobReport/%s/' % (job_number)
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
@@ -51,6 +51,26 @@ def view_jobReportSearch(request):
         form = jobReportSearch()
 
     return render(request, 'inspection/jobReportSearch.html', {'form': form})
+
+
+def view_itemReportSearch(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = itemReportSearch(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            part_number = form.cleaned_data['item_Number']
+            redirect_url = '/inspection/itemReport/%s/' % (part_number)
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = itemReportSearch()
+
+    return render(request, 'inspection/itemReportSearch.html', {'form': form})
 
 
 def view_jobReport(request, jobNumber):

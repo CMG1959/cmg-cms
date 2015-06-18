@@ -6,6 +6,7 @@ urlpatterns = [
     # ex: /startupshot/
     url(r'^$', views.view_index, name='index'),
     url(r'^jobReport/$', views.view_jobReportSearch, name='view_jobReportSearch'),
+    url(r'^itemReport/$', views.view_itemReportSearch, name='view_itemReportSearch'),
     # ex: /startupshot/123-456789/
     url(r'^jobReport/(?P<jobNumber>[0-9]+(.[0-9]+)+)/$', views.view_jobReport, name='view_jobReport'),
     url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/$', views.view_detailJob, name='view_detailJob'),
