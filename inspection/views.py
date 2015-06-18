@@ -73,6 +73,54 @@ def view_itemReportSearch(request):
     return render(request, 'inspection/itemReportSearch.html', {'form': form})
 
 
+def view_itemReport(request, itemNumber):
+    jobList = CIMC_Production.objects.filter(item__item_Number=itemNumber)
+    jobList = jobList.values_list('jobNumber', flat=True)
+    partDict = {}
+    n = 0
+    for eachJob in jobList:
+        dictID = 'Job%i' % (n)
+        n += 1
+        partDict[dictID] = {}
+        partDict[dictID]['startupInfo'] = CIMC_Production.objects.filter(jobNumber=eachJob).select_related('item')
+        if partDict[dictID]['startupInfo'][0].item.visual_inspection:
+            partDict[dictID]['visualInspectionDict'] = {}
+            ### Count number of passed inspections
+            partDict[dictID]['visualInspectionDict']['numPass'] = \
+                visualInspection.objects.filter(jobID__jobNumber=eachJob, inspectionResult=1).count()
+            ### Count number of failed inspections
+            partDict[dictID]['visualInspectionDict']['numFail'] = \
+                visualInspection.objects.filter(jobID__jobNumber=eachJob, inspectionResult=0).count()
+            ### Calculate number of total inspections
+            partDict[dictID]['visualInspectionDict']['totalInspections'] = partDict[dictID]['visualInspectionDict'][
+                                                                               'numPass'] + \
+                                                                           partDict[dictID]['visualInspectionDict'][
+                                                                               'numFail']
+            ### Calculate percentage passed
+            partDict[dictID]['visualInspectionDict']['passPerc'] = 100 * partDict[dictID]['visualInspectionDict'][
+                'numPass'] / + \
+                                                                       partDict[dictID]['visualInspectionDict'][
+                                                                           'totalInspections']
+
+        if partDict[dictID]['startupInfo'][0].item.weight_inspection:
+            partDict[dictID]['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=eachJob)
+            partDict[dictID]['partWeightInspectionDict'] = {}
+            partDict[dictID]['partWeightInspectionDict'] = \
+                partWeightInspection.objects.filter(jobID__jobNumber=eachJob).aggregate(Avg('partWeight'),
+                                                                                        Max('partWeight'),
+                                                                                        Min('partWeight'),
+                                                                                        StdDev('partWeight'))
+
+    context_dict = {}
+    context_dict['partDict'] = partDict
+    print context_dict
+
+    template = loader.get_template('inspection/partReport.html')
+    context = RequestContext(request, context_dict)
+    return HttpResponse(template.render(context))
+
+
+
 def view_jobReport(request, jobNumber):
     active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
 
@@ -105,7 +153,6 @@ def view_jobReport(request, jobNumber):
                                                                                       Max('partWeight'),
                                                                                       Min('partWeight'),
                                                                                       StdDev('partWeight'))
-
 
     template = loader.get_template('inspection/jobReport.html')
     context = RequestContext(request, context_dic)

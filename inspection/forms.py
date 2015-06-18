@@ -1,8 +1,5 @@
 from django import forms
-from django.forms.util import flatatt
 from inspection.models import partWeightInspection, visualInspection
-from employee.models import employee
-
 
 class jobReportSearch(forms.Form):
     job_Number = forms.CharField(label="Job Number:", max_length=15)

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+
+
+{% for key,value in partDict.items %}
+
+    {% if value.startupInfo %}
+        {% with value.startupInfo as active_job %}
+            {% include "inspection/subJobInfo.html" %}
+        {% endwith %}
+    {% endif %}
+
+    {% if value.visualInspectionDict %}
+        {% with value.visualInspectionDict as visualInspectionDict %}
+            {% include "inspection/subSummary.html" %}
+        {% endwith %}
+    {% endif %}
+
+
+    {% if value.partWeightInspectionDict %}
+        {% with value.partWeightInspectionDict as partWeightInspectionDict %}
+            {% include "inspection/subSummary.html" %}
+        {% endwith %}
+    {% endif %}
+
+
+{% endfor %}
+
+
+</body>
+</html>
