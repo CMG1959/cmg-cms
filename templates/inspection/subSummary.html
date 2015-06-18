@@ -1,0 +1,53 @@
+{% if visualInspectionDict %}
+    <table class="table table-hover">
+        <caption style="text-align:center">Visual Inspection Summary</caption>
+        <tr>
+            <td>Total Visual Inspections</td>
+            <td>Pass</td>
+            <td>Fail</td>
+            <td>Pass Percent</td>
+        </tr>
+        <tr>
+            <td>
+                {{ visualInspectionDict.totalInspections }}
+            </td>
+            <td>
+                {{ visualInspectionDict.numPass }}
+            </td>
+            <td>
+                {{ visualInspectionDict.numFail }}
+            </td>
+            <td>
+                {{ visualInspectionDict.passPerc }} %
+            </td>
+        </tr>
+    </table>
+{% endif %}
+
+
+
+{% if partWeightInspectionDict %}
+    <table class="table table-hover">
+        <caption style="text-align:center">Part Weight Inspection Summary</caption>
+        <tr>
+            <td>Minimum</td>
+            <td>Average</td>
+            <td>Standard Deviation</td>
+            <td>Maximum</td>
+        </tr>
+        <tr>
+            <td>
+                {{ partWeightInspectionDict.partWeight__min }}
+            </td>
+            <td>
+                {{ partWeightInspectionDict.partWeight__avg }}
+            </td>
+            <td>
+                {{ partWeightInspectionDict.partWeight__stddev }}
+            </td>
+            <td>
+                {{ partWeightInspectionDict.partWeight__max }}
+            </td>
+        </tr>
+    </table>
+{% endif %}

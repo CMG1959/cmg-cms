@@ -15,6 +15,7 @@
 
 {%  for ep in active_job %}
     <ul>
+        <li><a href="/inspection/jobReport/{{ ep.jobNumber }}">Click here to view current job report</a></li>
         {% if ep.item.visual_inspection %}
         <li><a href="/inspection/{{ ep.jobNumber }}/visual">Click here to record visual inspection</a></li>
         {% endif %}

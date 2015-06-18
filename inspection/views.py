@@ -3,11 +3,12 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from django.db.models import Avg, Max, Min, StdDev
 
 from models import partWeightInspection, visualInspection
 from startupshot.models import CIMC_Production
 from employee.models import cimc_organizations, employee
-from forms import partWeightForm, visualInspectionForm
+from forms import partWeightForm, visualInspectionForm, jobReportSearch
 
 
 def view_index(request):
@@ -32,6 +33,26 @@ def view_detailJob(request, jobNumber):
     return HttpResponse(template.render(context))
 
 
+def view_jobReportSearch(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = jobReportSearch(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            part_number = form.cleaned_data['job_Number']
+            redirect_url = '/inspection/jobReport/%s/' % (part_number)
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = jobReportSearch()
+
+    return render(request, 'inspection/jobReportSearch.html', {'form': form})
+
+
 def view_jobReport(request, jobNumber):
     active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
 
@@ -41,8 +62,30 @@ def view_jobReport(request, jobNumber):
 
     if first_item.item.visual_inspection:
         context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber)
+        ### Initialize dictionary for summary stats
+        context_dic['visualInspectionDict'] = {}
+        ### Count number of passed inspections
+        context_dic['visualInspectionDict']['numPass'] = \
+            visualInspection.objects.filter(jobID__jobNumber=jobNumber, inspectionResult=1).count()
+        ### Count number of failed inspections
+        context_dic['visualInspectionDict']['numFail'] = \
+            visualInspection.objects.filter(jobID__jobNumber=jobNumber, inspectionResult=0).count()
+        ### Calculate number of total inspections
+        context_dic['visualInspectionDict']['totalInspections'] = context_dic['visualInspectionDict']['numPass'] + \
+                                                                  context_dic['visualInspectionDict']['numFail']
+        ### Calculate percentage passed
+        context_dic['visualInspectionDict']['passPerc'] = 100 * context_dic['visualInspectionDict']['numPass'] / + \
+            context_dic['visualInspectionDict']['totalInspections']
+
     if first_item.item.weight_inspection:
         context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber)
+        context_dic['partWeightInspectionDict'] = {}
+        context_dic['partWeightInspectionDict'] = \
+            partWeightInspection.objects.filter(jobID__jobNumber=jobNumber).aggregate(Avg('partWeight'),
+                                                                                      Max('partWeight'),
+                                                                                      Min('partWeight'),
+                                                                                      StdDev('partWeight'))
+
 
     template = loader.get_template('inspection/jobReport.html')
     context = RequestContext(request, context_dic)
