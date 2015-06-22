@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
-from .models import CIMC_Part, CIMC_Production
+from part.models import Part
+from .models import Production
 from .forms import startupShotLookup, startupShotForm
 
 def index(request):
@@ -30,13 +31,13 @@ def index(request):
 
 
 def detailPart(request, part_number):
-    currentPart = CIMC_Part.objects.get(item_Number=part_number)
+    currentPart = Part.objects.get(item_Number=part_number)
     return HttpResponse("Part Detail: You're looking %s: %s" % (currentPart.item_Number,currentPart.item_Description))
 
 
 def viewCreatedStartUpShot(request, part_number):
-    item_id = CIMC_Part.objects.get(item_Number = part_number)
-    different_shots = CIMC_Production.objects.filter(item_id = item_id.id)
+    item_id = Part.objects.get(item_Number=part_number)
+    different_shots = Production.objects.filter(item_id=item_id.id)
     template = loader.get_template('startupshot/view.html')
     context = RequestContext(request, {
         'item' : item_id,

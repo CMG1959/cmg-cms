@@ -14,11 +14,11 @@ class partWeightForm(forms.ModelForm):
     class Meta:
         model = partWeightInspection
         fields = ['jobID','machineOperator','inspectorName','dateCreated',
-                  'cavityID','partWeight']
+                  'headCavID', 'partWeight']
 
 
 class visualInspectionForm(forms.ModelForm):
     class Meta:
         model = visualInspection
         fields = ['jobID','machineOperator','inspectorName','dateCreated',
-                  'cavityID','inspectionResult','defectType']
+                  'headCavID', 'inspectionResult', 'defectType']

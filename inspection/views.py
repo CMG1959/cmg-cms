@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
 
 from models import partWeightInspection, visualInspection
-from startupshot.models import CIMC_Production
+from startupshot.models import Production
 from employee.models import cimc_organizations, employee
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
 
@@ -14,7 +14,7 @@ from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemRep
 def view_index(request):
     # item_id = CIMC_Part.objects.get(item_Number = part_number)
     # different_shots = CIMC_Production.objects.filter(item_id = item_id.id)
-    active_parts = CIMC_Production.objects.filter(inProduction = True).select_related('item')
+    active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
     template = loader.get_template('inspection/index.html')
     context = RequestContext(request, {
@@ -24,7 +24,7 @@ def view_index(request):
 
 
 def view_detailJob(request, jobNumber):
-    active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
+    active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
@@ -74,7 +74,7 @@ def view_itemReportSearch(request):
 
 
 def view_itemReport(request, itemNumber):
-    jobList = CIMC_Production.objects.filter(item__item_Number=itemNumber)
+    jobList = Production.objects.filter(item__item_Number=itemNumber)
     jobList = jobList.values_list('jobNumber', flat=True)
     partDict = {}
     n = 0
@@ -82,7 +82,7 @@ def view_itemReport(request, itemNumber):
         dictID = 'Job%i' % (n)
         n += 1
         partDict[dictID] = {}
-        partDict[dictID]['startupInfo'] = CIMC_Production.objects.filter(jobNumber=eachJob).select_related('item')
+        partDict[dictID]['startupInfo'] = Production.objects.filter(jobNumber=eachJob).select_related('item')
         if partDict[dictID]['startupInfo'][0].item.visual_inspection:
             partDict[dictID]['visualInspectionDict'] = {}
             ### Count number of passed inspections
@@ -122,7 +122,7 @@ def view_itemReport(request, itemNumber):
 
 
 def view_jobReport(request, jobNumber):
-    active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
+    active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
 
     context_dic = {'active_job': active_job}
 
@@ -161,7 +161,7 @@ def view_jobReport(request, jobNumber):
 
 
 def view_visualInspection(request, jobNumber):
-    active_job = CIMC_Production.objects.filter(jobNumber=jobNumber).select_related('item')
+    active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = visualInspectionForm(request.POST)
@@ -178,7 +178,7 @@ def view_visualInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = visualInspectionForm(
-            initial={'jobID':CIMC_Production.objects.get(jobNumber=jobNumber).id}
+            initial={'jobID': Production.objects.get(jobNumber=jobNumber).id}
         )
         ### Filter the machine operators
         machOp = cimc_organizations.objects.get(org_name='Machine Operator')
@@ -208,7 +208,7 @@ def view_weightInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = partWeightForm(
-            initial={'jobID':CIMC_Production.objects.get(jobNumber=jobNumber).id}
+            initial={'jobID': Production.objects.get(jobNumber=jobNumber).id}
         )
         ### Filter the machine operators
         machOp = cimc_organizations.objects.get(org_name='Machine Operator')

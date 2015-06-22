@@ -2,18 +2,19 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import CIMC_Production, CIMC_Part
+from .models import Production
 
-class CIMC_ProductionAdmin(admin.ModelAdmin):
+
+class ProductionAdmin(admin.ModelAdmin):
     fields = ['item',
               'jobNumber',
               'machNo',
               'partWeight',
-              'cavityID',
-              'headID',
+              'moldNumber',
+              'headCavID',
               'activeCavities',
               'dateCreated',
               'inProduction']
 
-admin.site.register(CIMC_Part)
-admin.site.register(CIMC_Production,CIMC_ProductionAdmin)
+
+admin.site.register(Production, ProductionAdmin)

@@ -9,7 +9,7 @@ class partWeightInspectionAdmin(admin.ModelAdmin):
               'machineOperator',
               'inspectorName',
               'dateCreated',
-              'cavityID',
+              'headCavID',
               'partWeight']
 
 class visualInspectionCriteriaAdmin(admin.ModelAdmin):
@@ -22,7 +22,7 @@ class visualInspectionAdmin(admin.ModelAdmin):
 	'dateCreated',
 	'inspectionResult',
 	'defectType',
-	'cavityID']
+              'headCavID']
 
 admin.site.register(partWeightInspection,partWeightInspectionAdmin)
 admin.site.register(visualInspectionCriteria,visualInspectionCriteriaAdmin)
