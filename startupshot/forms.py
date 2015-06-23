@@ -8,4 +8,5 @@ class startupShotLookup(forms.Form):
 class startupShotForm(forms.ModelForm):
     class Meta:
         model = Production
-        fields = ['item', 'jobNumber', 'partWeight', 'moldNumber', 'headCavID', 'activeCavities', 'dateCreated']
+        fields = ['machNo', 'item', 'jobNumber', 'partWeight', 'moldNumber', 'headCavID', 'activeCavities',
+                  'dateCreated']

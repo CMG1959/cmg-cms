@@ -16,10 +16,10 @@
 {%  for ep in active_job %}
     <ul>
         <li><a href="/inspection/jobReport/{{ ep.jobNumber }}">Click here to view current job report</a></li>
-        {% if ep.item.visual_inspection %}
+        {% if inspectionTypes.visual_inspection %}
         <li><a href="/inspection/{{ ep.jobNumber }}/visual">Click here to record visual inspection</a></li>
         {% endif %}
-        {% if ep.item.weight_inspection %}
+        {% if inspectionTypes.weight_inspection %}
             <li><a href="/inspection/{{ ep.jobNumber }}/weight">Click here to record weight inspection</a></li>
         {% endif %}
     </ul>

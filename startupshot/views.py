@@ -5,11 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from part.models import Part
-from .models import Production
+from .models import Production, MattecProd
 from .forms import startupShotLookup, startupShotForm
 
 def index(request):
-    # template = loader.get_template('startupshot/index.html')
+    # template = loader.get_template('startupshot/startUpShotSearch.html')
     # return HttpResponse(template.render())
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -27,7 +27,16 @@ def index(request):
     else:
         form = startupShotLookup()
 
-    return render(request, 'startupshot/index.html', {'form': form})
+    return render(request, 'startupshot/startUpShotSearch.html', {'form': form})
+
+
+def viewActive(request):
+    activeInMattec = MattecProd.objects.all()
+    template = loader.get_template('startupshot/viewActive.html')
+    context = RequestContext(request, {
+        'activeInMattec': activeInMattec,
+    })
+    return HttpResponse(template.render(context))
 
 
 def detailPart(request, part_number):

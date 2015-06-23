@@ -6,17 +6,17 @@ from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
 
 from models import partWeightInspection, visualInspection
+from part.models import PartInspection
 from startupshot.models import Production
 from employee.models import cimc_organizations, employee
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
 
 
 def view_index(request):
-    # item_id = CIMC_Part.objects.get(item_Number = part_number)
-    # different_shots = CIMC_Production.objects.filter(item_id = item_id.id)
+
     active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
-    template = loader.get_template('inspection/index.html')
+    template = loader.get_template('inspection/startUpShotSearch.html')
     context = RequestContext(request, {
         'active_parts' : active_parts,
         })
@@ -24,11 +24,14 @@ def view_index(request):
 
 
 def view_detailJob(request, jobNumber):
+
     active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
+    inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
         'active_job' : active_job,
+        'inspectionTypes': inspectionTypes
         })
     return HttpResponse(template.render(context))
 
@@ -83,6 +86,7 @@ def view_itemReport(request, itemNumber):
         n += 1
         partDict[dictID] = {}
         partDict[dictID]['startupInfo'] = Production.objects.filter(jobNumber=eachJob).select_related('item')
+
         if partDict[dictID]['startupInfo'][0].item.visual_inspection:
             partDict[dictID]['visualInspectionDict'] = {}
             ### Count number of passed inspections

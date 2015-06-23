@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+
+{% include "nav/nav.html" %}
+
+<p>Welcome to the CIMC Startup Shot Page! The following machines are active:</p>
+
+{% if activeInMattec %}
+    <ul>
+        {% for eachActive in activeInMattec %}
+            <li><a href="/startupshot/{{ eachActive.itemNo }}/">{{ eachActive.machNo }} - {{ eachActive.itemDesc }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
