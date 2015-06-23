@@ -18,7 +18,8 @@
 {% if activeInMattec %}
     <ul>
         {% for eachActive in activeInMattec %}
-            <li><a href="/startupshot/{{ eachActive.itemNo }}/">{{ eachActive.machNo }} - {{ eachActive.itemDesc }} </a>
+            <li><a href="/startupshot/create/{{ eachActive.jobNumber }}/">{{ eachActive.machNo }}
+                - {{ eachActive.itemDesc }} </a>
             </li>
         {% endfor %}
     </ul>

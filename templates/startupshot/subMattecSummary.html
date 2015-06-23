@@ -1,0 +1,34 @@
+{% if MattecDict %}
+    <table class="table table-hover">
+        <caption style="text-align:center">Startup Shot</caption>
+        <tr>
+            <td>Machine Number</td>
+            <td>Item Number</td>
+            <td>Item Description</td>
+            <td>Job Number</td>
+            <td>Mold Number</td>
+            <td>Active Cavities</td>
+        </tr>
+        <tr>
+            <td>
+                {{ MattecDict.machNo }}
+            </td>
+            <td>
+                {{ MattecDict.itemNo }}
+            </td>
+            <td>
+                {{ MattecDict.itemDesc }}
+            </td>
+            <td>
+                {{ MattecDict.jobNumber }}
+            </td>
+            <td>
+                {{ MattecDict.moldNumber }}
+            </td>
+            <td>
+                {{ MattecDict.activeCavities }}
+            </td>
+        </tr>
+    </table>
+{% endif %}
+

@@ -13,10 +13,6 @@
 
 {% include "nav/nav.html" %}
 
-<h1>This is the startup shot page!</h1>
-<p> Type in a part number to view already created startup shots.</p>
-
-
 <form action="/startupshot/" method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}

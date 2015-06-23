@@ -54,7 +54,9 @@ def viewCreatedStartUpShot(request, part_number):
         })
     return HttpResponse(template.render(context))
 
-def createNewStartUpShot(request):
+
+def createNewStartUpShot(request, jobNo):
+    MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = startupShotForm(request.POST)
@@ -70,5 +72,5 @@ def createNewStartUpShot(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = startupShotForm()
-
-    return render(request, 'startupshot/createStartupShot.html', {'form': form})
+    print MattecInfo.jobNumber
+    return render(request, 'startupshot/createStartupShot.html', {'form': form, 'MattecDict': MattecInfo})
