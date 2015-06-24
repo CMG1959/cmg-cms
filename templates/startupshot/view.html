@@ -23,6 +23,7 @@
             <tr>
                 <td>Job Number</td>
                 <td>Date Created</td>
+                <td>Inspector Name</td>
                 <td>Shot Weight</td>
                 <td>Active Cavities</td>
                 <td>Average Part Weight</td>
@@ -31,6 +32,7 @@
                 <tr>
                     <td>{{ eachJob.jobNumber }}</td>
                     <td>{{ eachJob.dateCreated }}</td>
+                    <td>{{ eachJob.inspectorName }}</td>
                     <td>{{ eachJob.shotWeight }}</td>
                     <td>{{ eachJob.activeCavities }}</td>
                     <td>{{ eachJob.shotWeight|div:eachJob.activeCavities }}</td>
