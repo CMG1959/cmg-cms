@@ -1,3 +1,5 @@
+{% load mathfilters %}
+
 {% if active_job %}
     <table class="table table-hover">
         <caption style="text-align:center">Start Up Shot Information</caption>
@@ -5,10 +7,10 @@
             <td>Item #</td>
             <td>Description</td>
             <td>Job Number</td>
-            <td>Start up part Weight</td>
             <td>Mold ID</td>
-            <td>Cavity ID</td>
-            <td>Active Cavities</td>
+            <td>Shot Weight</td>
+            <td>Active Cavitation</td>
+            <td>Average Part Weight</td>
             <td>Machine Number</td>
         </tr>
         {%  for ep in active_job %}
@@ -23,16 +25,16 @@
                     {{ ep.jobNumber }}
                 </td>
                 <td>
-                    {{ ep.partWeight }}
-                </td>
-                <td>
                     {{ ep.moldNumber }}
                 </td>
                 <td>
-                    {{ ep.headCavID }}
+                    {{ ep.shotWeight }}
                 </td>
                 <td>
                     {{ ep.activeCavities }}
+                </td>
+                <td>
+                    {{ ep.shotWeight|div:ep.activeCavities }}
                 </td>
                 <td>
                     {{ ep.machNo }}

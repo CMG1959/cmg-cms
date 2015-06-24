@@ -5,16 +5,16 @@ from django.db import models
 
 
 class Production(models.Model):
-	item = models.ForeignKey('part.Part')
-	jobNumber = models.CharField(max_length=15, unique=True)
-	moldNumber = models.ForeignKey('molds.Mold')
+	item = models.ForeignKey('part.Part', verbose_name="Item")
+	jobNumber = models.CharField(max_length=15, unique=True, verbose_name="Job Number")
+	moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")
 	# headCavID = models.ForeignKey('molds.PartIdentifier')
 	# partWeight = models.DecimalField(max_digits=12,decimal_places=3)
-	activeCavities = models.IntegerField()
-	dateCreated = models.DateTimeField(auto_now_add=True)
-	machNo = models.ForeignKey('equipment.EquipmentInfo')
-	inspectorName = models.ForeignKey('employee.employee')
-	shotWeight = models.DecimalField(max_digits=12,decimal_places=3)
+	activeCavities = models.IntegerField( verbose_name="")
+	dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+	machNo = models.ForeignKey('equipment.EquipmentInfo', verbose_name="Machine Number")
+	inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name")
+	shotWeight = models.DecimalField(max_digits=12,decimal_places=3, verbose_name="Shot Weight")
 
 	def __unicode__(self):
 		return self.jobNumber
@@ -22,12 +22,12 @@ class Production(models.Model):
 
 class MattecProd(models.Model):
 	### This information will be taken from MATTEC via SQL script
-	jobNumber = models.CharField(max_length=15)
-	machNo = models.CharField(max_length=10)
-	itemDesc = models.CharField(max_length=50)
-	itemNo = models.CharField(max_length=15)
-	moldNumber = models.CharField(max_length=15)
-	activeCavities = models.IntegerField()
+	jobNumber = models.CharField(max_length=15, verbose_name="Job Number")
+	machNo = models.CharField(max_length=10, verbose_name="Machine Number")
+	itemDesc = models.CharField(max_length=50, verbose_name="Item Description")
+	itemNo = models.CharField(max_length=15, verbose_name="Item Number")
+	moldNumber = models.CharField(max_length=15, verbose_name="Mold Number")
+	activeCavities = models.IntegerField(verbose_name="Active Cavities")
 
 	def __unicode__(self):
 		return '%s - %s' % (self.machNo,self.itemDesc)

@@ -78,6 +78,9 @@ def view_itemReportSearch(request):
 
 
 def view_itemReport(request, itemNumber):
+
+    inspectionTypes = PartInspection.objects.get(item_Number__item_Number=itemNumber)
+
     jobList = Production.objects.filter(item__item_Number=itemNumber)
     jobList = jobList.values_list('jobNumber', flat=True)
     partDict = {}
@@ -88,7 +91,7 @@ def view_itemReport(request, itemNumber):
         partDict[dictID] = {}
         partDict[dictID]['startupInfo'] = Production.objects.filter(jobNumber=eachJob).select_related('item')
 
-        if partDict[dictID]['startupInfo'][0].item.visual_inspection:
+        if inspectionTypes.visual_inspection:
             partDict[dictID]['visualInspectionDict'] = {}
             ### Count number of passed inspections
             partDict[dictID]['visualInspectionDict']['numPass'] = \
@@ -102,12 +105,13 @@ def view_itemReport(request, itemNumber):
                                                                            partDict[dictID]['visualInspectionDict'][
                                                                                'numFail']
             ### Calculate percentage passed
-            partDict[dictID]['visualInspectionDict']['passPerc'] = 100 * partDict[dictID]['visualInspectionDict'][
-                'numPass'] / + \
-                                                                       partDict[dictID]['visualInspectionDict'][
-                                                                           'totalInspections']
+            if partDict[dictID]['visualInspectionDict']['totalInspections']>0:
+                partDict[dictID]['visualInspectionDict']['passPerc'] = 100 * partDict[dictID]['visualInspectionDict'][
+                    'numPass'] / partDict[dictID]['visualInspectionDict']['totalInspections']
+            else:
+                partDict[dictID]['visualInspectionDict']['passPerc']=0
 
-        if partDict[dictID]['startupInfo'][0].item.weight_inspection:
+        if inspectionTypes.weight_inspection:
             partDict[dictID]['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=eachJob)
             partDict[dictID]['partWeightInspectionDict'] = {}
             partDict[dictID]['partWeightInspectionDict'] = \
@@ -129,11 +133,13 @@ def view_itemReport(request, itemNumber):
 def view_jobReport(request, jobNumber):
     active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
 
+    inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
+
     context_dic = {'active_job': active_job}
 
-    first_item = active_job[0]
+    # first_item = active_job[0]
 
-    if first_item.item.visual_inspection:
+    if inspectionTypes.visual_inspection:
         context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber)
         ### Initialize dictionary for summary stats
         context_dic['visualInspectionDict'] = {}
@@ -147,10 +153,13 @@ def view_jobReport(request, jobNumber):
         context_dic['visualInspectionDict']['totalInspections'] = context_dic['visualInspectionDict']['numPass'] + \
                                                                   context_dic['visualInspectionDict']['numFail']
         ### Calculate percentage passed
-        context_dic['visualInspectionDict']['passPerc'] = 100 * context_dic['visualInspectionDict']['numPass'] / + \
-            context_dic['visualInspectionDict']['totalInspections']
+        if context_dic['visualInspectionDict']['totalInspections']>0:
+            context_dic['visualInspectionDict']['passPerc'] = 100 * context_dic['visualInspectionDict']['numPass'] / + \
+                context_dic['visualInspectionDict']['totalInspections']
+        else:
+            context_dic['visualInspectionDict']['passPerc'] = 0
 
-    if first_item.item.weight_inspection:
+    if inspectionTypes.weight_inspection:
         context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber)
         context_dic['partWeightInspectionDict'] = {}
         context_dic['partWeightInspectionDict'] = \

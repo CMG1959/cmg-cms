@@ -13,12 +13,10 @@ class itemReportSearch(forms.Form):
 class partWeightForm(forms.ModelForm):
     class Meta:
         model = partWeightInspection
-        fields = ['jobID','machineOperator','inspectorName','dateCreated',
-                  'headCavID', 'partWeight']
+        fields = ['jobID','machineOperator','inspectorName','headCavID', 'partWeight']
 
 
 class visualInspectionForm(forms.ModelForm):
     class Meta:
         model = visualInspection
-        fields = ['jobID','machineOperator','inspectorName','dateCreated',
-                  'headCavID', 'inspectionResult', 'defectType']
+        fields = ['jobID','machineOperator','inspectorName','headCavID', 'inspectionResult', 'defectType']
