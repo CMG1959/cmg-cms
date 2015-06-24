@@ -5,6 +5,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from part.models import Part
+from molds.models import Mold, PartIdentifier
+from equipment.models import EquipmentInfo
+
 from .models import Production, MattecProd
 from .forms import startupShotLookup, startupShotForm
 
@@ -55,22 +58,52 @@ def viewCreatedStartUpShot(request, part_number):
     return HttpResponse(template.render(context))
 
 
+
+    #
+
+
+# item = models.ForeignKey('part.Part')
+# moldNumber = models.ForeignKey('molds.Mold')
+# headCavID = models.ForeignKey('molds.PartIdentifier')
+# machNo = models.ForeignKey('equipment.EquipmentInfo')
+
+
+
 def createNewStartUpShot(request, jobNo):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
+
+    # print Part.objects.get(item_Number=MattecInfo.itemNo)
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
+
         form = startupShotForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            part_number = form.cleaned_data['item']
-            form.save()
+            head, cavID = str(form.cleaned_data.get('headCavID')).replace(" ", "").split('-')
+
+            newForm = Production(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
+                                 jobNumber=jobNo, \
+                                 moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
+                                 headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
+                                                                      head_code=head, cavity_id=cavID), \
+                                 partWeight=form.cleaned_data['partWeight'], \
+                                 activeCavities=MattecInfo.activeCavities, \
+                                 inProduction=1, \
+                                 machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
+
+            newForm.save()
             # process the data in form.cleaned_data as required
-            redirect_url = '/startupshot/%s/viewCreated' % (part_number)
+            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo)
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
-
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = startupShotForm()
-    print MattecInfo.jobNumber
+        if Production.objects.filter(jobNumber=jobNo).exists():
+            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo)
+            return HttpResponseRedirect(redirect_url)
+
+        else:
+            form = startupShotForm()
+
     return render(request, 'startupshot/createStartupShot.html', {'form': form, 'MattecDict': MattecInfo})

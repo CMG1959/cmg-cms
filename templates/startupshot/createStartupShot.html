@@ -15,7 +15,7 @@
 {% include "startupshot/subMattecSummary.html" %}
 
 
-<form action="/startupshot/create/" method="post" class="form">
+<form method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}
     {% buttons %}

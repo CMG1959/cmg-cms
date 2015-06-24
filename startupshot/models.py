@@ -11,7 +11,7 @@ class Production(models.Model):
 	headCavID = models.ForeignKey('molds.PartIdentifier')
 	partWeight = models.DecimalField(max_digits=12,decimal_places=3)
 	activeCavities = models.IntegerField()
-	dateCreated = models.DateTimeField('date published')
+	dateCreated = models.DateTimeField(auto_now_add=True)
 	inProduction = models.BooleanField(default=True)
 	machNo = models.ForeignKey('equipment.EquipmentInfo')
 
