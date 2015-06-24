@@ -7,18 +7,19 @@ from django.db.models import Avg, Max, Min, StdDev
 
 from models import partWeightInspection, visualInspection
 from part.models import PartInspection
-from startupshot.models import Production
+from startupshot.models import Production, MattecProd
 from employee.models import cimc_organizations, employee
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
 
 
 def view_index(request):
+    activeInMattec = MattecProd.objects.all()
 
-    active_parts = Production.objects.filter(inProduction=True).select_related('item')
+    # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
-    template = loader.get_template('inspection/startUpShotSearch.html')
+    template = loader.get_template('inspection/index.html')
     context = RequestContext(request, {
-        'active_parts' : active_parts,
+        'active_parts': activeInMattec,
         })
     return HttpResponse(template.render(context))
 
