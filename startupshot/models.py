@@ -8,12 +8,13 @@ class Production(models.Model):
 	item = models.ForeignKey('part.Part')
 	jobNumber = models.CharField(max_length=15, unique=True)
 	moldNumber = models.ForeignKey('molds.Mold')
-	headCavID = models.ForeignKey('molds.PartIdentifier')
-	partWeight = models.DecimalField(max_digits=12,decimal_places=3)
+	# headCavID = models.ForeignKey('molds.PartIdentifier')
+	# partWeight = models.DecimalField(max_digits=12,decimal_places=3)
 	activeCavities = models.IntegerField()
 	dateCreated = models.DateTimeField(auto_now_add=True)
-	inProduction = models.BooleanField(default=True)
 	machNo = models.ForeignKey('equipment.EquipmentInfo')
+	inspectorName = models.ForeignKey('employee.employee')
+	shotWeight = models.DecimalField(max_digits=12,decimal_places=3)
 
 	def __unicode__(self):
 		return self.jobNumber
@@ -27,3 +28,6 @@ class MattecProd(models.Model):
 	itemNo = models.CharField(max_length=15)
 	moldNumber = models.CharField(max_length=15)
 	activeCavities = models.IntegerField()
+
+	def __unicode__(self):
+		return '%s - %s' % (self.machNo,self.itemDesc)

@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'jquery',
     'bootstrap3',
     'sitetree',
+    'mathfilters',
     'molds',
     'part',
     'equipment',

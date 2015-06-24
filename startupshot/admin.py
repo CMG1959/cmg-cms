@@ -9,13 +9,13 @@ class ProductionAdmin(admin.ModelAdmin):
     fields = ['item',
               'jobNumber',
               'machNo',
-              'partWeight',
+              'shotWeight',
               'moldNumber',
-              'headCavID',
               'activeCavities',
               'dateCreated',
+              'inspectorName',
               'inProduction']
 
 
-admin.site.register(Production, ProductionAdmin)
+admin.site.register(Production)#, ProductionAdmin)
 admin.site.register(MattecProd)

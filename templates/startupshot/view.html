@@ -6,36 +6,36 @@
 </head>
 <body>
 
+{% load mathfilters %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery=1 %}
 {% include "nav/nav.html" %}
 
-{% if item %}
-    {{item.item_Number}} - {{item.item_Description}}
-{%  endif %}
+
 
 {% if different_shot_list %}
     <div>
-    <table class="table table-bordered">
-    <tr>
-    <td>Job Number</td>
-    <td>Date Created</td>
-    <td>Part Weight</td>
-    <td>Active Cavities</td>
-    <td>Head ID</td>
-        <td>Cavity ID</td>
-    </tr>
-    {% for eachJob in different_shot_list %}
-        <tr>
-        <td> {{ eachJob.jobNumber }}</td>
-            <td>{{ eachJob.dateCreated }}</td>
-            <td>{{ eachJob.partWeight }}</td>
-            <td>{{ eachJob.activeCavities }}</td>
-            <td>{{ eachJob.headID }}</td>
-            <td>{{ eachJob.cavityID }}</td>
-        </tr>
-    {% endfor %}
+        <table class="table table-bordered">
+            {% if item %}
+                <caption style="text-align:center">Start Up Shot Log for Part: {{item.item_Number}} - {{item.item_Description}}</caption>
+            {%  endif %}
+            <tr>
+                <td>Job Number</td>
+                <td>Date Created</td>
+                <td>Shot Weight</td>
+                <td>Active Cavities</td>
+                <td>Average Part Weight</td>
+            </tr>
+            {% for eachJob in different_shot_list %}
+                <tr>
+                    <td>{{ eachJob.jobNumber }}</td>
+                    <td>{{ eachJob.dateCreated }}</td>
+                    <td>{{ eachJob.shotWeight }}</td>
+                    <td>{{ eachJob.activeCavities }}</td>
+                    <td>{{ eachJob.shotWeight|div:eachJob.activeCavities }}</td>
+                </tr>
+            {% endfor %}
     </div>
 {% else %}
     <p>No jobs recorded.</p>

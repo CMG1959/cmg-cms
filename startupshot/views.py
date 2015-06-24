@@ -7,7 +7,7 @@ from django.shortcuts import render
 from part.models import Part
 from molds.models import Mold, PartIdentifier
 from equipment.models import EquipmentInfo
-
+from employee.models import employee
 from .models import Production, MattecProd
 from .forms import startupShotLookup, startupShotForm
 
@@ -80,16 +80,17 @@ def createNewStartUpShot(request, jobNo):
         form = startupShotForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            head, cavID = str(form.cleaned_data.get('headCavID')).replace(" ", "").split('-')
+            print form.cleaned_data['inspectorName'].pk
+            # head, cavID = str(form.cleaned_data.get('headCavID')).replace(" ", "").split('-')
 
-            newForm = Production(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
-                                 jobNumber=jobNo, \
-                                 moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
-                                 headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
-                                                                      head_code=head, cavity_id=cavID), \
-                                 partWeight=form.cleaned_data['partWeight'], \
-                                 activeCavities=MattecInfo.activeCavities, \
-                                 inProduction=1, \
+            newForm = Production(item=Part.objects.get(item_Number=MattecInfo.itemNo),\
+                                 jobNumber=jobNo,\
+                                 moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber),\
+                                 # headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
+                                 #                                      head_code=head, cavity_id=cavID), \
+                                 inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),\
+                                 shotWeight=form.cleaned_data['shotWeight'],\
+                                 activeCavities=MattecInfo.activeCavities,\
                                  machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
 
             newForm.save()
