@@ -9,6 +9,7 @@ from models import partWeightInspection, visualInspection
 from part.models import PartInspection
 from startupshot.models import Production, MattecProd
 from employee.models import cimc_organizations, employee
+from molds.models import PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
 
 
@@ -195,17 +196,19 @@ def view_visualInspection(request, jobNumber):
             initial={'jobID': Production.objects.get(jobNumber=jobNumber).id}
         )
         ### Filter the machine operators
-        machOp = cimc_organizations.objects.get(org_name='Machine Operator')
-        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name=machOp.id)
+        # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
+        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
         ### Filter the QA ladies
-        QA = cimc_organizations.objects.get(org_name='QA')
-        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name=QA.id)
+        # QA = cimc_organizations.objects.get(org_name='QA')
+        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        ### Filter the cavity and molds
+        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
 
     return render(request, 'inspection/visualInspection.html' , {'form': form, 'active_job':active_job})
 
 
 def view_weightInspection(request, jobNumber):
-    active_job = CIMC_Production.objects.filter(jobNumber = jobNumber).select_related('item')
+    active_job = Production.objects.filter(jobNumber = jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = partWeightForm(request.POST)
@@ -225,10 +228,12 @@ def view_weightInspection(request, jobNumber):
             initial={'jobID': Production.objects.get(jobNumber=jobNumber).id}
         )
         ### Filter the machine operators
-        machOp = cimc_organizations.objects.get(org_name='Machine Operator')
-        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name=machOp.id)
+        # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
+        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
         ### Filter the QA ladies
-        QA = cimc_organizations.objects.get(org_name='QA')
-        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name=QA.id)
+        # QA = cimc_organizations.objects.get(org_name='QA')
+        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        ### Filter the cavity and molds
+        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
 
     return render(request, 'inspection/weightInspection.html', {'form': form, 'active_job': active_job})
