@@ -24,3 +24,20 @@ class EquipmentInfo(models.Model):
 
     def __unicode__(self):
         return self.part_identifier
+
+
+class PMFreq(models.Model):
+    # Month, Quarterly, Weekly, Yearly
+    pm_frequency = models.CharField(verbose_name="PM Frequency", max_length=25)
+
+    def __unicode__(self):
+        return self.pm_frequency
+
+
+class PM(models.Model):
+
+
+class EquipmentPM(models.Model):
+    pm_frequency = models.ForeignKey('PMFreq', verbose_name="PM Frequency")
+    equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
+    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")

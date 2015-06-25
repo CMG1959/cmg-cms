@@ -204,6 +204,7 @@ def view_visualInspection(request, jobNumber):
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
 
+
     return render(request, 'inspection/visualInspection.html' , {'form': form, 'active_job':active_job})
 
 
@@ -225,7 +226,7 @@ def view_weightInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = partWeightForm(
-            initial={'jobID': Production.objects.get(jobNumber=jobNumber).id}
+            initial={'jobID': Production.objects.get(jobNumber=jobNumber).id},
         )
         ### Filter the machine operators
         # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
@@ -235,5 +236,7 @@ def view_weightInspection(request, jobNumber):
         form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
+        ### lets see if we can change weight
+        form.fields["partWeight"].min_value = 9
 
     return render(request, 'inspection/weightInspection.html', {'form': form, 'active_job': active_job})
