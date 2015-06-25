@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from employee.models import employee
 
-from models import EquipmentType, EquipmentInfo, PM
+from models import EquipmentType, EquipmentInfo, PM, PMFreq
 from forms import equipmentPMForm
 
 # Create your views here.
@@ -54,16 +54,20 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
         # create a form instance and populate it with data from the request:
         form = equipmentPMForm(request.POST)
         # check whether it's valid:
-        # if form.is_valid():
-        #     # process the data in form.cleaned_data as required
-        #     # job_number = form.cleaned_data['job_Number']
-        #     redirect_url = '/inspection/jobReport/%s/' % (job_number)
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # job_number = form.cleaned_data['job_Number']
+            redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
         #     # redirect to a new URL:
-        #     return HttpResponseRedirect(redirect_url)
+            form.save()
+        return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = equipmentPMForm()
+        form = equipmentPMForm(
+            initial={'equipment_ID': equip_info.id,
+                     'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type)},
+        )
         form.fields["employee"].queryset = employee.objects.filter(organization_name__org_name='Engineering')
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
                                                               pm_frequency__pm_frequency=pm_type)
