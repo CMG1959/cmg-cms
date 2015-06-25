@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^startupshot/', include('startupshot.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^inspection/', include('inspection.urls')),
+    url(r'^equipment/', include('equipment.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

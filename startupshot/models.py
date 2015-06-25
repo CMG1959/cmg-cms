@@ -5,11 +5,14 @@ from django.db import models
 
 
 class Production(models.Model):
+	class Meta:
+		verbose_name='Startup Shot'
+		verbose_name_plural='Startup Shots'
+
 	item = models.ForeignKey('part.Part', verbose_name="Item")
 	jobNumber = models.CharField(max_length=15, unique=True, verbose_name="Job Number")
 	moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")
-	# headCavID = models.ForeignKey('molds.PartIdentifier')
-	# partWeight = models.DecimalField(max_digits=12,decimal_places=3)
+
 	activeCavities = models.IntegerField( verbose_name="")
 	dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
 	machNo = models.ForeignKey('equipment.EquipmentInfo', verbose_name="Machine Number")
@@ -21,6 +24,9 @@ class Production(models.Model):
 
 
 class MattecProd(models.Model):
+	class Meta:
+		verbose_name='MATTEC Current Job Information'
+		verbose_name_plural='MATTEC Current Job Information'
 	### This information will be taken from MATTEC via SQL script
 	jobNumber = models.CharField(max_length=15, verbose_name="Job Number")
 	machNo = models.CharField(max_length=10, verbose_name="Machine Number")

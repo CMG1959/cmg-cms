@@ -3,6 +3,9 @@ from django.db import models
 # Create your models here.
 class Part(models.Model):
     # Stuff from TMM will go here
+    class Meta:
+        verbose_name='Part'
+        verbose_name_plural='Parts'
     item_Number = models.CharField( verbose_name="Item Number",max_length=15)
     item_Description = models.CharField( verbose_name="Item Description",max_length=75)
 
@@ -11,6 +14,9 @@ class Part(models.Model):
 
 
 class PartInspection(models.Model):
+    class Meta:
+        verbose_name='Required Part Inspection'
+        verbose_name_plural='Required Part Inspections'
     item_Number = models.ForeignKey(Part, verbose_name="Item Number")
     visual_inspection = models.BooleanField( verbose_name="Visual Inspection",default=True)
     weight_inspection = models.BooleanField( verbose_name="Weight Inspection",default=True)

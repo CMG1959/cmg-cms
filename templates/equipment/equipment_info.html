@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+{#<ul>#}
+{#{%  for each_type in equipmentTypes %}#}
+{#    <li><a href="/equipment/{{ each_type.equipment_type }}/{{ each_type.part_identifier }}">{{each_type.part_identifier}}</a></li>#}
+{#{% endfor %}#}
+{#</ul>#}
+
+{% include "equipment/subTemplates/equipInfo.html" %}
+
+
+
+
+
+</body>
+</html>

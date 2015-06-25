@@ -3,6 +3,9 @@ from django.db import models
 # Create your models here.
 
 class Mold(models.Model):
+    class Meta:
+        verbose_name = 'Mold Information'
+        verbose_name_plural = 'Molds Information'
     mold_number = models.CharField( verbose_name="Mold Number",max_length=15)
     mold_description = models.CharField( verbose_name="Mold Description",max_length=30)
     num_cavities = models.IntegerField( verbose_name="Number of Cavities")

@@ -17,20 +17,20 @@
 
     {% if value.startupInfo %}
         {% with value.startupInfo as active_job %}
-            {% include "inspection/subJobInfo.html" %}
+            {% include "inspection/subTemplates/subJobInfo.html" %}
         {% endwith %}
     {% endif %}
 
     {% if value.visualInspectionDict %}
         {% with value.visualInspectionDict as visualInspectionDict %}
-            {% include "inspection/subSummary.html" %}
+            {% include "inspection/subTemplates/subSummary.html" %}
         {% endwith %}
     {% endif %}
 
 
     {% if value.partWeightInspectionDict %}
         {% with value.partWeightInspectionDict as partWeightInspectionDict %}
-            {% include "inspection/subSummary.html" %}
+            {% include "inspection/subTemplates/subSummary.html" %}
         {% endwith %}
     {% endif %}
 
