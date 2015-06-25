@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from employee.models import employee
 
-from models import EquipmentType, EquipmentInfo, PM, PMFreq
+from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM
 from forms import equipmentPMForm
 
 # Create your views here.
@@ -72,3 +72,15 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
                                                               pm_frequency__pm_frequency=pm_type)
     return render(request, 'equipment/forms/pm.html', {'form': form, 'equip_info': equip_info})
+
+
+def view_pm_report(request, equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+    pm_report = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name)
+
+    template = loader.get_template('equipment/reports/equipment_pm_report.html')
+    context = RequestContext(request, {
+        'equip_info': equip_info,
+        'PM_info': pm_report,
+    })
+    return HttpResponse(template.render(context))

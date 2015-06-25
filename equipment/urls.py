@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)$', views.view_equipment_info, name='view_equipment_info'),
     ### Go to PM page
     url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)/PM/(?P<pm_type>\w+)$', views.view_pm_form, name='view_pm_form'),
+    ### Go to PM Report
+    url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)/ViewPM$', views.view_pm_report, name='view_pm_report'),
     ### Go to Repair page
     url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)/Repair$', views.view_equipment_info, name='view_equipment_info'),
     ### link to item report

@@ -74,3 +74,4 @@ class EquipmentPM(models.Model):
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
     logged_pm = models.ManyToManyField('PM', verbose_name="PM Items")
 
+
