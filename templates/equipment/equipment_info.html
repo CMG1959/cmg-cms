@@ -11,16 +11,25 @@
 {% bootstrap_javascript jquery=1 %}
 {% include "nav/nav.html" %}
 
-{#<ul>#}
-{#{%  for each_type in equipmentTypes %}#}
-{#    <li><a href="/equipment/{{ each_type.equipment_type }}/{{ each_type.part_identifier }}">{{each_type.part_identifier}}</a></li>#}
-{#{% endfor %}#}
-{#</ul>#}
 
 {% include "equipment/subTemplates/equipInfo.html" %}
 
 
-
+<ul>
+    {% if PM_info %}
+        {% for each_PM in PM_info %}
+            <li>
+                <a href="/equipment/{{ each_PM.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM.pm_frequency.pm_frequency }}">Record {{ each_PM.pm_frequency.pm_frequency }}
+                    PM</a></li>
+        {% endfor %}
+    {% endif %}
+    <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/Repair">Record Repair</a>
+    </li>
+    <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewRepair">View Repair
+        Log</a></li>
+    <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewPM">View PM Log</a>
+    </li>
+</ul>
 
 
 </body>
