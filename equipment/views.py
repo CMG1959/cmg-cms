@@ -2,7 +2,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
 
+from employee.models import employee
+
 from models import EquipmentType, EquipmentInfo, PM
+from forms import equipmentPMForm
 
 # Create your views here.
 
@@ -41,3 +44,27 @@ def view_equipment_info(request,equip_type,equip_name):
         'PM_info': PMinfo,
         })
     return HttpResponse(template.render(context))
+
+
+def view_pm_form(request, equip_type, equip_name, pm_type):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = equipmentPMForm(request.POST)
+        # check whether it's valid:
+        # if form.is_valid():
+        #     # process the data in form.cleaned_data as required
+        #     # job_number = form.cleaned_data['job_Number']
+        #     redirect_url = '/inspection/jobReport/%s/' % (job_number)
+        #     # redirect to a new URL:
+        #     return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = equipmentPMForm()
+        form.fields["employee"].queryset = employee.objects.filter(organization_name__org_name='Engineering')
+        form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
+                                                              pm_frequency__pm_frequency=pm_type)
+    return render(request, 'equipment/forms/pm.html', {'form': form, 'equip_info': equip_info})

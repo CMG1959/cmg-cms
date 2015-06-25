@@ -9,6 +9,10 @@ urlpatterns = [
     url(r'^(?P<equip_type>\w+)$', views.view_equipment, name='view_equipment'),
     ### Display information related to specific piece of equipment
     url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)$', views.view_equipment_info, name='view_equipment_info'),
+    ### Go to PM page
+    url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)/PM/(?P<pm_type>\w+)$', views.view_pm_form, name='view_pm_form'),
+    ### Go to Repair page
+    url(r'^(?P<equip_type>\w+)/(?P<equip_name>\w+)/Repair$', views.view_equipment_info, name='view_equipment_info'),
     ### link to item report
     # url(r'^itemReport/$', views.view_itemReportSearch, name='view_itemReportSearch'),
     # ### link to view for job report
