@@ -4,8 +4,8 @@ from django.shortcuts import render
 
 from employee.models import employee
 
-from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM
-from forms import equipmentPMForm
+from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair
+from forms import equipmentPMForm, equipmentRepairForm
 
 # Create your views here.
 
@@ -82,5 +82,42 @@ def view_pm_report(request, equip_type, equip_name):
     context = RequestContext(request, {
         'equip_info': equip_info,
         'PM_info': pm_report,
+    })
+    return HttpResponse(template.render(context))
+
+def view_repair_form(request,equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = equipmentRepairForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # job_number = form.cleaned_data['job_Number']
+            redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
+        #     # redirect to a new URL:
+            form.save()
+        return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = equipmentRepairForm(
+            initial={'equipment_ID': equip_info.id,
+                     },
+        )
+        form.fields["employee"].queryset = employee.objects.filter(organization_name__org_name='Engineering')
+
+    return render(request, 'equipment/forms/repair.html', {'form': form, 'equip_info': equip_info})
+
+def view_repair_report(request, equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+    repair_report = EquipmentRepair.objects.filter(equipment_ID__part_identifier=equip_name)
+
+    template = loader.get_template('equipment/reports/equipment_repair_report.html')
+    context = RequestContext(request, {
+        'equip_info': equip_info,
+        'repair_info': repair_report,
     })
     return HttpResponse(template.render(context))
