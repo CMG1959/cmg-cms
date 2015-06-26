@@ -5,7 +5,7 @@ class phlLookup(forms.Form):
     job_Number = forms.CharField(label="Job Number:",max_length=15)
 
 class moldLookup(forms.Form):
-    mold_Number = forms.CharField(label="Number Number:",max_length=10)
+    mold_Number = forms.CharField(label="Mold Number:",max_length=10)
 
 class phlForm(forms.ModelForm):
     class Meta:

@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'molds',
     'part',
     'equipment',
+    'production_and_mold_history',
     'home',
     'employee',
     'inspection',

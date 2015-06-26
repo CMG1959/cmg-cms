@@ -3,8 +3,9 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 # Create your views here.
 from forms import phlLookup, phlForm, moldLookup, mhlForm
-from startupshot.models import MattecProd
+from startupshot.models import MattecProd, Production
 from molds.models import Mold
+from .models import ProductionHistory, MoldHistory
 
 def view_index(request):
     template = loader.get_template('phl/index.html')
@@ -120,7 +121,23 @@ def view_mold_report_search(request):
     else:
         form = moldLookup()
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
-#
-# def view_phl_report(request,jobNo):
-#
+
+def view_phl_report(request,jobNo):
+    start_up_info = Production.objects.get(jobNumber = jobNo)
+    PHL = ProductionHistory.objects.filter(jobNumber = jobNo)
+    context_dict = {'active_job':start_up_info,'PHL':PHL}
+    template = loader.get_template('phl/reports/phl.html')
+    context = RequestContext(request,context_dict)
+    return HttpResponse(template.render(context))
+
+def view_mold_report(request,moldNo):
+    mold_info = Mold.objects.get(mold_number = moldNo)
+    MHL = MoldHistory.objects.filter(moldNumber = moldNo)
+    context_dict = {'mold_info':mold_info,'MHL':MHL}
+    template = loader.get_template('phl/reports/mhl.html')
+    context = RequestContext(request,context_dict)
+    return HttpResponse(template.render(context))
+
+
+
 # def view_mold_report(request,moldNo):
