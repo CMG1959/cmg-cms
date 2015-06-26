@@ -36,7 +36,6 @@ def view_equipment(request,equip_type):
 def view_equipment_info(request,equip_type,equip_name):
     equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,part_identifier=equip_name)
     PMinfo = PM.objects.filter(equipment_type__equipment_type=equip_type).select_related()
-    print PMinfo
 
     template = loader.get_template('equipment/equipment_info.html')
     context = RequestContext(request, {

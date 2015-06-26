@@ -84,7 +84,7 @@ class EquipmentRepair(models.Model):
     dateCreated = models.DateTimeField(verbose_name="Date Created",auto_now_add=True)
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
     po_num = models.CharField(verbose_name='PO Number',max_length=25)
-    part_supplier = models.CharField('supplier.supplier_name', verbose_name='Part Supplier')
+    part_supplier = models.ForeignKey('supplier.supplier_name', verbose_name='Part Supplier')
     part_name = models.CharField(verbose_name='Part Name',max_length=50)
     part_number = models.CharField(verbose_name='Part Number',max_length=25)
     part_cost = models.DecimalField(verbose_name='Unit Cost',max_digits=12,decimal_places=2)

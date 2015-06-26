@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+<p>Welcome to the Production History Log Page!</p>
+
+<ul>
+    <li><a href="/production_and_mold_history/production"></a>Record production related observation</li>
+    <li><a href="/production_and_mold_history/mold"></a>Record toolroom event</li>
+    <li><a href="/production_and_mold_history/production_report"></a>View production history log</li>
+    <li><a href="/production_and_mold_history/production_report"></a>View mold history log</li>
+</ul>
+
+
+</body>
+</html>
