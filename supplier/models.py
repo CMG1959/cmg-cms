@@ -8,3 +8,6 @@ class supplier(models.Model):
         verbose_name_plural = 'Suppliers'
 
     supplier_name = models.CharField(verbose_name='Supplier Name', max_length=25)
+
+    def __unicode__(self):
+        return self.supplier_name

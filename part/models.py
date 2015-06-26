@@ -20,3 +20,5 @@ class PartInspection(models.Model):
     item_Number = models.ForeignKey(Part, verbose_name="Item Number")
     visual_inspection = models.BooleanField( verbose_name="Visual Inspection",default=True)
     weight_inspection = models.BooleanField( verbose_name="Weight Inspection",default=True)
+    def __unicode__(self):
+        return '%s' % (self.item_Number)

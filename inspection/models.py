@@ -24,7 +24,8 @@ class partWeightInspection(models.Model):
 	dateCreated = models.DateTimeField(verbose_name="Date Created",auto_now_add=True)
 	headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID")
 	partWeight = models.DecimalField(max_digits=12,decimal_places=3, verbose_name="Part Weight")
-
+	def __unicode__(self):
+		return '%s - %s' % (self.jobID,self.dateCreated)
 
 class visualInspection(models.Model):
 	class Meta:
@@ -38,3 +39,5 @@ class visualInspection(models.Model):
 	inspectionResult = models.BooleanField( verbose_name="Inspection Result")
 	defectType = models.ManyToManyField(visualInspectionCriteria, verbose_name="Defect Type")
 	headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID")
+	def __unicode__(self):
+		return '%s - %s' % (self.jobID,self.dateCreated)

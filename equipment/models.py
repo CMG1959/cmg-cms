@@ -74,6 +74,9 @@ class EquipmentPM(models.Model):
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
     logged_pm = models.ManyToManyField('PM', verbose_name="PM Items")
 
+    def __unicode__(self):
+        return '%s - %s - %s' % (self.equipment_ID,self.pm_frequency,self.dateCreated)
+
 
 class EquipmentRepair(models.Model):
     class Meta:
@@ -89,3 +92,5 @@ class EquipmentRepair(models.Model):
     part_number = models.CharField(verbose_name='Part Number',max_length=25)
     part_cost = models.DecimalField(verbose_name='Unit Cost',max_digits=12,decimal_places=2)
     part_quantity = models.IntegerField(verbose_name='Quantity')
+    def __unicode__(self):
+        return '%s - %s - %s' % (self.equipment_ID,self.dateCreated,self.part_name)

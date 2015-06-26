@@ -7,6 +7,8 @@ class ProductionHistory(models.Model):
     dateCreated = models.DateTimeField(verbose_name="Date Created",auto_now_add=True)
     jobNumber = models.ForeignKey('startupshot.Production',verbose_name="Job Number")
     descEvent = models.CharField(max_length=None,verbose_name="Event Description")
+    def __unicode__(self):
+        return '%s - %s' % (self.jobNumber,self.dateCreated)
 
 
 class MoldHistory(models.Model):
@@ -17,3 +19,5 @@ class MoldHistory(models.Model):
     pm = models.BooleanField(default=False,verbose_name="Preventative Maintenance")
     repair = models.BooleanField(default=False,verbose_name="Repair")
     hours_worked = models.DecimalField(verbose_name="Hours worked",max_digits=10,decimal_places=2)
+    def __unicode__(self):
+        return '%s - %s' % (self.moldNumber,self.dateCreated)
