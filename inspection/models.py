@@ -5,8 +5,8 @@ from django.db import models
 # Create your models here.
 class visualInspectionCriteria(models.Model):
 	class Meta:
-		verbose_name='Visual Inspection Criteria'
-		verbose_name_plural='Visual Inspection Criterion'
+		verbose_name='Visual Inspection Criterion'
+		verbose_name_plural='Visual Inspection Criteria'
 
 	defectType = models.CharField(max_length=25)
 	def __unicode__(self):
