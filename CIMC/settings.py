@@ -15,6 +15,9 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+SETTINGS_DIR = os.path.dirname(__file__)
+PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
+PROJECT_PATH = os.path.abspath(PROJECT_PATH)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -75,7 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -89,27 +92,27 @@ WSGI_APPLICATION = 'CIMC.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
-    # 'default': {
-    #     'NAME': 'CIMC_DB',
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '',
-    #     'USER': 'mcaro',
-    #     'PASSWORD': '1959Cmg1',
-    #
-    # },
+    'default': {
+        'NAME': 'CIMC_DB',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+        'USER': 'mcaro',
+        'PASSWORD': '1959Cmg1',
+
+    },
     # DATABASES = {
-        'default': {
-            'NAME': 'CIMC_DB',
-            'ENGINE': 'sql_server.pyodbc',
-            'HOST': '127.0.0.1',
-            'PORT' :'1433',
-            'USER': 'mcaro',
-            'PASSWORD': '1959Cmg1',
-            'OPTIONS': {
-                'driver': 'SQL Server Native Client 11.0',
-            },
-        },
+    #     'default': {
+    #         'NAME': 'CIMC_DB',
+    #         'ENGINE': 'sql_server.pyodbc',
+    #         'HOST': '127.0.0.1',
+    #         'PORT' :'1433',
+    #         'USER': 'mcaro',
+    #         'PASSWORD': '1959Cmg1',
+    #         'OPTIONS': {
+    #             'driver': 'SQL Server Native Client 11.0',
+    #         },
+    #     },
     # 'mattec': {
     #     'NAME': 'MATTEC',
     #     'ENGINE': 'sql_server.pyodbc',
@@ -140,4 +143,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/'  # You may find this is already defined as such.
+STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
+
+STATICFILES_DIRS = (
+    STATIC_PATH,
+)

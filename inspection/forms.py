@@ -3,11 +3,14 @@ from inspection.models import partWeightInspection, visualInspection
 
 class jobReportSearch(forms.Form):
     job_Number = forms.CharField(label="Job Number:", max_length=15)
+    date_from = forms.DateField(label="Date From:", required=False)
+    date_to = forms.DateField(label="Date To:", required=False)
 
 
 class itemReportSearch(forms.Form):
     item_Number = forms.CharField(label="Item Number:", max_length=15)
-
+    date_from = forms.DateField(label="Date From:", required=False)
+    date_to = forms.DateField(label="Date To:", required=False)
 
 
 class partWeightForm(forms.ModelForm):

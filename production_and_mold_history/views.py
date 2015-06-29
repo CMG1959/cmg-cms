@@ -8,8 +8,7 @@ from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 
 def view_index(request):
-    template = loader.get_template('phl/index.html')
-    return HttpResponse(template.render())
+    return render(request, 'phl/index.html')
 
 def view_phl_form(request):
     activeInMattec = MattecProd.objects.all()
