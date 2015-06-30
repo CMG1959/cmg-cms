@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import cimc_organizations, employee
+from .models import organizations, employee
 
 
 class CIMC_EmplopyeeAdmin(admin.ModelAdmin):
@@ -10,5 +10,6 @@ class CIMC_EmplopyeeAdmin(admin.ModelAdmin):
               'employee_id',
               'organization_name']
 
-admin.site.register(cimc_organizations)
+
+admin.site.register(organizations)
 admin.site.register(employee,CIMC_EmplopyeeAdmin)

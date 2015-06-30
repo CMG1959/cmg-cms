@@ -8,7 +8,7 @@ from django.db.models import Avg, Max, Min, StdDev
 from models import partWeightInspection, visualInspection
 from part.models import PartInspection
 from startupshot.models import Production, MattecProd
-from employee.models import cimc_organizations, employee
+from employee.models import organizations, employee
 from molds.models import PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
 
@@ -51,17 +51,12 @@ def view_jobReportSearch(request):
             job_number = form.cleaned_data['job_Number']
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
+
             context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
-            # redirect_url = '/inspection/jobReport/%s/' % (job_number)
-            # redirect to a new URL:
-            # return HttpResponseRedirect(redirect_url)
-            # active_job = Production.objects.filter(jobNumber=job_number).select_related('item')
-            # if len(active_job)>0:
-            #     context_dic = createJobReportDict(jobNumber=job_number,date_from=date_from,date_to=date_to)
             template = loader.get_template('inspection/reports/jobReport.html')
+
             context = RequestContext(request, context_dic)
             return HttpResponse(template.render(context))
-
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -95,9 +90,6 @@ def view_itemReportSearch(request):
 
 
 def view_itemReport(request, itemNumber):
-
-
-
     context_dict = {}
     context_dict['partDict'] = createItemReportDict(itemNumber)
     print context_dict
@@ -182,13 +174,7 @@ def view_weightInspection(request, jobNumber):
 
 
 def createItemReportDict(itemNumber, date_from=None, date_to=None):
-    if date_from is None:
-        date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
-        date_from = timezone.make_aware(date_from, timezone.get_current_timezone())
-
-    if date_to is None:
-        date_to = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-        date_to = timezone.make_aware(date_to, timezone.get_current_timezone())
+    date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
 
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=itemNumber)
 
@@ -238,13 +224,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
-    if date_from is None:
-        date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
-        date_from = timezone.make_aware(date_from, timezone.get_current_timezone())
-
-    if date_to is None:
-        date_to = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-        date_to = timezone.make_aware(date_to, timezone.get_current_timezone())
+    date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
 
     context_dic = {}
 
@@ -290,3 +270,15 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                                                                 StdDev('partWeight'))
 
     return context_dic
+
+
+def createDateRange(date_from=None, date_to=None):
+    if date_from is None:
+        date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
+        date_from = timezone.make_aware(date_from, timezone.get_current_timezone())
+
+    if date_to is None:
+        date_to = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+        date_to = timezone.make_aware(date_to, timezone.get_current_timezone())
+
+    return (date_from, date_to)
