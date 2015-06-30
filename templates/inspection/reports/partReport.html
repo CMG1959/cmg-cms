@@ -34,6 +34,11 @@
         {% endwith %}
     {% endif %}
 
+    {% if value.shotWeightInspectionDict %}
+        {% with value.shotWeightInspectionDict as shotWeightInspectionDict %}
+            {% include "inspection/subTemplates/subSummary.html" %}
+        {% endwith %}
+    {% endif %}
 
 {% endfor %}
 

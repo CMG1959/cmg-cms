@@ -30,6 +30,7 @@ def view_index(request):
 def view_detailJob(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
+    print inspectionTypes
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
@@ -254,10 +255,10 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                                                                date_from, date_to))
             partDict[dictID]['shotWeightInspectionDict'] = {}
             partDict[dictID]['shotWeightInspectionDict'] = partDict[dictID]['shotWeightInspection'].aggregate(
-                Avg('partWeight'),
-                Max('partWeight'),
-                Min('partWeight'),
-                StdDev('partWeight'))
+                Avg('shotWeight'),
+                Max('shotWeight'),
+                Min('shotWeight'),
+                StdDev('shotWeight'))
     return partDict
 
 
@@ -280,6 +281,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['InspectionDates'] = {}
         context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
                                                                                    Max('dateCreated'))
+        print context_dic['InspectionDates']
         ### Initialize dictionary for summary stats
         context_dic['visualInspectionDict'] = {}
         ### Count number of passed inspections
@@ -315,10 +317,10 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                                                   dateCreated__range=(
                                                                                       date_from, date_to))
         context_dic['shotWeightInspectionDict'] = {}
-        context_dic['shotWeightInspectionDict'] = context_dic['shotWeightInspection'].aggregate(Avg('partWeight'),
-                                                                                                Max('partWeight'),
-                                                                                                Min('partWeight'),
-                                                                                                StdDev('partWeight'))
+        context_dic['shotWeightInspectionDict'] = context_dic['shotWeightInspection'].aggregate(Avg('shotWeight'),
+                                                                                                Max('shotWeight'),
+                                                                                                Min('shotWeight'),
+                                                                                                StdDev('shotWeight'))
 
 
 

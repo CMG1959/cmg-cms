@@ -4,6 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 from forms import phlLookup, phlForm, moldLookup, mhlForm
 from startupshot.models import MattecProd, startUpShot
+from employee.models import employee
 from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 
@@ -27,7 +28,7 @@ def view_mold_form(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             mold_Number = form.cleaned_data['mold_Number']
-            redirect_url = '/production_and_mold_history/mold_form/%s' % (mold_Number)
+            redirect_url = '/production_and_mold_history/mold/%s' % (mold_Number)
             # redirect to a new URL:
         return HttpResponseRedirect(redirect_url)
 
@@ -44,9 +45,14 @@ def view_specific_phl_form(request, jobNo):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            job_Number = form.cleaned_data['jobNumber']
-            redirect_url = '/production_and_mold_history/production_report/%s' % (job_Number)
-            form.save()
+            newForm = ProductionHistory(
+                inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+                jobNumber=startUpShot.objects.get(jobNumber=jobNo),
+                descEvent=form.cleaned_data['descEvent'],
+            )
+            newForm.save()
+
+        redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
             # redirect to a new URL:
         return HttpResponseRedirect(redirect_url)
 
@@ -68,9 +74,18 @@ def view_specific_mold_form(request,moldNo):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            moldNumber = form.cleaned_data['moldNumber']
-            redirect_url = '/production_and_mold_history/mold_report/%s' % (moldNumber)
-            form.save()
+
+            newForm = MoldHistory(
+                inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+                moldNumber=Mold.objects.get(mold_number=moldNo),
+                descEvent=form.cleaned_data['descEvent'],
+                pm=form.cleaned_data['pm'],
+                repair=form.cleaned_data['repair'],
+                hours_worked=form.cleaned_data['hours_worked'],
+            )
+            newForm.save()
+
+        redirect_url = '/production_and_mold_history/mold_report/%s' % (moldNo)
             # redirect to a new URL:
         return HttpResponseRedirect(redirect_url)
 
@@ -122,8 +137,9 @@ def view_mold_report_search(request):
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 def view_phl_report(request,jobNo):
-    start_up_info = startUpShot.objects.get(jobNumber=jobNo)
-    PHL = ProductionHistory.objects.filter(jobNumber = jobNo)
+    start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
+    PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo)
+    print PHL
     context_dict = {'active_job':start_up_info,'PHL':PHL}
     template = loader.get_template('phl/reports/phl.html')
     context = RequestContext(request,context_dict)
@@ -131,7 +147,7 @@ def view_phl_report(request,jobNo):
 
 def view_mold_report(request,moldNo):
     mold_info = Mold.objects.get(mold_number = moldNo)
-    MHL = MoldHistory.objects.filter(moldNumber = moldNo)
+    MHL = MoldHistory.objects.filter(moldNumber__mold_number=moldNo)
     context_dict = {'mold_info':mold_info,'MHL':MHL}
     template = loader.get_template('phl/reports/mhl.html')
     context = RequestContext(request,context_dict)

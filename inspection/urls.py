@@ -17,7 +17,10 @@ urlpatterns = [
     url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/$', views.view_detailJob, name='view_detailJob'),
     ### link to visual inspection form
     url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/visual/$', views.view_visualInspection, name='view_visualInspection'),
-    ### link to weight inspection form
-    url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/weight/$', views.view_partWeightInspection,
+    ### link to part weight inspection form
+    url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/part_weight/$', views.view_partWeightInspection,
         name='view_partWeightInspection'),
+    ### link to weight inspection form
+    url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/shot_weight/$', views.view_shotWeightInspection,
+        name='view_shotWeightInspection'),
 ]

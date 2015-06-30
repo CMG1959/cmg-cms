@@ -19,8 +19,13 @@
         {% if inspectionTypes.visual_inspection %}
         <li><a href="/inspection/{{ ep.jobNumber }}/visual">Click here to record visual inspection</a></li>
         {% endif %}
-        {% if inspectionTypes.weight_inspection %}
-            <li><a href="/inspection/{{ ep.jobNumber }}/weight">Click here to record weight inspection</a></li>
+        {% if inspectionTypes.part_weight_inspection %}
+            <li><a href="/inspection/{{ ep.jobNumber }}/part_weight">Click here to record part weight inspection</a>
+            </li>
+        {% endif %}
+        {% if inspectionTypes.shot_weight_inspection %}
+            <li><a href="/inspection/{{ ep.jobNumber }}/shot_weight">Click here to record shot weight inspection</a>
+            </li>
         {% endif %}
     </ul>
 {% endfor %}

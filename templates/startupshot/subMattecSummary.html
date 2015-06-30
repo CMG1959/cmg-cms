@@ -8,7 +8,9 @@
             <td>Job Number</td>
             <td>Mold Number</td>
             <td>Active Cavities</td>
-            <td>Cycle Time</td>
+            <td>MATTEC Cycle Time</td>
+            <td>TMM Cycle Time</td>
+            <td>TMM Part Weight</td>
         </tr>
         <tr>
             <td>
@@ -30,6 +32,8 @@
                 {{ MattecDict.activeCavities }}
             </td>
             <td> {{ MattecDict.cycleTime }}</td>
+            <td> {{ PartInfo.exp_cycle_time }}</td>
+            <td> {{ PartInfo.exp_part_weight }}</td>
         </tr>
     </table>
 {% endif %}

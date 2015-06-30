@@ -7,10 +7,10 @@
         </tr>
         <tr>
             <td>
-                {{ InspectionDates.date_created__min }}
+                {{ InspectionDates.dateCreated__min|date:"M d, Y" }}
             </td>
             <td>
-                {{ InspectionDates.date_created__max }}
+                {{ InspectionDates.dateCreated__max|date:"M d, Y" }}
             </td>
         </tr>
     </table>
@@ -65,6 +65,32 @@
             </td>
             <td>
                 {{ partWeightInspectionDict.partWeight__max }}
+            </td>
+        </tr>
+    </table>
+{% endif %}
+
+{% if shotWeightInspectionDict %}
+    <table class="table table-hover">
+        <caption style="text-align:center">Shot Weight Inspection Summary</caption>
+        <tr>
+            <td>Minimum</td>
+            <td>Average</td>
+            <td>Standard Deviation</td>
+            <td>Maximum</td>
+        </tr>
+        <tr>
+            <td>
+                {{ shotWeightInspectionDict.shotWeight__min }}
+            </td>
+            <td>
+                {{ shotWeightInspectionDict.shotWeight__avg }}
+            </td>
+            <td>
+                {{ shotWeightInspectionDict.shotWeight__stddev }}
+            </td>
+            <td>
+                {{ shotWeightInspectionDict.shotWeight__max }}
             </td>
         </tr>
     </table>

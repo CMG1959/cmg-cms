@@ -12,9 +12,9 @@
 {% bootstrap_javascript jquery=1 %}
 
 {% include "nav/nav.html" %}
-<p>Type in a part number to see what has already been created.</p>
+<p>Type in a job number view a production history log.</p>
 
-<form action="/startupshot/" method="post" class="form">
+<form method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}
     {% buttons %}

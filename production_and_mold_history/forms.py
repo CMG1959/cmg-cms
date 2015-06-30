@@ -10,9 +10,9 @@ class moldLookup(forms.Form):
 class phlForm(forms.ModelForm):
     class Meta:
         model = ProductionHistory
-        fields = ['inspectorName', 'jobNumber', 'descEvent' ]
+        fields = ['inspectorName', 'descEvent']
 
 class mhlForm(forms.ModelForm):
     class Meta:
         model = MoldHistory
-        fields = ['inspectorName','moldNumber','pm','repair','hours_worked','descEvent']
+        fields = ['inspectorName', 'pm', 'repair', 'hours_worked', 'descEvent']

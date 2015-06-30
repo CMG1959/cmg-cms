@@ -60,8 +60,8 @@ def viewCreatedStartUpShot(request, part_number):
 
 def createNewStartUpShot(request, jobNo):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
+    PartInfo = Part.objects.get(item_Number=MattecInfo.itemNo)
 
-    # print Part.objects.get(item_Number=MattecInfo.itemNo)
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -96,5 +96,7 @@ def createNewStartUpShot(request, jobNo):
 
         else:
             form = startupShotForm()
+            form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
 
-    return render(request, 'startupshot/createStartupShot.html', {'form': form, 'MattecDict': MattecInfo})
+    return render(request, 'startupshot/createStartupShot.html', {'form': form, 'MattecDict': MattecInfo,
+                                                                  'PartInfo': PartInfo})
