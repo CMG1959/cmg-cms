@@ -4,7 +4,7 @@ from django.db import models
 
 
 
-class Production(models.Model):
+class startUpShot(models.Model):
 	class Meta:
 		verbose_name='Startup Shot'
 		verbose_name_plural='Startup Shots'
@@ -13,11 +13,12 @@ class Production(models.Model):
 	jobNumber = models.CharField(max_length=15, unique=True, verbose_name="Job Number")
 	moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")
 
-	activeCavities = models.IntegerField( verbose_name="")
+	activeCavities = models.IntegerField(verbose_name="Active Cavities")
 	dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
 	machNo = models.ForeignKey('equipment.EquipmentInfo', verbose_name="Machine Number")
 	inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name")
 	shotWeight = models.DecimalField(max_digits=12,decimal_places=3, verbose_name="Shot Weight")
+	cycleTime = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Cycle Time (s)")
 
 	def __unicode__(self):
 		return self.jobNumber
@@ -34,6 +35,7 @@ class MattecProd(models.Model):
 	itemNo = models.CharField(max_length=15, verbose_name="Item Number")
 	moldNumber = models.CharField(max_length=15, verbose_name="Mold Number")
 	activeCavities = models.IntegerField(verbose_name="Active Cavities")
+	cycleTime = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Cycle Time (s)")
 
 	def __unicode__(self):
 		return '%s - %s' % (self.machNo,self.itemDesc)

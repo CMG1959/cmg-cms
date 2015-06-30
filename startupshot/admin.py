@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Production, MattecProd
+from .models import startUpShot, MattecProd
 
 
 class ProductionAdmin(admin.ModelAdmin):
@@ -17,5 +17,5 @@ class ProductionAdmin(admin.ModelAdmin):
               'inProduction']
 
 
-admin.site.register(Production)#, ProductionAdmin)
+admin.site.register(startUpShot)  # , ProductionAdmin)
 admin.site.register(MattecProd)

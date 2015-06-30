@@ -8,7 +8,7 @@ from part.models import Part
 from molds.models import Mold, PartIdentifier
 from equipment.models import EquipmentInfo
 from employee.models import employee
-from .models import Production, MattecProd
+from .models import startUpShot, MattecProd
 from .forms import startupShotLookup, startupShotForm
 
 def index(request):
@@ -49,24 +49,13 @@ def detailPart(request, part_number):
 
 def viewCreatedStartUpShot(request, part_number):
     item_id = Part.objects.get(item_Number=part_number)
-    different_shots = Production.objects.filter(item_id=item_id.id)
+    different_shots = startUpShot.objects.filter(item_id=item_id.id)
     template = loader.get_template('startupshot/view.html')
     context = RequestContext(request, {
         'item' : item_id,
         'different_shot_list': different_shots,
         })
     return HttpResponse(template.render(context))
-
-
-
-    #
-
-
-# item = models.ForeignKey('part.Part')
-# moldNumber = models.ForeignKey('molds.Mold')
-# headCavID = models.ForeignKey('molds.PartIdentifier')
-# machNo = models.ForeignKey('equipment.EquipmentInfo')
-
 
 
 def createNewStartUpShot(request, jobNo):
@@ -83,15 +72,16 @@ def createNewStartUpShot(request, jobNo):
             print form.cleaned_data['inspectorName'].pk
             # head, cavID = str(form.cleaned_data.get('headCavID')).replace(" ", "").split('-')
 
-            newForm = Production(item=Part.objects.get(item_Number=MattecInfo.itemNo),\
-                                 jobNumber=jobNo,\
+            newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
+                                  jobNumber=jobNo,\
                                  moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber),\
                                  # headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
                                  #                                      head_code=head, cavity_id=cavID), \
                                  inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),\
                                  shotWeight=form.cleaned_data['shotWeight'],\
-                                 activeCavities=MattecInfo.activeCavities,\
-                                 machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
+                                 activeCavities=MattecInfo.activeCavities, \
+                                  cycleTime=MattecInfo.cycleTime, \
+                                  machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
 
             newForm.save()
             # process the data in form.cleaned_data as required
@@ -100,7 +90,7 @@ def createNewStartUpShot(request, jobNo):
             return HttpResponseRedirect(redirect_url)
     # if a GET (or any other method) we'll create a blank form
     else:
-        if Production.objects.filter(jobNumber=jobNo).exists():
+        if startUpShot.objects.filter(jobNumber=jobNo).exists():
             redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo)
             return HttpResponseRedirect(redirect_url)
 

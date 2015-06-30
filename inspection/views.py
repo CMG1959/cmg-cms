@@ -7,7 +7,7 @@ from django.db.models import Avg, Max, Min, StdDev
 
 from models import partWeightInspection, visualInspection
 from part.models import PartInspection
-from startupshot.models import Production, MattecProd
+from startupshot.models import startUpShot, MattecProd
 from employee.models import organizations, employee
 from molds.models import PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
@@ -28,8 +28,7 @@ def view_index(request):
 
 
 def view_detailJob(request, jobNumber):
-
-    active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
 
     template = loader.get_template('inspection/detailJob.html')
@@ -108,7 +107,7 @@ def view_jobReport(request, jobNumber):
 
 
 def view_visualInspection(request, jobNumber):
-    active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = visualInspectionForm(request.POST)
@@ -125,7 +124,7 @@ def view_visualInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = visualInspectionForm(
-            initial={'jobID': Production.objects.get(jobNumber=jobNumber).id}
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id}
         )
         ### Filter the machine operators
         # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
@@ -140,7 +139,7 @@ def view_visualInspection(request, jobNumber):
 
 
 def view_weightInspection(request, jobNumber):
-    active_job = Production.objects.filter(jobNumber = jobNumber).select_related('item')
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = partWeightForm(request.POST)
@@ -157,7 +156,7 @@ def view_weightInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = partWeightForm(
-            initial={'jobID': Production.objects.get(jobNumber=jobNumber).id},
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         ### Filter the machine operators
         # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
@@ -178,7 +177,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=itemNumber)
 
-    jobList = Production.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from, date_to))
+    jobList = startUpShot.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from, date_to))
     jobList = jobList.values_list('jobNumber', flat=True)
     partDict = {}
     n = 0
@@ -186,7 +185,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         dictID = 'Job%i' % (n)
         n += 1
         partDict[dictID] = {}
-        partDict[dictID]['startupInfo'] = Production.objects.filter(jobNumber=eachJob, dateCreated__range=(
+        partDict[dictID]['startupInfo'] = startUpShot.objects.filter(jobNumber=eachJob, dateCreated__range=(
         date_from, date_to)).select_related('item')
 
         if inspectionTypes.visual_inspection:
@@ -228,7 +227,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     context_dic = {}
 
-    active_job = Production.objects.filter(jobNumber=jobNumber).select_related('item')
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
 

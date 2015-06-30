@@ -18,7 +18,7 @@ class partWeightInspection(models.Model):
 		verbose_name='Part Weight Inspection'
 		verbose_name_plural='Part Weight Inspections'
 
-	jobID = models.ForeignKey('startupshot.Production', verbose_name="Job ID", related_name='pwi_jobID')
+	jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='pwi_jobID')
 	machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",related_name='pwi_machineOperator')
 	inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",related_name='pwi_inspectorName')
 	dateCreated = models.DateTimeField(verbose_name="Date Created",auto_now_add=True)
@@ -32,7 +32,7 @@ class visualInspection(models.Model):
 		verbose_name='Visual Inspection'
 		verbose_name_plural='Visual Inspections'
 
-	jobID = models.ForeignKey('startupshot.Production',  verbose_name="Job ID",related_name='vi_jobID')
+	jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='vi_jobID')
 	machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",related_name='vi_machineOperator')
 	inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",related_name='vi_inspectorName')
 	dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")

@@ -8,6 +8,7 @@
             <td>Job Number</td>
             <td>Mold Number</td>
             <td>Active Cavities</td>
+            <td>Cycle Time</td>
         </tr>
         <tr>
             <td>
@@ -28,7 +29,9 @@
             <td>
                 {{ MattecDict.activeCavities }}
             </td>
+            <td> {{ MattecDict.cycleTime }}</td>
         </tr>
     </table>
 {% endif %}
 
+{# Need to add in expected cycle and expected part weight from TMM#}

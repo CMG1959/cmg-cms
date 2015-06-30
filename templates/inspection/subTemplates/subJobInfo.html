@@ -6,6 +6,8 @@
         <tr>
             <td>Item #</td>
             <td>Description</td>
+            <td>TMM Part Weight</td>
+            <td>TMM Cycle</td>
             <td>Job Number</td>
             <td>Mold ID</td>
             <td>Shot Weight</td>
@@ -21,6 +23,8 @@
                 <td>
                     {{ ep.item.item_Description }}
                 </td>
+                <td>{{ ep.item.exp_part_weight }}</td>
+                <td>{{ ep.item.exp_cycle_time }}</td>
                 <td>
                     {{ ep.jobNumber }}
                 </td>
@@ -39,6 +43,7 @@
                 <td>
                     {{ ep.machNo }}
                 </td>
+                <td> {{ ep.cycleTime }}</td>
             </tr>
         {% endfor %}
     </table>

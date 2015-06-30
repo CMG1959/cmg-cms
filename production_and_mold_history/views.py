@@ -3,7 +3,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 # Create your views here.
 from forms import phlLookup, phlForm, moldLookup, mhlForm
-from startupshot.models import MattecProd, Production
+from startupshot.models import MattecProd, startUpShot
 from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 
@@ -122,7 +122,7 @@ def view_mold_report_search(request):
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 def view_phl_report(request,jobNo):
-    start_up_info = Production.objects.get(jobNumber = jobNo)
+    start_up_info = startUpShot.objects.get(jobNumber=jobNo)
     PHL = ProductionHistory.objects.filter(jobNumber = jobNo)
     context_dict = {'active_job':start_up_info,'PHL':PHL}
     template = loader.get_template('phl/reports/phl.html')
