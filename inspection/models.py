@@ -27,6 +27,23 @@ class partWeightInspection(models.Model):
 	def __unicode__(self):
 		return '%s - %s' % (self.jobID,self.dateCreated)
 
+
+class shotWeightInspection(models.Model):
+	class Meta:
+		verbose_name = 'Shot Weight Inspection'
+		verbose_name_plural = 'Shot Weight Inspections'
+
+	jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='swi_jobID')
+	machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+										related_name='swi_machineOperator')
+	inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+									  related_name='swi_inspectorName')
+	dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
+	shotWeight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Shot Weight")
+
+	def __unicode__(self):
+		return '%s - %s' % (self.jobID, self.dateCreated)
+
 class visualInspection(models.Model):
 	class Meta:
 		verbose_name='Visual Inspection'

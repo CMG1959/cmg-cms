@@ -1,3 +1,21 @@
+{% if InspectionDates %}
+    <table class="table table-hover">
+        <caption style="text-align:center">Date Range Summary</caption>
+        <tr>
+            <td>Job Started</td>
+            <td>Job Ended</td>
+        </tr>
+        <tr>
+            <td>
+                {{ InspectionDates.date_created__min }}
+            </td>
+            <td>
+                {{ InspectionDates.date_created__max }}
+            </td>
+        </tr>
+    </table>
+{% endif %}
+
 {% if visualInspectionDict %}
     <table class="table table-hover">
         <caption style="text-align:center">Visual Inspection Summary</caption>

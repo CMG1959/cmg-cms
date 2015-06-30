@@ -5,12 +5,12 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
 
-from models import partWeightInspection, visualInspection
+from models import partWeightInspection, visualInspection, shotWeightInspection
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
 from employee.models import organizations, employee
 from molds.models import PartIdentifier
-from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch
+from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm
 
 import datetime
 from django.utils import timezone
@@ -126,19 +126,18 @@ def view_visualInspection(request, jobNumber):
         form = visualInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id}
         )
+        form = presetStandardFields(form)
         ### Filter the machine operators
-        # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
-        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
         ### Filter the QA ladies
-        # QA = cimc_organizations.objects.get(org_name='QA')
-        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
 
     return render(request, 'inspection/forms/visualInspection.html', {'form': form, 'active_job': active_job})
 
 
-def view_weightInspection(request, jobNumber):
+def view_partWeightInspection(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -158,18 +157,45 @@ def view_weightInspection(request, jobNumber):
         form = partWeightForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
+        form = presetStandardFields(form)
         ### Filter the machine operators
-        # machOp = cimc_organizations.objects.get(org_name='Machine Operator')
-        form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
         ### Filter the QA ladies
-        # QA = cimc_organizations.objects.get(org_name='QA')
-        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
-        ### lets see if we can change weight
-        form.fields["partWeight"].min_value = 9
 
-    return render(request, 'inspection/forms/weightInspection.html', {'form': form, 'active_job': active_job})
+    return render(request, 'inspection/forms/partWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+def view_shotWeightInspection(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = shotWeightForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = shotWeightForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
 
 def createItemReportDict(itemNumber, date_from=None, date_to=None):
@@ -191,6 +217,9 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         if inspectionTypes.visual_inspection:
             temp_obj = visualInspection.objects.filter(jobID__jobNumber=eachJob,
                                                        dateCreated__range=(date_from, date_to))
+            partDict[dictID]['InspectionDates'] = {}
+            partDict[dictID]['InspectionDates'] = temp_obj.aggregate(Min('dateCreated'), Max('dateCreated'))
+
             partDict[dictID]['visualInspectionDict'] = {}
             ### Count number of passed inspections
             partDict[dictID]['visualInspectionDict']['numPass'] = temp_obj.filter(inspectionResult=1).count()
@@ -210,7 +239,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             else:
                 partDict[dictID]['visualInspectionDict']['passPerc'] = 0
 
-        if inspectionTypes.weight_inspection:
+        if inspectionTypes.part_weight_inspection:
             temp_obj = partWeightInspection.objects.filter(jobID__jobNumber=eachJob,
                                                            dateCreated__range=(date_from, date_to))
             partDict[dictID]['partWeightInspection'] = temp_obj
@@ -219,6 +248,16 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                                               Max('partWeight'),
                                                                               Min('partWeight'),
                                                                               StdDev('partWeight'))
+        if inspectionTypes.shot_weight_inspection:
+            partDict[dictID]['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=eachJob,
+                                                                                           dateCreated__range=(
+                                                                                               date_from, date_to))
+            partDict[dictID]['shotWeightInspectionDict'] = {}
+            partDict[dictID]['shotWeightInspectionDict'] = partDict[dictID]['shotWeightInspection'].aggregate(
+                Avg('partWeight'),
+                Max('partWeight'),
+                Min('partWeight'),
+                StdDev('partWeight'))
     return partDict
 
 
@@ -238,6 +277,9 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     if inspectionTypes.visual_inspection:
         context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
                                                                           dateCreated__range=(date_from, date_to))
+        context_dic['InspectionDates'] = {}
+        context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
+                                                                                   Max('dateCreated'))
         ### Initialize dictionary for summary stats
         context_dic['visualInspectionDict'] = {}
         ### Count number of passed inspections
@@ -258,7 +300,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         else:
             context_dic['visualInspectionDict']['passPerc'] = 0
 
-    if inspectionTypes.weight_inspection:
+    if inspectionTypes.part_weight_inspection:
         context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
                                                                                   dateCreated__range=(
                                                                                   date_from, date_to))
@@ -267,6 +309,18 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                                                                 Max('partWeight'),
                                                                                                 Min('partWeight'),
                                                                                                 StdDev('partWeight'))
+
+    if inspectionTypes.shot_weight_inspection:
+        context_dic['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
+                                                                                  dateCreated__range=(
+                                                                                      date_from, date_to))
+        context_dic['shotWeightInspectionDict'] = {}
+        context_dic['shotWeightInspectionDict'] = context_dic['shotWeightInspection'].aggregate(Avg('partWeight'),
+                                                                                                Max('partWeight'),
+                                                                                                Min('partWeight'),
+                                                                                                StdDev('partWeight'))
+
+
 
     return context_dic
 
@@ -281,3 +335,13 @@ def createDateRange(date_from=None, date_to=None):
         date_to = timezone.make_aware(date_to, timezone.get_current_timezone())
 
     return (date_from, date_to)
+
+
+def presetStandardFields(my_form):
+    # this will preset machine and qa fields
+    ### Filter the machine operators
+    my_form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+    ### Filter the QA ladies
+    my_form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return my_form
