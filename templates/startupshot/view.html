@@ -13,42 +13,44 @@
 {% include "nav/nav.html" %}
 
 
-<div class="panel panel-default">
-    <div class="modal-body">
+<div class="col-sm-10 bootcards-cards">
+    <div class="panel panel-default bootcards-richtext">
+        <div class="panel-body">
 
-{% if different_shot_list %}
-    <div>
-        <table class="table table-hover">
-            {% if item %}
-                <caption style="text-align:center">Start Up Shot Log for Part: {{item.item_Number}} - {{item.item_Description}}</caption>
-            {%  endif %}
-            <thead>
-            <tr>
+            {% if different_shot_list %}
+                <div>
+                    <table class="table table-hover">
+                        {% if item %}
+                            <caption style="text-align:center">Start Up Shot Log for Part: {{ item.item_Number }}
+                                - {{ item.item_Description }}</caption>
+                        {% endif %}
+                        <thead>
+                        <tr>
                             <th>Job Number</th>
-                <th>Date Created</th>
-                <th>Inspector Name</th>
-                <th>Shot Weight</th>
-                <th>Active Cavities</th>
-                <th>Average Part Weight</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for eachJob in different_shot_list %}
-                <tr>
-                    <td>{{ eachJob.jobNumber }}</td>
-                    <td>{{ eachJob.dateCreated }}</td>
-                    <td>{{ eachJob.inspectorName }}</td>
-                    <td>{{ eachJob.shotWeight }}</td>
-                    <td>{{ eachJob.activeCavities }}</td>
-                    <td>{{ eachJob.shotWeight|div:eachJob.activeCavities }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </div>
-{% else %}
-    <p>No jobs recorded.</p>
-{% endif %}
-
+                            <th>Date Created</th>
+                            <th>Inspector Name</th>
+                            <th>Shot Weight</th>
+                            <th>Active Cavities</th>
+                            <th>Average Part Weight</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for eachJob in different_shot_list %}
+                            <tr>
+                                <td>{{ eachJob.jobNumber }}</td>
+                                <td>{{ eachJob.dateCreated }}</td>
+                                <td>{{ eachJob.inspectorName }}</td>
+                                <td>{{ eachJob.shotWeight }}</td>
+                                <td>{{ eachJob.activeCavities }}</td>
+                                <td>{{ eachJob.shotWeight|div:eachJob.activeCavities }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                </div>
+            {% else %}
+                <p>No jobs recorded.</p>
+            {% endif %}
+        </div>
     </div>
 </div>
 

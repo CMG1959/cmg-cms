@@ -7,22 +7,25 @@
 
 </head>
 
+{% load staticfiles %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery=1 %}
+
 {% include "nav/nav.html" %}
 
 <body>
-<div style="text-align:center">
-    {%  load staticfiles %}
-    <img src="{%  static "images/CMGlogo-white-BG.jpg"%}" style="height:200px">
+<div class="col-sm-10 bootcards-cards">
+    <div class="panel panel-default">
+        <div style="text-align:center">
+            <img src="{% static "images/CMGlogo-white-BG.jpg" %}" style="height:200px">
 
+            <h1>Welcome to the CMG Intranet</h1>
 
-    <h1>Welcome to the CMG Intranet</h1>
-
-    <p> Still under construction.</p>
+            <p> Still under construction.</p>
+        </div>
+    </div>
 </div>
-
 
 </body>
 </html>

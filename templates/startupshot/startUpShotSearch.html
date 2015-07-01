@@ -8,28 +8,33 @@
 <body>
 
 {% load staticfiles %}
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery=1 %}
+{#{% load bootstrap3 %}#}
+{#{% bootstrap_css %}#}
+{#{% bootstrap_javascript jquery=1 %}#}
 
 {% include "nav/nav.html" %}
 
-
+<div class="col-sm-10 bootcards-cards">
 <div class="panel panel-default">
-    <div class="modal-body">
+    <div class="panel-body">
     <span class="help-block"> Type in a part number to see what has already been created</span>
-    <form action="/startupshot/" method="post" class="form">
+
+        <form action="/startupshot/" method="post" class="form-horizontal">
     {% csrf_token %}
-    {% bootstrap_form form layout='horizontal' %}
-    {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "star" %} Submit
-        </button>
-    {% endbuttons %}
+            {{ form }}
+            <input type="submit" value="Submit"/>
     </form>
     </div>
+</div>
 </div>
 
 
 </body>
 </html>
+
+{#    {% bootstrap_form form layout='horizontal' %}#}
+{#    {% buttons %}#}
+{#        <button type="submit" class="btn btn-primary">#}
+{#            {% bootstrap_icon "star" %} Submit#}
+{#        </button>#}
+{#    {% endbuttons %}#}
