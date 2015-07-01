@@ -1,97 +1,134 @@
-{% if InspectionDates %}
-    <table class="table table-hover">
-        <caption style="text-align:center">Date Range Summary</caption>
-        <tr>
-            <td>Job Started</td>
-            <td>Job Ended</td>
-        </tr>
-        <tr>
-            <td>
-                {{ InspectionDates.dateCreated__min|date:"M d, Y" }}
-            </td>
-            <td>
-                {{ InspectionDates.dateCreated__max|date:"M d, Y" }}
-            </td>
-        </tr>
-    </table>
-{% endif %}
+<div class="panel panel-default">
+    <div class="modal-body">
+        {% if InspectionDates %}
+            <table class="table table-hover">
+                <caption style="text-align:center">Date Range Summary</caption>
+                <thead>
+                <tr>
+                    <th>Job Started</th>
+                    <th>Job Ended</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ InspectionDates.dateCreated__min|date:"M d, Y" }}
+                    </td>
+                    <td>
+                        {{ InspectionDates.dateCreated__max|date:"M d, Y" }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
 
-{% if visualInspectionDict %}
-    <table class="table table-hover">
-        <caption style="text-align:center">Visual Inspection Summary</caption>
-        <tr>
-            <td>Total Visual Inspections</td>
-            <td>Pass</td>
-            <td>Fail</td>
-            <td>Pass Percent</td>
-        </tr>
-        <tr>
-            <td>
-                {{ visualInspectionDict.totalInspections }}
-            </td>
-            <td>
-                {{ visualInspectionDict.numPass }}
-            </td>
-            <td>
-                {{ visualInspectionDict.numFail }}
-            </td>
-            <td>
-                {{ visualInspectionDict.passPerc }} %
-            </td>
-        </tr>
-    </table>
-{% endif %}
+<div class="panel panel-default">
+    <div class="modal-body">
+        {% if visualInspectionDict %}
+            <table class="table table-hover">
+                <caption style="text-align:center">Visual Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Total Visual Inspections</th>
+                    <th>Pass</th>
+                    <th>Fail</th>
+                    <th>Pass Percent</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ visualInspectionDict.totalInspections }}
+                    </td>
+                    <td>
+                        {{ visualInspectionDict.numPass }}
+                    </td>
+                    <td>
+                        {{ visualInspectionDict.numFail }}
+                    </td>
+                    <td>
+                        {{ visualInspectionDict.passPerc }} %
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="modal-body">
+        {% if partWeightInspectionDict %}
+            <table class="table table-hover">
+                <caption style="text-align:center">Part Weight Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Minimum</th>
+                    <th>Average</th>
+                    <th>Standard Deviation</th>
+                    <th>Maximum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ partWeightInspectionDict.partWeight__min }}
+                    </td>
+                    <td>
+                        {{ partWeightInspectionDict.partWeight__avg }}
+                    </td>
+                    <td>
+                        {{ partWeightInspectionDict.partWeight__stddev }}
+                    </td>
+                    <td>
+                        {{ partWeightInspectionDict.partWeight__max }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="modal-body">
+        {% if shotWeightInspectionDict %}
+            <table class="table table-hover">
+                <caption style="text-align:center">Shot Weight Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Minimum</th>
+                    <th>Average</th>
+                    <th>Standard Deviation</th>
+                    <th>Maximum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ shotWeightInspectionDict.shotWeight__min }}
+                    </td>
+                    <td>
+                        {{ shotWeightInspectionDict.shotWeight__avg }}
+                    </td>
+                    <td>
+                        {{ shotWeightInspectionDict.shotWeight__stddev }}
+                    </td>
+                    <td>
+                        {{ shotWeightInspectionDict.shotWeight__max }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+</div>
 
 
 
-{% if partWeightInspectionDict %}
-    <table class="table table-hover">
-        <caption style="text-align:center">Part Weight Inspection Summary</caption>
-        <tr>
-            <td>Minimum</td>
-            <td>Average</td>
-            <td>Standard Deviation</td>
-            <td>Maximum</td>
-        </tr>
-        <tr>
-            <td>
-                {{ partWeightInspectionDict.partWeight__min }}
-            </td>
-            <td>
-                {{ partWeightInspectionDict.partWeight__avg }}
-            </td>
-            <td>
-                {{ partWeightInspectionDict.partWeight__stddev }}
-            </td>
-            <td>
-                {{ partWeightInspectionDict.partWeight__max }}
-            </td>
-        </tr>
-    </table>
-{% endif %}
 
-{% if shotWeightInspectionDict %}
-    <table class="table table-hover">
-        <caption style="text-align:center">Shot Weight Inspection Summary</caption>
-        <tr>
-            <td>Minimum</td>
-            <td>Average</td>
-            <td>Standard Deviation</td>
-            <td>Maximum</td>
-        </tr>
-        <tr>
-            <td>
-                {{ shotWeightInspectionDict.shotWeight__min }}
-            </td>
-            <td>
-                {{ shotWeightInspectionDict.shotWeight__avg }}
-            </td>
-            <td>
-                {{ shotWeightInspectionDict.shotWeight__stddev }}
-            </td>
-            <td>
-                {{ shotWeightInspectionDict.shotWeight__max }}
-            </td>
-        </tr>
-    </table>
-{% endif %}

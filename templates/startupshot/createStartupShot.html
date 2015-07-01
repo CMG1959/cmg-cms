@@ -14,7 +14,8 @@
 
 {% include "startupshot/subMattecSummary.html" %}
 
-
+<div class="panel panel-default">
+    <div class="modal-body">
 <form method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}
@@ -24,6 +25,10 @@
         </button>
     {% endbuttons %}
 </form>
+
+    </div>
+</div>
+
 
 
 </body>

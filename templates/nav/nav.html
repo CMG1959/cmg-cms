@@ -1,7 +1,52 @@
-{% load sitetree %}
+{% load staticfiles %}
 
-<div class="navbar">
-    <div class="navbar-inner">
-        {% sitetree_menu from "maintree" include "trunk,topmenu" template "sitetree/menu_bootstrap.html" %}
+
+<link href="{% static "bootstrap/bootstrap.min.css"%}" rel="stylesheet">
+<link href="{% static "simple-sidebar/simple-sidebar.css"%}" rel="stylesheet">
+
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="/">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="/startupshot/">Startup Shot</a>
+            </li>
+            <li>
+                <a href="/startupshot/view">Startup Shot Report</a>
+            </li>
+            <li>
+                <a href="/inspection/">Inspection</a>
+            </li>
+            <li>
+                <a href="/inspection/itemReport/">Part Report</a>
+            </li>
+            <li>
+                <a href="/inspection/jobReport/">Job Report</a>
+            </li>
+            <li>
+                <a href="/production_and_mold_history/">PHL</a>
+            </li>
+            <li>
+                <a href="/equipment/">Equipment</a>
+            </li>
+        </ul>
     </div>
-</div>
+
+    <script src="{% static "jquery/jquery.js"%}"></script>
+
+    <script src="{% static "bootstrap/bootstrap.min.js"%}"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>

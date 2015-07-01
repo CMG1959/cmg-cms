@@ -11,6 +11,10 @@
 {% bootstrap_javascript jquery=1 %}
 {% include "nav/nav.html" %}
 
+
+<div class="panel panel-default">
+    <div class="modal-body">
+
 <p>Welcome to the CIMC Inspection Page! The following machines are active:</p>
 
 <ul>
@@ -18,6 +22,10 @@
     <li><a href="/inspection/{{ each_part.jobNumber }}">{{ each_part.machNo }} - {{ each_part.itemDesc }}</a></li>
 {% endfor %}
 </ul>
+
+    </div>
+</div>
+
 
 
 

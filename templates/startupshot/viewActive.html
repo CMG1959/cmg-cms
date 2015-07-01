@@ -13,14 +13,21 @@
 
 {% include "nav/nav.html" %}
 
-<p>Welcome to the CIMC Startup Shot Page! The following machines are active:</p>
 
-{% if activeInMattec %}
-    <ul>
-        {% for eachActive in activeInMattec %}
-            <li><a href="/startupshot/create/{{ eachActive.jobNumber }}/">{{ eachActive.machNo }}
-                - {{ eachActive.itemDesc }} </a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+
+
+<div class="panel panel-default">
+    <div class="modal-body">
+    <p>Welcome to the CIMC Startup Shot Page! The following machines are active:</p>
+        {% if activeInMattec %}
+            <ul>
+                {% for eachActive in activeInMattec %}
+                    <li><a href="/startupshot/create/{{ eachActive.jobNumber }}/">{{ eachActive.machNo }}
+                    - {{ eachActive.itemDesc }} </a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+
+
