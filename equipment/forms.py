@@ -7,7 +7,9 @@ class equipmentPMForm(forms.ModelForm):
         model = EquipmentPM
         fields = ['employee', 'equipment_ID', 'pm_frequency', 'logged_pm']
 
+
 class equipmentRepairForm(forms.ModelForm):
     class Meta:
         model = EquipmentRepair
-        fields = ['employee','equipment_ID','po_num','part_supplier','part_name','part_number','part_cost','part_quantity']
+        fields = ['employee', 'equipment_ID', 'po_num', 'part_supplier', 'part_name', 'part_number', 'part_cost',
+                  'part_quantity']

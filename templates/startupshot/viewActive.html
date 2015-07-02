@@ -17,16 +17,16 @@
 <div class="col-sm-10 bootcards-cards">
     <div class="panel panel-default bootcards-richtext">
         <div class="panel-body">
-    <p>Welcome to the CIMC Startup Shot Page! The following machines are active:</p>
-        {% if activeInMattec %}
-            <ul>
-                {% for eachActive in activeInMattec %}
-                    <li><a href="/startupshot/create/{{ eachActive.jobNumber }}/">{{ eachActive.machNo }}
-                    - {{ eachActive.itemDesc }} </a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
+            <p>Welcome to the CIMC Startup Shot Page! The following machines are active:</p>
+            {% if activeInMattec %}
+                <ul>
+                    {% for eachActive in activeInMattec %}
+                        <li><a href="/startupshot/create/{{ eachActive.jobNumber }}/">{{ eachActive.machNo }}
+                            - {{ eachActive.itemDesc }} </a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
     </div>
 </div>
 

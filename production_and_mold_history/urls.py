@@ -22,4 +22,3 @@ urlpatterns = [
     ### link to view specific mold report
     url(r'^mold_report/(?P<moldNo>[0-9]+(-[0-9]+)+)$', views.view_mold_report, name='view_mold_report'),
 ]
-

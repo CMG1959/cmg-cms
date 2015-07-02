@@ -6,9 +6,7 @@
 </head>
 <body>
 
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery=1 %}
+{% load staticfiles %}
 {% include "nav/nav.html" %}
 
 <div class="col-sm-10 bootcards-cards">
@@ -17,17 +15,9 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <div class="form-group">
-                <form method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form layout='horizontal' %}
-                    {% buttons %}
-                        <button type="submit" class="btn btn-primary">
-                            {% bootstrap_icon "star" %} Submit
-                        </button>
-                    {% endbuttons %}
-                </form>
-            </div>
+{#                    <div class="panel-body">#}
+            {% include "project_form_templates/gen_form.html" %}
+{#        </div>#}
         </div>
     </div>
 

@@ -1,19 +1,18 @@
-
 # Create your views here.
+import datetime
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
-
 from models import partWeightInspection, visualInspection, shotWeightInspection
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
-from employee.models import organizations, employee
+from employee.models import employee
 from molds.models import PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm
-
-import datetime
 from django.utils import timezone
+
 
 def view_index(request):
     activeInMattec = MattecProd.objects.all()
@@ -23,7 +22,7 @@ def view_index(request):
     template = loader.get_template('inspection/index.html')
     context = RequestContext(request, {
         'active_parts': activeInMattec,
-        })
+    })
     return HttpResponse(template.render(context))
 
 
@@ -34,9 +33,9 @@ def view_detailJob(request, jobNumber):
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
-        'active_job' : active_job,
+        'active_job': active_job,
         'inspectionTypes': inspectionTypes
-        })
+    })
     return HttpResponse(template.render(context))
 
 
@@ -99,7 +98,6 @@ def view_itemReport(request, itemNumber):
     return HttpResponse(template.render(context))
 
 
-
 def view_jobReport(request, jobNumber):
     context_dic = createJobReportDict(jobNumber)
     template = loader.get_template('inspection/reports/jobReport.html')
@@ -133,7 +131,8 @@ def view_visualInspection(request, jobNumber):
         ### Filter the QA ladies
         # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
         ### Filter the cavity and molds
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
+        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
+            mold_number__mold_number=active_job[0].moldNumber)
 
     return render(request, 'inspection/forms/visualInspection.html', {'form': form, 'active_job': active_job})
 
@@ -165,7 +164,8 @@ def view_partWeightInspection(request, jobNumber):
         # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
 
         ### Filter the cavity and molds
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(mold_number__mold_number=active_job[0].moldNumber)
+        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
+            mold_number__mold_number=active_job[0].moldNumber)
 
     return render(request, 'inspection/forms/partWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -213,7 +213,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         n += 1
         partDict[dictID] = {}
         partDict[dictID]['startupInfo'] = startUpShot.objects.filter(jobNumber=eachJob, dateCreated__range=(
-        date_from, date_to)).select_related('item')
+            date_from, date_to)).select_related('item')
 
         if inspectionTypes.visual_inspection:
             temp_obj = visualInspection.objects.filter(jobID__jobNumber=eachJob,
@@ -305,7 +305,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     if inspectionTypes.part_weight_inspection:
         context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
                                                                                   dateCreated__range=(
-                                                                                  date_from, date_to))
+                                                                                      date_from, date_to))
         context_dic['partWeightInspectionDict'] = {}
         context_dic['partWeightInspectionDict'] = context_dic['partWeightInspection'].aggregate(Avg('partWeight'),
                                                                                                 Max('partWeight'),
@@ -321,8 +321,6 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                                                                 Max('shotWeight'),
                                                                                                 Min('shotWeight'),
                                                                                                 StdDev('shotWeight'))
-
-
 
     return context_dic
 

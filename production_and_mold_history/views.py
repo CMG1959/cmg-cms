@@ -8,8 +8,10 @@ from employee.models import employee
 from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 
+
 def view_index(request):
     return render(request, 'phl/index.html')
+
 
 def view_phl_form(request):
     activeInMattec = MattecProd.objects.all()
@@ -18,6 +20,7 @@ def view_phl_form(request):
         'activeInMattec': activeInMattec,
     })
     return HttpResponse(template.render(context))
+
 
 def view_mold_form(request):
     # if this is a POST request we need to process the form data
@@ -37,6 +40,7 @@ def view_mold_form(request):
         form = moldLookup()
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
+
 def view_specific_phl_form(request, jobNo):
     activeInMattec = MattecProd.objects.get(jobNumber=jobNo)
     if request.method == 'POST':
@@ -53,7 +57,7 @@ def view_specific_phl_form(request, jobNo):
             newForm.save()
 
         redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
-            # redirect to a new URL:
+        # redirect to a new URL:
         return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
@@ -61,12 +65,13 @@ def view_specific_phl_form(request, jobNo):
         form = phlForm()
 
     context = RequestContext(request, {
-        'form':form,
+        'form': form,
         'activeInMattec': activeInMattec,
     })
-    return render(request,'phl/forms/phlForm.html',context)
+    return render(request, 'phl/forms/phlForm.html', context)
 
-def view_specific_mold_form(request,moldNo):
+
+def view_specific_mold_form(request, moldNo):
     specific_mold = Mold.objects.get(mold_number=moldNo)
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -86,7 +91,7 @@ def view_specific_mold_form(request,moldNo):
             newForm.save()
 
         redirect_url = '/production_and_mold_history/mold_report/%s' % (moldNo)
-            # redirect to a new URL:
+        # redirect to a new URL:
         return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
@@ -94,10 +99,10 @@ def view_specific_mold_form(request,moldNo):
         form = mhlForm()
 
     context = RequestContext(request, {
-        'form':form,
+        'form': form,
         'specific_mold': specific_mold,
     })
-    return render(request,'phl/forms/moldForm.html',context)
+    return render(request, 'phl/forms/moldForm.html', context)
 
 
 def view_phl_report_search(request):
@@ -118,6 +123,7 @@ def view_phl_report_search(request):
         form = phlLookup()
     return render(request, 'phl/forms/phlLookup.html', {'form': form})
 
+
 def view_mold_report_search(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -136,23 +142,23 @@ def view_mold_report_search(request):
         form = moldLookup()
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
-def view_phl_report(request,jobNo):
+
+def view_phl_report(request, jobNo):
     start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
     PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo)
     print PHL
-    context_dict = {'active_job':start_up_info,'PHL':PHL}
+    context_dict = {'active_job': start_up_info, 'PHL': PHL}
     template = loader.get_template('phl/reports/phl.html')
-    context = RequestContext(request,context_dict)
+    context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
 
-def view_mold_report(request,moldNo):
-    mold_info = Mold.objects.get(mold_number = moldNo)
+
+def view_mold_report(request, moldNo):
+    mold_info = Mold.objects.get(mold_number=moldNo)
     MHL = MoldHistory.objects.filter(moldNumber__mold_number=moldNo)
-    context_dict = {'mold_info':mold_info,'MHL':MHL}
+    context_dict = {'mold_info': mold_info, 'MHL': MHL}
     template = loader.get_template('phl/reports/mhl.html')
-    context = RequestContext(request,context_dict)
+    context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
-
-
 
 # def view_mold_report(request,moldNo):

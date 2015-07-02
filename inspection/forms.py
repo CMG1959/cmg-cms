@@ -1,6 +1,7 @@
 from django import forms
 from inspection.models import partWeightInspection, visualInspection, shotWeightInspection
 
+
 class jobReportSearch(forms.Form):
     job_Number = forms.CharField(label="Job Number:", max_length=15)
     date_from = forms.DateField(label="Date From:", required=False)
@@ -16,13 +17,13 @@ class itemReportSearch(forms.Form):
 class partWeightForm(forms.ModelForm):
     class Meta:
         model = partWeightInspection
-        fields = ['jobID','machineOperator','inspectorName','headCavID', 'partWeight']
+        fields = ['jobID', 'machineOperator', 'inspectorName', 'headCavID', 'partWeight']
 
 
 class visualInspectionForm(forms.ModelForm):
     class Meta:
         model = visualInspection
-        fields = ['jobID','machineOperator','inspectorName','headCavID', 'inspectionResult', 'defectType']
+        fields = ['jobID', 'machineOperator', 'inspectorName', 'headCavID', 'inspectionResult', 'defectType']
 
 
 class shotWeightForm(forms.ModelForm):

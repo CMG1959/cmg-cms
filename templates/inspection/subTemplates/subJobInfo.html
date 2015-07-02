@@ -1,45 +1,44 @@
 {% load mathfilters %}
 
-<div class="panel panel-default">
-    <div class="modal-body">
+<div class="panel-body">
 
-        {% if active_job %}
-            <table class="table table-hover">
-                <caption style="text-align:center">Start Up Shot Information</caption>
-                <thead>
+    {% if active_job %}
+        <table class="table table-hover">
+            <caption style="text-align:center">Start Up Shot Information</caption>
+            <thead>
+            <tr>
+                <th>Item #</th>
+                <th>Description</th>
+                <th>TMM Part Weight</th>
+                <th>TMM Cycle</th>
+                <th>Job Number</th>
+                <th>Mold ID</th>
+                <th>Shot Weight</th>
+                <th>Active Cavitation</th>
+                <th>Average Part Weight</th>
+                <th>Machine Number</th>
+                <th>Cycle Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ep in active_job %}
                 <tr>
-                    <th>Item #</th>
-                    <th>Description</th>
-                    <th>TMM Part Weight</th>
-                    <th>TMM Cycle</th>
-                    <th>Job Number</th>
-                    <th>Mold ID</th>
-                    <th>Shot Weight</th>
-                    <th>Active Cavitation</th>
-                    <th>Average Part Weight</th>
-                    <th>Machine Number</th>
-                    <th>Cycle Time</th>
+                    <td>{{ ep.item.item_Number }}</td>
+                    <td>{{ ep.item.item_Description }}</td>
+                    <td>{{ ep.item.exp_part_weight }}</td>
+                    <td>{{ ep.item.exp_cycle_time }}</td>
+                    <td>{{ ep.jobNumber }} </td>
+                    <td>{{ ep.moldNumber }}</td>
+                    <td>{{ ep.shotWeight }}</td>
+                    <td>{{ ep.activeCavities }}</td>
+                    <td>{{ ep.shotWeight|div:ep.activeCavities }}</td>
+                    <td>{{ ep.machNo }}</td>
+                    <td>{{ ep.cycleTime }}</td>
                 </tr>
-                </thead>
-                <tbody>
-                {%  for ep in active_job %}
-                    <tr>
-                        <td>{{ ep.item.item_Number }}</td>
-                        <td>{{ ep.item.item_Description }}</td>
-                        <td>{{ ep.item.exp_part_weight }}</td>
-                        <td>{{ ep.item.exp_cycle_time }}</td>
-                        <td>{{ ep.jobNumber }} </td>
-                        <td>{{ ep.moldNumber }}</td>
-                        <td>{{ ep.shotWeight }}</td>
-                        <td>{{ ep.activeCavities }}</td>
-                        <td>{{ ep.shotWeight|div:ep.activeCavities }}</td>
-                        <td>{{ ep.machNo }}</td>
-                        <td>{{ ep.cycleTime }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
-    </div>
 </div>
+

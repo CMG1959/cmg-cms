@@ -6,23 +6,17 @@
 </head>
 <body>
 
-
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery=1 %}
-
 {% include "nav/nav.html" %}
-<p>Type in a job number view a production history log.</p>
 
-<form method="post" class="form">
-    {% csrf_token %}
-    {% bootstrap_form form layout='horizontal' %}
-    {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "star" %} Submit
-        </button>
-    {% endbuttons %}
-</form>
+
+
+
+<div class="col-sm-10 bootcards-cards">
+    <p>Type in a job number view a production history log.</p>
+    <div class="panel panel-default bootcards-richtext">
+            {% include "project_form_templates/gen_form.html" %}
+    </div>
+</div>
 
 
 </body>

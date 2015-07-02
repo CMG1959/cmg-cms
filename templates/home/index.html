@@ -1,16 +1,14 @@
-<html lang="en">
-
-
-<head>
-    <title>My Home Page</title>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" media="screen" />
-
-</head>
-
 {% load staticfiles %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery=1 %}
+
+<html lang="en">
+<head>
+    <title>My Home Page</title>
+    {#    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" media="screen" />#}
+</head>
+
 
 {% include "nav/nav.html" %}
 

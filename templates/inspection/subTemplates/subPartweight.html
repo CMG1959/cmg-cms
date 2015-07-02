@@ -1,42 +1,41 @@
 
 
-<div class="panel panel-default">
-    <div class="modal-body">
-        {% if partWeightInspection %}
-            <table class="table table-hover">
-                <caption style="text-align:center">Part Weight Log</caption>
-                <thead>
-                <tr>
-                    <th>Date Created</th>
-                    <th>Machine Operator</th>
-                    <th>Inspector Name</th>
-                    <th>Cavity ID</th>
-                    <th>Part Weight</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for ep in partWeightInspection %}
-                    <tr>
-                        <td>
-                            {{ ep.dateCreated }}
-                        </td>
-                        <td>
-                            {{ ep.machineOperator }}
-                        </td>
-                        <td>
-                            {{ ep.inspectorName }}
-                        </td>
-                        <td>
-                            {{ ep.headCavID }}
-                        </td>
-                        <td>
-                            {{ ep.partWeight }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
+{% if partWeightInspection %}
+    <div class="panel-body">
+    <table class="table table-hover">
+        <caption style="text-align:center">Part Weight Log</caption>
+        <thead>
+        <tr>
+            <th>Date Created</th>
+            <th>Machine Operator</th>
+            <th>Inspector Name</th>
+            <th>Cavity ID</th>
+            <th>Part Weight</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ep in partWeightInspection %}
+            <tr>
+                <td>
+                    {{ ep.dateCreated }}
+                </td>
+                <td>
+                    {{ ep.machineOperator }}
+                </td>
+                <td>
+                    {{ ep.inspectorName }}
+                </td>
+                <td>
+                    {{ ep.headCavID }}
+                </td>
+                <td>
+                    {{ ep.partWeight }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
 
-            </table>
-        {% endif %}
-    </div>
+    </table>
+{% endif %}
 </div>
+

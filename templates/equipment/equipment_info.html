@@ -6,31 +6,34 @@
 </head>
 <body>
 
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery=1 %}
 {% include "nav/nav.html" %}
 
+    <div class="panel panel-default bootcards-richtext">
+        <div class="panel-body">
 
-{% include "equipment/subTemplates/equipInfo.html" %}
+            {% include "equipment/subTemplates/equipInfo.html" %}
 
 
-<ul>
-    {% if PM_info %}
-        {% for each_PM in PM_info %}
-            <li>
-                <a href="/equipment/{{ each_PM.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM.pm_frequency.pm_frequency }}">Record {{ each_PM.pm_frequency.pm_frequency }}
-                    PM</a></li>
-        {% endfor %}
-    {% endif %}
-    <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/Repair">Record Repair</a>
-    </li>
-    <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewRepair">View Repair
-        Log</a></li>
-    <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewPM">View PM Log</a>
-    </li>
-</ul>
-
+            <ul>
+                {% if PM_info %}
+                    {% for each_PM in PM_info %}
+                        <li>
+                            <a href="/equipment/{{ each_PM.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM.pm_frequency.pm_frequency }}">Record {{ each_PM.pm_frequency.pm_frequency }}
+                                PM</a></li>
+                    {% endfor %}
+                {% endif %}
+                <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/Repair">Record
+                    Repair</a>
+                </li>
+                <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewRepair">View
+                    Repair
+                    Log</a></li>
+                <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewPM">View PM
+                    Log</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 
 </body>
 </html>

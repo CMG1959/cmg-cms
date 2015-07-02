@@ -19,10 +19,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-	url(r'^$', 'home.views.index'),
-    url(r'^startupshot/', include('startupshot.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^inspection/', include('inspection.urls')),
-    url(r'^equipment/', include('equipment.urls')),
-    url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+                  url(r'^/?$', 'home.views.index'),
+                  url(r'^startupshot/', include('startupshot.urls')),
+                  url(r'^admin/', include(admin.site.urls)),
+                  url(r'^inspection/', include('inspection.urls')),
+                  url(r'^equipment/', include('equipment.urls')),
+                  url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

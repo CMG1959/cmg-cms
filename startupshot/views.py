@@ -5,11 +5,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from part.models import Part
-from molds.models import Mold, PartIdentifier
+from molds.models import Mold
 from equipment.models import EquipmentInfo
 from employee.models import employee
 from .models import startUpShot, MattecProd
 from .forms import startupShotLookup, startupShotForm
+
 
 def index(request):
     # template = loader.get_template('startupshot/startUpShotSearch.html')
@@ -44,7 +45,7 @@ def viewActive(request):
 
 def detailPart(request, part_number):
     currentPart = Part.objects.get(item_Number=part_number)
-    return HttpResponse("Part Detail: You're looking %s: %s" % (currentPart.item_Number,currentPart.item_Description))
+    return HttpResponse("Part Detail: You're looking %s: %s" % (currentPart.item_Number, currentPart.item_Description))
 
 
 def viewCreatedStartUpShot(request, part_number):
@@ -52,16 +53,15 @@ def viewCreatedStartUpShot(request, part_number):
     different_shots = startUpShot.objects.filter(item_id=item_id.id)
     template = loader.get_template('startupshot/view.html')
     context = RequestContext(request, {
-        'item' : item_id,
+        'item': item_id,
         'different_shot_list': different_shots,
-        })
+    })
     return HttpResponse(template.render(context))
 
 
 def createNewStartUpShot(request, jobNo):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
     PartInfo = Part.objects.get(item_Number=MattecInfo.itemNo)
-
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -73,13 +73,13 @@ def createNewStartUpShot(request, jobNo):
             # head, cavID = str(form.cleaned_data.get('headCavID')).replace(" ", "").split('-')
 
             newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
-                                  jobNumber=jobNo,\
-                                 moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber),\
-                                 # headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
-                                 #                                      head_code=head, cavity_id=cavID), \
-                                 inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),\
-                                 shotWeight=form.cleaned_data['shotWeight'],\
-                                 activeCavities=MattecInfo.activeCavities, \
+                                  jobNumber=jobNo, \
+                                  moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
+                                  # headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
+                                  #                                      head_code=head, cavity_id=cavID), \
+                                  inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk), \
+                                  shotWeight=form.cleaned_data['shotWeight'], \
+                                  activeCavities=MattecInfo.activeCavities, \
                                   cycleTime=MattecInfo.cycleTime, \
                                   machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
 

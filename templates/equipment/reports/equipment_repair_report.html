@@ -41,9 +41,9 @@
             <td>{{ each_PM.part_supplier }}</td>
             <td>{{ each_PM.part_name }}</td>
             <td>{{ each_PM.part_number }}</td>
-            <td>${{each_PM.part_cost }}</td>
+            <td>${{ each_PM.part_cost }}</td>
             <td>{{ each_PM.part_quantity }}</td>
-            <td>${{each_PM.part_cos|mul: each_PM.part_quantity  }}</td>
+            <td>${{ each_PM.part_cos|mul: each_PM.part_quantity }}</td>
         </tr>
     {% endfor %}
     </tbody>

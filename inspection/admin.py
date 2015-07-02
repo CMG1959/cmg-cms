@@ -12,18 +12,21 @@ class partWeightInspectionAdmin(admin.ModelAdmin):
               'headCavID',
               'partWeight']
 
+
 class visualInspectionCriteriaAdmin(admin.ModelAdmin):
     fields = ['defectType']
 
+
 class visualInspectionAdmin(admin.ModelAdmin):
     fields = ['jobID',
-	'machineOperator',
-	'inspectorName',
-	'dateCreated',
-	'inspectionResult',
-	'defectType',
+              'machineOperator',
+              'inspectorName',
+              'dateCreated',
+              'inspectionResult',
+              'defectType',
               'headCavID']
 
-admin.site.register(partWeightInspection,partWeightInspectionAdmin)
-admin.site.register(visualInspectionCriteria,visualInspectionCriteriaAdmin)
-admin.site.register(visualInspection,visualInspectionAdmin)
+
+admin.site.register(partWeightInspection, partWeightInspectionAdmin)
+admin.site.register(visualInspectionCriteria, visualInspectionCriteriaAdmin)
+admin.site.register(visualInspection, visualInspectionAdmin)

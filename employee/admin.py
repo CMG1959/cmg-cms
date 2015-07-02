@@ -12,4 +12,4 @@ class CIMC_EmplopyeeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(organizations)
-admin.site.register(employee,CIMC_EmplopyeeAdmin)
+admin.site.register(employee, CIMC_EmplopyeeAdmin)

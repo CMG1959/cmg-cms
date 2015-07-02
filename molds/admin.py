@@ -16,5 +16,4 @@ class MoldAdmin(admin.ModelAdmin):
     inlines = [PartIdentifierInline]
 
 
-
 admin.site.register(Mold, MoldAdmin)
