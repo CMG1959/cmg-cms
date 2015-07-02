@@ -27,6 +27,8 @@ def view_equipment(request, equip_type):
 
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
+
+
     template = loader.get_template('equipment/equipment_index.html')
     context = RequestContext(request, {
         'equipmentTypes': equipmentTypes,
