@@ -1,0 +1,23 @@
+{% if mold_info %}
+    <div class="panel panel-default bootcards-richtext">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Mold Information</caption>
+                <thead>
+                <tr>
+                    <th>Mold Number</th>
+                    <th>Mold Description</th>
+                    <th>Number of Cavities</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> {{ mold_info.mold_number }} </td>
+                    <td> {{ mold_info.mold_description }} </td>
+                    <td> {{ mold_info.num_cavities }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
