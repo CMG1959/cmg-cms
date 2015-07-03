@@ -17,14 +17,25 @@
         <div class="panel-body">
             <p>Welcome to the CIMC Inspection Page! The following machines are active:</p>
 
-            <ul>
-                {% for each_part in active_parts %}
-                    <li><a href="/inspection/{{ each_part.jobNumber }}">{{ each_part.machNo }}
-                        - {{ each_part.itemDesc }}</a></li>
-                {% endfor %}
-            </ul>
         </div>
     </div>
+
+
+    {% if active_parts %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    {% for each_part in active_parts %}
+                        <a class="list-group-item" href="/inspection/{{ each_part.jobNumber }}">
+                            <h4 class="list-group-item-heading">{{ each_part.machNo }}</h4>
+
+                            <p class="list-group-item-text">{{ each_part.itemDesc }} </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 

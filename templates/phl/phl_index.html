@@ -15,19 +15,26 @@
     <div class="panel panel-default bootcards-richtext">
         <div class="panel-body">
             <p>Welcome to the Production History Log Page!</p>
-
-            {% if activeInMattec %}
-                <ul>
-                    {% for eachActive in activeInMattec %}
-                        <li>
-                            <a href="/production_and_mold_history/production/{{ eachActive.jobNumber }}">{{ eachActive.machNo }}
-                                - {{ eachActive.itemDesc }} </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
         </div>
     </div>
+
+    {% if activeInMattec %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    {% for eachActive in activeInMattec %}
+                        <a class="list-group-item"
+                           href="/production_and_mold_history/production/{{ eachActive.jobNumber }}">
+                            <h4 class="list-group-item-heading">{{ eachActive.machNo }}</h4>
+
+                            <p class="list-group-item-text">{{ eachActive.itemDesc }} </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 </div>
 
 

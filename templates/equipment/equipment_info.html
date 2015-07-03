@@ -9,28 +9,43 @@
 {% include "nav/nav.html" %}
 <div class="col-sm-10 bootcards-cards">
     {% include "equipment/subTemplates/equipInfo.html" %}
-    <div class="panel panel-default bootcards-richtext">
-        <div class="panel-body">
-            <ul>
-                {% if PM_info %}
-                    {% for each_PM in PM_info %}
-                        <li>
-                            <a href="/equipment/{{ each_PM.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM.pm_frequency.pm_frequency }}">Record {{ each_PM.pm_frequency.pm_frequency }}
-                                PM</a></li>
+
+
+
+
+
+{% if PM_info %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    {% if PM_info %}
+                        {% for each_PM in PM_info %}
+                        <a class="list-group-item" href="/equipment/{{ each_PM.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM.pm_frequency.pm_frequency }}">
+                            <h4 class="list-group-item-heading">Record </h4>
+                            <p class="list-group-item-text">{{ each_PM.pm_frequency.pm_frequency }}</p>
+                        </a>
                     {% endfor %}
-                {% endif %}
-                <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/Repair">Record
-                    Repair</a>
-                </li>
-                <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewRepair">View
-                    Repair
-                    Log</a></li>
-                <li><a href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewPM">View PM
-                    Log</a>
-                </li>
-            </ul>
+                    {% endif %}
+                <a class="list-group-item" href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/Repair">
+                            <h4 class="list-group-item-heading">Record </h4>
+                            <p class="list-group-item-text">Record a repair</p>
+                        </a>
+
+                <a class="list-group-item" href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewRepair">
+                            <h4 class="list-group-item-heading">Report </h4>
+                            <p class="list-group-item-text">View repair Log</p>
+                        </a>
+
+                <a class="list-group-item" href="/equipment/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewPM">
+                            <h4 class="list-group-item-heading">Report </h4>
+                            <p class="list-group-item-text">View PM Log</p>
+                        </a>
+
+                </div>
+            </div>
         </div>
-    </div>
+    {% endif %}
+
 </div>
 </body>
 </html>
