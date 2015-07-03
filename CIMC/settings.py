@@ -28,7 +28,7 @@ SECRET_KEY = '#95@a0qici=2*%n&4zh#k%ecmkvn@(i$8gwhn5qq6=$vw#9fp@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
 
 
 # Application definition
@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'jquery',
     'bootstrap3',
-    'sitetree',
     'mathfilters',
     'supplier',
     'molds',
@@ -91,28 +90,28 @@ WSGI_APPLICATION = 'CIMC.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'NAME': 'CIMC_DB',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': '127.0.0.1',
+#         'PORT': '',
+#         'USER': 'mcaro',
+#         'PASSWORD': '1959Cmg1',
+#
+#     },
 DATABASES = {
-    'default': {
-        'NAME': 'CIMC_DB',
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'PORT': '',
-        'USER': 'mcaro',
-        'PASSWORD': '1959Cmg1',
-
-    },
-    # DATABASES = {
-    #     'default': {
-    #         'NAME': 'CIMC_DB',
-    #         'ENGINE': 'sql_server.pyodbc',
-    #         'HOST': '127.0.0.1',
-    #         'PORT' :'1433',
-    #         'USER': 'mcaro',
-    #         'PASSWORD': '1959Cmg1',
-    #         'OPTIONS': {
-    #             'driver': 'SQL Server Native Client 11.0',
-    #         },
-    #     },
+        'default': {
+            'NAME': 'CIMC_DB',
+            'ENGINE': 'sql_server.pyodbc',
+            'HOST': '127.0.0.1',
+            'PORT' :'1433',
+            'USER': 'mcaro',
+            'PASSWORD': '1959Cmg1',
+            'OPTIONS': {
+                'driver': 'SQL Server Native Client 11.0',
+            },
+        },
     # 'mattec': {
     #     'NAME': 'MATTEC',
     #     'ENGINE': 'sql_server.pyodbc',

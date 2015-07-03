@@ -1,4 +1,5 @@
 {% if InspectionDates %}
+    <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-hover">
             <caption style="text-align:center">Date Range Summary</caption>
@@ -20,10 +21,12 @@
             </tbody>
         </table>
     </div>
+    </div>
 {% endif %}
 
 
 {% if visualInspectionDict %}
+    <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-hover">
             <caption style="text-align:center">Visual Inspection Summary</caption>
@@ -53,11 +56,13 @@
             </tbody>
         </table>
     </div>
+    </div>
 {% endif %}
 
 
 
 {% if partWeightInspectionDict %}
+    <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-hover">
             <caption style="text-align:center">Part Weight Inspection Summary</caption>
@@ -87,11 +92,13 @@
             </tbody>
         </table>
     </div>
+    </div>
 {% endif %}
 
 
 
 {% if shotWeightInspectionDict %}
+    <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-hover">
             <caption style="text-align:center">Shot Weight Inspection Summary</caption>
@@ -120,6 +127,7 @@
             </tr>
             </tbody>
         </table>
+    </div>
     </div>
 {% endif %}
 

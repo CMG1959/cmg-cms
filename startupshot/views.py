@@ -1,9 +1,10 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
 from part.models import Part
 from molds.models import Mold
 from equipment.models import EquipmentInfo
@@ -49,7 +50,12 @@ def detailPart(request, part_number):
 
 
 def viewCreatedStartUpShot(request, part_number):
-    item_id = Part.objects.get(item_Number=part_number)
+
+    try:
+        item_id = Part.objects.get(item_Number=part_number)
+    except ObjectDoesNotExist:
+        raise Http404("Part number does not exist")
+
     different_shots = startUpShot.objects.filter(item_id=item_id.id)
     template = loader.get_template('startupshot/view.html')
     context = RequestContext(request, {

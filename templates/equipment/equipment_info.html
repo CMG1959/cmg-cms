@@ -7,13 +7,10 @@
 <body>
 
 {% include "nav/nav.html" %}
-
+<div class="col-sm-10 bootcards-cards">
+    {% include "equipment/subTemplates/equipInfo.html" %}
     <div class="panel panel-default bootcards-richtext">
         <div class="panel-body">
-
-            {% include "equipment/subTemplates/equipInfo.html" %}
-
-
             <ul>
                 {% if PM_info %}
                     {% for each_PM in PM_info %}
@@ -34,6 +31,6 @@
             </ul>
         </div>
     </div>
-
+</div>
 </body>
 </html>

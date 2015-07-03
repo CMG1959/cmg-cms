@@ -12,39 +12,25 @@
 {% include "nav/nav.html" %}
 
 <div class="col-sm-10 bootcards-cards">
-    <div class="panel panel-default bootcards-richtext">
-        <div class="panel-body">
+    {% include "inspection/subTemplates/subJobInfo.html" %}
+    {% include "phl/subtemplates/moldInfo.html" %}
 
-
-            {% include "inspection/subTemplates/subJobInfo.html" %}
-
-            {% if mold_info %}
-                <table class="table table-hover">
-                    <caption style="text-align:center">Mold Information</caption>
-                    <tr>
-                        <td>Mold Number</td>
-                        <td>Mold Description</td>
-                        <td>Number of Cavities</td>
-                    </tr>
-                    <tr>
-                        <td> {{ mold_info.mold_number }} </td>
-                        <td> {{ mold_info.mold_description }} </td>
-                        <td> {{ mold_info.num_cavities }}</td>
-                    </tr>
-                </table>
-            {% endif %}
-
-            {% if MHL %}
+    {% if MHL %}
+        <div class="panel panel-default bootcards-richtext">
+            <div class="panel-body">
                 <table class="table table-hover">
                     <caption style="text-align:center">Mold History Information</caption>
+                    <thead>
                     <tr>
-                        <td>Inspector Name</td>
-                        <td>Date Created</td>
-                        <td>PM</td>
-                        <td>Repair</td>
-                        <td>Hours Worked</td>
-                        <td>Description of Event</td>
+                        <th>Inspector Name</th>
+                        <th>Date Created</th>
+                        <th>PM</th>
+                        <th>Repair</th>
+                        <th>Hours Worked</th>
+                        <th>Description of Event</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     {% for ep in MHL %}
                         <tr>
                             <td> {{ ep.inspectorName }} </td>
@@ -55,10 +41,12 @@
                             <td> {{ ep.descEvent }} </td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
-            {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
+
 </div>
 
 

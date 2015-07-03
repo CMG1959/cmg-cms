@@ -1,10 +1,11 @@
 # Create your views here.
 import datetime
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
+from django.core.exceptions import ObjectDoesNotExist
 from models import partWeightInspection, visualInspection, shotWeightInspection
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
@@ -28,6 +29,9 @@ def view_index(request):
 
 def view_detailJob(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if not active_job.exists():
+        raise Http404("Part number does not exist")
+
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
     print inspectionTypes
 
@@ -202,7 +206,10 @@ def view_shotWeightInspection(request, jobNumber):
 def createItemReportDict(itemNumber, date_from=None, date_to=None):
     date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
 
-    inspectionTypes = PartInspection.objects.get(item_Number__item_Number=itemNumber)
+    try:
+        inspectionTypes = PartInspection.objects.get(item_Number__item_Number=itemNumber)
+    except ObjectDoesNotExist:
+        raise Http404("No inspections types were set")
 
     jobList = startUpShot.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from, date_to))
     jobList = jobList.values_list('jobNumber', flat=True)
@@ -269,7 +276,11 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
-    inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
+    try:
+        inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
+    except ObjectDoesNotExist:
+        raise Http404("No inspections types were set")
+
 
     context_dic['active_job'] = active_job
 

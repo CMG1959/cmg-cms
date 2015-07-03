@@ -1,6 +1,7 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 from forms import phlLookup, phlForm, moldLookup, mhlForm
 from startupshot.models import MattecProd, startUpShot
@@ -42,7 +43,16 @@ def view_mold_form(request):
 
 
 def view_specific_phl_form(request, jobNo):
-    activeInMattec = MattecProd.objects.get(jobNumber=jobNo)
+    # try:
+    #     activeInMattec = MattecProd.objects.get(jobNumber=jobNo)
+    # except ObjectDoesNotExist:
+    #     raise Http404("Part number does not exist in MATTEC table")
+
+    active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
+    if not active_job.exists():
+        raise Http404("Part number does not exist")
+
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = phlForm(request.POST)
@@ -66,13 +76,17 @@ def view_specific_phl_form(request, jobNo):
 
     context = RequestContext(request, {
         'form': form,
-        'activeInMattec': activeInMattec,
+        'active_job': active_job,
     })
     return render(request, 'phl/forms/phlForm.html', context)
 
 
 def view_specific_mold_form(request, moldNo):
-    specific_mold = Mold.objects.get(mold_number=moldNo)
+    try:
+        mold_info = Mold.objects.get(mold_number=moldNo)
+    except ObjectDoesNotExist:
+        raise Http404("The mold has not been created in the system yet.")
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = mhlForm(request.POST)
@@ -97,10 +111,11 @@ def view_specific_mold_form(request, moldNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = mhlForm()
+        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='Toolroom')
 
     context = RequestContext(request, {
         'form': form,
-        'specific_mold': specific_mold,
+        'mold_info': mold_info,
     })
     return render(request, 'phl/forms/moldForm.html', context)
 
@@ -140,6 +155,7 @@ def view_mold_report_search(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = moldLookup()
+
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 
@@ -154,7 +170,11 @@ def view_phl_report(request, jobNo):
 
 
 def view_mold_report(request, moldNo):
-    mold_info = Mold.objects.get(mold_number=moldNo)
+    try:
+        mold_info = Mold.objects.get(mold_number=moldNo)
+    except ObjectDoesNotExist:
+        raise Http404("The mold has not been created in the system yet.")
+
     MHL = MoldHistory.objects.filter(moldNumber__mold_number=moldNo)
     context_dict = {'mold_info': mold_info, 'MHL': MHL}
     template = loader.get_template('phl/reports/mhl.html')
