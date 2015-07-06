@@ -12,7 +12,6 @@ class startUpShot(models.Model):
     item = models.ForeignKey('part.Part', verbose_name="Item")
     jobNumber = models.CharField(max_length=15, unique=True, verbose_name="Job Number")
     moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")
-
     activeCavities = models.IntegerField(verbose_name="Active Cavities")
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     machNo = models.ForeignKey('equipment.EquipmentInfo', verbose_name="Machine Number")

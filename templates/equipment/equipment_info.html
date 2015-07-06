@@ -22,7 +22,9 @@
                         {% for each_PM in PM_info %}
                         <a class="list-group-item" href="/equipment/{{ each_PM.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM.pm_frequency.pm_frequency }}">
                             <h4 class="list-group-item-heading">Record </h4>
-                            <p class="list-group-item-text">{{ each_PM.pm_frequency.pm_frequency }}</p>
+
+                            <p class="list-group-item-text">{{ each_PM.pm_frequency.pm_frequency }} Preventative
+                                Maintenance</p>
                         </a>
                     {% endfor %}
                     {% endif %}

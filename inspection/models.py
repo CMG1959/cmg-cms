@@ -62,7 +62,7 @@ class visualInspection(models.Model):
     inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
                                       related_name='vi_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
-    inspectionResult = models.BooleanField(verbose_name="Inspection Result")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)")
     defectType = models.ManyToManyField(visualInspectionCriteria, verbose_name="Defect Type")
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID")
 

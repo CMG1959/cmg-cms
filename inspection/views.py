@@ -33,7 +33,6 @@ def view_detailJob(request, jobNumber):
         raise Http404("Part number does not exist")
 
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
-    print inspectionTypes
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
@@ -351,8 +350,23 @@ def createDateRange(date_from=None, date_to=None):
 def presetStandardFields(my_form):
     # this will preset machine and qa fields
     ### Filter the machine operators
-    my_form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+    my_form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator',
+                                                                         shift_id=getShift())
     ### Filter the QA ladies
-    my_form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+    my_form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA',
+                                                                       shift_id=getShift())
 
     return my_form
+
+
+def getShift():
+    currentHour = datetime.datetime.time(datetime.datetime.now()).hour
+
+    if (currentHour >= 7) and (currentHour < 15):
+        shift = 1
+    elif (currentHour >= 15) and (currentHour < 23):
+        shift = 2
+    else:
+        shift = 3
+
+    return shift

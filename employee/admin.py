@@ -8,7 +8,8 @@ class CIMC_EmplopyeeAdmin(admin.ModelAdmin):
     fields = ['last_name',
               'first_name',
               'employee_id',
-              'organization_name']
+              'organization_name',
+              'shift_id']
 
 
 admin.site.register(organizations)

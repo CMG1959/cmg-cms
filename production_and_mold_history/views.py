@@ -8,7 +8,7 @@ from startupshot.models import MattecProd, startUpShot
 from employee.models import employee
 from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
-
+import datetime
 
 def view_index(request):
     return render(request, 'phl/index.html')
@@ -73,6 +73,12 @@ def view_specific_phl_form(request, jobNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlForm()
+        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA',
+                                                                        shift_id=getShift()) | \
+                                                employee.objects.filter(organization_name__org_name='QC',
+                                                                        shift_id=getShift()) | \
+                                                employee.objects.filter(organization_name__org_name='Engineering')
+
 
     context = RequestContext(request, {
         'form': form,
@@ -182,3 +188,14 @@ def view_mold_report(request, moldNo):
     return HttpResponse(template.render(context))
 
 # def view_mold_report(request,moldNo):
+def getShift():
+    currentHour = datetime.datetime.time(datetime.datetime.now()).hour
+
+    if (currentHour >= 7) and (currentHour < 15):
+        shift = 1
+    elif (currentHour >= 15) and (currentHour < 23):
+        shift = 2
+    else:
+        shift = 3
+
+    return shift

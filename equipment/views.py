@@ -68,8 +68,9 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
     else:
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
-                     'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type)},
+                     'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type).id},
         )
+        form.fields["pm_frequency"].queryset = PMFreq.objects.filter(pm_frequency=pm_type)
         form.fields["employee"].queryset = employee.objects.filter(organization_name__org_name='Engineering')
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
                                                               pm_frequency__pm_frequency=pm_type)
