@@ -26,9 +26,9 @@ PROJECT_PATH = os.path.abspath(PROJECT_PATH)
 SECRET_KEY = '#95@a0qici=2*%n&4zh#k%ecmkvn@(i$8gwhn5qq6=$vw#9fp@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
 
 
 # Application definition
@@ -156,7 +156,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'  # You may find this is already defined as such.
 STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
+STATIC_ROOT = "C:\CIMC_static"
 
 STATICFILES_DIRS = (
     STATIC_PATH,
 )
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
