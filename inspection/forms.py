@@ -36,7 +36,7 @@ class shotWeightForm(forms.ModelForm):
 class outsideDiameterForm(forms.ModelForm):
     class Meta:
         model = outsideDiameterInspection
-        fields = ['jobID', 'machineOperator', 'inspectorName', 'dateCreated']
+        fields = ['jobID', 'machineOperator', 'inspectorName', 'outsideDiameter']
 
 
 class volumeInspectionForm(forms.ModelForm):
