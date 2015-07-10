@@ -6,15 +6,18 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+
 from models import partWeightInspection, visualInspection, shotWeightInspection
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
 from employee.models import employee
 from molds.models import PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm
-from django.utils import timezone
 
 
+@login_required
 def view_index(request):
     activeInMattec = MattecProd.objects.all()
 
@@ -27,6 +30,7 @@ def view_index(request):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def view_detailJob(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if not active_job.exists():
@@ -42,6 +46,7 @@ def view_detailJob(request, jobNumber):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def view_jobReportSearch(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -67,6 +72,7 @@ def view_jobReportSearch(request):
     return render(request, 'inspection/searchForms/jobReportSearch.html', {'form': form})
 
 
+@login_required
 def view_itemReportSearch(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -91,6 +97,7 @@ def view_itemReportSearch(request):
     return render(request, 'inspection/searchForms/itemReportSearch.html', {'form': form})
 
 
+@login_required
 def view_itemReport(request, itemNumber):
     context_dict = {}
     context_dict['partDict'] = createItemReportDict(itemNumber)
@@ -101,6 +108,7 @@ def view_itemReport(request, itemNumber):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def view_jobReport(request, jobNumber):
     context_dic = createJobReportDict(jobNumber)
     template = loader.get_template('inspection/reports/jobReport.html')
@@ -108,6 +116,7 @@ def view_jobReport(request, jobNumber):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def view_visualInspection(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
@@ -140,6 +149,7 @@ def view_visualInspection(request, jobNumber):
     return render(request, 'inspection/forms/visualInspection.html', {'form': form, 'active_job': active_job})
 
 
+@login_required
 def view_partWeightInspection(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
@@ -173,6 +183,7 @@ def view_partWeightInspection(request, jobNumber):
     return render(request, 'inspection/forms/partWeightInspection.html', {'form': form, 'active_job': active_job})
 
 
+@login_required
 def view_shotWeightInspection(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
@@ -201,6 +212,8 @@ def view_shotWeightInspection(request, jobNumber):
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
+
+####### Helper functions ###########
 
 def createItemReportDict(itemNumber, date_from=None, date_to=None):
     date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)

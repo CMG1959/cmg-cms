@@ -3,6 +3,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
+from django.contrib.auth.decorators import login_required
 from forms import phlLookup, phlForm, moldLookup, mhlForm
 from startupshot.models import MattecProd, startUpShot
 from employee.models import employee
@@ -10,10 +11,13 @@ from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 import datetime
 
+
+@login_required
 def view_index(request):
     return render(request, 'phl/index.html')
 
 
+@login_required
 def view_phl_form(request):
     activeInMattec = MattecProd.objects.all()
     template = loader.get_template('phl/phl_index.html')
@@ -23,6 +27,7 @@ def view_phl_form(request):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def view_mold_form(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -42,6 +47,7 @@ def view_mold_form(request):
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 
+@login_required
 def view_specific_phl_form(request, jobNo):
     # try:
     #     activeInMattec = MattecProd.objects.get(jobNumber=jobNo)
@@ -87,6 +93,7 @@ def view_specific_phl_form(request, jobNo):
     return render(request, 'phl/forms/phlForm.html', context)
 
 
+@login_required
 def view_specific_mold_form(request, moldNo):
     try:
         mold_info = Mold.objects.get(mold_number=moldNo)
@@ -126,6 +133,7 @@ def view_specific_mold_form(request, moldNo):
     return render(request, 'phl/forms/moldForm.html', context)
 
 
+@login_required
 def view_phl_report_search(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -145,6 +153,7 @@ def view_phl_report_search(request):
     return render(request, 'phl/forms/phlLookup.html', {'form': form})
 
 
+@login_required
 def view_mold_report_search(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -165,6 +174,7 @@ def view_mold_report_search(request):
     return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 
+@login_required
 def view_phl_report(request, jobNo):
     start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
     PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo)
@@ -175,6 +185,7 @@ def view_phl_report(request, jobNo):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def view_mold_report(request, moldNo):
     try:
         mold_info = Mold.objects.get(mold_number=moldNo)
@@ -186,6 +197,10 @@ def view_mold_report(request, moldNo):
     template = loader.get_template('phl/reports/mhl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
+
+
+###### Helper functions #####
+
 
 # def view_mold_report(request,moldNo):
 def getShift():

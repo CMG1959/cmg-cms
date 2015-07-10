@@ -11,10 +11,11 @@ from equipment.models import EquipmentInfo
 from employee.models import employee
 from .models import startUpShot, MattecProd
 from .forms import startupShotLookup, startupShotForm
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def index(request):
-    # template = loader.get_template('startupshot/startUpShotSearch.html')
     # return HttpResponse(template.render())
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -35,6 +36,7 @@ def index(request):
     return render(request, 'startupshot/startUpShotSearch.html', {'form': form})
 
 
+@login_required
 def viewActive(request):
     activeInMattec = MattecProd.objects.all()
     template = loader.get_template('startupshot/viewActive.html')
@@ -44,11 +46,13 @@ def viewActive(request):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def detailPart(request, part_number):
     currentPart = Part.objects.get(item_Number=part_number)
     return HttpResponse("Part Detail: You're looking %s: %s" % (currentPart.item_Number, currentPart.item_Description))
 
 
+@login_required
 def viewCreatedStartUpShot(request, part_number):
 
     try:
@@ -65,6 +69,7 @@ def viewCreatedStartUpShot(request, part_number):
     return HttpResponse(template.render(context))
 
 
+@login_required
 def createNewStartUpShot(request, jobNo):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
     PartInfo = Part.objects.get(item_Number=MattecInfo.itemNo)

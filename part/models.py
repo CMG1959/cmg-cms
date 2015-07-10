@@ -4,8 +4,8 @@ from django.db import models
 class Part(models.Model):
     # Stuff from TMM will go here
     class Meta:
-        verbose_name = 'Part'
-        verbose_name_plural = 'Parts'
+        verbose_name = 'TMM Part'
+        verbose_name_plural = 'TMM Parts'
 
     item_Number = models.CharField(verbose_name="Item Number", max_length=15)
     item_Description = models.CharField(verbose_name="Item Description", max_length=75)

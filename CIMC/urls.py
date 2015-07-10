@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
                   url(r'^/?$', 'home.views.index'),
@@ -25,4 +26,6 @@ urlpatterns = [
                   url(r'^inspection/', include('inspection.urls')),
                   url(r'^equipment/', include('equipment.urls')),
                   url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
+                  url(r'^accounts/login/$', auth_views.login),
+                  url(r'^logout$', auth_views.logout, {'next_page': '/'}),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
