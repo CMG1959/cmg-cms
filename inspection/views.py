@@ -14,7 +14,9 @@ from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
 from employee.models import employee
 from molds.models import PartIdentifier
-from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm
+from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm, \
+    outsideDiameterForm, volumeInspectionForm, neckDiameterForm, assemblyInspectionForm, cartonTempForm, \
+    visionInspectionForm
 
 
 @login_required
@@ -202,6 +204,186 @@ def view_shotWeightInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = shotWeightForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+@login_required
+def view_outsideDiameterInspection(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = outsideDiameterForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = outsideDiameterForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+@login_required
+def view_volumeInspectionForm(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = volumeInspectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = volumeInspectionForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+@login_required
+def view_neckDiameterForm(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = neckDiameterForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = neckDiameterForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+@login_required
+def view_assemblyInspectionForm(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = assemblyInspectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = assemblyInspectionForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+@login_required
+def view_cartonTempForm(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = cartonTempForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = cartonTempForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+        )
+        form = presetStandardFields(form)
+        ### Filter the machine operators
+        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        ### Filter the QA ladies
+        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+
+@login_required
+def view_visionInspectionForm(request, jobNumber):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = visionInspectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = visionInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form)

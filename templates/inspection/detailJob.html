@@ -47,6 +47,57 @@
                             </a>
                         {% endif %}
 
+                        {% if inspectionTypes.od_inspection %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber }}/outside_diameter">
+                                <h4 class="list-group-item-heading">Outside Diameter Inspection</h4>
+
+                                <p class="list-group-item-text">Click Here to record an outside diameter inspection </p>
+                            </a>
+                        {% endif %}
+
+                        {% if inspectionTypes.vol_inspection %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber }}/volume_test">
+                                <h4 class="list-group-item-heading">Volume Inspection</h4>
+
+                                <p class="list-group-item-text">Click Here to record a volume inspection </p>
+                            </a>
+                        {% endif %}
+
+
+                        {% if inspectionTypes.neck_diameter_inspection %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber }}/neck_diameter">
+                                <h4 class="list-group-item-heading">Neck Diameter Inspection</h4>
+
+                                <p class="list-group-item-text">Click Here to record a neck diameter inspection </p>
+                            </a>
+                        {% endif %}
+
+                        {% if inspectionTypes.assembly_test_inspection %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber }}/assembly_test">
+                                <h4 class="list-group-item-heading">Assembly Inspection</h4>
+
+                                <p class="list-group-item-text">Click Here to record an assembly inspection </p>
+                            </a>
+                        {% endif %}
+
+                        {% if inspectionTypes.carton_temp_inspection %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber }}/carton_temp">
+                                <h4 class="list-group-item-heading">Carton Temperature Inspection</h4>
+
+                                <p class="list-group-item-text">Click Here to record a carton temperature
+                                    inspection </p>
+                            </a>
+                        {% endif %}
+
+
+                        {% if inspectionTypes.vision_system_inspection %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber }}/vision_system">
+                                <h4 class="list-group-item-heading">Vision System Inspection</h4>
+
+                                <p class="list-group-item-text">Click Here to record a vision system inspection </p>
+                            </a>
+                        {% endif %}
+
                     {% endfor %}
                 </div>
             </div>

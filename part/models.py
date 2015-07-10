@@ -25,6 +25,12 @@ class PartInspection(models.Model):
     visual_inspection = models.BooleanField(verbose_name="Visual Inspection", default=True)
     part_weight_inspection = models.BooleanField(verbose_name="Part Weight Inspection", default=False)
     shot_weight_inspection = models.BooleanField(verbose_name="Shot Weight Inspection", default=True)
+    od_inspection = models.BooleanField(verbose_name="Outside Diameter Inspection", default=False)
+    vol_inspection = models.BooleanField(verbose_name="Volume Inspection", default=False)
+    neck_diameter_inspection = models.BooleanField(verbose_name="Neck Diameter Inspection", default=False)
+    assembly_test_inspection = models.BooleanField(verbose_name="Assembly Test Inspection", default=False)
+    carton_temp_inspection = models.BooleanField(verbose_name="Carton Temperature", default=False)
+    vision_system_inspection = models.BooleanField(verbose_name="Vision System", default=False)
 
     def __unicode__(self):
         return '%s' % (self.item_Number)
