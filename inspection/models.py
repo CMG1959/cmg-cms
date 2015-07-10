@@ -75,11 +75,11 @@ class outsideDiameterInspection(models.Model):
         verbose_name = 'Outside Diameter Inspection'
         verbose_name_plural = 'Outside Diameter Inspections'
 
-    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='swi_jobID')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='odi_jobID')
     machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
-                                        related_name='swi_machineOperator')
+                                        related_name='odi_machineOperator')
     inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
-                                      related_name='swi_inspectorName')
+                                      related_name='odi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     outsideDiameter = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Outside Diameter")
 
@@ -92,11 +92,11 @@ class neckDiameterInspection(models.Model):
         verbose_name = 'Neck Diameter Inspection'
         verbose_name_plural = 'Neck Diameter Inspections'
 
-    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='swi_jobID')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ndi_jobID')
     machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
-                                        related_name='swi_machineOperator')
+                                        related_name='ndi_machineOperator')
     inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
-                                      related_name='swi_inspectorName')
+                                      related_name='ndi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     liquidWeight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Liquid Weight (g)")
 
