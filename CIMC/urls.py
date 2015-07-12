@@ -27,5 +27,6 @@ urlpatterns = [
                   url(r'^equipment/', include('equipment.urls')),
                   url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
                   url(r'^accounts/login/$', auth_views.login),
+                  url(r'^mobile/', include('mobile_views.urls')),
                   url(r'^logout$', auth_views.logout, {'next_page': '/'}),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
