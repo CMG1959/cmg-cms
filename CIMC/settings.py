@@ -43,16 +43,15 @@ INSTALLED_APPS = (
     'jquery',
     'bootstrap3',
     'mathfilters',
-    'supplier',
+    'employee',
+    'equipment',
+    'home',
+    'mobile_views',
     'molds',
     'part',
-    'equipment',
     'production_and_mold_history',
-    'home',
-    'employee',
-    'inspection',
     'startupshot',
-)
+    'supplier')
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -104,7 +103,7 @@ DATABASES = {
     'default': {
         'NAME': 'cmg_qms',
         'ENGINE': 'sql_server.pyodbc',
-        'HOST': 'cmc\CMG-SQL1',
+        'HOST': 'CMG-SQL1',
         'PORT': '',
         'USER': 'webappUser',
         'PASSWORD': '1959Cmg1',
