@@ -3,6 +3,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <link href="{% static "bootstrap/bootstrap.min.css" %}" rel="stylesheet">
 
@@ -10,7 +11,7 @@
 <body>
 
 {% if active_parts %}
-    <table class="table table-hover">
+    <table class="table table-responsive">
         <caption style="text-align:center">Part Weights</caption>
         <thead>
         <tr>
@@ -22,7 +23,7 @@
         </thead>
         <tbody>
         {% for key,value in active_parts.items %}
-            <tr class={{ value.alertLevelw }}>
+            <tr class={{ value.alertLevel }}>
                 <td>
                     {{ value.machID }}
                 </td>
