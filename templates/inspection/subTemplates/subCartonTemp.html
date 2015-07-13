@@ -1,0 +1,36 @@
+{% if cartonTemp_inspection %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Carton Temp Inspections</caption>
+                <thead>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Machine Operator</th>
+                    <th>Inspector Name</th>
+                    <th>Carton Temp (F)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ep in cartonTemp_inspection %}
+                    <tr>
+                        <td>
+                            {{ ep.dateCreated }}
+                        </td>
+                        <td>
+                            {{ ep.machineOperator }}
+                        </td>
+                        <td>
+                            {{ ep.inspectorName }}
+                        </td>
+                        <td>
+                            {{ ep.shotWeight }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+

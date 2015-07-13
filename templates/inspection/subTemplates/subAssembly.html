@@ -1,0 +1,39 @@
+
+
+{% if assembly_inspection %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Assembly Inspections</caption>
+                <thead>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Machine Operator</th>
+                    <th>Inspector Name</th>
+                    <th>Assembly Test Results</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ep in assembly_inspection %}
+                    <tr>
+                        <td>
+                            {{ ep.dateCreated }}
+                        </td>
+                        <td>
+                            {{ ep.machineOperator }}
+                        </td>
+                        <td>
+                            {{ ep.inspectorName }}
+                        </td>
+                        <td>
+                            {% for eachItem in ep.assemblyTestResults.all %}
+                                <p>{{ eachItem.assemblyTestItem }}</p> {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+

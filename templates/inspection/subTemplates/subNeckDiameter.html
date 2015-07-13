@@ -1,0 +1,36 @@
+{% if neckDiam_inspection %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Neck Diameter Inspections</caption>
+                <thead>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Machine Operator</th>
+                    <th>Inspector Name</th>
+                    <th>Test Result</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ep in neckDiam_inspection %}
+                    <tr>
+                        <td>
+                            {{ ep.dateCreated }}
+                        </td>
+                        <td>
+                            {{ ep.machineOperator }}
+                        </td>
+                        <td>
+                            {{ ep.inspectorName }}
+                        </td>
+                        <td>
+                            {{ ep.testResult }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+

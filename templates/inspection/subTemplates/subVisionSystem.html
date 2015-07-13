@@ -1,0 +1,37 @@
+{% if visionSys_inspection %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Vision System Inspections</caption>
+                <thead>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Machine Operator</th>
+                    <th>Inspector Name</th>
+                    <th>Test Result</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ep in od_inspection %}
+                    <tr>
+                        <td>
+                            {{ ep.dateCreated }}
+                        </td>
+                        <td>
+                            {{ ep.machineOperator }}
+                        </td>
+                        <td>
+                            {{ ep.inspectorName }}
+                        </td>
+                        <td>
+                            {% for eachItem in ep.visionTestResults.all %}
+                                <p>{{ eachItem.visionTestItem }}</p> {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+

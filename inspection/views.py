@@ -9,7 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import partWeightInspection, visualInspection, shotWeightInspection
+from models import partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
+    volumeInspection, \
+    neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
 from employee.models import employee
@@ -18,6 +20,12 @@ from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemRep
     outsideDiameterForm, volumeInspectionForm, neckDiameterForm, assemblyInspectionForm, cartonTempForm, \
     visionInspectionForm
 
+
+######################################
+#
+#  Section for generating indexs, etc
+#
+######################################
 
 @login_required
 def view_index(request):
@@ -48,74 +56,11 @@ def view_detailJob(request, jobNumber):
     return HttpResponse(template.render(context))
 
 
-@login_required
-def view_jobReportSearch(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = jobReportSearch(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            job_number = form.cleaned_data['job_Number']
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-
-            context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
-            template = loader.get_template('inspection/reports/jobReport.html')
-
-            context = RequestContext(request, context_dic)
-            return HttpResponse(template.render(context))
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = jobReportSearch()
-
-    return render(request, 'inspection/searchForms/jobReportSearch.html', {'form': form})
-
-
-@login_required
-def view_itemReportSearch(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = itemReportSearch(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            item_number = form.cleaned_data['item_Number']
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-            context_dic = {}
-            context_dic['partDict'] = createItemReportDict(item_number, date_from=date_from, date_to=date_to)
-            template = loader.get_template('inspection/reports/partReport.html')
-            context = RequestContext(request, context_dic)
-            return HttpResponse(template.render(context))
-
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = itemReportSearch()
-
-    return render(request, 'inspection/searchForms/itemReportSearch.html', {'form': form})
-
-
-@login_required
-def view_itemReport(request, itemNumber):
-    context_dict = {}
-    context_dict['partDict'] = createItemReportDict(itemNumber)
-    print context_dict
-
-    template = loader.get_template('inspection/reports/partReport.html')
-    context = RequestContext(request, context_dict)
-    return HttpResponse(template.render(context))
-
-
-@login_required
-def view_jobReport(request, jobNumber):
-    context_dic = createJobReportDict(jobNumber)
-    template = loader.get_template('inspection/reports/jobReport.html')
-    context = RequestContext(request, context_dic)
-    return HttpResponse(template.render(context))
+######################################
+#
+#  Section for generating forms
+#
+######################################
 
 
 @login_required
@@ -395,6 +340,84 @@ def view_visionInspectionForm(request, jobNumber):
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
 
+######################################
+#
+#  Section for generating reports
+#
+######################################
+
+
+@login_required
+def view_jobReportSearch(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = jobReportSearch(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            job_number = form.cleaned_data['job_Number']
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+
+            context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
+            template = loader.get_template('inspection/reports/jobReport.html')
+
+            context = RequestContext(request, context_dic)
+            return HttpResponse(template.render(context))
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = jobReportSearch()
+
+    return render(request, 'inspection/searchForms/jobReportSearch.html', {'form': form})
+
+
+@login_required
+def view_itemReportSearch(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = itemReportSearch(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            item_number = form.cleaned_data['item_Number']
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+            context_dic = {}
+            context_dic['partDict'] = createItemReportDict(item_number, date_from=date_from, date_to=date_to)
+            template = loader.get_template('inspection/reports/partReport.html')
+            context = RequestContext(request, context_dic)
+            return HttpResponse(template.render(context))
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = itemReportSearch()
+
+    return render(request, 'inspection/searchForms/itemReportSearch.html', {'form': form})
+
+
+@login_required
+def view_itemReport(request, itemNumber):
+    context_dict = {}
+    context_dict['partDict'] = createItemReportDict(itemNumber)
+    print context_dict
+
+    template = loader.get_template('inspection/reports/partReport.html')
+    context = RequestContext(request, context_dict)
+    return HttpResponse(template.render(context))
+
+
+@login_required
+def view_jobReport(request, jobNumber):
+    context_dic = createJobReportDict(jobNumber)
+    template = loader.get_template('inspection/reports/jobReport.html')
+    context = RequestContext(request, context_dic)
+    return HttpResponse(template.render(context))
+
+
+
 ####### Helper functions ###########
 
 def createItemReportDict(itemNumber, date_from=None, date_to=None):
@@ -460,6 +483,73 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                 Max('shotWeight'),
                 Min('shotWeight'),
                 StdDev('shotWeight'))
+
+        if inspectionTypes.od_inspection:
+            partDict[dictID]['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=eachJob,
+                                                                                         dateCreated__range=(
+                                                                                             date_from, date_to))
+            partDict[dictID]['od_inspectionDict'] = {}
+            partDict[dictID]['od_inspectionDict'] = partDict[dictID]['od_inspection'].aggregate(
+                Avg('outsideDiameter'),
+                Max('outsideDiameter'),
+                Min('outsideDiameter'),
+                StdDev('outsideDiameter'))
+
+        if inspectionTypes.vol_inspection:
+            partDict[dictID]['vol_inspection'] = volumeInspection.objects.filter(jobID__jobNumber=eachJob,
+                                                                                 dateCreated__range=(
+                                                                                     date_from, date_to))
+            partDict[dictID]['vol_inspectionDict'] = {}
+            partDict[dictID]['vol_inspectionDict'] = partDict[dictID]['od_inspection'].aggregate(
+                Avg('liquidWeight'),
+                Max('liquidWeight'),
+                Min('liquidWeight'),
+                StdDev('liquidWeight'))
+
+        if inspectionTypes.neck_diameter_inspection:
+            partDict[dictID]['neckDiam_inspection'] = neckDiameterInspection.objects.filter(jobID__jobNumber=eachJob,
+                                                                                            dateCreated__range=(
+                                                                                                date_from, date_to))
+            partDict[dictID]['neckDiam_inspectionDict'] = {}
+            partDict[dictID]['neckDiam_inspectionDict']['numPass'] = partDict[dictID]['neckDiam_inspection'].filter(
+                testResult=1).count()
+            partDict[dictID]['neckDiam_inspectionDict']['numFail'] = partDict[dictID]['neckDiam_inspection'].filter(
+                testResult=0).count()
+            partDict[dictID]['neckDiam_inspectionDict']['totalInspections'] = \
+            partDict[dictID]['neckDiam_inspectionDict']['numPass'] + \
+            partDict[dictID]['neckDiam_inspectionDict']['numFail']
+
+            ### Calculate percentage passed
+            if partDict[dictID]['neckDiam_inspectionDict']['totalInspections'] > 0:
+                partDict[dictID]['neckDiam_inspectionDict']['passPerc'] = 100 * \
+                                                                          partDict[dictID]['neckDiam_inspectionDict'][
+                                                                              'numPass'] / \
+                                                                          partDict[dictID]['neckDiam_inspectionDict'][
+                                                                              'totalInspections']
+            else:
+                partDict[dictID]['neckDiam_inspectionDict']['passPerc'] = 0
+
+        if inspectionTypes.assembly_test_inspection:
+            partDict[dictID]['assembly_inspection'] = assemblyInspection.objects.filter(jobID__jobNumber=eachJob,
+                                                                                        dateCreated__range=(
+                                                                                            date_from, date_to))
+        if inspectionTypes.carton_temp_inspection:
+            partDict[dictID]['cartonTemp_inspection'] = cartonTemperature.objects.filter(jobID__jobNumber=eachJob,
+                                                                                         dateCreated__range=(
+                                                                                             date_from, date_to))
+            partDict[dictID]['cartonTemp_inspectionDict'] = {}
+            partDict[dictID]['cartonTemp_inspectionDict'] = partDict[dictID]['cartonTemp_inspection'].aggregate(
+                Avg('cartonTemp'),
+                Max('cartonTemp'),
+                Min('cartonTemp'),
+                StdDev('cartonTemp'))
+
+        if inspectionTypes.vision_system_inspection:
+            partDict[dictID]['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=eachJob,
+                                                                                       dateCreated__range=(
+                                                                                           date_from, date_to))
+
+
     return partDict
 
 
@@ -486,7 +576,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['InspectionDates'] = {}
         context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
                                                                                    Max('dateCreated'))
-        print context_dic['InspectionDates']
+
         ### Initialize dictionary for summary stats
         context_dic['visualInspectionDict'] = {}
         ### Count number of passed inspections
@@ -527,8 +617,76 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                                                                 Min('shotWeight'),
                                                                                                 StdDev('shotWeight'))
 
+    if inspectionTypes.od_inspection:
+        context_dic['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
+                                                                                dateCreated__range=(
+                                                                                    date_from, date_to))
+        context_dic['od_inspectionDict'] = {}
+        context_dic['od_inspectionDict'] = context_dic['od_inspection'].aggregate(
+            Avg('outsideDiameter'),
+            Max('outsideDiameter'),
+            Min('outsideDiameter'),
+            StdDev('outsideDiameter'))
+
+    if inspectionTypes.vol_inspection:
+        context_dic['vol_inspection'] = volumeInspection.objects.filter(jobID__jobNumber=jobNumber,
+                                                                        dateCreated__range=(
+                                                                            date_from, date_to))
+        context_dic['vol_inspectionDict'] = {}
+        context_dic['vol_inspectionDict'] = context_dic['od_inspection'].aggregate(
+            Avg('liquidWeight'),
+            Max('liquidWeight'),
+            Min('liquidWeight'),
+            StdDev('liquidWeight'))
+
+    if inspectionTypes.neck_diameter_inspection:
+        context_dic['neckDiam_inspection'] = neckDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
+                                                                                   dateCreated__range=(
+                                                                                       date_from, date_to))
+        context_dic['neckDiam_inspectionDict'] = {}
+        context_dic['neckDiam_inspectionDict']['numPass'] = context_dic['neckDiam_inspection'].filter(
+            testResult=1).count()
+        context_dic['neckDiam_inspectionDict']['numFail'] = context_dic['neckDiam_inspection'].filter(
+            testResult=0).count()
+        context_dic['neckDiam_inspectionDict']['totalInspections'] = context_dic['neckDiam_inspectionDict']['numPass'] + \
+                                                                     context_dic['neckDiam_inspectionDict']['numFail']
+
+        ### Calculate percentage passed
+        if context_dic['neckDiam_inspectionDict']['totalInspections'] > 0:
+            context_dic['neckDiam_inspectionDict']['passPerc'] = 100 * context_dic['neckDiam_inspectionDict'][
+                'numPass'] / context_dic['neckDiam_inspectionDict']['totalInspections']
+        else:
+            context_dic['neckDiam_inspectionDict']['passPerc'] = 0
+
+    if inspectionTypes.assembly_test_inspection:
+        context_dic['assembly_inspection'] = assemblyInspection.objects.filter(jobID__jobNumber=jobNumber,
+                                                                               dateCreated__range=(
+                                                                                   date_from, date_to))
+    if inspectionTypes.carton_temp_inspection:
+        context_dic['cartonTemp_inspection'] = cartonTemperature.objects.filter(jobID__jobNumber=jobNumber,
+                                                                                dateCreated__range=(
+                                                                                    date_from, date_to))
+        context_dic['cartonTemp_inspectionDict'] = {}
+        context_dic['cartonTemp_inspectionDict'] = context_dic['cartonTemp_inspection'].aggregate(
+            Avg('cartonTemp'),
+            Max('cartonTemp'),
+            Min('cartonTemp'),
+            StdDev('cartonTemp'))
+
+    if inspectionTypes.vision_system_inspection:
+        context_dic['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=jobNumber,
+                                                                              dateCreated__range=(
+                                                                                  date_from, date_to))
+
+
     return context_dic
 
+
+######################
+#
+# Helper functions
+#
+######################
 
 def createDateRange(date_from=None, date_to=None):
     if date_from is None:

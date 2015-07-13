@@ -133,5 +133,141 @@
 
 
 
+{% if neckDiam_inspectionDict %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Shot Weight Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Minimum</th>
+                    <th>Average</th>
+                    <th>Standard Deviation</th>
+                    <th>Maximum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ neckDiam_inspectionDict.shotWeight__min }}
+                    </td>
+                    <td>
+                        {{ neckDiam_inspectionDict.shotWeight__avg }}
+                    </td>
+                    <td>
+                        {{ neckDiam_inspectionDict.shotWeight__stddev }}
+                    </td>
+                    <td>
+                        {{ neckDiam_inspectionDict.shotWeight__max }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
 
+{% if od_inspectionDict %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Outside Diameter Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Minimum</th>
+                    <th>Average</th>
+                    <th>Standard Deviation</th>
+                    <th>Maximum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ od_inspectionDict.outsideDiameter__min }}
+                    </td>
+                    <td>
+                        {{ od_inspectionDict.outsideDiameter__avg }}
+                    </td>
+                    <td>
+                        {{ od_inspectionDict.outsideDiameter__stddev }}
+                    </td>
+                    <td>
+                        {{ od_inspectionDict.outsideDiameter__max }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+
+{% if vol_inspectionDict %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Volume Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Minimum</th>
+                    <th>Average</th>
+                    <th>Standard Deviation</th>
+                    <th>Maximum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ vol_inspectionDict.liquidWeight__min }}
+                    </td>
+                    <td>
+                        {{ vol_inspectionDict.liquidWeight__avg }}
+                    </td>
+                    <td>
+                        {{ vol_inspectionDict.liquidWeight__stddev }}
+                    </td>
+                    <td>
+                        {{ vol_inspectionDict.liquidWeight__max }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+
+{% if neckDiam_inspectionDict %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Neck Diameter Inspection Summary</caption>
+                <thead>
+                <tr>
+                    <th>Total Inspections</th>
+                    <th>Pass</th>
+                    <th>Fail</th>
+                    <th>Pass Percent</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {{ neckDiam_inspectionDict.totalInspections }}
+                    </td>
+                    <td>
+                        {{ neckDiam_inspectionDict.numPass }}
+                    </td>
+                    <td>
+                        {{ neckDiam_inspectionDict.numFail }}
+                    </td>
+                    <td>
+                        {{ neckDiam_inspectionDict.passPerc }} %
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
 
