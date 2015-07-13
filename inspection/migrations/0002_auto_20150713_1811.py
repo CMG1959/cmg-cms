@@ -7,10 +7,10 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('employee', '0002_employee_shift_id'),
         ('startupshot', '0001_initial'),
+        ('employee', '0001_squashed_0002_employee_shift_id'),
         ('equipment', '0001_initial'),
-        ('part', '0002_auto_20150712_1340'),
+        ('part', '0001_squashed_0002_auto_20150713_1746'),
         ('inspection', '0001_initial'),
     ]
 
@@ -142,6 +142,11 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Volume Inspection',
                 'verbose_name_plural': 'Volume Inspections',
             },
+        ),
+        migrations.AddField(
+            model_name='shotweightinspection',
+            name='activeCavities',
+            field=models.IntegerField(default=1, verbose_name=b'Active Cavities'),
         ),
         migrations.AlterField(
             model_name='visualinspection',

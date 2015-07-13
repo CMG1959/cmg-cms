@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
-from django.db.models import Avg, Max, Min, StdDev, F
+from django.db.models import Avg, Max, Min, StdDev, F, FloatField
 
 ### bring in models
 from startupshot.models import MattecProd, startUpShot
@@ -44,9 +44,16 @@ def view_weightStatus(request):
                 active_parts[idx_id]['avgPartWeight'] = avg_weight['avg_weight']
 
             elif quick_part[0].shot_weight_inspection:
-                avg_weight = shotWeightInspection.objects.filter(jobID__jobNumber=each_part[2]).aggregate(Avg(F('shotWeight')/F('activeCavities')))
-                active_parts[idx_id]['avgPartWeight'] = avg_weight['avg_weight']
+                shotObj = shotWeightInspection.objects.filter(jobID__jobNumber=each_part[2])
+                shotList = []
+                for eachShot in shotObj:
+                    shotList.append(eachShot.shotWeight / eachShot.activeCavities)
+                active_parts[idx_id]['avgPartWeight'] = '%1.3f' % (sum(shotList) / len(shotList))
 
+        if active_parts[idx_id]['avgPartWeight'] > active_parts[idx_id]['startWeight']:
+            active_parts[idx_id]['alertLevel'] = "danger"
+        else:
+            active_parts[idx_id]['alertLevel'] = "success"
         idx += 1
     ### Create a dictionary with
     print active_parts

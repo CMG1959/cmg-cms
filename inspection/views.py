@@ -138,9 +138,10 @@ def view_shotWeightInspection(request, jobNumber):
         form = shotWeightForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            act_cav = startUpShot.MattecProd.objects.get(jobNumber=jobNumber)
+            act_cav = MattecProd.objects.get(jobNumber=jobNumber)
+
             newForm = shotWeightInspection(
-                jobID=startUpShot.objects.get(jobNumber=jobNumber).id,
+                jobID=startUpShot.objects.get(jobNumber=jobNumber),
                 machineOperator=employee.objects.get(pk=form.cleaned_data['machineOperator'].pk),
                 inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
                 shotWeight=form.cleaned_data['shotWeight'],

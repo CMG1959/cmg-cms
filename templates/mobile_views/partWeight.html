@@ -22,7 +22,7 @@
         </thead>
         <tbody>
         {% for key,value in active_parts.items %}
-            <tr>
+            <tr class={{ value.alertLevel }}>
                 <td>
                     {{ value.machID }}
                 </td>
