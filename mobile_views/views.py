@@ -56,7 +56,7 @@ def view_weightStatus(request):
             active_parts[idx_id]['alertLevel'] = "success"
         idx += 1
     ### Create a dictionary with
-    print active_parts
+    # print active_parts
 
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
