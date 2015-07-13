@@ -138,11 +138,19 @@ def view_shotWeightInspection(request, jobNumber):
         form = shotWeightForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
+            act_cav = startUpShot.MattecProd.objects.get(jobNumber=jobNumber)
+            newForm = shotWeightInspection(
+                jobID=startUpShot.objects.get(jobNumber=jobNumber).id,
+                machineOperator=employee.objects.get(pk=form.cleaned_data['machineOperator'].pk),
+                inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+                shotWeight=form.cleaned_data['shotWeight'],
+                activeCavities=act_cav.activeCavities
+            )
             # process the data in form.cleaned_data as required
             # part_number = form.cleaned_data['jobID']
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
-            form.save()
+            newForm.save()
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 

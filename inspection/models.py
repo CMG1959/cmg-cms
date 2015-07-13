@@ -46,7 +46,7 @@ class shotWeightInspection(models.Model):
                                       related_name='swi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     shotWeight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Shot Weight")
-
+    activeCavities = models.IntegerField(verbose_name='Active Cavities',default=1)
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
