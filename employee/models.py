@@ -2,15 +2,15 @@ from django.db import models
 
 # Create your models here.
 
-class organizations(models.Model):
-    class Meta:
-        verbose_name = 'Organization'
-        verbose_name_plural = 'Organizations'
-
-    org_name = models.CharField(verbose_name="Organization Name", max_length=25)
-
-    def __unicode__(self):
-        return self.org_name
+# class organizations(models.Model):
+#     class Meta:
+#         verbose_name = 'Organization'
+#         verbose_name_plural = 'Organizations'
+#
+#     org_name = models.CharField(verbose_name="Organization Name", max_length=25)
+#
+#     def __unicode__(self):
+#         return self.org_name
 
 class JobTitles(models.Model):
     class Meta:
