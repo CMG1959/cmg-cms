@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from part.models import Part
 from molds.models import Mold
 from equipment.models import EquipmentInfo
-from employee.models import employee
+from employee.models import Employees
 from .models import startUpShot, MattecProd
 from .forms import startupShotLookup, startupShotForm
 from django.contrib.auth.decorators import login_required
@@ -88,7 +88,7 @@ def createNewStartUpShot(request, jobNo):
                                   moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
                                   # headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
                                   #                                      head_code=head, cavity_id=cavID), \
-                                  inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk), \
+                                  inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk), \
                                   shotWeight=form.cleaned_data['shotWeight'], \
                                   activeCavities=MattecInfo.activeCavities, \
                                   cycleTime=MattecInfo.cycleTime, \
@@ -107,7 +107,7 @@ def createNewStartUpShot(request, jobNo):
 
         else:
             form = startupShotForm()
-            form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+            form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'startupshot/createStartupShot.html', {'form': form, 'MattecDict': MattecInfo,
                                                                   'PartInfo': PartInfo})

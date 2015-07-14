@@ -3,7 +3,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from employee.models import employee
+from employee.models import Employees
 
 from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair
 from forms import equipmentPMForm, equipmentRepairForm
@@ -75,7 +75,7 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
                      'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type).id},
         )
         form.fields["pm_frequency"].queryset = PMFreq.objects.filter(pm_frequency=pm_type)
-        form.fields["employee"].queryset = employee.objects.filter(organization_name__org_name='Engineering')
+        form.fields["employee"].queryset = Employees.objects.filter(EmpJob__JobNum=1) # admin
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
                                                               pm_frequency__pm_frequency=pm_type)
     return render(request, 'equipment/forms/pm.html', {'form': form, 'equip_info': equip_info})
@@ -117,7 +117,7 @@ def view_repair_form(request, equip_type, equip_name):
             initial={'equipment_ID': equip_info.id,
                      },
         )
-        form.fields["employee"].queryset = employee.objects.filter(organization_name__org_name='Engineering')
+        form.fields["employee"].queryset = Employees.objects.filter(EmpJob__JobNum=1) # admin
 
     return render(request, 'equipment/forms/repair.html', {'form': form, 'equip_info': equip_info})
 

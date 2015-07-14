@@ -14,7 +14,7 @@ from models import partWeightInspection, visualInspection, shotWeightInspection,
     neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
-from employee.models import employee
+from employee.models import Employees
 from molds.models import PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm, \
     outsideDiameterForm, volumeInspectionForm, neckDiameterForm, assemblyInspectionForm, cartonTempForm, \
@@ -86,9 +86,9 @@ def view_visualInspection(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
@@ -119,9 +119,9 @@ def view_partWeightInspection(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
@@ -142,8 +142,8 @@ def view_shotWeightInspection(request, jobNumber):
 
             newForm = shotWeightInspection(
                 jobID=startUpShot.objects.get(jobNumber=jobNumber),
-                machineOperator=employee.objects.get(pk=form.cleaned_data['machineOperator'].pk),
-                inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+                machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk),
+                inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
                 shotWeight=form.cleaned_data['shotWeight'],
                 activeCavities=act_cav.activeCavities
             )
@@ -162,9 +162,9 @@ def view_shotWeightInspection(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -192,9 +192,9 @@ def view_outsideDiameterInspection(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -222,9 +222,9 @@ def view_volumeInspectionForm(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -252,9 +252,9 @@ def view_neckDiameterForm(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -282,9 +282,9 @@ def view_assemblyInspectionForm(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -312,9 +312,9 @@ def view_cartonTempForm(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -342,9 +342,9 @@ def view_visionInspectionForm(request, jobNumber):
         )
         form = presetStandardFields(form, jobID=jobNumber)
         ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator')
+        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
         ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
     return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
 
@@ -712,11 +712,11 @@ def createDateRange(date_from=None, date_to=None):
 def presetStandardFields(my_form, jobID):
     # this will preset machine and qa fields
     ### Filter the machine operators
-    my_form.fields["machineOperator"].queryset = employee.objects.filter(organization_name__org_name='Machine Operator',
-                                                                         shift_id=getShift())
+    my_form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9,
+                                                                         EmpShift=getShift())
     ### Filter the QA ladies
-    my_form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA',
-                                                                       shift_id=getShift())
+    my_form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6,
+                                                                       EmpShift=getShift())
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
 

@@ -10,7 +10,7 @@ class ProductionHistory(models.Model):
         verbose_name = 'Production History Log Entry'
         verbose_name_plural = 'Production History Log Entries'
 
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name")
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     jobNumber = models.ForeignKey('startupshot.startUpShot', verbose_name="Job Number")
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
@@ -24,7 +24,7 @@ class MoldHistory(models.Model):
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
 
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Name")
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")

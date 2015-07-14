@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from forms import phlLookup, phlForm, moldLookup, mhlForm
 from startupshot.models import MattecProd, startUpShot
-from employee.models import employee
+from employee.models import Employees
 from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 import datetime
@@ -66,7 +66,7 @@ def view_specific_phl_form(request, jobNo):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             newForm = ProductionHistory(
-                inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+                inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
                 jobNumber=startUpShot.objects.get(jobNumber=jobNo),
                 descEvent=form.cleaned_data['descEvent'],
             )
@@ -79,11 +79,11 @@ def view_specific_phl_form(request, jobNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlForm()
-        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='QA',
+        form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6,
                                                                         shift_id=getShift()) | \
-                                                employee.objects.filter(organization_name__org_name='QC',
+                                                Employees.objects.filter(EmpJob__JobNum=2,
                                                                         shift_id=getShift()) | \
-                                                employee.objects.filter(organization_name__org_name='Engineering')
+                                                Employees.objects.filter(EmpJob__JobNum=1)
 
 
     context = RequestContext(request, {
@@ -108,7 +108,7 @@ def view_specific_mold_form(request, moldNo):
             # process the data in form.cleaned_data as required
 
             newForm = MoldHistory(
-                inspectorName=employee.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+                inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
                 moldNumber=Mold.objects.get(mold_number=moldNo),
                 descEvent=form.cleaned_data['descEvent'],
                 pm=form.cleaned_data['pm'],
@@ -124,7 +124,7 @@ def view_specific_mold_form(request, moldNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = mhlForm()
-        form.fields["inspectorName"].queryset = employee.objects.filter(organization_name__org_name='Toolroom')
+        form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=1)
 
     context = RequestContext(request, {
         'form': form,

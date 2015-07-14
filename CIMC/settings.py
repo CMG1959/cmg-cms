@@ -90,28 +90,28 @@ WSGI_APPLICATION = 'CIMC.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'NAME': 'CIMC_DB',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': '127.0.0.1',
+#         'PORT': '',
+#         'USER': 'mcaro',
+#         'PASSWORD': '1959Cmg1',
+#
+#     },
 DATABASES = {
-    'default': {
-        'NAME': 'CIMC_DB',
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'PORT': '',
-        'USER': 'mcaro',
-        'PASSWORD': '1959Cmg1',
-
-    },
-    # DATABASES = {
-    #     'default': {
-    #         'NAME': 'cmg_qms',
-    #         'ENGINE': 'sql_server.pyodbc',
-    #         'HOST': 'CMG-SQL1',
-    #         'PORT': '',
-    #         'USER': 'webappUser',
-    #         'PASSWORD': '1959Cmg1',
-    #         'OPTIONS': {
-    #             'driver': 'SQL Server Native Client 11.0',
-    #         },
-    #     },
+        'default': {
+            'NAME': 'cmg_qms',
+            'ENGINE': 'sql_server.pyodbc',
+            'HOST': 'CMG-SQL1',
+            'PORT': '',
+            'USER': 'webappUser',
+            'PASSWORD': '1959Cmg1',
+            'OPTIONS': {
+                'driver': 'SQL Server Native Client 11.0',
+            },
+        },
     # DATABASES = {
     #             'default': {
     #                 'NAME': 'CIMC_DB',

@@ -24,7 +24,7 @@ class partWeightInspection(models.Model):
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='pwi_jobID')
     machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
                                         related_name='pwi_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='pwi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID")
@@ -40,9 +40,9 @@ class shotWeightInspection(models.Model):
         verbose_name_plural = 'Shot Weight Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='swi_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='swi_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='swi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     shotWeight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Shot Weight")
@@ -57,9 +57,9 @@ class visualInspection(models.Model):
         verbose_name_plural = 'Visual Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='vi_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='vi_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='vi_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)")
@@ -76,9 +76,9 @@ class outsideDiameterInspection(models.Model):
         verbose_name_plural = 'Outside Diameter Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='odi_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='odi_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='odi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     outsideDiameter = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Outside Diameter")
@@ -93,9 +93,9 @@ class volumeInspection(models.Model):
         verbose_name_plural = 'Volume Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='vol_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='vol_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='vol_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     liquidWeight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Liquid Weight (g)")
@@ -110,9 +110,9 @@ class neckDiameterInspection(models.Model):
         verbose_name_plural = 'Neck Diameter Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ndi_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ndi_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='ndi_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     testResult = models.BooleanField(verbose_name="Test Result", default=True)
@@ -151,9 +151,9 @@ class assemblyInspection(models.Model):
         verbose_name_plural = 'Assembly Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='assem_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='assem_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='assem_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     assemblyTestResults = models.ManyToManyField(assemblyTest, verbose_name="Assembly Test Results")
@@ -168,9 +168,9 @@ class cartonTemperature(models.Model):
         verbose_name_plural = 'Carton Temperatures'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ct_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ct_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='ct_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     cartonTemp = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Carton Temp (F)")
@@ -208,9 +208,9 @@ class visionInspection(models.Model):
         verbose_name_plural = 'Vision System Test'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='vis_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='vis_machineOperator')
-    inspectorName = models.ForeignKey('employee.employee', verbose_name="Inspector Name",
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='vis_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     visionTestResults = models.ManyToManyField(visionTest, verbose_name="Vision System Test Results")
