@@ -49,14 +49,10 @@ def view_mold_form(request):
 
 @login_required
 def view_specific_phl_form(request, jobNo):
-    # try:
-    #     activeInMattec = MattecProd.objects.get(jobNumber=jobNo)
-    # except ObjectDoesNotExist:
-    #     raise Http404("Part number does not exist in MATTEC table")
 
     active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
     if not active_job.exists():
-        raise Http404("Part number does not exist")
+        raise Http404("Need a start-up shot before proceeding")
 
 
     if request.method == 'POST':

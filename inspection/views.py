@@ -23,7 +23,7 @@ from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemRep
 
 ######################################
 #
-#  Section for generating indexs, etc
+#  Section for generating indexes, etc
 #
 ######################################
 
@@ -31,7 +31,6 @@ from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemRep
 def view_index(request):
     activeInMattec = MattecProd.objects.all().order_by('machNo')
 
-    # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
     template = loader.get_template('inspection/index.html')
     context = RequestContext(request, {
@@ -42,9 +41,11 @@ def view_index(request):
 
 @login_required
 def view_detailJob(request, jobNumber):
+    jobNumber = str(jobNumber).strip()
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if not active_job.exists():
-        raise Http404("Part number does not exist")
+        redir_url = '/startupshot/create/%s/' % jobNumber
+        return HttpResponseRedirect(redir_url)
 
     # if  PartInspection object hasnt be created, make it now.
     checkPartInspection(active_job[0].item)
@@ -717,11 +718,11 @@ def createDateRange(date_from=None, date_to=None):
 def presetStandardFields(my_form, jobID):
     # this will preset machine and qa fields
     ### Filter the machine operators
-    my_form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9,
-                                                                         EmpShift=getShift())
+    my_form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9).order_by('EmpShift')
+                                                                         # EmpShift=getShift())
     ### Filter the QA ladies
-    my_form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6,
-                                                                       EmpShift=getShift())
+    my_form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6).order_by('EmpShifft')
+                                                                       # EmpShift=getShift())
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
 
