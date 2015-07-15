@@ -15,7 +15,7 @@ from models import partWeightInspection, visualInspection, shotWeightInspection,
 from part.models import PartInspection
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
-from molds.models import PartIdentifier
+from molds.models import Mold,PartIdentifier
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm, \
     outsideDiameterForm, volumeInspectionForm, neckDiameterForm, assemblyInspectionForm, cartonTempForm, \
     visionInspectionForm
@@ -45,6 +45,11 @@ def view_detailJob(request, jobNumber):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if not active_job.exists():
         raise Http404("Part number does not exist")
+
+    # if  PartInspection object hasnt be created, make it now.
+    checkPartInspection(active_job[0].item)
+    # better go ahead and take care of the Mold now
+    checkMoldCavs(item_Number=active_job[0].item)
 
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
 
@@ -734,3 +739,22 @@ def getShift():
         shift = 3
 
     return shift
+
+def checkPartInspection(item_Number):
+    if not PartInspection.objects.filter(item_Number__item_Number=item_Number).exists():
+        newPartInspection = PartInspection(item_Number__item_Number = item_Number)
+        # will probably need to add a switch for CMC vs Canada
+        newPartInspection.save()
+
+def checkMoldCavs(item_Number=None,mold_Number=None):
+    if item_Number:
+        mattec_info = MattecProd.objects.get(itemNo=item_Number)
+        mold_Number = mattec_info.moldNumber
+
+    if not PartIdentifier.objects.filter(mold_number__mold_number=mold_Number).exists():
+        ### grab the mold information
+        mold_info = Mold.objects.get(mold_number = mold_Number)
+        ### add all the cavities
+        for n in range(mold_info.num_cavities):
+            newCavID = PartIdentifier(mold_number__mold_number=mold_Number,head_code='A',cavity_id = '%i' % (n))
+            newCavID.save()

@@ -5,16 +5,14 @@ from django.db import models
 
 
 # Create your models here.
-class visualInspectionCriteria(models.Model):
-    class Meta:
-        verbose_name = 'Visual Inspection Criterion'
-        verbose_name_plural = 'Visual Inspection Criteria'
 
-    defectType = models.CharField(max_length=25)
-
-    def __unicode__(self):
-        return self.defectType
-
+#######################################################################################################################
+#
+#
+# Part Weight Inspection
+#
+#
+#######################################################################################################################
 
 class partWeightInspection(models.Model):
     class Meta:
@@ -33,6 +31,14 @@ class partWeightInspection(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
+#######################################################################################################################
+#
+#
+# Shot Weight Inspection
+#
+#
+#######################################################################################################################
+
 
 class shotWeightInspection(models.Model):
     class Meta:
@@ -50,6 +56,23 @@ class shotWeightInspection(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
+#######################################################################################################################
+#
+#
+# Visual Inspection
+#
+#
+#######################################################################################################################
+
+class visualInspectionCriteria(models.Model):
+    class Meta:
+        verbose_name = 'Visual Inspection Criterion'
+        verbose_name_plural = 'Visual Inspection Criteria'
+
+    defectType = models.CharField(max_length=25)
+
+    def __unicode__(self):
+        return self.defectType
 
 class visualInspection(models.Model):
     class Meta:
@@ -62,12 +85,20 @@ class visualInspection(models.Model):
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='vi_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
-    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)")
-    defectType = models.ManyToManyField(visualInspectionCriteria, verbose_name="Defect Type")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
+    defectType = models.ManyToManyField(visualInspectionCriteria, verbose_name="Defect Type",blank=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID")
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
+
+#######################################################################################################################
+#
+#
+# Outside Diameter Inspection
+#
+#
+#######################################################################################################################
 
 
 class outsideDiameterInspection(models.Model):
@@ -86,6 +117,13 @@ class outsideDiameterInspection(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
+#######################################################################################################################
+#
+#
+# Volume Inspection
+#
+#
+#######################################################################################################################
 
 class volumeInspection(models.Model):
     class Meta:
@@ -102,6 +140,14 @@ class volumeInspection(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
+
+#######################################################################################################################
+#
+#
+# Neck Diameter Inspection
+#
+#
+#######################################################################################################################
 
 
 class neckDiameterInspection(models.Model):
@@ -120,6 +166,13 @@ class neckDiameterInspection(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
+#######################################################################################################################
+#
+#
+# Assembly Inspection
+#
+#
+#######################################################################################################################
 
 
 class assemblyTestCriteria(models.Model):
@@ -144,7 +197,6 @@ class assemblyTest(models.Model):
     def __unicode__(self):
         return self.assemblyTestItem.assemblyTest
 
-
 class assemblyInspection(models.Model):
     class Meta:
         verbose_name = 'Assembly Inspection'
@@ -156,10 +208,18 @@ class assemblyInspection(models.Model):
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='assem_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
-    assemblyTestResults = models.ManyToManyField(assemblyTest, verbose_name="Assembly Test Results")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
+    assemblyTestResults = models.ManyToManyField(assemblyTest, verbose_name="Assembly Test Results",blank=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
+#######################################################################################################################
+#
+#
+# Carton Temperature
+#
+#
+#######################################################################################################################
 
 
 class cartonTemperature(models.Model):
@@ -178,6 +238,14 @@ class cartonTemperature(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
+#######################################################################################################################
+#
+#
+# Vision System
+#
+#
+#######################################################################################################################
+
 
 class visionTestCriteria(models.Model):
     class Meta:
@@ -188,7 +256,6 @@ class visionTestCriteria(models.Model):
 
     def __unicode__(self):
         return self.visionTest
-
 
 class visionTest(models.Model):
     class Meta:
@@ -213,7 +280,8 @@ class visionInspection(models.Model):
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='vis_inspectorName')
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
-    visionTestResults = models.ManyToManyField(visionTest, verbose_name="Vision System Test Results")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
+    visionTestResults = models.ManyToManyField(visionTest, verbose_name="Vision System Test Results",blank=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
