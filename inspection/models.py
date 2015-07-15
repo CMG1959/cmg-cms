@@ -22,7 +22,7 @@ class partWeightInspection(models.Model):
         verbose_name_plural = 'Part Weight Inspections'
 
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='pwi_jobID')
-    machineOperator = models.ForeignKey('employee.employee', verbose_name="Machine Operator",
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='pwi_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='pwi_inspectorName')

@@ -5,6 +5,7 @@ from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
     ]
 
@@ -18,8 +19,8 @@ class Migration(migrations.Migration):
                 ('num_cavities', models.IntegerField(verbose_name=b'Number of Cavities')),
             ],
             options={
-                'verbose_name': 'Mold Information',
-                'verbose_name_plural': 'Molds Information',
+                'verbose_name': 'TMM Mold Information',
+                'verbose_name_plural': 'TMM Mold Information',
             },
         ),
         migrations.CreateModel(

@@ -29,7 +29,7 @@ from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemRep
 
 @login_required
 def view_index(request):
-    activeInMattec = MattecProd.objects.all()
+    activeInMattec = MattecProd.objects.all().order_by('machNo')
 
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 

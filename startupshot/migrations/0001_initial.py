@@ -5,11 +5,12 @@ from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ('molds', '0001_initial'),
         ('part', '0001_initial'),
-        ('equipment', '0001_initial'),
+        ('molds', '0001_initial'),
         ('employee', '0001_initial'),
+        ('equipment', '0001_initial'),
     ]
 
     operations = [
@@ -39,7 +40,7 @@ class Migration(migrations.Migration):
                 ('dateCreated', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
                 ('shotWeight', models.DecimalField(verbose_name=b'Shot Weight', max_digits=12, decimal_places=3)),
                 ('cycleTime', models.DecimalField(verbose_name=b'Cycle Time (s)', max_digits=12, decimal_places=3)),
-                ('inspectorName', models.ForeignKey(verbose_name=b'Inspector Name', to='employee.employee')),
+                ('inspectorName', models.ForeignKey(verbose_name=b'Inspector Name', to='employee.Employees')),
                 ('item', models.ForeignKey(verbose_name=b'Item', to='part.Part')),
                 ('machNo', models.ForeignKey(verbose_name=b'Machine Number', to='equipment.EquipmentInfo')),
                 ('moldNumber', models.ForeignKey(verbose_name=b'Mold Number', to='molds.Mold')),

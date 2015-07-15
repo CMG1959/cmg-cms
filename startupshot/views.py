@@ -38,7 +38,7 @@ def index(request):
 
 @login_required
 def viewActive(request):
-    activeInMattec = MattecProd.objects.all()
+    activeInMattec = MattecProd.objects.all().order_by('machNo')
     template = loader.get_template('startupshot/viewActive.html')
     context = RequestContext(request, {
         'activeInMattec': activeInMattec,
