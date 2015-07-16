@@ -12,7 +12,7 @@ from django.utils import timezone
 from models import partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
     volumeInspection, \
     neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
-from part.models import PartInspection
+from part.models import PartInspection, Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
 from molds.models import Mold,PartIdentifier
@@ -721,7 +721,7 @@ def presetStandardFields(my_form, jobID):
     my_form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9).order_by('EmpShift')
                                                                          # EmpShift=getShift())
     ### Filter the QA ladies
-    my_form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6).order_by('EmpShifft')
+    my_form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6).order_by('EmpShift')
                                                                        # EmpShift=getShift())
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
@@ -743,7 +743,7 @@ def getShift():
 
 def checkPartInspection(item_Number):
     if not PartInspection.objects.filter(item_Number__item_Number=item_Number).exists():
-        newPartInspection = PartInspection(item_Number__item_Number = item_Number)
+        newPartInspection = PartInspection(item_Number = Part.objects.get(item_Number=item_Number))
         # will probably need to add a switch for CMC vs Canada
         newPartInspection.save()
 
@@ -757,5 +757,5 @@ def checkMoldCavs(item_Number=None,mold_Number=None):
         mold_info = Mold.objects.get(mold_number = mold_Number)
         ### add all the cavities
         for n in range(mold_info.num_cavities):
-            newCavID = PartIdentifier(mold_number__mold_number=mold_Number,head_code='A',cavity_id = '%i' % (n))
+            newCavID = PartIdentifier(mold_number=mold_info,head_code='A',cavity_id = '%i' % (n))
             newCavID.save()

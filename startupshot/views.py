@@ -86,23 +86,22 @@ def createNewStartUpShot(request, jobNo):
             newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
                                   jobNumber=jobNo, \
                                   moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
-                                  # headCavID=PartIdentifier.objects.get(mold_number__mold_number=MattecInfo.moldNumber,
-                                  #                                      head_code=head, cavity_id=cavID), \
                                   inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk), \
                                   shotWeight=form.cleaned_data['shotWeight'], \
                                   activeCavities=MattecInfo.activeCavities, \
                                   cycleTime=MattecInfo.cycleTime, \
                                   machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
 
+            newForm.full_clean()
             newForm.save()
             # process the data in form.cleaned_data as required
-            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo)
+            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
     # if a GET (or any other method) we'll create a blank form
     else:
         if startUpShot.objects.filter(jobNumber=jobNo).exists():
-            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo)
+            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
             return HttpResponseRedirect(redirect_url)
 
         else:

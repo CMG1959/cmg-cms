@@ -23,3 +23,11 @@
 
 </body>
 </html>
+
+<script>
+    $('#id_inspectionResult').change(function () {
+            var name = $(this).val();
+            var check = $(this).attr('checked');
+            console.log("Change: " + name + " to " + check);
+        });
+</script>
