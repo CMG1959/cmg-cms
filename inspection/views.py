@@ -99,7 +99,9 @@ def view_visualInspection(request, jobNumber):
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 
-    return render(request, 'inspection/forms/visualInspection.html', {'form': form, 'active_job': active_job})
+    return render(request, 'inspection/forms/visualInspection.html',\
+                  {'form': form, 'active_job': active_job,'id_check':'#id_inspectionResult',\
+                   'idSelect':'#id_defectType'})
 
 
 @login_required
@@ -292,7 +294,9 @@ def view_assemblyInspectionForm(request, jobNumber):
         ### Filter the QA ladies
         # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form,\
+                'active_job': active_job,'id_check':'#id_inspectionResult',\
+                   'idSelect':'#id_assemblyTestResults'})
 
 
 @login_required
@@ -322,7 +326,8 @@ def view_cartonTempForm(request, jobNumber):
         ### Filter the QA ladies
         # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+    return render(request, 'inspection/forms/shotWeightInspection.html',\
+                  {'form': form, 'active_job': active_job})
 
 
 @login_required
@@ -352,7 +357,9 @@ def view_visionInspectionForm(request, jobNumber):
         ### Filter the QA ladies
         # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+    return render(request, 'inspection/forms/shotWeightInspection.html', \
+                  {'form': form, 'active_job': active_job,'id_check':'#id_inspectionResult',\
+                   'idSelect':'#id_visionTestResults'})
 
 
 ######################################
