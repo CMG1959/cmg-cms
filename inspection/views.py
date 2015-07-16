@@ -132,11 +132,12 @@ def view_partWeightInspection(request, jobNumber):
             mold_number__mold_number=active_job[0].moldNumber)
 
         ### Get inspection parameters
-        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job.item.item_Number)
+        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
         min_val = inspecParam.min_part_weight
         max_val = inspecParam.max_part_weight
+        num_id = '#id_partWeight'
     return render(request, 'inspection/forms/partWeightInspection.html', {'form': form,
-                'active_job': active_job,'min_val':min_val, 'max_val':max_val})
+                'active_job': active_job,'min_val':min_val, 'max_val':max_val,'num_id':num_id})
 
 
 @login_required

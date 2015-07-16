@@ -1,0 +1,27 @@
+
+<script>
+    $( document ).ready(function() {
+        var strCont = 'Outside of tolerance. Value should be between {{ min_val }} and {{ max_val }}.';
+        $('{{ num_id }}').popover({content: strCont,trigger:'manual', placement:'top'});
+});
+</script>
+
+<script>
+    $('{{ num_id }}').keyup(function() {
+        if ($(this).val()>{{ max_val }}){
+            if(!$('.popover').hasClass('in')) {
+                $(this).popover('toggle');
+            }
+        }
+        if ($(this).val()<{{ min_val }}){
+            if (!$('.popover').hasClass('in')) {
+                $(this).popover('toggle');
+            }
+        }
+        if (($(this).val()>{{ min_val }}) && ($(this).val()<{{ max_val }})){
+            if ($('.popover').hasClass('in')) {
+                $(this).popover('toggle');
+            }
+        }
+    })
+</script>

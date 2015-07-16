@@ -53,15 +53,15 @@ class PartInspection(models.Model):
     carton_temp_inspection = models.BooleanField(verbose_name="Carton Temperature", default=False)
     ## Min/Max Parameters
     min_part_weight = models.DecimalField(verbose_name="Minimum Part Weight", default=0, max_digits=12,decimal_places=3)
-    max_part_weight = models.DecimalField(verbose_name="Maximum Part Weight", default=0, max_digits=12,decimal_places=3)
+    max_part_weight = models.DecimalField(verbose_name="Maximum Part Weight", default=999999999, max_digits=12,decimal_places=3)
     min_od = models.DecimalField(verbose_name="Minimum Outside Diameter", default=0, max_digits=12,decimal_places=3)
-    max_od = models.DecimalField(verbose_name="Maximum Outside Diameter", default=0, max_digits=12,decimal_places=3)
+    max_od = models.DecimalField(verbose_name="Maximum Outside Diameter", default=999999999, max_digits=12,decimal_places=3)
     min_vol = models.DecimalField(verbose_name="Minimum Volume", default=0, max_digits=12,decimal_places=3)
-    max_vol = models.DecimalField(verbose_name="Maximum Volume", default=0, max_digits=12,decimal_places=3)
+    max_vol = models.DecimalField(verbose_name="Maximum Volume", default=999999999, max_digits=12,decimal_places=3)
     min_neck_diam = models.DecimalField(verbose_name="Minimum Neck Diameter", default=0, max_digits=12,decimal_places=3)
-    max_neck_diam = models.DecimalField(verbose_name="Maximum Neck Diameter", default=0, max_digits=12,decimal_places=3)
+    max_neck_diam = models.DecimalField(verbose_name="Maximum Neck Diameter", default=999999999, max_digits=12,decimal_places=3)
     min_carton_temp = models.DecimalField(verbose_name="Minimum Carton Temp", default=0, max_digits=12,decimal_places=3)
-    min_carton_tempt = models.DecimalField(verbose_name="Maximum Carton Temp", default=0, max_digits=12,decimal_places=3)
+    min_carton_tempt = models.DecimalField(verbose_name="Maximum Carton Temp", default=999999999, max_digits=12,decimal_places=3)
     def __unicode__(self):
         return '%s' % (self.item_Number)
 
