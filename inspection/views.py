@@ -126,16 +126,17 @@ def view_partWeightInspection(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
         ### Filter the cavity and molds
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 
-    return render(request, 'inspection/forms/partWeightInspection.html', {'form': form, 'active_job': active_job})
+        ### Get inspection parameters
+        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job.item.item_Number)
+        min_val = inspecParam.min_part_weight
+        max_val = inspecParam.max_part_weight
+    return render(request, 'inspection/forms/partWeightInspection.html', {'form': form,
+                'active_job': active_job,'min_val':min_val, 'max_val':max_val})
 
 
 @login_required
