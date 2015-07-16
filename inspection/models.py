@@ -285,3 +285,4 @@ class visionInspection(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
+
