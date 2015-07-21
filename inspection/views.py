@@ -91,17 +91,20 @@ def view_visualInspection(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id}
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
-        ### Filter the cavity and molds
+
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 
-    return render(request, 'inspection/forms/visualInspection.html',\
-                  {'form': form, 'active_job': active_job,'id_check':'#id_inspectionResult',\
-                   'idSelect':'#id_defectType'})
+        template = loader.get_template('inspection/forms/visualInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Visual Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_defectType'
+        })
+        return HttpResponse(template.render(context))
 
 
 @login_required
@@ -136,8 +139,19 @@ def view_partWeightInspection(request, jobNumber):
         min_val = inspecParam.min_part_weight
         max_val = inspecParam.max_part_weight
         num_id = '#id_partWeight'
-    return render(request, 'inspection/forms/partWeightInspection.html', {'form': form,
-                'active_job': active_job,'min_val':min_val, 'max_val':max_val,'num_id':num_id})
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Part Weight Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_minmax': True,
+            'min_val': min_val,
+            'max_val': max_val,
+            'num_id' : num_id,
+        })
+        return HttpResponse(template.render(context))
+
 
 
 @login_required
@@ -171,12 +185,25 @@ def view_shotWeightInspection(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+        act_cav = MattecProd.objects.get(jobNumber=jobNumber)
+
+        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
+        min_val = inspecParam.min_part_weight * act_cav.activeCavities
+        max_val = inspecParam.max_part_weight * act_cav.activeCavities
+        num_id = '#id_shotWeight'
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Shot Weight Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_minmax': True,
+            'min_val': min_val,
+            'max_val': max_val,
+            'num_id' : num_id,
+        })
+        return HttpResponse(template.render(context))
 
 
 @login_required
@@ -201,12 +228,23 @@ def view_outsideDiameterInspection(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
+        min_val = inspecParam.min_od
+        max_val = inspecParam.max_od
+        num_id = '#id_outsideDiameter'
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Outside Diameter Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_minmax': True,
+            'min_val': min_val,
+            'max_val': max_val,
+            'num_id' : num_id,
+        })
+        return HttpResponse(template.render(context))
 
 
 @login_required
@@ -231,13 +269,23 @@ def view_volumeInspectionForm(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
+        min_val = inspecParam.min_vol
+        max_val = inspecParam.max_vol
+        num_id = '#id_liquidWeight'
 
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Volume Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_minmax': True,
+            'min_val': min_val,
+            'max_val': max_val,
+            'num_id' : num_id,
+        })
+        return HttpResponse(template.render(context))
 
 @login_required
 def view_neckDiameterForm(request, jobNumber):
@@ -261,12 +309,18 @@ def view_neckDiameterForm(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form, 'active_job': active_job})
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Neck Diameter Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_defectType'
+        })
+        return HttpResponse(template.render(context))
 
 
 @login_required
@@ -291,14 +345,17 @@ def view_assemblyInspectionForm(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', {'form': form,\
-                'active_job': active_job,'id_check':'#id_inspectionResult',\
-                   'idSelect':'#id_assemblyTestResults'})
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Assembly Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_assemblyTestResults'
+        })
+        return HttpResponse(template.render(context))
 
 
 @login_required
@@ -323,13 +380,24 @@ def view_cartonTempForm(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html',\
-                  {'form': form, 'active_job': active_job})
+        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
+        min_val = inspecParam.min_carton_temp
+        max_val = inspecParam.max_carton_temp
+        num_id = '#id_cartonTemp'
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Carton Temperature Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_minmax': True,
+            'min_val': min_val,
+            'max_val': max_val,
+            'num_id' : num_id,
+        })
+        return HttpResponse(template.render(context))
+
 
 
 @login_required
@@ -354,14 +422,17 @@ def view_visionInspectionForm(request, jobNumber):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
         )
         form = presetStandardFields(form, jobID=jobNumber)
-        ### Filter the machine operators
-        # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-        ### Filter the QA ladies
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'inspection/forms/shotWeightInspection.html', \
-                  {'form': form, 'active_job': active_job,'id_check':'#id_inspectionResult',\
-                   'idSelect':'#id_visionTestResults'})
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : 'Vision System Inspection Form',
+            'form': form,
+            'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_visionTestResults'
+        })
+        return HttpResponse(template.render(context))
 
 
 ######################################

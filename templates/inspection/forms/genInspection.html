@@ -16,6 +16,9 @@
 
 
     <div class="panel panel-default bootcards-richtext">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{ form_title }}</h3>
+        </div>
             {% include "project_form_templates/gen_form.html" %}
     </div>
 </div>
@@ -25,4 +28,11 @@
 </html>
 
 
-{% include "inspection/forms/../subTemplates/subcheckBoxSelectLock.html" %}
+{% if use_checkbox %}
+    {% include "inspection/subTemplates/subcheckBoxSelectLock.html" %}
+{% elif use_minmax %}
+    {% include "inspection/subTemplates/subMinMaxChecker.html" %}
+{% else %}
+
+{% endif %}
+
