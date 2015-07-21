@@ -5,7 +5,8 @@ from django.contrib import admin
 from .models import startUpShot, MattecProd
 
 
-class ProductionAdmin(admin.ModelAdmin):
+class startupShotAdmin(admin.ModelAdmin):
+    list_display = ('item','jobNumber','dateCreated')
     fields = ['item',
               'jobNumber',
               'machNo',
@@ -13,9 +14,11 @@ class ProductionAdmin(admin.ModelAdmin):
               'moldNumber',
               'activeCavities',
               'dateCreated',
+              'machineOperator',
               'inspectorName',
               'inProduction']
+    search_fields = ['jobNumber','item__item_Number']
 
 
-admin.site.register(startUpShot)  # , ProductionAdmin)
+admin.site.register(startUpShot,startupShotAdmin)  # , ProductionAdmin)
 admin.site.register(MattecProd)
