@@ -95,7 +95,7 @@ def view_visualInspection(request, jobNumber):
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 
-        template = loader.get_template('inspection/forms/visualInspection.html')
+        template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
             'form_title' : 'Visual Inspection Form',
             'form': form,
