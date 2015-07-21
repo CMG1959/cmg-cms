@@ -15,7 +15,10 @@ class startUpShot(models.Model):
     activeCavities = models.IntegerField(verbose_name="Active Cavities")
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     machNo = models.ForeignKey('equipment.EquipmentInfo', verbose_name="Machine Number")
-    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
+            related_name='sus_machineOperator')
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
+                                      related_name='sus_inspectorName')
     shotWeight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Shot Weight")
     cycleTime = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Cycle Time (s)")
 
