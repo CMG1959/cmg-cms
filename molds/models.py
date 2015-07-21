@@ -7,6 +7,7 @@ class Mold(models.Model):
     class Meta:
         verbose_name = 'TMM Mold Information'
         verbose_name_plural = 'TMM Mold Information'
+        ordering = ('mold_number',)
 
     mold_number = models.CharField(verbose_name="Mold Number", max_length=20)
     mold_description = models.CharField(verbose_name="Mold Description", max_length=50)
