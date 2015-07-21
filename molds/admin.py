@@ -9,6 +9,8 @@ class PartIdentifierInline(admin.StackedInline):
 
 
 class MoldAdmin(admin.ModelAdmin):
+    list_display = ('mold_number','mold_description')
+
     fields = ['mold_number',
               'mold_description',
               'num_cavities']
