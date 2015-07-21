@@ -15,5 +15,7 @@ class MoldAdmin(admin.ModelAdmin):
 
     inlines = [PartIdentifierInline]
 
+    search_fields = ['mold_number']
+
 
 admin.site.register(Mold, MoldAdmin)

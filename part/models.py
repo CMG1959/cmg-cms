@@ -40,7 +40,7 @@ class PartInspection(models.Model):
     class Meta:
         verbose_name = 'Required Part Inspection'
         verbose_name_plural = 'Required Part Inspections'
-        ordering = ('item_Number')
+
 
     ### Item Info
     item_Number = models.ForeignKey(Part, verbose_name="Item Number")
