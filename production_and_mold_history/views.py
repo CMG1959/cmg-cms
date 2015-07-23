@@ -10,7 +10,7 @@ from employee.models import Employees
 from molds.models import Mold
 from .models import ProductionHistory, MoldHistory
 import datetime
-
+from django.utils import timezone
 
 @login_required
 def view_index(request):
