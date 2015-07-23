@@ -3,7 +3,8 @@ from production_and_mold_history.models import ProductionHistory, MoldHistory
 
 
 class phlLookup(forms.Form):
-    job_Number = forms.CharField(label="Job Number:", max_length=15)
+    item_type = forms.ChoiceField(choices=['Mold Number, Job Number'])
+    id_Number = forms.CharField(label="ID", max_length=15)
     date_from = forms.DateField(label="Date From:", required=False)
     date_to = forms.DateField(label="Date To:", required=False)
 

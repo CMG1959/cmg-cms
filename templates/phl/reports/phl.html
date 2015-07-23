@@ -15,39 +15,51 @@
 
 
 <div class="col-sm-10 bootcards-cards">
-    {% include "inspection/subTemplates/subJobInfo.html" %}
 
-    {% if active_job %}
-        <div class="panel panel-default bootcards-richtext">
-            <div class="panel-body">
 
-                <table class="table table-hover">
-                    <caption style="text-align:center">Production History Log</caption>
-                    <thead>
-                    <tr>
-                        <th>Inspector Name</th>
-                        <th>Date Created</th>
-                        <th>Description of Event</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for ep in PHL %}
-                        <tr>
-                            <td>
-                                {{ ep.inspectorName }}
-                            </td>
-                            <td>
-                                {{ ep.dateCreated }}
-                            </td>
-                            <td>
-                                {{ ep.descEvent }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    {% if my_dict %}
+        {% for key,value in my_dict.items %}
+
+            {% if value.sus %}
+                {% with value.sus as active_job %}
+                    {% include "inspection/subTemplates/subJobInfo.html" %}
+                {% endwith %}
+            {% endif %}
+
+            {% if value.sus %}
+                {% with value.phl as PHL %}
+                    <div class="panel panel-default bootcards-richtext">
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <caption style="text-align:center">Production History Log</caption>
+                                <thead>
+                                <tr>
+                                    <th>Inspector Name</th>
+                                    <th>Date Created</th>
+                                    <th>Description of Event</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ep in PHL %}
+                                    <tr>
+                                        <td>
+                                            {{ ep.inspectorName }}
+                                        </td>
+                                        <td>
+                                            {{ ep.dateCreated }}
+                                        </td>
+                                        <td>
+                                            {{ ep.descEvent }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
     {% endif %}
 </div>
 

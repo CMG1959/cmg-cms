@@ -136,24 +136,39 @@ def view_phl_report_search(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            jobNo = form.cleaned_data['job_Number']
+            item_type = form.cleaned_data['item_type']
+            item_id = form.cleaned_data['id_Number']
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
             date_from, date_to = createDateRange(date_from, date_to)
+            my_dict = {}
+
+            n = 1
+            if item_type == 'Job Number':
+                my_dict[str(n)] = {}
+                my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=item_id)
+                my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=item_id, \
+                                                                          dateCreated__range=(date_from, date_to))
+            else:
+                # mold list
+                active_list = startUpShot.objects.filter(moldNumber__mold_number=item_id)
+                for eachJob in active_list:
+                    my_dict[str(n)] = {}
+                    my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=eachJob.jobNumber)
+                    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob.jobNumber, \
+                                                                              dateCreated__range=(date_from, date_to))
+                    n += 1
+                    # for each_job in
             # Format PHL report
-            start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
-            PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo, dateCreated__range=(date_from, date_to))
+            #     Figure out how to plot the shit in a report
+
             # Format dictionaries
-            context_dict = {'active_job': start_up_info, 'PHL': PHL}
+            context_dict = {'my_dict': my_dict}
             template = loader.get_template('phl/reports/phl.html')
             context = RequestContext(request, context_dict)
             # Return new page
             return HttpResponse(template.render(context))
 
-
-            # redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
-            # redirect to a new URL:
-            # return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:
