@@ -75,10 +75,8 @@ def view_specific_phl_form(request, jobNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlForm()
-        form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6,
-                                                                        shift_id=getShift()) | \
-                                                Employees.objects.filter(EmpJob__JobNum=2,
-                                                                        shift_id=getShift()) | \
+        form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6) | \
+                                                Employees.objects.filter(EmpJob__JobNum=2) | \
                                                 Employees.objects.filter(EmpJob__JobNum=1)
 
 
