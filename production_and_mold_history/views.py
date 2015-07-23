@@ -120,11 +120,11 @@ def view_specific_mold_form(request, moldNo):
         form = mhlForm()
         form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=1)
 
-    context = RequestContext(request, {
-        'form': form,
-        'mold_info': mold_info,
-    })
-    return render(request, 'phl/forms/moldForm.html', context)
+        context = RequestContext(request, {
+            'form': form,
+            'mold_info': mold_info,
+        })
+        return render(request, 'phl/forms/moldForm.html', context)
 
 
 @login_required
@@ -137,14 +137,28 @@ def view_phl_report_search(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             jobNo = form.cleaned_data['job_Number']
-            redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+            date_from, date_to = createDateRange(date_from, date_to)
+            # Format PHL report
+            start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
+            PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo, dateCreated__range=(date_from, date_to))
+            # Format dictionaries
+            context_dict = {'active_job': start_up_info, 'PHL': PHL}
+            template = loader.get_template('phl/reports/phl.html')
+            context = RequestContext(request, context_dict)
+            # Return new page
+            return HttpResponse(template.render(context))
+
+
+            # redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
             # redirect to a new URL:
-        return HttpResponseRedirect(redirect_url)
+            # return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlLookup()
-    return render(request, 'phl/forms/phlLookup.html', {'form': form})
+        return render(request, 'phl/forms/phlLookup.html', {'form': form})
 
 
 @login_required
@@ -157,15 +171,29 @@ def view_mold_report_search(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             mold_Number = form.cleaned_data['mold_Number']
-            redirect_url = '/production_and_mold_history/mold_report/%s' % (mold_Number)
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+            # Format date range
+            date_from, date_to = createDateRange(date_from, date_to)
+            # Get information from DB
+            mold_info = Mold.objects.get(mold_number=mold_Number)
+            MHL = MoldHistory.objects.filter(moldNumber__mold_number=mold_Number,
+                                             dateCreated__range=(date_from, date_to))
+            # Format dictionaries
+            context_dict = {'mold_info': mold_info, 'MHL': MHL}
+            template = loader.get_template('phl/reports/mhl.html')
+            context = RequestContext(request, context_dict)
+            # Return new page
+            return HttpResponse(template.render(context))
+            # redirect_url = '/production_and_mold_history/mold_report/%s' % (mold_Number)
             # redirect to a new URL:
-        return HttpResponseRedirect(redirect_url)
+            # return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = moldLookup()
 
-    return render(request, 'phl/forms/moldLookup.html', {'form': form})
+        return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 
 @login_required
@@ -193,8 +221,22 @@ def view_mold_report(request, moldNo):
     return HttpResponse(template.render(context))
 
 
-###### Helper functions #####
+######################
+#
+# Helper functions
+#
+######################
 
+def createDateRange(date_from=None, date_to=None):
+    if date_from is None:
+        date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
+        date_from = timezone.make_aware(date_from, timezone.get_current_timezone())
+
+    if date_to is None:
+        date_to = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+        date_to = timezone.make_aware(date_to, timezone.get_current_timezone())
+
+    return (date_from, date_to)
 
 # def view_mold_report(request,moldNo):
 def getShift():
