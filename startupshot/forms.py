@@ -9,4 +9,4 @@ class startupShotLookup(forms.Form):
 class startupShotForm(forms.ModelForm):
     class Meta:
         model = startUpShot
-        fields = ['inspectorName', 'shotWeight', ]
+        fields = ['machineOperator','inspectorName', 'shotWeight', ]

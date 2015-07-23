@@ -13,10 +13,9 @@ class startupShotAdmin(admin.ModelAdmin):
               'shotWeight',
               'moldNumber',
               'activeCavities',
-              'dateCreated',
               'machineOperator',
               'inspectorName',
-              'inProduction']
+              ]
     search_fields = ['jobNumber','item__item_Number']
 
 
