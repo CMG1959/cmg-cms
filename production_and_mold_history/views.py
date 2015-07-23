@@ -51,8 +51,8 @@ def view_mold_form(request):
 def view_specific_phl_form(request, jobNo):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
-    if not active_job.exists():
-        raise Http404("Need a start-up shot before proceeding")
+    #if not active_job.exists():
+    #    raise Http404("Need a start-up shot before proceeding")
 
 
     if request.method == 'POST':
@@ -82,11 +82,11 @@ def view_specific_phl_form(request, jobNo):
                                                 Employees.objects.filter(EmpJob__JobNum=1)
 
 
-    context = RequestContext(request, {
-        'form': form,
-        'active_job': active_job,
-    })
-    return render(request, 'phl/forms/phlForm.html', context)
+        context = RequestContext(request, {
+            'form': form,
+            'active_job': active_job,
+        })
+        return render(request, 'phl/forms/phlForm.html', context)
 
 
 @login_required
