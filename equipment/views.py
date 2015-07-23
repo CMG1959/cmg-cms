@@ -11,7 +11,7 @@ from forms import equipmentPMForm, equipmentRepairForm
 # Create your views here.
 @login_required
 def view_index(request):
-    equipmentTypes = EquipmentType.objects.all()
+    equipmentTypes = EquipmentType.objects.all().order_by('equipment_type')
 
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
@@ -24,7 +24,7 @@ def view_index(request):
 
 @login_required
 def view_equipment(request, equip_type):
-    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__equipment_type=equip_type)
+    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__equipment_type=equip_type).order_by('part_identifier')
 
 
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')

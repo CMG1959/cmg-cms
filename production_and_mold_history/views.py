@@ -19,7 +19,7 @@ def view_index(request):
 
 @login_required
 def view_phl_form(request):
-    activeInMattec = MattecProd.objects.all()
+    activeInMattec = MattecProd.objects.all().order_by('machNo')
     template = loader.get_template('phl/phl_index.html')
     context = RequestContext(request, {
         'activeInMattec': activeInMattec,
