@@ -25,6 +25,14 @@
                 {% endwith %}
             {% endif %}
 
+        {% if value.phl %}
+            {% with value.phl as phl %}
+                {% include "inspection/subTemplates/subComments.html" %}
+            {% endwith %}
+        {% endif %}
+
+
+
             {% if value.visualInspectionDict %}
                 {% with value.visualInspectionDict as visualInspectionDict %}
                     {% include "inspection/subTemplates/subSummary.html" %}

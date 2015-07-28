@@ -1,0 +1,34 @@
+{% if phl %}
+    {% with phl as PHL %}
+        <div class="panel panel-default bootcards-richtext">
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <caption style="text-align:center">Production Comments</caption>
+                    <thead>
+                    <tr>
+                        <th>Inspector Name</th>
+                        <th>Date Created</th>
+                        <th>Description of Event</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ep in PHL %}
+                        <tr>
+                            <td>
+                                {{ ep.inspectorName }}
+                            </td>
+                            <td>
+                                {{ ep.dateCreated }}
+                            </td>
+                            <td>
+                                {{ ep.descEvent }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endwith %}
+{% endif %}
+

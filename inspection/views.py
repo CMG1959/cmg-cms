@@ -16,9 +16,11 @@ from part.models import PartInspection, Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
 from molds.models import Mold,PartIdentifier
+from production_and_mold_history.models import ProductionHistory
 from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm, \
     outsideDiameterForm, volumeInspectionForm, neckDiameterForm, assemblyInspectionForm, cartonTempForm, \
     visionInspectionForm
+
 
 
 ######################################
@@ -534,6 +536,15 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict[dictID]['startupInfo'] = startUpShot.objects.filter(jobNumber=eachJob, dateCreated__range=(
             date_from, date_to)).select_related('item')
 
+        # Job number 6 and 9 should be QA and
+        partDict[dictID]['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
+                                                                   dateCreated__range=(date_from, date_to),
+                                                                   inspectorName__EmpJob__JobNum=6).select_related(
+            'item')  # |\
+        # ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
+        # dateCreated__range=(date_from, date_to),inspectorName__EmpJob__JobNum=9).select_related('item')
+
+
         if inspectionTypes.visual_inspection:
             temp_obj = visualInspection.objects.filter(jobID__jobNumber=eachJob,
                                                        dateCreated__range=(date_from, date_to))
@@ -664,6 +675,12 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     context_dic['active_job'] = active_job
 
     # first_item = active_job[0]
+    # Job number 6 and 9 should be QA and
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
+                                                          dateCreated__range=(date_from, date_to),
+                                                          inspectorName__EmpJob__JobNum=6).select_related('item')  # |\
+    # ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
+    # dateCreated__range=(date_from, date_to),inspectorName__EmpJob__JobNum=9).select_related('item')
 
     if inspectionTypes.visual_inspection:
         context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
