@@ -27,8 +27,8 @@
                 <div class="list-group">
                     {% for each_type in equipmentTypes %}
                         <a class="list-group-item" href="/equipment/{{ each_type.equipment_type }}/{{ each_type.part_identifier }}">
-                            <h4 class="list-group-item-heading">{{ each_type.equipment_type }}</h4>
-                            <p class="list-group-item-text">{{ each_type.part_identifier }}</p>
+                            <h4 class="list-group-item-heading">{{ each_type.part_identifier }}</h4>
+                            <p class="list-group-item-text">{{ each_type.manufacturer_name }} {{ each_type.equipment_type }}</p>
                         </a>
                     {% endfor %}
                 </div>

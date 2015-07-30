@@ -31,7 +31,7 @@ from forms import partWeightForm, visualInspectionForm, jobReportSearch, itemRep
 
 @login_required
 def view_index(request):
-    activeInMattec = MattecProd.objects.all().order_by('machNo')
+    activeInMattec = MattecProd.objects.order_by('machNo').all()
 
 
     template = loader.get_template('inspection/index.html')
@@ -541,8 +541,6 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                                    dateCreated__range=(date_from, date_to),
                                                                    inspectorName__EmpJob__JobNum=6).select_related(
             'item')  # |\
-        # ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
-        # dateCreated__range=(date_from, date_to),inspectorName__EmpJob__JobNum=9).select_related('item')
 
 
         if inspectionTypes.visual_inspection:
@@ -658,7 +656,6 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     return partDict
 
-
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
     date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
 
@@ -671,20 +668,17 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     except ObjectDoesNotExist:
         raise Http404("No inspections types were set")
 
-
     context_dic['active_job'] = active_job
 
-    # first_item = active_job[0]
     # Job number 6 and 9 should be QA and
-    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber,
                                                           dateCreated__range=(date_from, date_to),
                                                           inspectorName__EmpJob__JobNum=6).select_related('item')  # |\
-    # ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
-    # dateCreated__range=(date_from, date_to),inspectorName__EmpJob__JobNum=9).select_related('item')
 
     if inspectionTypes.visual_inspection:
         context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
                                                                           dateCreated__range=(date_from, date_to))
+
         context_dic['InspectionDates'] = {}
         context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
                                                                                    Max('dateCreated'))

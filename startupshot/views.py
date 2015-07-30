@@ -87,12 +87,13 @@ def createNewStartUpShot(request, jobNo):
                                   jobNumber=jobNo, \
                                   moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
                                   inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk), \
+                                  machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk), \
                                   shotWeight=form.cleaned_data['shotWeight'], \
                                   activeCavities=MattecInfo.activeCavities, \
                                   cycleTime=MattecInfo.cycleTime, \
-                                  machNo=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo))
+                                  machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
 
-            newForm.full_clean()
+
             newForm.save()
             # process the data in form.cleaned_data as required
             redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())

@@ -35,6 +35,7 @@ class EquipmentInfo(models.Model):
     manufacturer_name = models.ForeignKey(EquipmentManufacturer, verbose_name="Manufacturer Name")
     serial_number = models.CharField(verbose_name="Serial Number", max_length=25)
     date_of_manufacture = models.DateField(verbose_name="Date of Manufacture", default=date.today)
+    is_active = models.BooleanField(verbose_name="Is Active", default=True)
 
     def __unicode__(self):
         return self.part_identifier
