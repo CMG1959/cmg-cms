@@ -216,7 +216,12 @@ def view_phl_report(request, jobNo):
     start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
     PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo)
     print PHL
-    context_dict = {'active_job': start_up_info, 'PHL': PHL}
+    my_dict = {}
+    my_dict['0'] = {}
+    my_dict['0']['sus'] = start_up_info
+    my_dict['0']['phl'] = PHL
+
+    context_dict = {'my_dict' : my_dict}
     template = loader.get_template('phl/reports/phl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
@@ -230,7 +235,10 @@ def view_mold_report(request, moldNo):
         raise Http404("The mold has not been created in the system yet.")
 
     MHL = MoldHistory.objects.filter(moldNumber__mold_number=moldNo)
-    context_dict = {'mold_info': mold_info, 'MHL': MHL}
+
+
+    my_dict = {'mold_info': mold_info, 'MHL': MHL}
+    context_dict = {'my_dict':my_dict}
     template = loader.get_template('phl/reports/mhl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
