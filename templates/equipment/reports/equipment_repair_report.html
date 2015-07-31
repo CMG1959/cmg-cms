@@ -33,6 +33,7 @@
                         <th>Unit Cost</th>
                         <th>Quantity</th>
                         <th>Total Cost</th>
+                        <th>Comments</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,6 +48,7 @@
                             <td>${{ each_repair.part_cost }}</td>
                             <td>{{ each_repair.part_quantity }}</td>
                             <td>${{ each_repair.part_cost|mul:each_repair.part_quantity }}</td>
+                            <td> {{ each_PM.comments }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

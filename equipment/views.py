@@ -85,7 +85,7 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
 @login_required
 def view_pm_report(request, equip_type, equip_name):
     equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
-    pm_report = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name)
+    pm_report = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name).order_by('dateCreated').reverse()
 
     template = loader.get_template('equipment/reports/equipment_pm_report.html')
     context = RequestContext(request, {
@@ -126,7 +126,7 @@ def view_repair_form(request, equip_type, equip_name):
 @login_required
 def view_repair_report(request, equip_type, equip_name):
     equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
-    repair_report = EquipmentRepair.objects.filter(equipment_ID__part_identifier=equip_name)
+    repair_report = EquipmentRepair.objects.filter(equipment_ID__part_identifier=equip_name).order_by('dateCreated').reverse()
 
     template = loader.get_template('equipment/reports/equipment_repair_report.html')
     context = RequestContext(request, {

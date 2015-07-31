@@ -77,6 +77,7 @@ class EquipmentPM(models.Model):
     pm_frequency = models.ForeignKey('PMFreq', verbose_name="PM Frequency")
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
     logged_pm = models.ManyToManyField('PM', verbose_name="PM Items")
+    comments = models.CharField(max_length=1000, verbose_name="Event Description",null=True,blank=True)
 
     def __unicode__(self):
         return '%s - %s - %s' % (self.equipment_ID, self.pm_frequency, self.dateCreated)
@@ -96,6 +97,7 @@ class EquipmentRepair(models.Model):
     part_number = models.CharField(verbose_name='Part Number', max_length=25)
     part_cost = models.DecimalField(verbose_name='Unit Cost', max_digits=12, decimal_places=2)
     part_quantity = models.IntegerField(verbose_name='Quantity')
+    comments = models.CharField(max_length=1000, verbose_name="Event Description", null=True,blank=True)
 
     def __unicode__(self):
         return '%s - %s - %s' % (self.equipment_ID, self.dateCreated, self.part_name)
