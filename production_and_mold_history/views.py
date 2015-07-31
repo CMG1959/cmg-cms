@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 from django.contrib.auth.decorators import login_required
-from forms import phlLookup, phlForm, moldLookup, mhlForm
+from forms import phlLookup, phlForm, moldLookup, mhlForm, moldLookupForm
 from startupshot.models import MattecProd, startUpShot
 from employee.models import Employees
 from molds.models import Mold
@@ -39,12 +39,12 @@ def view_mold_form(request):
             mold_Number = form.cleaned_data['mold_Number']
             redirect_url = '/production_and_mold_history/mold/%s' % (mold_Number)
             # redirect to a new URL:
-        return HttpResponseRedirect(redirect_url)
+            return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = moldLookup()
-    return render(request, 'phl/forms/moldLookup.html', {'form': form})
+        form = moldLookupForm()
+        return render(request, 'phl/forms/moldLookup.html', {'form': form})
 
 
 @login_required

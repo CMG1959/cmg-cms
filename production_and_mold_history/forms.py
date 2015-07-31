@@ -18,6 +18,9 @@ class moldLookup(forms.Form):
     date_from = forms.DateField(label="Date From:", required=False)
     date_to = forms.DateField(label="Date To:", required=False)
 
+class moldLookupForm(forms.Form):
+    mold_Number = forms.CharField(label="Mold Number:", max_length=10)
+
 class phlForm(forms.ModelForm):
     class Meta:
         model = ProductionHistory
