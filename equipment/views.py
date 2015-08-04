@@ -73,7 +73,7 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
     else:
 
         lastPM = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name,
-                                            equipment_ID__equipment_type__equipment_type=equip_type)
+                                            equipment_ID__equipment_type__equipment_type=equip_type).order_by('-dateCreated')[:3]
 
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
@@ -85,7 +85,7 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
                                                               pm_frequency__pm_frequency=pm_type)
 
         context_dic = {'form': form, 'equip_info': equip_info, 'pm_id': '#id_logged_pm'}
-        if lastPM.exists():
+        if lastPM:
             context_dic['PM_info'] = lastPM
 
     return render(request, 'equipment/forms/pm.html', context_dic)

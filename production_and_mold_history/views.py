@@ -58,9 +58,9 @@ def view_specific_phl_form(request, jobNo):
         mattecInfo = MattecProd.objects.get(jobNumber=jobNo)
 
         machInfo = EquipmentInfo.objects.filter(part_identifier=mattecInfo.machNo,
-                                                equipment_type__equipment_type='IMM') | \
+                                                equipment_type__equipment_type='Injection Molding Machine') | \
                    EquipmentInfo.objects.filter(part_identifier=mattecInfo.machNo,
-                                                equipment_type__equipment_type='ISBM')
+                                                equipment_type__equipment_type='Injection Stretch Blow Molding Machine')
 
         newSUS = startUpShot(
             item=Part.objects.get(item_Number=mattecInfo.itemNo),
