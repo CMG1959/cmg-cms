@@ -19,6 +19,8 @@
 <div class="col-sm-10 bootcards-cards">
     {% include "equipment/subTemplates/equipInfo.html" %}
 
+    {% include "equipment/subTemplates/pm_subreport.html" %}
+
 
     <div class="panel panel-default bootcards-richtext">
             {% include "project_form_templates/gen_form.html" %}
@@ -30,3 +32,17 @@
 
 </body>
 </html>
+
+
+{% if pm_id %}
+
+
+    <script>
+        $(document).ready(function () {
+            {% with pm_id|add:' option' as idSelectopt %}
+                $('{{ idSelectopt }}').prop('selected', true);
+            {% endwith %}
+        });
+    </script>
+
+{% endif %}

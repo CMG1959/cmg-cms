@@ -17,34 +17,8 @@
     {% include "equipment/subTemplates/equipInfo.html" %}
 
 
-    {% if PM_info %}
-        <div class="panel panel-default bootcards-richtext">
-            <div class="panel-body">
-                <table class="table table-hover">
-                    <caption style="text-align:center">Preventative Maintenance Information</caption>
-                    <thead>
-                    <tr>
-                        <th>Mechanic</th>
-                        <th>Date</th>
-                        <th>PM Frequency</th>
-                        <th>Logged PM</th>
-                        <th>Comments</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for each_PM in PM_info %}
-                        <tr>
-                            <td>{{ each_PM.employee }}</td>
-                            <td>{{ each_PM.dateCreated }}</td>
-                            <td>{{ each_PM.pm_frequency }}</td>
-                            <td> {% for pmt in each_PM.logged_pm.all %} <p>{{ pmt.pm_item }}</p> {% endfor %}</td>
-                            <td> {{ each_PM.comments }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-            </div>
-        </div>
-    {% endif %}
+    {% include "equipment/subTemplates/pm_subreport.html" %}
+
 
 </div>
 </body>

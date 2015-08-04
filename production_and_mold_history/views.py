@@ -8,6 +8,9 @@ from forms import phlLookup, phlForm, moldLookup, mhlForm, moldLookupForm
 from startupshot.models import MattecProd, startUpShot
 from employee.models import Employees
 from molds.models import Mold
+from part.models import Part
+from equipment.models import EquipmentInfo
+from equipment.models import EquipmentInfo
 from .models import ProductionHistory, MoldHistory
 import datetime
 from django.utils import timezone
@@ -51,8 +54,26 @@ def view_mold_form(request):
 def view_specific_phl_form(request, jobNo):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
-    #if not active_job.exists():
-    #    raise Http404("Need a start-up shot before proceeding")
+    if not active_job.exists():
+        mattecInfo = MattecProd.objects.get(jobNumber=jobNo)
+
+        machInfo = EquipmentInfo.objects.filter(part_identifier=mattecInfo.machNo,
+                                                equipment_type__equipment_type='IMM') | \
+                   EquipmentInfo.objects.filter(part_identifier=mattecInfo.machNo,
+                                                equipment_type__equipment_type='ISBM')
+
+        newSUS = startUpShot(
+            item=Part.objects.get(item_Number=mattecInfo.itemNo),
+            jobNumber=mattecInfo.jobNumber,
+            moldNumber=Mold.objects.get(mold_number=mattecInfo.moldNumber),
+            activeCavities=mattecInfo.activeCavities,
+            machNo=machInfo[0],
+            machineOperator=Employees.objects.get(EmpLName='McCabe', EmpFName='Bernie'),
+            inspectorName=Employees.objects.get(EmpLName='McCabe', EmpFName='Bernie'),
+            shotWeight=0.0,
+            cycleTime=mattecInfo.cycleTime,
+        )
+        newSUS.save()
 
 
     if request.method == 'POST':

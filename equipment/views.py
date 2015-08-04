@@ -71,6 +71,10 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
 
     # if a GET (or any other method) we'll create a blank form
     else:
+
+        lastPM = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name,
+                                            equipment_ID__equipment_type__equipment_type=equip_type)
+
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
                      'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type).id},
@@ -79,7 +83,12 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
         form.fields["employee"].queryset = Employees.objects.filter(EmpJob__JobNum=1) # admin
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
                                                               pm_frequency__pm_frequency=pm_type)
-    return render(request, 'equipment/forms/pm.html', {'form': form, 'equip_info': equip_info})
+
+        context_dic = {'form': form, 'equip_info': equip_info, 'pm_id': '#id_logged_pm'}
+        if lastPM.exists():
+            context_dic['PM_info'] = lastPM
+
+    return render(request, 'equipment/forms/pm.html', context_dic)
 
 
 @login_required
