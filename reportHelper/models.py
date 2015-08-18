@@ -19,17 +19,17 @@ class jobReport:
         self.dateList = []
 
 
+
     def getPHL(self):
         # Production History Log
-        if self.inspectionTypes.visual_inspection:
-            self.reportDict['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=self.jobNumber,
-            dateCreated__range=(self.dateFrom, self.dateTo),inspectorName__EmpJob__JobNum=6).select_related('item')
-            self.myDateFinder('phl')
+        self.reportDict['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=self.jobNumber,
+        dateCreated__range=(self.dateFrom, self.dateTo),inspectorName__EmpJob__JobNum=6).select_related('item')
+        self.myDateFinder('phl')
 
 
     def getVI(self):
         #   visual inspection
-        if self.inspectionTypes.part_weight_inspection:
+        if self.inspectionTypes.visual_inspection:
             self.reportDict['visualInspection']=visualInspection.objects.filter(jobID__jobNumber=self.jobNumber,\
             dateCreated__range=(self.dateFrom, self.dateTo))
             self.myDateFinder('visualInspection')
@@ -37,7 +37,7 @@ class jobReport:
 
     def getPWI(self):
         #   part weight inspection
-        if self.inspectionTypes.shot_weight_inspection:
+        if self.inspectionTypes.part_weight_inspection:
             self.reportDict['partWeightInspection']=partWeightInspection.objects.filter(jobID__jobNumber=self.jobNumber,
             dateCreated__range=(self.dateFrom, self.dateTo))
             self.myDateFinder('partWeightInspection')
@@ -45,7 +45,7 @@ class jobReport:
 
     def getSWI(self):
         #   shot weight inspection
-        if self.inspectionTypes.od_inspection:
+        if self.inspectionTypes.shot_weight_inspection:
             self.reportDict['shotWeightInspection']=shotWeightInspection.objects.filter(\
                 jobID__jobNumber=self.jobNumber,dateCreated__range=(self.dateFrom, self.dateTo))
             self.myDateFinder('shotWeightInspection')
@@ -53,7 +53,7 @@ class jobReport:
 
     def getODI(self):
         #   outside diameter inspection
-        if self.inspectionTypes.vol_inspection:
+        if self.inspectionTypes.od_inspection:
             self.reportDict['od_inspection']=outsideDiameterInspection.objects.filter(
                 jobID__jobNumber=self.jobNumber,dateCreated__range=(self.dateFrom, self.dateTo))
             self.myDateFinder('od_inspection')
@@ -61,7 +61,7 @@ class jobReport:
 
     def getVOI(self):
         #   volume inspection
-        if self.inspectionTypes.neck_diameter_inspection:
+        if self.inspectionTypes.vol_inspection:
             self.reportDict['vol_inspection']=volumeInspection.objects.filter(
                 jobID__jobNumber=self.jobNumber,dateCreated__range=(self.dateFrom, self.dateTo))
             self.myDateFinder('vol_inspection')
@@ -131,6 +131,18 @@ class jobReport:
                                                            self.reportDict[dictID + 'Dict']['totalInspections']
         else:
             self.reportDict[dictID + 'Dict']['passPerc'] = 0
+
+
+    def createMyReport(self):
+        self.getASI() # Get Assembly Test Inspection
+        self.getCTI() # Get Carton Temp Inspection
+        self.getODI() # Get Outside Diameter Inspection
+        self.getPHL() # Get Production History Log
+        self.getPWI() # Get Part Weight Inspection
+        self.getSWI() # Get Shot Weight Inspection
+        self.getVI()  # Get Visual Inspection
+        self.getVOI() # Get Volume Inspection
+        self.getVSI() # Get Vision System Inspection
 
 
     #
@@ -207,5 +219,5 @@ class jobReport:
     #     context_dic['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=self.jobNumber,
     #                                                                           dateCreated__range=(self.dateFrom, self.dateTo))
 
-
-    return context_dic
+    #
+    # return context_dic
