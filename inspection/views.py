@@ -1,5 +1,7 @@
 # Create your views here.
 import datetime
+import numpy as np
+
 
 from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.template import RequestContext, loader
@@ -581,12 +583,20 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             partDict[dictID]['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=eachJob,
                                                                                            dateCreated__range=(
                                                                                                date_from, date_to))
-            partDict[dictID]['shotWeightInspectionDict'] = {}
-            partDict[dictID]['shotWeightInspectionDict'] = partDict[dictID]['shotWeightInspection'].aggregate(
-                Avg('shotWeight'),
-                Max('shotWeight'),
-                Min('shotWeight'),
-                StdDev('shotWeight'))
+
+            partWeightList = []
+            for eachShot in partDict[dictID]['shotWeightInspection']:
+                partWeightList.append(eachShot.shotWeight / eachShot.activeCavities)
+
+            partDict[dictID]['partWeightInspectionDict'] = {}
+            partDict[dictID]['partWeightInspectionDict'] = \
+                {
+                    'partWeight__min':    '%1.3f' % (np.amin(partWeightList)),
+                    'partWeight__max':    '%1.3f' % (np.amax(partWeightList)),
+                    'partWeight__avg':    '%1.3f' % (np.mean(partWeightList)),
+                    'partWeight__stddev': '%1.3f' % (np.std(partWeightList))
+                }
+
 
         if inspectionTypes.od_inspection:
             partDict[dictID]['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=eachJob,
@@ -717,11 +727,21 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
                                                                                   dateCreated__range=(
                                                                                       date_from, date_to))
-        context_dic['shotWeightInspectionDict'] = {}
-        context_dic['shotWeightInspectionDict'] = context_dic['shotWeightInspection'].aggregate(Avg('shotWeight'),
-                                                                                                Max('shotWeight'),
-                                                                                                Min('shotWeight'),
-                                                                                                StdDev('shotWeight'))
+
+        partWeightList = []
+        for eachShot in context_dic['shotWeightInspection']:
+            partWeightList.append(eachShot.shotWeight / eachShot.activeCavities)
+
+        context_dic['partWeightInspectionDict'] = {}
+        context_dic['partWeightInspectionDict'] = \
+                {
+                    'partWeight__min':    '%1.3f' % (np.amin(partWeightList)),
+                    'partWeight__max':    '%1.3f' % (np.amax(partWeightList)),
+                    'partWeight__avg':    '%1.3f' % (np.mean(partWeightList)),
+                    'partWeight__stddev': '%1.3f' % (np.std(partWeightList))
+                }
+
+
 
     if inspectionTypes.od_inspection:
         context_dic['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,

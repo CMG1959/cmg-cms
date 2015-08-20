@@ -10,7 +10,9 @@
                     <th>Date Created</th>
                     <th>Machine Operator</th>
                     <th>Inspector Name</th>
+                    <th>Active Cavities</th>
                     <th>Shot Weight (g)</th>
+                    <th>Average Part Weight (g)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -22,12 +24,10 @@
                         <td>
                             {{ ep.machineOperator }}
                         </td>
-                        <td>
-                            {{ ep.inspectorName }}
-                        </td>
-                        <td>
-                            {{ ep.shotWeight }}
-                        </td>
+                        <td> {{ ep.inspectorName }}</td>
+                        <td> {{ ep.activeCavities }}</td>
+                        <td> {{ ep.shotWeight }} </td>
+                        <td> {{ ep.shotWeight|div:ep.activeCavities }} </td>
                     </tr>
                 {% endfor %}
                 </tbody>
