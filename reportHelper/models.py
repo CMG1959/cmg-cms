@@ -2,6 +2,7 @@ __author__ = 'mike'
 
 import datetime
 from django.utils import timezone
+from django.db.models import Avg, Max, Min, StdDev
 
 from startupshot.models import *
 from production_and_mold_history.models import *
@@ -17,6 +18,8 @@ class jobReport:
         self.active_job = startUpShot.objects.filter(jobNumber=self.jobNumber).select_related('item')
         self.inspectionTypes = PartInspection.objects.get(item_Number__item_Number=self.active_job[0].item)
         self.dateList = []
+        self.createMyReport()
+        self.getDateStats()
 
 
 
@@ -119,6 +122,23 @@ class jobReport:
                                                                                 Min(param),
                                                                                 StdDev(param))
 
+    def getDateStats(self):
+        # This will return the minimum and maximum date for all inspections
+
+        # first map everything to a single dictionary
+        finalMap = {}
+        for d in self.dateList:
+            finalMap.update(d)
+
+        # then put all the values into a list
+        seq = []
+        for key, value in finalMap.iteritems():
+            seq.append(value)
+
+        # store the minimum and maximum values in the report dictionary
+        self.reportDict['InspectionDates'] = {'dateCreated__min':min(seq),'dateCreated__max':max(seq)}
+
+
     def myDescStatsHelper(self,dictID):
         self.reportDict[dictID + 'Dict'] = {}
         self.reportDict[dictID + 'Dict']['numPass'] = self.reportDict[dictID].filter(param=1).count()
@@ -144,80 +164,3 @@ class jobReport:
         self.getVOI() # Get Volume Inspection
         self.getVSI() # Get Vision System Inspection
 
-
-    #
-    # if inspectionTypes.part_weight_inspection:
-    #     context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                               dateCreated__range=(date_from, date_to))
-    #     context_dic['partWeightInspectionDict'] = {}
-    #     context_dic['partWeightInspectionDict'] = context_dic['partWeightInspection'].aggregate(Avg('partWeight'),
-    #                                                                                             Max('partWeight'),
-    #                                                                                             Min('partWeight'),
-    #                                                                                             StdDev('partWeight'))
-    #
-    # if inspectionTypes.shot_weight_inspection:
-    #     context_dic['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                               dateCreated__range=(self.dateFrom, self.dateTo))
-    #     context_dic['shotWeightInspectionDict'] = {}
-    #     context_dic['shotWeightInspectionDict'] = context_dic['shotWeightInspection'].aggregate(Avg('shotWeight'),
-    #                                                                                             Max('shotWeight'),
-    #                                                                                             Min('shotWeight'),
-    #                                                                                             StdDev('shotWeight'))
-    #
-    # if inspectionTypes.od_inspection:
-    #     context_dic['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                             dateCreated__range=(self.dateFrom, self.dateTo))
-    #     context_dic['od_inspectionDict'] = {}
-    #     context_dic['od_inspectionDict'] = context_dic['od_inspection'].aggregate(
-    #         Avg('outsideDiameter'),
-    #         Max('outsideDiameter'),
-    #         Min('outsideDiameter'),
-    #         StdDev('outsideDiameter'))
-    #
-    # if inspectionTypes.vol_inspection:
-    #     context_dic['vol_inspection'] = volumeInspection.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                     dateCreated__range=(self.dateFrom, self.dateTo))
-    #     context_dic['vol_inspectionDict'] = {}
-    #     context_dic['vol_inspectionDict'] = context_dic['od_inspection'].aggregate(
-    #         Avg('liquidWeight'),
-    #         Max('liquidWeight'),
-    #         Min('liquidWeight'),
-    #         StdDev('liquidWeight'))
-    #
-    # if inspectionTypes.neck_diameter_inspection:
-    #     context_dic['neckDiam_inspection'] = neckDiameterInspection.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                                dateCreated__range=(self.dateFrom, self.dateTo))
-    #     context_dic['neckDiam_inspectionDict'] = {}
-    #     context_dic['neckDiam_inspectionDict']['numPass'] = context_dic['neckDiam_inspection'].filter(
-    #         testResult=1).count()
-    #     context_dic['neckDiam_inspectionDict']['numFail'] = context_dic['neckDiam_inspection'].filter(
-    #         testResult=0).count()
-    #     context_dic['neckDiam_inspectionDict']['totalInspections'] = context_dic['neckDiam_inspectionDict']['numPass'] + \
-    #                                                                  context_dic['neckDiam_inspectionDict']['numFail']
-    #
-    #     ### Calculate percentage passed
-    #     if context_dic['neckDiam_inspectionDict']['totalInspections'] > 0:
-    #         context_dic['neckDiam_inspectionDict']['passPerc'] = 100 * context_dic['neckDiam_inspectionDict'][
-    #             'numPass'] / context_dic['neckDiam_inspectionDict']['totalInspections']
-    #     else:
-    #         context_dic['neckDiam_inspectionDict']['passPerc'] = 0
-
-    # if inspectionTypes.assembly_test_inspection:
-    #     context_dic['assembly_inspection'] = assemblyInspection.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                            dateCreated__range=(self.dateFrom, self.dateTo))
-    # if inspectionTypes.carton_temp_inspection:
-    #     context_dic['cartonTemp_inspection'] = cartonTemperature.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                             dateCreated__range=(self.dateFrom, self.dateTo))
-    #     context_dic['cartonTemp_inspectionDict'] = {}
-    #     context_dic['cartonTemp_inspectionDict'] = context_dic['cartonTemp_inspection'].aggregate(
-    #         Avg('cartonTemp'),
-    #         Max('cartonTemp'),
-    #         Min('cartonTemp'),
-    #         StdDev('cartonTemp'))
-
-    # if inspectionTypes.vision_system_inspection:
-    #     context_dic['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=self.jobNumber,
-    #                                                                           dateCreated__range=(self.dateFrom, self.dateTo))
-
-    #
-    # return context_dic
