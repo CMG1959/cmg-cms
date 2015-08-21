@@ -541,8 +541,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         # Job number 6 and 9 should be QA and
         partDict[dictID]['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob,
                                                                    dateCreated__range=(date_from, date_to),
-                                                                   inspectorName__EmpJob__JobNum=6).select_related(
-            'item')  # |\
+                                                                   inspectorName__EmpJob__JobNum=6)  # |\
 
 
         if inspectionTypes.visual_inspection:
@@ -683,7 +682,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     # Job number 6 and 9 should be QA and
     context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber,
                                                           dateCreated__range=(date_from, date_to),
-                                                          inspectorName__EmpJob__JobNum=6).select_related('item')  # |\
+                                                          inspectorName__EmpJob__JobNum=6)
 
     if inspectionTypes.visual_inspection:
         context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
