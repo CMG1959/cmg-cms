@@ -48,7 +48,7 @@
                             <td>${{ each_repair.part_cost }}</td>
                             <td>{{ each_repair.part_quantity }}</td>
                             <td>${{ each_repair.part_cost|mul:each_repair.part_quantity }}</td>
-                            <td> {{ each_PM.comments }}</td>
+                            <td> {{ each_repair.comments }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
