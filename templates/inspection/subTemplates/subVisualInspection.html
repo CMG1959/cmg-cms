@@ -30,7 +30,7 @@
                     {{ ep.headCavID }}
                 </td>
                 <td>
-                    {{ ep.inspectionResult }}
+                    {{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}
                 </td>
                 <td>
                     {% for dt in ep.defectType.all %} {{ dt.defectType }}. {% endfor %}
