@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import passFailByPart, \
+from models import passFailByPart, passFailTest, \
     partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
     volumeInspection, \
     neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
@@ -96,7 +96,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = passFailInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id}
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
+                     'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
         )
         form = presetStandardFields(form, jobID=jobNumber)
 
@@ -110,7 +111,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
             'active_job': active_job,
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
-            'idSelect':'#id_defectType'
+            'idSelect':'#id_defectType',
+            'idSelect2':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
@@ -134,7 +136,7 @@ def view_visualInspection(request, jobNumber):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = visualInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id}
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id }
         )
         form = presetStandardFields(form, jobID=jobNumber)
 
