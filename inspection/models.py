@@ -15,7 +15,7 @@ class passFailTest(models.Model):
     testName = models.CharField(max_length=25, verbose_name="Pass Fail Test Name")
 
     def __unicode__(self):
-        return '%s - %s' % (self.testName)
+        return '%s' % (self.testName)
 
 class passFailTestCriteria(models.Model):
     class Meta:
@@ -37,7 +37,7 @@ class passFailByPart(models.Model):
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
 
     def __unicode__(self):
-        return '%s - %s' % (self.testName, self.partNumber)
+        return '%s - %s' % (self.testName, self.item_Number)
 
 class passFailInspection(models.Model):
     class Meta:
@@ -45,11 +45,11 @@ class passFailInspection(models.Model):
         verbose_name_plural = 'Pass Fail Inspections'
 
     passFailTestName = models.ForeignKey('passFailTest',verbose_name='Inspection Name')
-    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='vi_jobID')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='pf_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
-                                        related_name='vi_machineOperator')
+                                        related_name='pf_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='vi_inspectorName')
+                                      related_name='pf_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)

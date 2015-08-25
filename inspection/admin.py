@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import partWeightInspection, visualInspectionCriteria, visualInspection, shotWeightInspection, \
     outsideDiameterInspection, volumeInspection, neckDiameterInspection, assemblyTestCriteria, \
     assemblyTest, assemblyInspection, cartonTemperature, visionTestCriteria, visionTest, \
-    visionInspection
+    visionInspection, passFailTest, passFailTestCriteria, passFailByPart, passFailInspection
 
 
 class partWeightInspectionAdmin(admin.ModelAdmin):
@@ -30,9 +30,16 @@ class visualInspectionAdmin(admin.ModelAdmin):
               'headCavID']
 
 
+
 admin.site.register(partWeightInspection, partWeightInspectionAdmin)
 admin.site.register(visualInspectionCriteria, visualInspectionCriteriaAdmin)
 admin.site.register(visualInspection, visualInspectionAdmin)
+
+admin.site.register(passFailTest)
+admin.site.register(passFailTestCriteria)
+admin.site.register(passFailByPart)
+admin.site.register(passFailInspection)
+
 
 admin.site.register(shotWeightInspection)
 admin.site.register(outsideDiameterInspection)
