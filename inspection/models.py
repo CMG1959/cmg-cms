@@ -34,7 +34,7 @@ class passFailByPart(models.Model):
         verbose_name_plural = 'Pass Fail By Parts'
 
     testName = models.ForeignKey('passFailTest', verbose_name = "Pass Fail Test Name")
-    partNumber = models.ForeignKey('part.Part', verbose_name = "Part Number")
+    item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
 
     def __unicode__(self):
         return '%s - %s' % (self.testName, self.partNumber)

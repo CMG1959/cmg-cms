@@ -11,7 +11,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
+from models import passFailByPart, \
+    partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
     volumeInspection, \
     neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
 from part.models import PartInspection, Part
@@ -57,11 +58,14 @@ def view_detailJob(request, jobNumber):
     checkMoldCavs(item_Number=active_job[0].item)
 
     inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
+    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
         'active_job': active_job,
-        'inspectionTypes': inspectionTypes
+        'inspectionTypes': inspectionTypes,
+        'pf_inspectionType' : pf_inspectionType,
     })
     return HttpResponse(template.render(context))
 
