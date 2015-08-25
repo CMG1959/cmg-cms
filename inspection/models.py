@@ -6,6 +6,58 @@ from django.db import models
 
 # Create your models here.
 
+
+class passFailTest(models.Model):
+    class Meta:
+        verbose_name = 'Pass Fail Test Name'
+        verbose_name_plural = 'Pass Fail Test Names'
+
+    testName = models.CharField(max_length=25, verbose_name="Pass Fail Test Name")
+
+    def __unicode__(self):
+        return '%s - %s' % (self.testName)
+
+class passFailTestCriteria(models.Model):
+    class Meta:
+        verbose_name = 'Pass Fail Test Criteria'
+        verbose_name_plural = 'Pass Fail Test Criteria'
+
+    testName = models.ForeignKey('passFailTest', verbose_name = "Pass Fail Test Name")
+    passFail = models.CharField(max_length=25, verbose_name = "Pass Fail Reason")
+
+    def __unicode__(self):
+        return '%s - %s' % (self.testName, self.passFail)
+
+class passFailByPart(models.Model):
+    class Meta:
+        verbose_name = 'Pass Fail Test By Part'
+        verbose_name_plural = 'Pass Fail By Parts'
+
+    testName = models.ForeignKey('passFailTest', verbose_name = "Pass Fail Test Name")
+    partNumber = models.ForeignKey('part.Part', verbose_name = "Part Number")
+
+    def __unicode__(self):
+        return '%s - %s' % (self.testName, self.partNumber)
+
+class passFailInspection(models.Model):
+    class Meta:
+        verbose_name = 'Pass Fail Inspection'
+        verbose_name_plural = 'Pass Fail Inspections'
+
+    passFailTestName = models.ForeignKey('passFailTest',verbose_name='Inspection Name')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='vi_jobID')
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
+                                        related_name='vi_machineOperator')
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
+                                      related_name='vi_inspectorName')
+    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
+    defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
+    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.jobID, self.dateCreated)
+
 #######################################################################################################################
 #
 #
