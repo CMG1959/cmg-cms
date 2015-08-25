@@ -1,6 +1,13 @@
 from django import forms
-from inspection.models import partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
+from inspection.models import passFailInspection, partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
     volumeInspection, neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
+
+
+class passFailInspectionForm(forms.ModelForm):
+    class Meta:
+        model = passFailInspection
+        fields = ['passFailTestName','jobID','machineOperator','inspectorName','inspectionResult',
+                  'defectType','headCavID']
 
 
 class jobReportSearch(forms.Form):
