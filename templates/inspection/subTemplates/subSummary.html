@@ -25,249 +25,84 @@
 {% endif %}
 
 
-{% if visualInspectionDict %}
-    <div class="panel panel-default">
-    <div class="panel-body">
-        <table class="table table-hover">
-            <caption style="text-align:center">Visual Inspection Summary</caption>
-            <thead>
-            <tr>
-                <th>Total Visual Inspections</th>
-                <th>Pass</th>
-                <th>Fail</th>
-                <th>Pass Percent</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    {{ visualInspectionDict.totalInspections }}
-                </td>
-                <td>
-                    {{ visualInspectionDict.numPass }}
-                </td>
-                <td>
-                    {{ visualInspectionDict.numFail }}
-                </td>
-                <td>
-                    {{ visualInspectionDict.passPerc }} %
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    </div>
-{% endif %}
+{% for key,value in pf.items %}
+                {% with value as pfSummaryDict %}
+                    {% include "inspection/subTemplates/subPFSummary.html" %}
+                {% endwith %}
+{% endfor %}
 
 
 
-{% if partWeightInspectionDict %}
-    <div class="panel panel-default">
-    <div class="panel-body">
-        <table class="table table-hover">
-            <caption style="text-align:center">Part Weight Inspection Summary</caption>
-            <thead>
-            <tr>
-                <th>Minimum</th>
-                <th>Average</th>
-                <th>Standard Deviation</th>
-                <th>Maximum</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    {{ partWeightInspectionDict.partWeight__min }}
-                </td>
-                <td>
-                    {{ partWeightInspectionDict.partWeight__avg }}
-                </td>
-                <td>
-                    {{ partWeightInspectionDict.partWeight__stddev }}
-                </td>
-                <td>
-                    {{ partWeightInspectionDict.partWeight__max }}
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    </div>
-{% endif %}
 
+{#{% if visualInspectionDict %}#}
+{#    <div class="panel panel-default">#}
+{#    <div class="panel-body">#}
+{#        <table class="table table-hover">#}
+{#            <caption style="text-align:center">Visual Inspection Summary</caption>#}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th>Total Visual Inspections</th>#}
+{#                <th>Pass</th>#}
+{#                <th>Fail</th>#}
+{#                <th>Pass Percent</th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                <td>#}
+{#                    {{ visualInspectionDict.totalInspections }}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {{ visualInspectionDict.numPass }}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {{ visualInspectionDict.numFail }}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {{ visualInspectionDict.passPerc }} %#}
+{#                </td>#}
+{#            </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{#    </div>#}
+{#{% endif %}#}
+{##}
+{##}
+{##}
+{#{% if partWeightInspectionDict %}#}
+{#    <div class="panel panel-default">#}
+{#    <div class="panel-body">#}
+{#        <table class="table table-hover">#}
+{#            <caption style="text-align:center">Part Weight Inspection Summary</caption>#}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th>Minimum</th>#}
+{#                <th>Average</th>#}
+{#                <th>Standard Deviation</th>#}
+{#                <th>Maximum</th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                <td>#}
+{#                    {{ partWeightInspectionDict.partWeight__min }}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {{ partWeightInspectionDict.partWeight__avg }}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {{ partWeightInspectionDict.partWeight__stddev }}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {{ partWeightInspectionDict.partWeight__max }}#}
+{#                </td>#}
+{#            </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{#    </div>#}
+{#{% endif %}#}
 
-
-{% if shotWeightInspectionDict %}
-    <div class="panel panel-default">
-    <div class="panel-body">
-        <table class="table table-hover">
-            <caption style="text-align:center">Shot Weight Inspection Summary</caption>
-            <thead>
-            <tr>
-                <th>Minimum</th>
-                <th>Average</th>
-                <th>Standard Deviation</th>
-                <th>Maximum</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    {{ shotWeightInspectionDict.shotWeight__min }}
-                </td>
-                <td>
-                    {{ shotWeightInspectionDict.shotWeight__avg }}
-                </td>
-                <td>
-                    {{ shotWeightInspectionDict.shotWeight__stddev }}
-                </td>
-                <td>
-                    {{ shotWeightInspectionDict.shotWeight__max }}
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    </div>
-{% endif %}
-
-
-
-{% if neckDiam_inspectionDict %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table class="table table-hover">
-                <caption style="text-align:center">Shot Weight Inspection Summary</caption>
-                <thead>
-                <tr>
-                    <th>Minimum</th>
-                    <th>Average</th>
-                    <th>Standard Deviation</th>
-                    <th>Maximum</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        {{ neckDiam_inspectionDict.shotWeight__min }}
-                    </td>
-                    <td>
-                        {{ neckDiam_inspectionDict.shotWeight__avg }}
-                    </td>
-                    <td>
-                        {{ neckDiam_inspectionDict.shotWeight__stddev }}
-                    </td>
-                    <td>
-                        {{ neckDiam_inspectionDict.shotWeight__max }}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-{% endif %}
-
-{% if od_inspectionDict %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table class="table table-hover">
-                <caption style="text-align:center">Outside Diameter Inspection Summary</caption>
-                <thead>
-                <tr>
-                    <th>Minimum</th>
-                    <th>Average</th>
-                    <th>Standard Deviation</th>
-                    <th>Maximum</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        {{ od_inspectionDict.outsideDiameter__min }}
-                    </td>
-                    <td>
-                        {{ od_inspectionDict.outsideDiameter__avg }}
-                    </td>
-                    <td>
-                        {{ od_inspectionDict.outsideDiameter__stddev }}
-                    </td>
-                    <td>
-                        {{ od_inspectionDict.outsideDiameter__max }}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-{% endif %}
-
-
-{% if vol_inspectionDict %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table class="table table-hover">
-                <caption style="text-align:center">Volume Inspection Summary</caption>
-                <thead>
-                <tr>
-                    <th>Minimum</th>
-                    <th>Average</th>
-                    <th>Standard Deviation</th>
-                    <th>Maximum</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        {{ vol_inspectionDict.liquidWeight__min }}
-                    </td>
-                    <td>
-                        {{ vol_inspectionDict.liquidWeight__avg }}
-                    </td>
-                    <td>
-                        {{ vol_inspectionDict.liquidWeight__stddev }}
-                    </td>
-                    <td>
-                        {{ vol_inspectionDict.liquidWeight__max }}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-{% endif %}
-
-
-{% if neckDiam_inspectionDict %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table class="table table-hover">
-                <caption style="text-align:center">Neck Diameter Inspection Summary</caption>
-                <thead>
-                <tr>
-                    <th>Total Inspections</th>
-                    <th>Pass</th>
-                    <th>Fail</th>
-                    <th>Pass Percent</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        {{ neckDiam_inspectionDict.totalInspections }}
-                    </td>
-                    <td>
-                        {{ neckDiam_inspectionDict.numPass }}
-                    </td>
-                    <td>
-                        {{ neckDiam_inspectionDict.numFail }}
-                    </td>
-                    <td>
-                        {{ neckDiam_inspectionDict.passPerc }} %
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 {% endif %}
 

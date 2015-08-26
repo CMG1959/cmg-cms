@@ -1,0 +1,33 @@
+{% if pfSummaryDict %}
+    <div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-hover">
+            <caption style="text-align:center">Visual Inspection Summary</caption>
+            <thead>
+            <tr>
+                <th>Total Inspections</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>Pass Percent</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {{ pfSummaryDict.totalInspections }}
+                </td>
+                <td>
+                    {{ pfSummaryDict.numPass }}
+                </td>
+                <td>
+                    {{ pfSummaryDict.numFail }}
+                </td>
+                <td>
+                    {{ pfSummaryDict.passPerc }} %
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+{% endif %}

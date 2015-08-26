@@ -18,31 +18,4 @@ urlpatterns = [
     ### link to visual inspection form
     url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/pf/(?P<inspectionName>[^/]+)/$', views.view_pfInspection, name='view_pfInspection'),
 
-    #
-    # ### link to visual inspection form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/visual/$', views.view_visualInspection, name='view_visualInspection'),
-    # ### link to part weight inspection form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/part_weight/$', views.view_partWeightInspection,
-    #     name='view_partWeightInspection'),
-    # ### link to weight inspection form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/shot_weight/$', views.view_shotWeightInspection,
-    #     name='view_shotWeightInspection'),
-    # ### link to outside diameter form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/outside_diameter/$', views.view_outsideDiameterInspection,
-    #     name='view_outsideDiameterInspection'),
-    # ### link to volume inspection form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/volume_test/$', views.view_volumeInspectionForm,
-    #     name='view_volumeInspectionForm'),
-    # ### link to neck diameter form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/neck_diameter/$', views.view_neckDiameterForm,
-    #     name='view_neckDiameterForm'),
-    # ### link to assembly inspection form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/assembly_test/$', views.view_assemblyInspectionForm,
-    #     name='view_assemblyInspectionForm'),
-    # ### link to carton temp form
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/carton_temp/$', views.view_cartonTempForm,
-    #     name='view_cartonTempForm'),
-    # ### link to vision system inspection
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/vision_system/$', views.view_visionInspectionForm,
-    #     name='view_visionInspectionForm'),
 ]

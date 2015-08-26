@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import passFailByPart, passFailTest, \
+from models import passFailByPart, passFailTest, passFailInspection, \
     partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
     volumeInspection, \
     neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
@@ -20,9 +20,7 @@ from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
-from forms import passFailInspectionForm, partWeightForm, visualInspectionForm, jobReportSearch, itemReportSearch, shotWeightForm, \
-    outsideDiameterForm, volumeInspectionForm, neckDiameterForm, assemblyInspectionForm, cartonTempForm, \
-    visionInspectionForm
+from forms import passFailInspectionForm, partWeightForm, jobReportSearch, itemReportSearch, shotWeightForm, \
 
 
 
@@ -57,7 +55,6 @@ def view_detailJob(request, jobNumber):
     # better go ahead and take care of the Mold now
     checkMoldCavs(item_Number=active_job[0].item)
 
-    inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
 
 
@@ -115,45 +112,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
             'idSelect2':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
-
-
-@login_required
-def view_visualInspection(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = visualInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = visualInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id }
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
-            mold_number__mold_number=active_job[0].moldNumber)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Visual Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_defectType'
-        })
-        return HttpResponse(template.render(context))
-
 
 @login_required
 def view_partWeightInspection(request, jobNumber):
@@ -250,235 +208,6 @@ def view_shotWeightInspection(request, jobNumber):
             'min_val': min_val,
             'max_val': max_val,
             'num_id' : num_id,
-        })
-        return HttpResponse(template.render(context))
-
-
-@login_required
-def view_outsideDiameterInspection(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = outsideDiameterForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = outsideDiameterForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
-        min_val = inspecParam.min_od
-        max_val = inspecParam.max_od
-        num_id = '#id_outsideDiameter'
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Outside Diameter Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_minmax': True,
-            'min_val': min_val,
-            'max_val': max_val,
-            'num_id' : num_id,
-        })
-        return HttpResponse(template.render(context))
-
-
-@login_required
-def view_volumeInspectionForm(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = volumeInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = volumeInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
-        min_val = inspecParam.min_vol
-        max_val = inspecParam.max_vol
-        num_id = '#id_liquidWeight'
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Volume Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_minmax': True,
-            'min_val': min_val,
-            'max_val': max_val,
-            'num_id' : num_id,
-        })
-        return HttpResponse(template.render(context))
-
-@login_required
-def view_neckDiameterForm(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = neckDiameterForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = neckDiameterForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Neck Diameter Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_defectType'
-        })
-        return HttpResponse(template.render(context))
-
-
-@login_required
-def view_assemblyInspectionForm(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = assemblyInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = assemblyInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Assembly Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_assemblyTestResults'
-        })
-        return HttpResponse(template.render(context))
-
-
-@login_required
-def view_cartonTempForm(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = cartonTempForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = cartonTempForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
-        min_val = inspecParam.min_carton_temp
-        max_val = inspecParam.max_carton_temp
-        num_id = '#id_cartonTemp'
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Carton Temperature Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_minmax': True,
-            'min_val': min_val,
-            'max_val': max_val,
-            'num_id' : num_id,
-        })
-        return HttpResponse(template.render(context))
-
-
-
-@login_required
-def view_visionInspectionForm(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = visionInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = visionInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Vision System Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_visionTestResults'
         })
         return HttpResponse(template.render(context))
 
@@ -716,11 +445,6 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
-    try:
-        inspectionTypes = PartInspection.objects.get(item_Number__item_Number=active_job[0].item)
-    except ObjectDoesNotExist:
-        raise Http404("No inspections types were set")
-
     context_dic['active_job'] = active_job
 
     # Job number 6 and 9 should be QA and
@@ -728,125 +452,149 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                           dateCreated__range=(date_from, date_to),
                                                           inspectorName__EmpJob__JobNum=6)
 
-    if inspectionTypes.visual_inspection:
-        context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                          dateCreated__range=(date_from, date_to))
+    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
 
-        context_dic['InspectionDates'] = {}
-        context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
-                                                                                   Max('dateCreated'))
+    context_dic['pf'] = {}
+    for each_pf_inspection in pf_inspectionType:
+        context_dic['pf'][each_pf_inspection.testName] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName,
+                                                                                     jobID__jobNumber=jobNumber)
 
-        ### Initialize dictionary for summary stats
-        context_dic['visualInspectionDict'] = {}
-        ### Count number of passed inspections
-        context_dic['visualInspectionDict']['numPass'] = context_dic['visualInspection'].filter(
+        context_dic['pf'][each_pf_inspection.testName]['numPass'] = context_dic['pf'][each_pf_inspection.testName].filter(
             inspectionResult=1).count()
 
         ### Count number of failed inspections
-        context_dic['visualInspectionDict']['numFail'] = context_dic['visualInspection'].filter(
+        context_dic['pf'][each_pf_inspection.testName]['numFail'] = context_dic['pf'][each_pf_inspection.testName].filter(
             inspectionResult=0).count()
 
         ### Calculate number of total inspections
-        context_dic['visualInspectionDict']['totalInspections'] = context_dic['visualInspectionDict']['numPass'] + \
-                                                                  context_dic['visualInspectionDict']['numFail']
+        context_dic['pf'][each_pf_inspection.testName]['totalInspections'] = context_dic['pf'][each_pf_inspection.testName]['numPass'] + \
+                                                                  context_dic['pf'][each_pf_inspection.testName]['numFail']
         ### Calculate percentage passed
-        if context_dic['visualInspectionDict']['totalInspections'] > 0:
-            context_dic['visualInspectionDict']['passPerc'] = 100 * context_dic['visualInspectionDict']['numPass'] / + \
-                context_dic['visualInspectionDict']['totalInspections']
+        if context_dic['pf'][each_pf_inspection.testName]['totalInspections'] > 0:
+            context_dic['pf'][each_pf_inspection.testName]['passPerc'] = 100 * context_dic['pf'][each_pf_inspection.testName]['numPass'] / + \
+                context_dic['pf'][each_pf_inspection.testName]['totalInspections']
         else:
-            context_dic['visualInspectionDict']['passPerc'] = 0
-
-    if inspectionTypes.part_weight_inspection:
-        context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                                  dateCreated__range=(
-                                                                                      date_from, date_to))
-        context_dic['partWeightInspectionDict'] = {}
-        context_dic['partWeightInspectionDict'] = context_dic['partWeightInspection'].aggregate(Avg('partWeight'),
-                                                                                                Max('partWeight'),
-                                                                                                Min('partWeight'),
-                                                                                                StdDev('partWeight'))
-
-    if inspectionTypes.shot_weight_inspection:
-        context_dic['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                                  dateCreated__range=(
-                                                                                      date_from, date_to))
-
-        partWeightList = []
-        for eachShot in context_dic['shotWeightInspection']:
-            partWeightList.append(eachShot.shotWeight / eachShot.activeCavities)
-
-        context_dic['partWeightInspectionDict'] = {}
-        context_dic['partWeightInspectionDict'] = \
-                {
-                    'partWeight__min':    '%1.3f' % (np.amin(partWeightList)),
-                    'partWeight__max':    '%1.3f' % (np.amax(partWeightList)),
-                    'partWeight__avg':    '%1.3f' % (np.mean(partWeightList)),
-                    'partWeight__stddev': '%1.3f' % (np.std(partWeightList))
-                }
-
-
-
-    if inspectionTypes.od_inspection:
-        context_dic['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                                dateCreated__range=(
-                                                                                    date_from, date_to))
-        context_dic['od_inspectionDict'] = {}
-        context_dic['od_inspectionDict'] = context_dic['od_inspection'].aggregate(
-            Avg('outsideDiameter'),
-            Max('outsideDiameter'),
-            Min('outsideDiameter'),
-            StdDev('outsideDiameter'))
-
-    if inspectionTypes.vol_inspection:
-        context_dic['vol_inspection'] = volumeInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                        dateCreated__range=(
-                                                                            date_from, date_to))
-        context_dic['vol_inspectionDict'] = {}
-        context_dic['vol_inspectionDict'] = context_dic['od_inspection'].aggregate(
-            Avg('liquidWeight'),
-            Max('liquidWeight'),
-            Min('liquidWeight'),
-            StdDev('liquidWeight'))
-
-    if inspectionTypes.neck_diameter_inspection:
-        context_dic['neckDiam_inspection'] = neckDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                                   dateCreated__range=(
-                                                                                       date_from, date_to))
-        context_dic['neckDiam_inspectionDict'] = {}
-        context_dic['neckDiam_inspectionDict']['numPass'] = context_dic['neckDiam_inspection'].filter(
-            testResult=1).count()
-        context_dic['neckDiam_inspectionDict']['numFail'] = context_dic['neckDiam_inspection'].filter(
-            testResult=0).count()
-        context_dic['neckDiam_inspectionDict']['totalInspections'] = context_dic['neckDiam_inspectionDict']['numPass'] + \
-                                                                     context_dic['neckDiam_inspectionDict']['numFail']
-
-        ### Calculate percentage passed
-        if context_dic['neckDiam_inspectionDict']['totalInspections'] > 0:
-            context_dic['neckDiam_inspectionDict']['passPerc'] = 100 * context_dic['neckDiam_inspectionDict'][
-                'numPass'] / context_dic['neckDiam_inspectionDict']['totalInspections']
-        else:
-            context_dic['neckDiam_inspectionDict']['passPerc'] = 0
-
-    if inspectionTypes.assembly_test_inspection:
-        context_dic['assembly_inspection'] = assemblyInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                               dateCreated__range=(
-                                                                                   date_from, date_to))
-    if inspectionTypes.carton_temp_inspection:
-        context_dic['cartonTemp_inspection'] = cartonTemperature.objects.filter(jobID__jobNumber=jobNumber,
-                                                                                dateCreated__range=(
-                                                                                    date_from, date_to))
-        context_dic['cartonTemp_inspectionDict'] = {}
-        context_dic['cartonTemp_inspectionDict'] = context_dic['cartonTemp_inspection'].aggregate(
-            Avg('cartonTemp'),
-            Max('cartonTemp'),
-            Min('cartonTemp'),
-            StdDev('cartonTemp'))
-
-    if inspectionTypes.vision_system_inspection:
-        context_dic['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=jobNumber,
-                                                                              dateCreated__range=(
-                                                                                  date_from, date_to))
-
+            context_dic['pf'][each_pf_inspection.testName]['passPerc'] = 0
+    #
+    # if inspectionTypes.visual_inspection:
+    #     context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                       dateCreated__range=(date_from, date_to))
+    #
+    #     context_dic['InspectionDates'] = {}
+    #     context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
+    #                                                                                Max('dateCreated'))
+    #
+    #     ### Initialize dictionary for summary stats
+    #     context_dic['visualInspectionDict'] = {}
+    #     ### Count number of passed inspections
+    #     context_dic['visualInspectionDict']['numPass'] = context_dic['visualInspection'].filter(
+    #         inspectionResult=1).count()
+    #
+    #     ### Count number of failed inspections
+    #     context_dic['visualInspectionDict']['numFail'] = context_dic['visualInspection'].filter(
+    #         inspectionResult=0).count()
+    #
+    #     ### Calculate number of total inspections
+    #     context_dic['visualInspectionDict']['totalInspections'] = context_dic['visualInspectionDict']['numPass'] + \
+    #                                                               context_dic['visualInspectionDict']['numFail']
+    #     ### Calculate percentage passed
+    #     if context_dic['visualInspectionDict']['totalInspections'] > 0:
+    #         context_dic['visualInspectionDict']['passPerc'] = 100 * context_dic['visualInspectionDict']['numPass'] / + \
+    #             context_dic['visualInspectionDict']['totalInspections']
+    #     else:
+    #         context_dic['visualInspectionDict']['passPerc'] = 0
+    #
+    # if inspectionTypes.part_weight_inspection:
+    #     context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                               dateCreated__range=(
+    #                                                                                   date_from, date_to))
+    #     context_dic['partWeightInspectionDict'] = {}
+    #     context_dic['partWeightInspectionDict'] = context_dic['partWeightInspection'].aggregate(Avg('partWeight'),
+    #                                                                                             Max('partWeight'),
+    #                                                                                             Min('partWeight'),
+    #                                                                                             StdDev('partWeight'))
+    #
+    # if inspectionTypes.shot_weight_inspection:
+    #     context_dic['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                               dateCreated__range=(
+    #                                                                                   date_from, date_to))
+    #
+    #     partWeightList = []
+    #     for eachShot in context_dic['shotWeightInspection']:
+    #         partWeightList.append(eachShot.shotWeight / eachShot.activeCavities)
+    #
+    #     context_dic['partWeightInspectionDict'] = {}
+    #     context_dic['partWeightInspectionDict'] = \
+    #             {
+    #                 'partWeight__min':    '%1.3f' % (np.amin(partWeightList)),
+    #                 'partWeight__max':    '%1.3f' % (np.amax(partWeightList)),
+    #                 'partWeight__avg':    '%1.3f' % (np.mean(partWeightList)),
+    #                 'partWeight__stddev': '%1.3f' % (np.std(partWeightList))
+    #             }
+    #
+    #
+    #
+    # if inspectionTypes.od_inspection:
+    #     context_dic['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                             dateCreated__range=(
+    #                                                                                 date_from, date_to))
+    #     context_dic['od_inspectionDict'] = {}
+    #     context_dic['od_inspectionDict'] = context_dic['od_inspection'].aggregate(
+    #         Avg('outsideDiameter'),
+    #         Max('outsideDiameter'),
+    #         Min('outsideDiameter'),
+    #         StdDev('outsideDiameter'))
+    #
+    # if inspectionTypes.vol_inspection:
+    #     context_dic['vol_inspection'] = volumeInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                     dateCreated__range=(
+    #                                                                         date_from, date_to))
+    #     context_dic['vol_inspectionDict'] = {}
+    #     context_dic['vol_inspectionDict'] = context_dic['od_inspection'].aggregate(
+    #         Avg('liquidWeight'),
+    #         Max('liquidWeight'),
+    #         Min('liquidWeight'),
+    #         StdDev('liquidWeight'))
+    #
+    # if inspectionTypes.neck_diameter_inspection:
+    #     context_dic['neckDiam_inspection'] = neckDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                                dateCreated__range=(
+    #                                                                                    date_from, date_to))
+    #     context_dic['neckDiam_inspectionDict'] = {}
+    #     context_dic['neckDiam_inspectionDict']['numPass'] = context_dic['neckDiam_inspection'].filter(
+    #         testResult=1).count()
+    #     context_dic['neckDiam_inspectionDict']['numFail'] = context_dic['neckDiam_inspection'].filter(
+    #         testResult=0).count()
+    #     context_dic['neckDiam_inspectionDict']['totalInspections'] = context_dic['neckDiam_inspectionDict']['numPass'] + \
+    #                                                                  context_dic['neckDiam_inspectionDict']['numFail']
+    #
+    #     ### Calculate percentage passed
+    #     if context_dic['neckDiam_inspectionDict']['totalInspections'] > 0:
+    #         context_dic['neckDiam_inspectionDict']['passPerc'] = 100 * context_dic['neckDiam_inspectionDict'][
+    #             'numPass'] / context_dic['neckDiam_inspectionDict']['totalInspections']
+    #     else:
+    #         context_dic['neckDiam_inspectionDict']['passPerc'] = 0
+    #
+    # if inspectionTypes.assembly_test_inspection:
+    #     context_dic['assembly_inspection'] = assemblyInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                            dateCreated__range=(
+    #                                                                                date_from, date_to))
+    # if inspectionTypes.carton_temp_inspection:
+    #     context_dic['cartonTemp_inspection'] = cartonTemperature.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                             dateCreated__range=(
+    #                                                                                 date_from, date_to))
+    #     context_dic['cartonTemp_inspectionDict'] = {}
+    #     context_dic['cartonTemp_inspectionDict'] = context_dic['cartonTemp_inspection'].aggregate(
+    #         Avg('cartonTemp'),
+    #         Max('cartonTemp'),
+    #         Min('cartonTemp'),
+    #         StdDev('cartonTemp'))
+    #
+    # if inspectionTypes.vision_system_inspection:
+    #     context_dic['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=jobNumber,
+    #                                                                           dateCreated__range=(
+    #                                                                               date_from, date_to))
+    #
 
     return context_dic
 
@@ -896,10 +644,13 @@ def getShift():
     return shift
 
 def checkPartInspection(item_Number):
-    if not PartInspection.objects.filter(item_Number__item_Number=item_Number).exists():
-        newPartInspection = PartInspection(item_Number = Part.objects.get(item_Number=item_Number))
-        # will probably need to add a switch for CMC vs Canada
+    if not passFailByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName='Visual Inspection').exists():
+        newPartInspection = passFailByPart(item_Number = Part.objects.get(item_Number=item_Number),
+                                           testName = passFailTest.objects.get(testName='Visual Inspection'))
         newPartInspection.save()
+
+    # Will probably need to create something for shot weights...
+
 
 def checkMoldCavs(item_Number=None,mold_Number=None):
     if item_Number:
