@@ -25,7 +25,7 @@
 {% endif %}
 
 
-{% for key,value in pf.items %}
+{% for key,value in pfSummary.items %}
                 {% with value as pfSummaryDict %}
                     {% include "inspection/subTemplates/subPFSummary.html" %}
                 {% endwith %}
@@ -104,5 +104,4 @@
 {#    </div>#}
 {#{% endif %}#}
 
-{% endif %}
 
