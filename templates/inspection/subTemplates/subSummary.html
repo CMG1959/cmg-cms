@@ -31,6 +31,12 @@
                 {% endwith %}
 {% endfor %}
 
+{% for key,value in rangeTestSummary.items %}
+                {% with value as rangeSummaryDict %}
+                    {% include "inspection/subTemplates/subRangeSummary.html" %}
+                {% endwith %}
+{% endfor %}
+
 
 
 

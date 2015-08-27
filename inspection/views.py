@@ -11,13 +11,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria
+from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart,\
+    rangeInspection,rangeTest
 from part.models import PartInspection, Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
-from forms import passFailInspectionForm, jobReportSearch, itemReportSearch
+from forms import passFailInspectionForm, rangeInspectionForm, jobReportSearch, itemReportSearch
 
 
 
@@ -92,7 +93,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
         )
-        form = presetStandardFields(form, jobID=jobNumber)
+        form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
 
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
@@ -102,19 +103,20 @@ def view_pfInspection(request, jobNumber, inspectionName):
             'form_title' : 'Visual Inspection Form',
             'form': form,
             'active_job': active_job,
-            'use_checkbox' : True,
+            'use_checkbox2' : True,
             'id_check':'#id_inspectionResult',
             'idSelect':'#id_defectType',
             'idSelect2':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
+
 @login_required
-def view_partWeightInspection(request, jobNumber):
+def view_rangeInspection(request, jobNumber, inspectionName):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = partWeightForm(request.POST)
+        form = rangeInspectionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
@@ -127,85 +129,130 @@ def view_partWeightInspection(request, jobNumber):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = partWeightForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
+        rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job.item.item_Number)
 
-        ### Filter the cavity and molds
+        form = rangeInspectionForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
+                     'rangeTestName':rangeInfo.id}
+        )
+        form = presetStandardFields(form, jobID=jobNumber,test_type='rangeInspection', test_name=inspectionName)
+
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 
-        ### Get inspection parameters
-        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
-        min_val = inspecParam.min_part_weight
-        max_val = inspecParam.max_part_weight
-        num_id = '#id_partWeight'
-
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
-            'form_title' : 'Part Weight Inspection Form',
+            'form_title' : 'Visual Inspection Form',
             'form': form,
             'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_defectType',
             'use_minmax': True,
-            'min_val': min_val,
-            'max_val': max_val,
-            'num_id' : num_id,
+            'num_id':'#id_numval',
+            'min_val':rangeInfo.rangeMin,
+            'max_val':rangeInfo.rangeMax
         })
         return HttpResponse(template.render(context))
 
-
-
-@login_required
-def view_shotWeightInspection(request, jobNumber):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = shotWeightForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            act_cav = MattecProd.objects.get(jobNumber=jobNumber)
-
-            newForm = shotWeightInspection(
-                jobID=startUpShot.objects.get(jobNumber=jobNumber),
-                machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk),
-                inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
-                shotWeight=form.cleaned_data['shotWeight'],
-                activeCavities=act_cav.activeCavities
-            )
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            newForm.save()
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = shotWeightForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
-        )
-        form = presetStandardFields(form, jobID=jobNumber)
-
-        act_cav = MattecProd.objects.get(jobNumber=jobNumber)
-
-        inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
-        min_val = inspecParam.min_part_weight * act_cav.activeCavities
-        max_val = inspecParam.max_part_weight * act_cav.activeCavities
-        num_id = '#id_shotWeight'
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context = RequestContext(request, {
-            'form_title' : 'Shot Weight Inspection Form',
-            'form': form,
-            'active_job': active_job,
-            'use_minmax': True,
-            'min_val': min_val,
-            'max_val': max_val,
-            'num_id' : num_id,
-        })
-        return HttpResponse(template.render(context))
+#
+# @login_required
+# def view_partWeightInspection(request, jobNumber):
+#     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+#     if request.method == 'POST':
+#         # create a form instance and populate it with data from the request:
+#         form = partWeightForm(request.POST)
+#         # check whether it's valid:
+#         if form.is_valid():
+#             # process the data in form.cleaned_data as required
+#             # part_number = form.cleaned_data['jobID']
+#             redirect_url = '/inspection/%s/' % (jobNumber)
+#             # save the data
+#             form.save()
+#             # redirect to a new URL:
+#             return HttpResponseRedirect(redirect_url)
+#
+#     # if a GET (or any other method) we'll create a blank form
+#     else:
+#         form = partWeightForm(
+#             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+#         )
+#         form = presetStandardFields(form, jobID=jobNumber)
+#
+#         ### Filter the cavity and molds
+#         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
+#             mold_number__mold_number=active_job[0].moldNumber)
+#
+#         ### Get inspection parameters
+#         inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
+#         min_val = inspecParam.min_part_weight
+#         max_val = inspecParam.max_part_weight
+#         num_id = '#id_partWeight'
+#
+#         template = loader.get_template('inspection/forms/genInspection.html')
+#         context = RequestContext(request, {
+#             'form_title' : 'Part Weight Inspection Form',
+#             'form': form,
+#             'active_job': active_job,
+#             'use_minmax': True,
+#             'min_val': min_val,
+#             'max_val': max_val,
+#             'num_id' : num_id,
+#         })
+#         return HttpResponse(template.render(context))
+#
+#
+#
+# @login_required
+# def view_shotWeightInspection(request, jobNumber):
+#     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+#     if request.method == 'POST':
+#         # create a form instance and populate it with data from the request:
+#         form = shotWeightForm(request.POST)
+#         # check whether it's valid:
+#         if form.is_valid():
+#             act_cav = MattecProd.objects.get(jobNumber=jobNumber)
+#
+#             newForm = shotWeightInspection(
+#                 jobID=startUpShot.objects.get(jobNumber=jobNumber),
+#                 machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk),
+#                 inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
+#                 shotWeight=form.cleaned_data['shotWeight'],
+#                 activeCavities=act_cav.activeCavities
+#             )
+#             # process the data in form.cleaned_data as required
+#             # part_number = form.cleaned_data['jobID']
+#             redirect_url = '/inspection/%s/' % (jobNumber)
+#             # save the data
+#             newForm.save()
+#             # redirect to a new URL:
+#             return HttpResponseRedirect(redirect_url)
+#
+#     # if a GET (or any other method) we'll create a blank form
+#     else:
+#         form = shotWeightForm(
+#             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id},
+#         )
+#         form = presetStandardFields(form, jobID=jobNumber)
+#
+#         act_cav = MattecProd.objects.get(jobNumber=jobNumber)
+#
+#         inspecParam = PartInspection.objects.get(item_Number__item_Number=active_job[0].item.item_Number)
+#         min_val = inspecParam.min_part_weight * act_cav.activeCavities
+#         max_val = inspecParam.max_part_weight * act_cav.activeCavities
+#         num_id = '#id_shotWeight'
+#
+#         template = loader.get_template('inspection/forms/genInspection.html')
+#         context = RequestContext(request, {
+#             'form_title' : 'Shot Weight Inspection Form',
+#             'form': form,
+#             'active_job': active_job,
+#             'use_minmax': True,
+#             'min_val': min_val,
+#             'max_val': max_val,
+#             'num_id' : num_id,
+#         })
+#         return HttpResponse(template.render(context))
 
 
 ######################################
@@ -449,6 +496,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                           inspectorName__EmpJob__JobNum=6)
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+    rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
 
     context_dic['pf'] = {}
     context_dic['pfSummary']={}
@@ -477,6 +525,32 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             context_dic['pfSummary'][str(n)]['passPerc'] = 0
 
         n+=1
+
+    n = 1
+    context_dic['rangeTests']={}
+    context_dic=['rangeTestSummary']={}
+    for each_range_inspection in rangeTests:
+        context_dic['rangeTests'][str(n)] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName.testName,
+                                                                                     jobID__jobNumber=jobNumber)
+        context_dic['rangeTestSummary'][str(n)] = {}
+        context_dic['rangeTestSummary'][str(n)]['rangeName'] = each_range_inspection.testName.testName
+
+        rangeList = []
+        for eachShot in context_dic['rangeTests'][str(n)]:
+            if eachShot.isFullShot:
+                rangeList.append(eachShot.numVal / active_job.activeCavities)
+            else:
+                rangeList.append(eachShot.numVal)
+
+        context_dic['rangeTestSummary'][str(n)]['rangeStats'] = {
+                    'rangeList__count' :  '%i' % (len(rangeList)),
+                    'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
+                    'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
+                    'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
+                    'rangeList__stddev': '%1.3f' % (np.std(rangeList))
+                }
+
+
     #
     # if inspectionTypes.visual_inspection:
     #     context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,

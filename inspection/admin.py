@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import passFailTest, passFailTestCriteria, passFailByPart, passFailInspection
+from .models import passFailTest, passFailTestCriteria, passFailByPart, passFailInspection, rangeTest,\
+    rangeTestByPart, rangeInspection
 
 
 class passFailTestAdmin(admin.ModelAdmin):
@@ -20,6 +21,21 @@ class passFailByPartAdmin(admin.ModelAdmin):
 class passFailInspectionAdmin(admin.ModelAdmin):
     search_fields = ['passFailTestName','jobID','dateCreated','inspectionResult']
     list_display = ('passFailTestName','jobID','dateCreated','inspectionResult')
+
+
+class rangeTestAdmin(admin.ModelAdmin):
+    search_fields = ['testName']
+    list_display = ('testName')
+
+class rangeTestByPartAdmin(admin.ModelAdmin):
+    search_fields = ['testName','item_Number']
+    list_display = ('testName','item_Number','rangeMin','rangeMax')
+
+
+class rangeInspectionAdmin(admin.ModelAdmin):
+    search_fields = ['rangeTestByPart','jobID','dateCreated']
+    list_display = ('rangeTestByPart','jobID','dateCreated')
+
 
 
 admin.site.register(passFailTest,passFailTestAdmin)

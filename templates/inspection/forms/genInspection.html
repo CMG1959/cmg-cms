@@ -30,9 +30,13 @@
 
 {% if use_checkbox %}
     {% include "inspection/subTemplates/subcheckBoxSelectLock.html" %}
-{% elif use_minmax %}
-    {% include "inspection/subTemplates/toDelete/subMinMaxChecker.html" %}
-{% else %}
+{% endif %}
 
+{% if use_checkbox2 %}
+    {% include "inspection/subTemplates/subcheckBoxSelectLock2.html" %}
+{% endif %}
+
+{% if use_minmax %}
+    {% include "inspection/subTemplates/toDelete/../subTemplates/subMinMaxChecker.html" %}
 {% endif %}
 

@@ -1,27 +1,18 @@
 <script>
     $(document).ready(function(){
         $('{{idSelect}}').prop('disabled', 'disabled');
-        $('{{idSelect2}}').prop('disabled', 'disabled');
     });
     $('{{ id_check }}').change(function () {
         if ($(this).prop('checked')){
-{#            console.log('Was unchecked. Now checked');#}
             {% with idSelect|add:' option' as idSelectopt %}
             $('{{ idSelectopt }}').prop('selected', false);
             {% endwith %}
 
-            {% with idSelect2|add:' option' as idSelectopt %}
-            $('{{ idSelectopt }}').prop('selected', false);
-            {% endwith %}
-
-
             $('{{idSelect}}').prop('disabled', 'disabled');
-            $('{{idSelect2}}').prop('disabled', 'disabled');
+
         }
         else {
-{#            console.log('Was checked. Now unchecked.');#}
             $('{{idSelect}}').prop('disabled', false);
-            $('{{idSelect2}}').prop('disabled', false);
         }
         });
 

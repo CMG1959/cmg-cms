@@ -1,5 +1,5 @@
 from django import forms
-from inspection.models import passFailInspection
+from inspection.models import passFailInspection, rangeInspection
 
 
 class passFailInspectionForm(forms.ModelForm):
@@ -7,6 +7,12 @@ class passFailInspectionForm(forms.ModelForm):
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectorName','inspectionResult',
                   'defectType','headCavID']
+
+class rangeInspectionForm(forms.ModelForm):
+    class Meta:
+        model = passFailInspection
+        fields = ['rangeTestName','jobID','machineOperator','inspectorName','isFullShot',
+                  'headCavID','numVal']
 
 
 class jobReportSearch(forms.Form):

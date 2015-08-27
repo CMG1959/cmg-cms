@@ -1,0 +1,40 @@
+{% load mathfilters %}
+
+{% if rangeSummaryDict %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">{{ rangeSummaryDict.rangeName }}</caption>
+                <thead>
+                <tr>
+                    <th>Total Inspections</th>
+                    <th>Min</th>
+                    <th>Average</th>
+                    <th>Std Dev</th>
+                    <th>Max</th>
+                </tr>
+                </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {{ rangeSummaryDict.rangeList__count }}
+                </td>
+                <td>
+                    {{ rangeSummaryDict.rangeList__min }}
+                </td>
+                <td>
+                    {{ rangeSummaryDict.rangeList__avg }}
+                </td>
+                <td>
+                    {{ rangeSummaryDict.rangeList__stddev }}
+                </td>
+                <td>
+                    {{ rangeSummaryDict.rangeList__max }}
+                </td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
