@@ -35,6 +35,15 @@
                             </a>
                         {% endfor %}
 
+
+                        {% for eachRI in range_inspectionType %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/rangeInspection/{{ eachRI.testName }}/">
+                            <h4 class="list-group-item-heading">{{ eachRI.testName }}</h4>
+                            <p class="list-group-item-text">Click Here to record a record for {{ eachRI.testName }} </p>
+                            </a>
+                        {% endfor %}
+
+
 {#                        {% if inspectionTypes.visual_inspection %}#}
 {#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/visual">#}
 {#                            <h4 class="list-group-item-heading">Visual Inspection</h4>#}

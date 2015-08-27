@@ -17,23 +17,24 @@
             <tbody>
             <tr>
                 <td>
-                    {{ rangeSummaryDict.rangeList__count }}
+                    {{ rangeSummaryDict.rangeStats.rangeList__count }}
                 </td>
                 <td>
-                    {{ rangeSummaryDict.rangeList__min }}
+                    {{ rangeSummaryDict.rangeStats.rangeList__min }}
                 </td>
                 <td>
-                    {{ rangeSummaryDict.rangeList__avg }}
+                    {{ rangeSummaryDict.rangeStats.rangeList__avg }}
                 </td>
                 <td>
-                    {{ rangeSummaryDict.rangeList__stddev }}
+                    {{ rangeSummaryDict.rangeStats.rangeList__stddev }}
                 </td>
                 <td>
-                    {{ rangeSummaryDict.rangeList__max }}
+                    {{ rangeSummaryDict.rangeStats.rangeList__max }}
                 </td>
             </tr>
             </tbody>
             </table>
+            Note: The resulting statistics take cavitation into account if a full shot was entered.
         </div>
     </div>
 {% endif %}

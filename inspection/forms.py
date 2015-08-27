@@ -10,7 +10,7 @@ class passFailInspectionForm(forms.ModelForm):
 
 class rangeInspectionForm(forms.ModelForm):
     class Meta:
-        model = passFailInspection
+        model = rangeInspection
         fields = ['rangeTestName','jobID','machineOperator','inspectorName','isFullShot',
                   'headCavID','numVal']
 

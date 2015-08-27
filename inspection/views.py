@@ -54,12 +54,13 @@ def view_detailJob(request, jobNumber):
     checkMoldCavs(item_Number=active_job[0].item)
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-
+    range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
 
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
         'active_job': active_job,
         'pf_inspectionType' : pf_inspectionType,
+        'range_inspectionType': range_inspectionType
     })
     return HttpResponse(template.render(context))
 
@@ -129,7 +130,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job.item.item_Number)
+        rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
 
         form = rangeInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
@@ -146,8 +147,8 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             'form': form,
             'active_job': active_job,
             'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_defectType',
+            'id_check':'#id_isFullShot',
+            'idSelect':'#id_headCavID',
             'use_minmax': True,
             'num_id':'#id_numval',
             'min_val':rangeInfo.rangeMin,
@@ -287,41 +288,41 @@ def view_jobReportSearch(request):
 
     return render(request, 'inspection/searchForms/jobReportSearch.html', {'form': form})
 
-
-@login_required
-def view_itemReportSearch(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = itemReportSearch(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            item_number = form.cleaned_data['item_Number']
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-            context_dic = {}
-            context_dic['partDict'] = createItemReportDict(item_number, date_from=date_from, date_to=date_to)
-            template = loader.get_template('inspection/reports/partReport.html')
-            context = RequestContext(request, context_dic)
-            return HttpResponse(template.render(context))
-
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = itemReportSearch()
-
-    return render(request, 'inspection/searchForms/itemReportSearch.html', {'form': form})
-
-
-@login_required
-def view_itemReport(request, itemNumber):
-    context_dict = {}
-    context_dict['partDict'] = createItemReportDict(itemNumber)
-    print context_dict
-
-    template = loader.get_template('inspection/reports/partReport.html')
-    context = RequestContext(request, context_dict)
-    return HttpResponse(template.render(context))
+#
+# @login_required
+# def view_itemReportSearch(request):
+#     # if this is a POST request we need to process the form data
+#     if request.method == 'POST':
+#         # create a form instance and populate it with data from the request:
+#         form = itemReportSearch(request.POST)
+#         # check whether it's valid:
+#         if form.is_valid():
+#             item_number = form.cleaned_data['item_Number']
+#             date_from = form.cleaned_data['date_from']
+#             date_to = form.cleaned_data['date_to']
+#             context_dic = {}
+#             context_dic['partDict'] = createItemReportDict(item_number, date_from=date_from, date_to=date_to)
+#             template = loader.get_template('inspection/reports/partReport.html')
+#             context = RequestContext(request, context_dic)
+#             return HttpResponse(template.render(context))
+#
+#
+#     # if a GET (or any other method) we'll create a blank form
+#     else:
+#         form = itemReportSearch()
+#
+#     return render(request, 'inspection/searchForms/itemReportSearch.html', {'form': form})
+#
+#
+# @login_required
+# def view_itemReport(request, itemNumber):
+#     context_dict = {}
+#     context_dict['partDict'] = createItemReportDict(itemNumber)
+#     print context_dict
+#
+#     template = loader.get_template('inspection/reports/partReport.html')
+#     context = RequestContext(request, context_dict)
+#     return HttpResponse(template.render(context))
 
 
 @login_required
@@ -335,7 +336,7 @@ def view_jobReport(request, jobNumber):
 
 ####### Helper functions ###########
 
-def createItemReportDict(itemNumber, date_from=None, date_to=None):
+# def createItemReportDict(itemNumber, date_from=None, date_to=None):
     # date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
     #
     # try:
@@ -479,7 +480,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     #                                                                                        date_from, date_to))
     #
 
-    return partDict
+
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
     date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
@@ -528,9 +529,9 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     n = 1
     context_dic['rangeTests']={}
-    context_dic=['rangeTestSummary']={}
+    context_dic['rangeTestSummary']={}
     for each_range_inspection in rangeTests:
-        context_dic['rangeTests'][str(n)] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName.testName,
+        context_dic['rangeTests'][str(n)] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
                                                                                      jobID__jobNumber=jobNumber)
         context_dic['rangeTestSummary'][str(n)] = {}
         context_dic['rangeTestSummary'][str(n)]['rangeName'] = each_range_inspection.testName.testName
@@ -538,7 +539,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         rangeList = []
         for eachShot in context_dic['rangeTests'][str(n)]:
             if eachShot.isFullShot:
-                rangeList.append(eachShot.numVal / active_job.activeCavities)
+                rangeList.append(eachShot.numVal / active_job[0].activeCavities)
             else:
                 rangeList.append(eachShot.numVal)
 
@@ -549,129 +550,6 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                     'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
                     'rangeList__stddev': '%1.3f' % (np.std(rangeList))
                 }
-
-
-    #
-    # if inspectionTypes.visual_inspection:
-    #     context_dic['visualInspection'] = visualInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                       dateCreated__range=(date_from, date_to))
-    #
-    #     context_dic['InspectionDates'] = {}
-    #     context_dic['InspectionDates'] = context_dic['visualInspection'].aggregate(Min('dateCreated'),
-    #                                                                                Max('dateCreated'))
-    #
-    #     ### Initialize dictionary for summary stats
-    #     context_dic['visualInspectionDict'] = {}
-    #     ### Count number of passed inspections
-    #     context_dic['visualInspectionDict']['numPass'] = context_dic['visualInspection'].filter(
-    #         inspectionResult=1).count()
-    #
-    #     ### Count number of failed inspections
-    #     context_dic['visualInspectionDict']['numFail'] = context_dic['visualInspection'].filter(
-    #         inspectionResult=0).count()
-    #
-    #     ### Calculate number of total inspections
-    #     context_dic['visualInspectionDict']['totalInspections'] = context_dic['visualInspectionDict']['numPass'] + \
-    #                                                               context_dic['visualInspectionDict']['numFail']
-    #     ### Calculate percentage passed
-    #     if context_dic['visualInspectionDict']['totalInspections'] > 0:
-    #         context_dic['visualInspectionDict']['passPerc'] = 100 * context_dic['visualInspectionDict']['numPass'] / + \
-    #             context_dic['visualInspectionDict']['totalInspections']
-    #     else:
-    #         context_dic['visualInspectionDict']['passPerc'] = 0
-    #
-    # if inspectionTypes.part_weight_inspection:
-    #     context_dic['partWeightInspection'] = partWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                               dateCreated__range=(
-    #                                                                                   date_from, date_to))
-    #     context_dic['partWeightInspectionDict'] = {}
-    #     context_dic['partWeightInspectionDict'] = context_dic['partWeightInspection'].aggregate(Avg('partWeight'),
-    #                                                                                             Max('partWeight'),
-    #                                                                                             Min('partWeight'),
-    #                                                                                             StdDev('partWeight'))
-    #
-    # if inspectionTypes.shot_weight_inspection:
-    #     context_dic['shotWeightInspection'] = shotWeightInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                               dateCreated__range=(
-    #                                                                                   date_from, date_to))
-    #
-    #     partWeightList = []
-    #     for eachShot in context_dic['shotWeightInspection']:
-    #         partWeightList.append(eachShot.shotWeight / eachShot.activeCavities)
-    #
-    #     context_dic['partWeightInspectionDict'] = {}
-    #     context_dic['partWeightInspectionDict'] = \
-    #             {
-    #                 'partWeight__min':    '%1.3f' % (np.amin(partWeightList)),
-    #                 'partWeight__max':    '%1.3f' % (np.amax(partWeightList)),
-    #                 'partWeight__avg':    '%1.3f' % (np.mean(partWeightList)),
-    #                 'partWeight__stddev': '%1.3f' % (np.std(partWeightList))
-    #             }
-    #
-    #
-    #
-    # if inspectionTypes.od_inspection:
-    #     context_dic['od_inspection'] = outsideDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                             dateCreated__range=(
-    #                                                                                 date_from, date_to))
-    #     context_dic['od_inspectionDict'] = {}
-    #     context_dic['od_inspectionDict'] = context_dic['od_inspection'].aggregate(
-    #         Avg('outsideDiameter'),
-    #         Max('outsideDiameter'),
-    #         Min('outsideDiameter'),
-    #         StdDev('outsideDiameter'))
-    #
-    # if inspectionTypes.vol_inspection:
-    #     context_dic['vol_inspection'] = volumeInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                     dateCreated__range=(
-    #                                                                         date_from, date_to))
-    #     context_dic['vol_inspectionDict'] = {}
-    #     context_dic['vol_inspectionDict'] = context_dic['od_inspection'].aggregate(
-    #         Avg('liquidWeight'),
-    #         Max('liquidWeight'),
-    #         Min('liquidWeight'),
-    #         StdDev('liquidWeight'))
-    #
-    # if inspectionTypes.neck_diameter_inspection:
-    #     context_dic['neckDiam_inspection'] = neckDiameterInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                                dateCreated__range=(
-    #                                                                                    date_from, date_to))
-    #     context_dic['neckDiam_inspectionDict'] = {}
-    #     context_dic['neckDiam_inspectionDict']['numPass'] = context_dic['neckDiam_inspection'].filter(
-    #         testResult=1).count()
-    #     context_dic['neckDiam_inspectionDict']['numFail'] = context_dic['neckDiam_inspection'].filter(
-    #         testResult=0).count()
-    #     context_dic['neckDiam_inspectionDict']['totalInspections'] = context_dic['neckDiam_inspectionDict']['numPass'] + \
-    #                                                                  context_dic['neckDiam_inspectionDict']['numFail']
-    #
-    #     ### Calculate percentage passed
-    #     if context_dic['neckDiam_inspectionDict']['totalInspections'] > 0:
-    #         context_dic['neckDiam_inspectionDict']['passPerc'] = 100 * context_dic['neckDiam_inspectionDict'][
-    #             'numPass'] / context_dic['neckDiam_inspectionDict']['totalInspections']
-    #     else:
-    #         context_dic['neckDiam_inspectionDict']['passPerc'] = 0
-    #
-    # if inspectionTypes.assembly_test_inspection:
-    #     context_dic['assembly_inspection'] = assemblyInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                            dateCreated__range=(
-    #                                                                                date_from, date_to))
-    # if inspectionTypes.carton_temp_inspection:
-    #     context_dic['cartonTemp_inspection'] = cartonTemperature.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                             dateCreated__range=(
-    #                                                                                 date_from, date_to))
-    #     context_dic['cartonTemp_inspectionDict'] = {}
-    #     context_dic['cartonTemp_inspectionDict'] = context_dic['cartonTemp_inspection'].aggregate(
-    #         Avg('cartonTemp'),
-    #         Max('cartonTemp'),
-    #         Min('cartonTemp'),
-    #         StdDev('cartonTemp'))
-    #
-    # if inspectionTypes.vision_system_inspection:
-    #     context_dic['visionSys_inspection'] = visionInspection.objects.filter(jobID__jobNumber=jobNumber,
-    #                                                                           dateCreated__range=(
-    #                                                                               date_from, date_to))
-    #
-
     return context_dic
 
 
@@ -725,6 +603,13 @@ def checkPartInspection(item_Number):
     if not passFailByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName='Visual Inspection').exists():
         newPartInspection = passFailByPart(item_Number = Part.objects.get(item_Number=item_Number),
                                            testName = passFailTest.objects.get(testName='Visual Inspection'))
+        newPartInspection.save()
+
+    if not rangeTestByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName='Shot Weight').exists():
+        newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
+                                           testName = passFailTest.objects.get(testName='Shot Weight'),
+                                            rangeMin=0,
+                                            rangeMax=9999999)
         newPartInspection.save()
 
     # Will probably need to create something for shot weights...

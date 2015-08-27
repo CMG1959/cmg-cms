@@ -25,7 +25,7 @@ class passFailInspectionAdmin(admin.ModelAdmin):
 
 class rangeTestAdmin(admin.ModelAdmin):
     search_fields = ['testName']
-    list_display = ('testName')
+    list_display = ('testName',)
 
 class rangeTestByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName','item_Number']
@@ -33,8 +33,8 @@ class rangeTestByPartAdmin(admin.ModelAdmin):
 
 
 class rangeInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['rangeTestByPart','jobID','dateCreated']
-    list_display = ('rangeTestByPart','jobID','dateCreated')
+    search_fields = ['rangeTestName','jobID','dateCreated']
+    list_display = ('rangeTestName','jobID','dateCreated')
 
 
 
@@ -43,3 +43,6 @@ admin.site.register(passFailTestCriteria,passFailTestCriteriaAdmin)
 admin.site.register(passFailByPart,passFailByPartAdmin)
 admin.site.register(passFailInspection,passFailInspectionAdmin)
 
+admin.site.register(rangeTest,rangeTestAdmin)
+admin.site.register(rangeTestByPart,rangeTestByPartAdmin)
+admin.site.register(rangeInspection,rangeInspectionAdmin)
