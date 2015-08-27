@@ -1,54 +1,29 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import partWeightInspection, visualInspectionCriteria, visualInspection, shotWeightInspection, \
-    outsideDiameterInspection, volumeInspection, neckDiameterInspection, assemblyTestCriteria, \
-    assemblyTest, assemblyInspection, cartonTemperature, visionTestCriteria, visionTest, \
-    visionInspection, passFailTest, passFailTestCriteria, passFailByPart, passFailInspection
+from .models import passFailTest, passFailTestCriteria, passFailByPart, passFailInspection
 
 
-class partWeightInspectionAdmin(admin.ModelAdmin):
-    fields = ['jobID',
-              'machineOperator',
-              'inspectorName',
-              'dateCreated',
-              'headCavID',
-              'partWeight']
+class passFailTestAdmin(admin.ModelAdmin):
+    search_fields = ['testName']
+    list_display = ('testName',)
 
 
-class visualInspectionCriteriaAdmin(admin.ModelAdmin):
-    fields = ['defectType']
+class passFailTestCriteriaAdmin(admin.ModelAdmin):
+    search_fields = ['testName','passFail']
+    list_display = ('testName','passFail')
+
+class passFailByPartAdmin(admin.ModelAdmin):
+    search_fields = ['testName','item_Number']
+    list_display = ('testName','item_Number')
+
+class passFailInspectionAdmin(admin.ModelAdmin):
+    search_fields = ['passFailTestName','jobID','dateCreated','inspectionResult']
+    list_display = ('passFailTestName','jobID','dateCreated','inspectionResult')
 
 
-class visualInspectionAdmin(admin.ModelAdmin):
-    fields = ['jobID',
-              'machineOperator',
-              'inspectorName',
-              'dateCreated',
-              'inspectionResult',
-              'defectType',
-              'headCavID']
+admin.site.register(passFailTest,passFailTestAdmin)
+admin.site.register(passFailTestCriteria,passFailTestCriteriaAdmin)
+admin.site.register(passFailByPart,passFailByPartAdmin)
+admin.site.register(passFailInspection,passFailInspectionAdmin)
 
-
-
-admin.site.register(partWeightInspection, partWeightInspectionAdmin)
-admin.site.register(visualInspectionCriteria, visualInspectionCriteriaAdmin)
-admin.site.register(visualInspection, visualInspectionAdmin)
-
-admin.site.register(passFailTest)
-admin.site.register(passFailTestCriteria)
-admin.site.register(passFailByPart)
-admin.site.register(passFailInspection)
-
-
-admin.site.register(shotWeightInspection)
-admin.site.register(outsideDiameterInspection)
-admin.site.register(volumeInspection)
-admin.site.register(neckDiameterInspection)
-admin.site.register(assemblyTestCriteria)
-admin.site.register(assemblyTest)
-admin.site.register(assemblyInspection)
-admin.site.register(cartonTemperature)
-admin.site.register(visionTestCriteria)
-admin.site.register(visionTest)
-admin.site.register(visionInspection)

@@ -11,16 +11,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import passFailByPart, passFailTest, passFailInspection, \
-    partWeightInspection, visualInspection, shotWeightInspection, outsideDiameterInspection, \
-    volumeInspection, \
-    neckDiameterInspection, assemblyInspection, cartonTemperature, visionInspection
+from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria
 from part.models import PartInspection, Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
-from forms import passFailInspectionForm, partWeightForm, jobReportSearch, itemReportSearch, shotWeightForm \
+from forms import passFailInspectionForm, jobReportSearch, itemReportSearch
 
 
 
@@ -622,7 +619,7 @@ def createDateRange(date_from=None, date_to=None):
     return (date_from, date_to)
 
 
-def presetStandardFields(my_form, jobID):
+def presetStandardFields(my_form, jobID, test_type, test_name):
     # this will preset machine and qa fields
     ### Filter the machine operators
     my_form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9).order_by('EmpShift')
@@ -632,6 +629,8 @@ def presetStandardFields(my_form, jobID):
                                                                        # EmpShift=getShift())
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
+    if test_type == 'pf':
+        my_form.fields["defectType"].queryset = passFailTestCriteria.objects.filter(testName__testName=test_name)
 
     return my_form
 
