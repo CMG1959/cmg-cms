@@ -6,7 +6,7 @@ from django.db.models import Avg, Max, Min, StdDev, F, FloatField
 
 ### bring in models
 from startupshot.models import MattecProd, startUpShot
-from part.models import Part, PartInspection
+from part.models import Part
 
 
 # Create your views here.

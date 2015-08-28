@@ -20,7 +20,7 @@ class passFailTest(models.Model):
         verbose_name = 'Pass Fail Test Name'
         verbose_name_plural = 'Pass Fail Test Names'
 
-    testName = models.CharField(max_length=25, verbose_name="Pass Fail Test Name",unique=True)
+    testName = models.CharField(max_length=50, verbose_name="Pass Fail Test Name",unique=True)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -32,7 +32,7 @@ class passFailTestCriteria(models.Model):
         unique_together = ("testName", "passFail")
 
     testName = models.ForeignKey('passFailTest', verbose_name = "Pass Fail Test Name")
-    passFail = models.CharField(max_length=25, verbose_name = "Pass Fail Reason")
+    passFail = models.CharField(max_length=50, verbose_name = "Pass Fail Reason")
 
     def __unicode__(self):
         return '%s' % (self.passFail)
@@ -83,7 +83,7 @@ class rangeTest(models.Model):
         verbose_name = 'Range Test Name'
         verbose_name_plural = 'Range Test Names'
 
-    testName = models.CharField(max_length=25, verbose_name="Range Test Name",unique=True)
+    testName = models.CharField(max_length=50, verbose_name="Range Test Name",unique=True)
 
     def __unicode__(self):
         return '%s' % (self.testName)

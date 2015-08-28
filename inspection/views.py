@@ -13,7 +13,7 @@ from django.utils import timezone
 
 from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart,\
     rangeInspection,rangeTest
-from part.models import PartInspection, Part
+from part.models import Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
 from molds.models import Mold,PartIdentifier

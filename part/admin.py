@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Part, PartInspection
+from .models import Part
 # Register your models here.
 
 class PartAdmin(admin.ModelAdmin):
@@ -7,9 +7,5 @@ class PartAdmin(admin.ModelAdmin):
     search_fields =['item_Number']
 
 
-class PartInspectionAdmin(admin.ModelAdmin):
-
-    search_fields =['item_Number__item_Number']
 
 admin.site.register(Part,PartAdmin)
-admin.site.register(PartInspection,PartInspectionAdmin)
