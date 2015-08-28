@@ -143,14 +143,14 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
-            'form_title' : 'Visual Inspection Form',
+            'form_title' : inspectionName,
             'form': form,
             'active_job': active_job,
             'use_checkbox' : True,
             'id_check':'#id_isFullShot',
             'idSelect':'#id_headCavID',
             'use_minmax': True,
-            'num_id':'#id_numval',
+            'num_id':'#id_numVal',
             'min_val':rangeInfo.rangeMin,
             'max_val':rangeInfo.rangeMax
         })
@@ -543,13 +543,25 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             else:
                 rangeList.append(eachShot.numVal)
 
-        context_dic['rangeTestSummary'][str(n)]['rangeStats'] = {
+        if rangeList:
+            context_dic['rangeTestSummary'][str(n)]['rangeStats'] = {
                     'rangeList__count' :  '%i' % (len(rangeList)),
                     'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
                     'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
                     'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
                     'rangeList__stddev': '%1.3f' % (np.std(rangeList))
                 }
+        else:
+            context_dic['rangeTestSummary'][str(n)]['rangeStats'] = {
+                    'rangeList__count' :  '%i' % (0),
+                    'rangeList__min':    '%1.3f' % (0),
+                    'rangeList__max':    '%1.3f' % (0),
+                    'rangeList__avg':    '%1.3f' % (0),
+                    'rangeList__stddev': '%1.3f' % (0)
+                }
+
+        n += 1
+
     return context_dic
 
 

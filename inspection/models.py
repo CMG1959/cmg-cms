@@ -97,7 +97,7 @@ class rangeTestByPart(models.Model):
     testName = models.ForeignKey('rangeTest', verbose_name = "Range Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
-    rangeMax = models.DecimalField(verbose_name="Maximum Value", default=0, max_digits=12,decimal_places=3)
+    rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -108,11 +108,11 @@ class rangeInspection(models.Model):
         verbose_name_plural = 'Range Inspections'
 
     rangeTestName = models.ForeignKey('rangeTestByPart',verbose_name='Inspection Name')
-    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='pf_jobID')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
-                                        related_name='pf_machineOperator')
+                                        related_name='ri_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='pf_inspectorName')
+                                      related_name='ri_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
