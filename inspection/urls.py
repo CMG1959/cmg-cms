@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/pf/(?P<inspectionName>[^/]+)/$', views.view_pfInspection, name='view_pfInspection'),
     ### link to view range inspection form
     url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/rangeInspection/(?P<inspectionName>[^/]+)/$', views.view_rangeInspection, name='view_rangeInspection'),
+    ### link to view text inspection form
+    url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/textInspection/(?P<inspectionName>[^/]+)/$', views.view_textInspection, name='view_textInspection'),
 ]
