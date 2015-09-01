@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart,\
     rangeInspection, textRecord, textRecordByPart, textInspection, rangeTest
+from dashboard.models import errorLog
 from part.models import Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
@@ -84,8 +85,16 @@ def view_pfInspection(request, jobNumber, inspectionName):
             # process the data in form.cleaned_data as required
             # part_number = form.cleaned_data['jobID']
             redirect_url = '/inspection/%s/' % (jobNumber)
+
+            checkFormForLog(form, inspectionType = 'pf',
+                            inspectionName = passFailTest.objects.get(testName=inspectionName).testName,
+                            activeJob=jobNumber, rangeInfo=None)
+
             # save the data
             form.save()
+
+
+
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
@@ -116,6 +125,9 @@ def view_pfInspection(request, jobNumber, inspectionName):
 @login_required
 def view_rangeInspection(request, jobNumber, inspectionName):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+
+    rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = rangeInspectionForm(request.POST)
@@ -125,13 +137,17 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             # part_number = form.cleaned_data['jobID']
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
+            checkFormForLog(form, inspectionType = 'rangeInspection',
+                            inspectionName = rangeInfo.testName,
+                            activeJob=jobNumber, rangeInfo=rangeInfo)
+
             form.save()
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
+
 
         form = rangeInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
@@ -456,3 +472,43 @@ def checkMoldCavs(item_Number=None,mold_Number=None):
         for n in range(mold_info.num_cavities):
             newCavID = PartIdentifier(mold_number=mold_info,head_code='A',cavity_id = '%i' % (n))
             newCavID.save()
+
+
+def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=None):
+    create_log = False
+
+    shiftID = getShift()
+    jobID = activeJob[0].JobNumber
+    machNo = activeJob[0].machNo.part_identifier
+    partDesc = activeJob[0].item.item_Description
+    inspectionName = inspectionName
+
+    if inspectionType == 'pf':
+        if not form.cleaned_data['inspectionResult']:
+            errorDescription = form.cleaned_data['defectType']
+            create_log = True
+
+    if inspectionType == 'rangeInspection':
+        measured_val = form.cleaned_data['numVal']
+
+        if measured_val<rangeInfo.rangeMin:
+            errorDescription = 'Measured value is %1.3f which is less than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMin)
+            create_log = True
+        if measured_val>rangeInfo.rangeMax:
+            errorDescription = 'Measured value is %1.3f which is greater than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMax)
+            create_log = True
+
+    # if inspectionType == 'textInspection':
+
+
+
+    if create_log:
+        newForm = errorLog(
+                shiftID = shiftID,
+                machNo = machNo,
+                partDesc = partDesc,
+                jobID = jobID,
+                inspectionName=inspectionName,
+                errorDescription = errorDescription,
+            )
+        newForm.save()
