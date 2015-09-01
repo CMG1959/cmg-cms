@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'jquery',
     'bootstrap3',
     'mathfilters',
+    'dashboard',
     'employee',
     'equipment',
     'home',
