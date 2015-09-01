@@ -17,7 +17,7 @@ class rangeInspectionForm(forms.ModelForm):
 class textInspectionForm(forms.ModelForm):
     class Meta:
         model = textInspection
-        fields = ['textTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID']
+        fields = ['textTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
 
 class jobReportSearch(forms.Form):
     job_Number = forms.CharField(label="Job Number:", max_length=15)

@@ -43,6 +43,12 @@
                             </a>
                         {% endfor %}
 
+                        {% for eachTI in text_inspectionType %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/textInspection/{{ eachTI.testName }}/">
+                            <h4 class="list-group-item-heading">{{ eachTI.testName }}</h4>
+                            <p class="list-group-item-text">Click Here to record a record for {{ eachTI.testName }} </p>
+                            </a>
+                        {% endfor %}
 
 {#                        {% if inspectionTypes.visual_inspection %}#}
 {#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/visual">#}

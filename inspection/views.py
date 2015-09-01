@@ -55,12 +55,13 @@ def view_detailJob(request, jobNumber):
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-
+    text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
         'active_job': active_job,
         'pf_inspectionType' : pf_inspectionType,
-        'range_inspectionType': range_inspectionType
+        'range_inspectionType': range_inspectionType,
+        'text_inspectionType':text_inspectionType
     })
     return HttpResponse(template.render(context))
 
@@ -438,7 +439,7 @@ def checkPartInspection(item_Number):
 
     for requiredTests in textRecord.objects.filter(requireAll=True):
         if not textRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
-            newPartInspection = textRecordByPart(testName = requiredTests, item_Number__item_Number = item_Number)
+            newPartInspection = textRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
     # Will probably need to create something for shot weights...
 
