@@ -88,7 +88,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
             checkFormForLog(form, inspectionType = 'pf',
                             inspectionName = passFailTest.objects.get(testName=inspectionName).testName,
-                            activeJob=jobNumber, rangeInfo=None)
+                            activeJob=active_job, rangeInfo=None)
 
             # save the data
             form.save()
@@ -139,7 +139,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             # save the data
             checkFormForLog(form, inspectionType = 'rangeInspection',
                             inspectionName = rangeInfo.testName,
-                            activeJob=jobNumber, rangeInfo=rangeInfo)
+                            activeJob=active_job, rangeInfo=rangeInfo)
 
             form.save()
             # redirect to a new URL:
@@ -478,7 +478,7 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
     create_log = False
 
     shiftID = getShift()
-    jobID = activeJob[0].JobNumber
+    jobID = activeJob[0].jobNumber
     machNo = activeJob[0].machNo.part_identifier
     partDesc = activeJob[0].item.item_Description
     inspectionName = inspectionName
@@ -486,6 +486,10 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
     if inspectionType == 'pf':
         if not form.cleaned_data['inspectionResult']:
             errorDescription = form.cleaned_data['defectType']
+            error_list = []
+            for each_error in errorDescription:
+                error_list.append(each_error.passFail)
+            errorDescription = ', '.join(error_list)
             create_log = True
 
     if inspectionType == 'rangeInspection':
