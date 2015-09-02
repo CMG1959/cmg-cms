@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error Log</title>
+</head>
+<body>
+
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-10 bootcards-cards">
+{% if prodErrors %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Error Log</caption>
+                <thead>
+                <tr>
+                    <th>Shift</th>
+                    <th>Date</th>
+                    <th>Machine</th>
+                    <th>Part Description</th>
+                    <th>Inspection Name</th>
+                    <th>Error Description</th>
+                </tr>
+                </thead>
+            <tbody>
+            {% for eachProdError in prodErrors %}
+                <tr>
+                <td>
+                    {{ eachProdError.shiftID }}
+                </td>
+                <td>
+                    {{ eachProdError.dateCreated }}
+                </td>
+                <td>
+                    {{ eachProdError.machNo }}
+                </td>
+                <td>
+                    {{ eachProdError.partDesc }}
+                </td>
+                <td>
+                    {{ eachProdError.inspectionName }}
+                </td>
+                <td>
+                    {{ eachProdError.errorDescription }}
+                </td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+</div>
+
+
+</body>
+</html>
