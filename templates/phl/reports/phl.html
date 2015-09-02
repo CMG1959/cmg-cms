@@ -20,13 +20,15 @@
     {% if my_dict %}
         {% for key,value in my_dict.items %}
 
-            {% if value.sus %}
+            {% if value.phl %}
+
+                {% if value.sus %}
                 {% with value.sus as active_job %}
                     {% include "inspection/subTemplates/subJobInfo.html" %}
                 {% endwith %}
             {% endif %}
 
-            {% if value.sus %}
+
                 {% with value.phl as PHL %}
                     <div class="panel panel-default bootcards-richtext">
                         <div class="panel-body">

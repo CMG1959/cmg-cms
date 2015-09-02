@@ -258,8 +258,8 @@ def view_mold_report(request, moldNo):
     MHL = MoldHistory.objects.filter(moldNumber__mold_number=moldNo)
 
 
-    my_dict = {'mold_info': mold_info, 'MHL': MHL}
-    context_dict = {'my_dict':my_dict}
+    context_dict = {'mold_info': mold_info, 'MHL': MHL}
+    # context_dict = {'my_dict':my_dict}
     template = loader.get_template('phl/reports/mhl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
