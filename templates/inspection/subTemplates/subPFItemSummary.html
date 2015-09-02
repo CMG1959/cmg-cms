@@ -1,13 +1,13 @@
 {% if pfSummaryDict %}
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left"> Pass Fail Test Summary </h3>
+            <h3 class="panel-title pull-left"> {{ pfSummaryDict.inspectionName }} </h3>
         </div>
     <div class="panel-body">
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>Pass Fail Test Name</th>
+                <th>Job Number</th>
                 <th>Total Inspections</th>
                 <th>Pass</th>
                 <th>Fail</th>
@@ -17,7 +17,7 @@
             <tbody>
             {% for key,value in pfSummaryDict.items %}
                 <tr>
-                <td> {{ value.pfName }}</td>
+                <td> {{ value.jobID }}</td>
                 <td> {{ value.totalInspections }}</td>
                 <td> {{ value.numPass }} </td>
                 <td> {{ value.numFail }} </td>

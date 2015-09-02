@@ -274,7 +274,7 @@ def view_itemReportSearch(request):
 @login_required
 def view_itemReport(request, itemNumber):
     context_dict = {}
-    context_dict['partDict'] = createItemReportDict(itemNumber)
+    context_dict = createItemReportDict(itemNumber)
     print context_dict
 
     template = loader.get_template('inspection/reports/partReport.html')
@@ -298,13 +298,92 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     jobList = startUpShot.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from1, date_to1))
     jobList = jobList.values_list('jobNumber', flat=True)
-    partDict = {}
-    n = 0
-    for eachJob in jobList:
-        dictID = 'Job%i' % (n)
-        n += 1
-        partDict[dictID] = {}
-        partDict[dictID] = createJobReportDict(eachJob, date_from=date_from, date_to=date_from)
+
+    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=itemNumber)
+    rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=itemNumber)
+    textTests = textRecordByPart.objects.filter(item_Number__item_Number=itemNumber)
+
+    partDict = {'pf':{},'rangeTest':{}}
+
+    for eachInspection1 in pf_inspectionType:
+        eachInspection = eachInspection1.testName
+        partDict['pf'][eachInspection] = {}
+        thisInspection = passFailInspection.objects.filter(passFailTestName__testName = eachInspection)
+        n=0
+        for eachJob in jobList:
+            n += 1
+            partDict['pf'][eachInspection]['inspectionName'] = eachInspection
+            partDict['pf'][eachInspection][str(n)]={}
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
+            partDict['pf'][eachInspection][str(n)]['jobID'] = eachJob
+            partDict['pf'][eachInspection][str(n)]['numPass'] = thisInspectionbyJob.filter(
+                inspectionResult=1).count()
+            partDict['pf'][eachInspection][str(n)]['numFail'] = thisInspectionbyJob.filter(
+                inspectionResult=0).count()
+            ### Calculate number of total inspections
+            partDict['pf'][eachInspection][str(n)]['totalInspections'] = partDict['pf'][eachInspection][str(n)]['numPass'] + \
+                partDict['pf'][eachInspection][str(n)]['numFail']
+            ### Calculate percentage passed
+            if  partDict['pf'][eachInspection][str(n)]['totalInspections'] > 0:
+                partDict['pf'][eachInspection][str(n)]['passPerc'] = 100 * partDict['pf'][eachInspection][str(n)]['numPass']/partDict['pf'][eachInspection][str(n)]['totalInspections']
+            else:
+                partDict['pf'][eachInspection][str(n)]['passPerc'] = 0
+
+    for eachInspection1 in rangeTests:
+        eachInspection = eachInspection1.testName.testName
+        partDict['rangeTest'][eachInspection] = {}
+        partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
+
+        thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection)
+        n=0
+        for eachJob in jobList:
+            n += 1
+            partDict['rangeTest'][eachInspection][str(n)] = {}
+            partDict['rangeTest'][eachInspection][str(n)]['jobID']=eachJob
+
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
+            active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
+
+            rangeList = []
+            for eachShot in thisInspectionbyJob:
+
+                if eachShot.isFullShot:
+                    rangeList.append(eachShot.numVal / active_job[0].activeCavities)
+                else:
+                    rangeList.append(eachShot.numVal)
+
+            if rangeList:
+                partDict['rangeTest'][eachInspection][str(n)]['rangeStats'] = {
+                    'rangeList__count' :  '%i' % (len(rangeList)),
+                    'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
+                    'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
+                    'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
+                    'rangeList__stddev': '%1.3f' % (np.std(rangeList))
+                }
+            else:
+                partDict['rangeTest'][eachInspection]['rangeStats'] = {
+                    'rangeList__count' :  '%i' % (0),
+                    'rangeList__min':    '%1.3f' % (0),
+                    'rangeList__max':    '%1.3f' % (0),
+                    'rangeList__avg':    '%1.3f' % (0),
+                    'rangeList__stddev': '%1.3f' % (0)
+                }
+
+    # for eachInspection in textTests.values_list('textTestName.testName',flat=True):
+    #     partDict[eachInspection] = {}
+    #     thisInspection = textInspection.objects.filter(textTestName__testName = eachInspection)
+    #     n=0
+    #     for eachJob in jobList:
+    #         n += 1
+    #         partDict[eachInspection][str(n)]={}
+    #         thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
+
+    # n = 0
+    # for eachJob in jobList:
+    #     dictID = 'Job%i' % (n)
+    #     n += 1
+    #     partDict[dictID] = {}
+    #     partDict[dictID] = createJobReportDict(eachJob, date_from=date_from, date_to=date_from)
 
     return partDict
 
@@ -324,6 +403,8 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+    textTests = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+
 
     context_dic['pf'] = {}
     context_dic['pfSummary']={}
@@ -386,6 +467,14 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                     'rangeList__stddev': '%1.3f' % (0)
                 }
 
+        n += 1
+
+
+    n = 1
+    context_dic['textTests']={}
+    for eachTextTest in textTests:
+        context_dic['textTests'][str(n)] = textInspection.objects.filter(\
+            textTestName__testName=eachTextTest.testName,jobID__jobNumber=jobNumber)
         n += 1
 
     return context_dic

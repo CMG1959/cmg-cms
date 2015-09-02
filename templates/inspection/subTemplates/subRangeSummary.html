@@ -2,11 +2,14 @@
 
 {% if rangeSummaryDict %}
     <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> Range Test Summary </h3>
+        </div>
         <div class="panel-body">
             <table class="table table-hover">
-                <caption style="text-align:center">{{ rangeSummaryDict.rangeName }}</caption>
                 <thead>
                 <tr>
+                    <th>Range Test Name</th>
                     <th>Total Inspections</th>
                     <th>Min</th>
                     <th>Average</th>
@@ -15,23 +18,16 @@
                 </tr>
                 </thead>
             <tbody>
-            <tr>
-                <td>
-                    {{ rangeSummaryDict.rangeStats.rangeList__count }}
-                </td>
-                <td>
-                    {{ rangeSummaryDict.rangeStats.rangeList__min }}
-                </td>
-                <td>
-                    {{ rangeSummaryDict.rangeStats.rangeList__avg }}
-                </td>
-                <td>
-                    {{ rangeSummaryDict.rangeStats.rangeList__stddev }}
-                </td>
-                <td>
-                    {{ rangeSummaryDict.rangeStats.rangeList__max }}
-                </td>
-            </tr>
+            {% for key,value in rangeSummaryDict.items %}
+                <tr>
+                <td> {{ value.rangeName }} </td>
+                <td> {{ value.rangeStats.rangeList__count }}</td>
+                <td> {{ value.rangeStats.rangeList__min }}</td>
+                <td> {{ value.rangeStats.rangeList__avg }}</td>
+                <td> {{ value.rangeStats.rangeList__stddev }}</td>
+                <td> {{ value.rangeStats.rangeList__max }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
             </table>
             Note: The resulting statistics take cavitation into account if a full shot was entered.

@@ -1,8 +1,10 @@
 {% if InspectionDates %}
     <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> Job Dates} </h3>
+        </div>
     <div class="panel-body">
         <table class="table table-hover">
-            <caption style="text-align:center">Date Range Summary</caption>
             <thead>
             <tr>
                 <th class="col-sm-2">Job Started</th>
@@ -25,16 +27,32 @@
 {% endif %}
 
 
-{% for key,value in pfSummary.items %}
-                {% with value as pfSummaryDict %}
+
+                {% with pfSummary as pfSummaryDict %}
                     {% include "inspection/subTemplates/subPFSummary.html" %}
                 {% endwith %}
-{% endfor %}
 
-{% for key,value in rangeTestSummary.items %}
-                {% with value as rangeSummaryDict %}
+
+                {% with rangeTestSummary as rangeSummaryDict %}
                     {% include "inspection/subTemplates/subRangeSummary.html" %}
                 {% endwith %}
+
+{% for key,value in pf.items %}
+    {% with value as pfDict %}
+        {% include "inspection/subTemplates/subPFInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+{% for key,value in rangeTests.items %}
+    {% with value as rangeDict %}
+        {% include "inspection/subTemplates/subRangeInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+{% for key,value in textTests.items %}
+    {% with value as textDict %}
+            {%  include "inspection/subTemplates/subTextInspection.html" %}
+    {% endwith %}
 {% endfor %}
 
 

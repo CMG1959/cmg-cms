@@ -1,0 +1,42 @@
+{% if pfDict %}
+        <div class="panel panel-default bootcards-richtext">
+                <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> {{ pfDict.0.passFailTestName }} </h3>
+                </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Machine Operator</th>
+                        <th>Inspector</th>
+                        <th>Date</th>
+                        <th>Inspection Result</th>
+                        <th>Cav</th>
+                        <th>Defects </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ep in pfDict %}
+                        <tr>
+                            <td>
+                                {{ ep.machineOperator }}
+                            </td>
+                            <td>
+                                {{ ep.inspectorName }}
+                            </td>
+                            <td>
+                                {{ ep.dateCreated }}
+                            </td>
+                            <td>
+                                {{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}
+                            </td>
+                            <td> {{ ep.headCavID }}</td>
+                            <td>  {% for dt in ep.defectType.all %} {{ dt.defectType }}. {% endfor %}  </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+{% endif %}
+

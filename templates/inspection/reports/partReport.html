@@ -19,6 +19,8 @@
             <h3 class="panel-title text-center">Summary For Job {{ value.startupInfo.0.jobNumber }}</h3>
         </div>
 
+
+
             {% if value.startupInfo %}
                 {% with value.startupInfo as active_job %}
                     {% include "inspection/subTemplates/subJobInfo.html" %}
@@ -54,6 +56,13 @@
 
         {#            </div>#}
         {% endfor %}
+
+    {% for key,value in partDict.pf.items %}
+            {% with value as pfSummaryDict %}
+                {% include "inspection/subTemplates/subPFItemSummary.html" %}
+            {% endwith %}
+{% endfor %}
+
 </div>
 
 
