@@ -297,13 +297,14 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     date_from1, date_to1 = createDateRange(date_from=date_from, date_to=date_to)
 
     jobList = startUpShot.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from1, date_to1))
+    susList = jobList
     jobList = jobList.values_list('jobNumber', flat=True)
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=itemNumber)
     rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=itemNumber)
     textTests = textRecordByPart.objects.filter(item_Number__item_Number=itemNumber)
 
-    partDict = {'pf':{},'rangeTest':{}}
+    partDict = {'pf':{},'rangeTest':{},'activeJob':susList}
 
     for eachInspection1 in pf_inspectionType:
         eachInspection = eachInspection1.testName

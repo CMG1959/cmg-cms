@@ -2,6 +2,7 @@
 
 {% if active_job %}
 
+
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left"> Part Information</h3>
@@ -17,14 +18,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for ep in active_job %}
                     <tr>
-                        <td>{{ ep.item.item_Number }}</td>
-                        <td>{{ ep.item.item_Description }}</td>
-                        <td>{{ ep.item.exp_part_weight }}</td>
-                        <td>{{ ep.item.exp_cycle_time }}</td>
+                        <td>{{ active_job.0.item.item_Number }}</td>
+                        <td>{{ active_job.0.item.item_Description }}</td>
+                        <td>{{ active_job.0.item.exp_part_weight }}</td>
+                        <td>{{ active_job.0.item.exp_cycle_time }}</td>
                     </tr>
-                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -75,6 +74,7 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
+                    <th>Job Number</th>
                     <th>Mold ID</th>
                     <th>Mold Description</th>
                     <th>Total Cavities</th>
@@ -83,6 +83,7 @@
                 <tbody>
                 {% for ep in active_job %}
                     <tr>
+                        <td> {{ ep.jobNumber }}</td>
                         <td>{{ ep.moldNumber }}</td>
                         <td>{{ ep.moldNumber.mold_description }}</td>
                         <td>{{ ep.moldNumber.num_cavities }}</td>

@@ -16,13 +16,15 @@
             </thead>
             <tbody>
             {% for key,value in pfSummaryDict.items %}
-                <tr>
+                {% if value.jobID %}
+                    <tr>
                 <td> {{ value.jobID }}</td>
                 <td> {{ value.totalInspections }}</td>
                 <td> {{ value.numPass }} </td>
                 <td> {{ value.numFail }} </td>
                 <td> {{ value.passPerc }} % </td>
                 </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
