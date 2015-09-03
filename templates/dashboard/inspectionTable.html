@@ -1,0 +1,45 @@
+{% if value %}
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> {{ value.susInfo.machNo }} - {{ value.susInfo.item.item_Description }} </h3>
+        </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Inspection Name </th>
+                <th>Required Inspections </th>
+                <th>Completed Inspections </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for valuePF in value.pfTests %}
+                <tr>
+                <td> {{ valuePF.testName }}</td>
+                <td> 0 </td>
+                <td> 0 </td>
+                </tr>
+            {% endfor %}
+
+            {% for valueRT in value.rangeTests %}
+                <tr>
+                <td> {{ valueRT.testName }}</td>
+                <td> 0 </td>
+                <td> 0 </td>
+                </tr>
+            {% endfor %}
+
+            {% for valueTT in value.textTests %}
+                <tr>
+                <td> {{ valueTT.testName }}</td>
+                <td> 0 </td>
+                <td> 0 </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+{% endif %}
