@@ -309,36 +309,32 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     for eachInspection1 in pf_inspectionType:
         eachInspection = eachInspection1.testName
         partDict['pf'][eachInspection] = {}
-        thisInspection = passFailInspection.objects.filter(passFailTestName__testName = eachInspection)
+        thisInspection = passFailInspection.objects.filter(passFailTestName__testName = eachInspection,
+                                                           dateCreated__range=(date_from1, date_to1))
         n=0
         for eachJob in jobList:
-            n += 1
+
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
             partDict['pf'][eachInspection][str(n)]={}
             thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
             partDict['pf'][eachInspection][str(n)]['jobID'] = eachJob
-            partDict['pf'][eachInspection][str(n)]['numPass'] = thisInspectionbyJob.filter(
-                inspectionResult=1).count()
-            partDict['pf'][eachInspection][str(n)]['numFail'] = thisInspectionbyJob.filter(
-                inspectionResult=0).count()
-            ### Calculate number of total inspections
-            partDict['pf'][eachInspection][str(n)]['totalInspections'] = partDict['pf'][eachInspection][str(n)]['numPass'] + \
-                partDict['pf'][eachInspection][str(n)]['numFail']
-            ### Calculate percentage passed
-            if  partDict['pf'][eachInspection][str(n)]['totalInspections'] > 0:
-                partDict['pf'][eachInspection][str(n)]['passPerc'] = 100 * partDict['pf'][eachInspection][str(n)]['numPass']/partDict['pf'][eachInspection][str(n)]['totalInspections']
-            else:
-                partDict['pf'][eachInspection][str(n)]['passPerc'] = 0
+            partDict['pf'][eachInspection][str(n)].update(createPFStats(thisInspectionbyJob))
+            n += 1
+
+        partDict['pf'][eachInspection][str(n)]={}
+        partDict['pf'][eachInspection][str(n)]['jobID'] = 'Total'
+        partDict['pf'][eachInspection][str(n)].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
 
     for eachInspection1 in rangeTests:
         eachInspection = eachInspection1.testName.testName
         partDict['rangeTest'][eachInspection] = {}
         partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
 
-        thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection)
+        thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection,
+                                                           dateCreated__range=(date_from1, date_to1))
         n=0
+        totalRangeList = []
         for eachJob in jobList:
-            n += 1
             partDict['rangeTest'][eachInspection][str(n)] = {}
             partDict['rangeTest'][eachInspection][str(n)]['jobID']=eachJob
 
@@ -350,41 +346,17 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
                 if eachShot.isFullShot:
                     rangeList.append(eachShot.numVal / active_job[0].activeCavities)
+                    totalRangeList.append(rangeList[-1])
                 else:
                     rangeList.append(eachShot.numVal)
+                    totalRangeList.append(rangeList[-1])
 
-            if rangeList:
-                partDict['rangeTest'][eachInspection][str(n)]['rangeStats'] = {
-                    'rangeList__count' :  '%i' % (len(rangeList)),
-                    'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
-                    'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
-                    'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
-                    'rangeList__stddev': '%1.3f' % (np.std(rangeList))
-                }
-            else:
-                partDict['rangeTest'][eachInspection]['rangeStats'] = {
-                    'rangeList__count' :  '%i' % (0),
-                    'rangeList__min':    '%1.3f' % (0),
-                    'rangeList__max':    '%1.3f' % (0),
-                    'rangeList__avg':    '%1.3f' % (0),
-                    'rangeList__stddev': '%1.3f' % (0)
-                }
+            partDict['rangeTest'][eachInspection][str(n)]['rangeStats'] = calcRangeStats(rangeList)
+            n += 1
 
-    # for eachInspection in textTests.values_list('textTestName.testName',flat=True):
-    #     partDict[eachInspection] = {}
-    #     thisInspection = textInspection.objects.filter(textTestName__testName = eachInspection)
-    #     n=0
-    #     for eachJob in jobList:
-    #         n += 1
-    #         partDict[eachInspection][str(n)]={}
-    #         thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
+        partDict['rangeTest'][eachInspection][str(n)] = {'jobID' :'Total',
+                                                         'rangeStats':calcRangeStats(totalRangeList)}
 
-    # n = 0
-    # for eachJob in jobList:
-    #     dictID = 'Job%i' % (n)
-    #     n += 1
-    #     partDict[dictID] = {}
-    #     partDict[dictID] = createJobReportDict(eachJob, date_from=date_from, date_to=date_from)
 
     return partDict
 
@@ -409,30 +381,15 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     context_dic['pf'] = {}
     context_dic['pfSummary']={}
-    n = 1
+    n = 0
     for each_pf_inspection in pf_inspectionType:
         context_dic['pf'][str(n)] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName.testName,
-                                                                                     jobID__jobNumber=jobNumber)
+                                                                      jobID__jobNumber=jobNumber,
+                                                                      dateCreated__range=(date_from, date_to))
 
         context_dic['pfSummary'][str(n)] = {}
         context_dic['pfSummary'][str(n)]['pfName'] = each_pf_inspection.testName.testName
-        context_dic['pfSummary'][str(n)]['numPass'] = context_dic['pf'][str(n)].filter(
-            inspectionResult=1).count()
-
-        ### Count number of failed inspections
-        context_dic['pfSummary'][str(n)]['numFail'] = context_dic['pf'][str(n)].filter(
-            inspectionResult=0).count()
-
-        ### Calculate number of total inspections
-        context_dic['pfSummary'][str(n)]['totalInspections'] = context_dic['pfSummary'][str(n)]['numPass'] + \
-                                                                  context_dic['pfSummary'][str(n)]['numFail']
-        ### Calculate percentage passed
-        if context_dic['pfSummary'][str(n)]['totalInspections'] > 0:
-            context_dic['pfSummary'][str(n)]['passPerc'] = 100 * context_dic['pfSummary'][str(n)]['numPass'] / + \
-                context_dic['pfSummary'][str(n)]['totalInspections']
-        else:
-            context_dic['pfSummary'][str(n)]['passPerc'] = 0
-
+        context_dic['pfSummary'][str(n)].update(createPFStats(context_dic['pf'][str(n)]))
         n+=1
 
     n = 1
@@ -440,7 +397,8 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     context_dic['rangeTestSummary']={}
     for each_range_inspection in rangeTests:
         context_dic['rangeTests'][str(n)] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
-                                                                                     jobID__jobNumber=jobNumber)
+                                                                           jobID__jobNumber=jobNumber,
+                                                                           dateCreated__range=(date_from, date_to))
         context_dic['rangeTestSummary'][str(n)] = {}
         context_dic['rangeTestSummary'][str(n)]['rangeName'] = each_range_inspection.testName.testName
 
@@ -451,22 +409,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             else:
                 rangeList.append(eachShot.numVal)
 
-        if rangeList:
-            context_dic['rangeTestSummary'][str(n)]['rangeStats'] = {
-                    'rangeList__count' :  '%i' % (len(rangeList)),
-                    'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
-                    'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
-                    'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
-                    'rangeList__stddev': '%1.3f' % (np.std(rangeList))
-                }
-        else:
-            context_dic['rangeTestSummary'][str(n)]['rangeStats'] = {
-                    'rangeList__count' :  '%i' % (0),
-                    'rangeList__min':    '%1.3f' % (0),
-                    'rangeList__max':    '%1.3f' % (0),
-                    'rangeList__avg':    '%1.3f' % (0),
-                    'rangeList__stddev': '%1.3f' % (0)
-                }
+        context_dic['rangeTestSummary'][str(n)]['rangeStats']=calcRangeStats(rangeList)
 
         n += 1
 
@@ -606,3 +549,35 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
                 errorDescription = errorDescription,
             )
         newForm.save()
+
+
+def createPFStats(qSet):
+    resultDict = {
+        'numPass': qSet.filter(inspectionResult=1).count(),
+        'numFail': qSet.filter(inspectionResult=0).count()}
+    resultDict['totalInspections'] = resultDict['numPass']+resultDict['numFail']
+    if resultDict['totalInspections'] > 0:
+        resultDict['passPerc']=100*resultDict['numPass']/resultDict['totalInspections']
+    else:
+        resultDict['passPerc']=0
+
+    return resultDict
+
+def calcRangeStats(rangeList):
+    if rangeList:
+        resultDict = {
+                    'rangeList__count' :  '%i' % (len(rangeList)),
+                    'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
+                    'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
+                    'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
+                    'rangeList__stddev': '%1.3f' % (np.std(rangeList))
+                }
+    else:
+        resultDict = {
+                    'rangeList__count' :  '%i' % (0),
+                    'rangeList__min':    '%1.3f' % (0),
+                    'rangeList__max':    '%1.3f' % (0),
+                    'rangeList__avg':    '%1.3f' % (0),
+                    'rangeList__stddev': '%1.3f' % (0)
+                }
+    return resultDict
