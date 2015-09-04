@@ -1,5 +1,5 @@
 {% if pfDict %}
-        <div class="panel panel-default bootcards-richtext">
+        <div class="panel panel-default">
                 <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left"> {{ pfDict.0.passFailTestName }} </h3>
                 </div>
@@ -31,7 +31,7 @@
                                 {{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}
                             </td>
                             <td> {{ ep.headCavID }}</td>
-                            <td>  {% for dt in ep.defectType.all %} {{ dt.defectType }}. {% endfor %}  </td>
+                            <td>  {% for dt in ep.defectType.all %} {{ dt.passFail }}. <br> {% endfor %}  </td>
                         </tr>
                     {% endfor %}
                     </tbody>

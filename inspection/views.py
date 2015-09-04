@@ -21,6 +21,7 @@ from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch
 
+import collections
 
 
 ######################################
@@ -308,7 +309,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     for eachInspection1 in pf_inspectionType:
         eachInspection = eachInspection1.testName
-        partDict['pf'][eachInspection] = {}
+        partDict['pf'][eachInspection] = collections.OrderedDict()
         thisInspection = passFailInspection.objects.filter(passFailTestName__testName = eachInspection,
                                                            dateCreated__range=(date_from1, date_to1))
         n=0
@@ -327,7 +328,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     for eachInspection1 in rangeTests:
         eachInspection = eachInspection1.testName.testName
-        partDict['rangeTest'][eachInspection] = {}
+        partDict['rangeTest'][eachInspection] = collections.OrderedDict()
         partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
 
         thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection,
@@ -358,6 +359,21 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                          'rangeStats':calcRangeStats(totalRangeList)}
 
 
+
+
+    n = 0
+    partDict['textTests']=collections.OrderedDict()
+    for eachTextTest in textTests:
+        partDict['textTests'][str(n)] = {
+            'testName': eachTextTest.testName,
+            'textDict': textInspection.objects.filter(\
+            textTestName__testName=eachTextTest.testName)
+        }
+
+        n += 1
+
+    partDict['phl'] = ProductionHistory.objects.filter(jobNumber__item__item_Number=itemNumber)
+    partDict['useJobNo'] = True
     return partDict
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
@@ -392,7 +408,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['pfSummary'][str(n)].update(createPFStats(context_dic['pf'][str(n)]))
         n+=1
 
-    n = 1
+    n = 0
     context_dic['rangeTests']={}
     context_dic['rangeTestSummary']={}
     for each_range_inspection in rangeTests:
@@ -414,12 +430,20 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         n += 1
 
 
-    n = 1
+    n = 0
     context_dic['textTests']={}
     for eachTextTest in textTests:
-        context_dic['textTests'][str(n)] = textInspection.objects.filter(\
+        context_dic['textTests'][str(n)] = {
+            'testName': eachTextTest.testName,
+            'textDict': textInspection.objects.filter(\
             textTestName__testName=eachTextTest.testName,jobID__jobNumber=jobNumber)
+        }
+
         n += 1
+
+
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber)
+
 
     return context_dic
 

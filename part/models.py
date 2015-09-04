@@ -22,6 +22,9 @@ class Part(models.Model):
     exp_part_weight = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Expected Part Weight")
     exp_cycle_time = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Expected Cycle Time")
 
+    def __unicode__(self):
+        return '%s' % (self.item_Number)
+
 
 
     def __unicode__(self):

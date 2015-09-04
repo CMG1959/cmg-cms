@@ -32,6 +32,16 @@
             {% endwith %}
     {% endfor %}
 
+    {% for key,value in partDict.textTests.items %}
+        {% include "inspection/subTemplates/subTextInspectionIR.html"  %}
+    {% endfor %}
+
+    {% with partDict.phl as phl  %}
+        {% with partDict.useJobNo as useJobNo %}
+            {% include "inspection/subTemplates/subComments.html" %}
+        {% endwith %}
+    {% endwith %}
+
 
 
 </div>

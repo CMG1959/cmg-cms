@@ -1,7 +1,8 @@
-{% if textDict %}
-        <div class="panel panel-default bootcards-richtext">
+{% if value.testName %}
+    {% if value.textDict %}
+        <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left"> {{ textDict.0.textTestName }} </h3>
+                <h3 class="panel-title pull-left"> {{ value.testName }} </h3>
             </div>
             <div class="panel-body">
                 <table class="table table-hover">
@@ -10,11 +11,11 @@
                         <th>Machine Operator</th>
                         <th>Inspector</th>
                         <th>Date</th>
-                        <th>Inspection Result</th>
+                        <th>{{ value.testName }}</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for ep in textDict %}
+                    {% for ep in value.textDict %}
                         <tr>
                             <td>
                                 {{ ep.machineOperator }}
@@ -34,5 +35,6 @@
                 </table>
             </div>
         </div>
+        {% endif %}
 {% endif %}
 

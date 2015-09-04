@@ -1,23 +1,29 @@
-{% if phl %}
-    {% with phl as PHL %}
+{% if value.testName %}
+    {% if value.textDict %}
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left"> Production History Log </h3>
+                <h3 class="panel-title pull-left"> {{ value.testName }} </h3>
             </div>
             <div class="panel-body">
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        {% if useJobNo %} <th> Job Number </th> {% endif %}
-                        <th>Inspector Name</th>
-                        <th>Date Created</th>
-                        <th>Description of Event</th>
+                        <th>Job Number</th>
+                        <th>Machine Operator</th>
+                        <th>Inspector</th>
+                        <th>Date</th>
+                        <th>{{ value.testName }}</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for ep in PHL %}
+                    {% for ep in value.textDict %}
                         <tr>
-                            {% if useJobNo %} <td> {{ ep.jobNumber }} </td> {% endif %}
+                        <td>
+                            {{ ep.jobID }}
+                        </td>
+                            <td>
+                                {{ ep.machineOperator }}
+                            </td>
                             <td>
                                 {{ ep.inspectorName }}
                             </td>
@@ -25,7 +31,7 @@
                                 {{ ep.dateCreated }}
                             </td>
                             <td>
-                                {{ ep.descEvent }}
+                                {{ ep.inspectionResult }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -33,6 +39,6 @@
                 </table>
             </div>
         </div>
-    {% endwith %}
+        {% endif %}
 {% endif %}
 
