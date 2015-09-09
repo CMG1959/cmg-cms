@@ -345,7 +345,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             rangeList = []
             for eachShot in thisInspectionbyJob:
                 # if its a full shot and we do not want to report the raw data (take average)
-                if eachShot.isFullShot and (not eachInspection1.testName.calcAvg):
+                if ((eachShot.isFullShot) and (not eachInspection1.testName.calcAvg)):
                     rangeList.append(eachShot.numVal / active_job[0].activeCavities)
                     totalRangeList.append(rangeList[-1])
                 else:
@@ -419,9 +419,11 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['rangeTestSummary'][str(n)] = {}
         context_dic['rangeTestSummary'][str(n)]['rangeName'] = each_range_inspection.testName.testName
 
+
+
         rangeList = []
         for eachShot in context_dic['rangeTests'][str(n)]:
-            if eachShot.isFullShot and (not each_range_inspection.testName.calcAvg) :
+            if ((eachShot.isFullShot) and (not each_range_inspection.testName.calcAvg)):
                 rangeList.append(eachShot.numVal / active_job[0].activeCavities)
             else:
                 rangeList.append(eachShot.numVal)
