@@ -86,6 +86,7 @@ class rangeTest(models.Model):
 
     testName = models.CharField(max_length=75, verbose_name="Range Test Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
+    calcAvg = models.BooleanField(verbose_name="Report raw data (do not take average)?",default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)

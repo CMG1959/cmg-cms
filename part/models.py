@@ -24,8 +24,3 @@ class Part(models.Model):
 
     def __unicode__(self):
         return '%s' % (self.item_Number)
-
-
-
-    def __unicode__(self):
-        return self.item_Number

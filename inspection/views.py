@@ -344,8 +344,8 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
             rangeList = []
             for eachShot in thisInspectionbyJob:
-
-                if eachShot.isFullShot:
+                # if its a full shot and we do not want to report the raw data (take average)
+                if eachShot.isFullShot and (not eachInspection1.testName.calcAvg):
                     rangeList.append(eachShot.numVal / active_job[0].activeCavities)
                     totalRangeList.append(rangeList[-1])
                 else:
@@ -367,7 +367,8 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['textTests'][str(n)] = {
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter(\
-            textTestName__testName=eachTextTest.testName)
+            textTestName__testName=eachTextTest.testName,
+            jobID__item__item_Number=itemNumber)
         }
 
         n += 1
@@ -526,9 +527,13 @@ def checkMoldCavs(item_Number=None,mold_Number=None):
         ### grab the mold information
         mold_info = Mold.objects.get(mold_number = mold_Number)
         ### add all the cavities
-        for n in range(mold_info.num_cavities):
+        for n in range(1,mold_info.num_cavities+1):
             newCavID = PartIdentifier(mold_number=mold_info,head_code='A',cavity_id = '%i' % (n))
             newCavID.save()
+
+        newCavID = PartIdentifier(mold_number=mold_info,head_code='A',cavity_id = 'All')
+        newCavID.save()
+
 
 
 def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=None):
