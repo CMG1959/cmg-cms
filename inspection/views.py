@@ -421,7 +421,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
         rangeList = []
         for eachShot in context_dic['rangeTests'][str(n)]:
-            if eachShot.isFullShot:
+            if eachShot.isFullShot and (not each_range_inspection.testName.calcAvg) :
                 rangeList.append(eachShot.numVal / active_job[0].activeCavities)
             else:
                 rangeList.append(eachShot.numVal)
