@@ -42,3 +42,14 @@ class MattecProd(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.machNo, self.itemDesc)
+
+
+class startUpShotWeightLinkage(models.Model):
+    class Meta:
+        verbose_name = 'Startup Shot Test Link Name'
+        verbose_name_plural = 'Startup Shot Test Link Name'
+
+    susName = models.ForeignKey('inspection.rangeTest', verbose_name='Link to inspection name')
+
+    def __unicode__(self):
+        return '%s' % (self.susName)
