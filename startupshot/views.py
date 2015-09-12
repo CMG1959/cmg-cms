@@ -75,18 +75,6 @@ def createNewStartUpShot(request, jobNo):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
     PartInfo = Part.objects.get(item_Number=MattecInfo.itemNo)
 
-    shotWeightName = startUpShotWeightLinkage.objects.all()[0]
-
-    rangeInfo = rangeTestByPart.objects.filter(testName__testName=shotWeightName.testName,item_Number__item_Number=MattecInfo.itemNo.trim())
-
-    if rangeInfo.exists():
-            min_val=rangeInfo.rangeMin
-            max_val=rangeInfo.rangeMax
-    else:
-            min_val=0
-            max_val=999999.999
-
-
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
 
@@ -123,10 +111,21 @@ def createNewStartUpShot(request, jobNo):
             form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
             form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
-    return render(request, 'startupshot/createStartupShot.html',
-                  {'form': form, 'MattecDict': MattecInfo,
-                    'PartInfo': PartInfo,
-                    'num_id':'#id_shotWeight',
-                    'min_val':min_val,
-                    'max_val':max_val
-                   })
+            shotWeightName = startUpShotWeightLinkage.objects.all()[0]
+
+            rangeInfo = rangeTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName,item_Number__item_Number=MattecInfo.itemNo)
+
+            if rangeInfo.exists():
+                    min_val=rangeInfo[0].rangeMin
+                    max_val=rangeInfo[0].rangeMax
+            else:
+                    min_val=0
+                    max_val=999999.999
+
+            return render(request, 'startupshot/createStartupShot.html',
+                          {'form': form, 'MattecDict': MattecInfo,
+                            'PartInfo': PartInfo,
+                            'num_id':'#id_shotWeight',
+                            'min_val':min_val,
+                            'max_val':max_val
+                           })

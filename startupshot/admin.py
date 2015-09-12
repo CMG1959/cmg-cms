@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import startUpShot, MattecProd
+from .models import startUpShot, MattecProd,startUpShotWeightLinkage
 
 
 class startupShotAdmin(admin.ModelAdmin):
@@ -21,3 +21,4 @@ class startupShotAdmin(admin.ModelAdmin):
 
 admin.site.register(startUpShot,startupShotAdmin)  # , ProductionAdmin)
 admin.site.register(MattecProd)
+admin.site.register(startUpShotWeightLinkage)
