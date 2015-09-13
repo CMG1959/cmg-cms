@@ -170,7 +170,8 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             'use_minmax': True,
             'num_id':'#id_numVal',
             'min_val':rangeInfo.rangeMin,
-            'max_val':rangeInfo.rangeMax
+            'max_val':rangeInfo.rangeMax,
+            'id_result':'#id_inspectionResult',
         })
         return HttpResponse(template.render(context))
 

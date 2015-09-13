@@ -119,7 +119,8 @@ class rangeInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
-    numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Test Value")
+    numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
