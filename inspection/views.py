@@ -135,7 +135,6 @@ def view_rangeInspection(request, jobNumber, inspectionName):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
             checkFormForLog(form, inspectionType = 'rangeInspection',
