@@ -33,8 +33,8 @@ class rangeTestByPartAdmin(admin.ModelAdmin):
 
 
 class rangeInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['rangeTestName','jobID','dateCreated']
-    list_display = ('rangeTestName','jobID','dateCreated')
+    search_fields = ['rangeTestName','jobID','dateCreated','inspectionResult']
+    list_display = ('rangeTestName','jobID','dateCreated','inspectionResult')
 
 class textRecordAdmin(admin.ModelAdmin):
     search_fields = ['testName','requireAll']

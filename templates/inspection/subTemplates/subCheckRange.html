@@ -1,6 +1,6 @@
 <script>
     $( document ).ready(function() {
-        $('{{ id_result }}').prop('readonly', true);
+        $('{{id_result}}').prop('onclick','return false');
 });
 </script>
 
@@ -9,17 +9,17 @@
     $('{{ num_id }}').keyup(function() {
         if ($(this).val()>{{ max_val }}){
             if ( $('{{ id_result }}').prop( "checked" ) ) {
-                $('{{ id_result }}').prop( "checked");
+                $('{{ id_result }}').prop( "checked",false);
             }
         }
         if ($(this).val()<{{ min_val }}){
             if ( $('{{ id_result }}').prop( "checked" ) ) {
-                $('{{ id_result }}').prop( "checked");
+                $('{{ id_result }}').prop( "checked",false);
             }
         }
         if (($(this).val()>{{ min_val }}) && ($(this).val()<{{ max_val }})){
             if ( !$('{{ id_result }}').prop( "checked" ) ) {
-                $('{{ id_result }}').prop( "checked");
+                $('{{ id_result }}').prop( "checked",true);
             }
         }
     })
