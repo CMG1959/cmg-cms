@@ -123,6 +123,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
         return HttpResponse(template.render(context))
 
 
+
 @login_required
 def view_rangeInspection(request, jobNumber, inspectionName):
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
@@ -141,7 +142,22 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                             inspectionName = rangeInfo.testName,
                             activeJob=active_job, rangeInfo=rangeInfo)
 
-            form.save()
+            if ((form.cleaned_data['numVal'] >=  rangeInfo.rangeMin) and (form.cleaned_data['numVal'] <= rangeInfo.rangeMax)):
+                inspectionResult = True
+            else:
+                inspectionResult = False
+
+            newForm = rangeInspection(
+                rangeTestName=form.cleaned_data['rangeTestName'],
+                jobID=form.cleaned_data['jobID'],
+                machineOperator=form.cleaned_data['machineOperator'],
+                inspectorName=form.cleaned_data['inspectorName'],
+                isFullShot=form.cleaned_data['isFullShot'],
+                numVal=form.cleaned_data['numVal'],
+                inspectionResult=inspectionResult,
+            )
+
+            newForm.save()
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
