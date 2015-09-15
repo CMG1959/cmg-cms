@@ -391,6 +391,14 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     partDict['phl'] = ProductionHistory.objects.filter(jobNumber__item__item_Number=itemNumber)
     partDict['useJobNo'] = True
+
+    partDict.update({
+        'headerDict':{
+            'companyName':'Custom Molders Group',
+            'reportName':'Part Report',
+            'documentName':'Part Number: %s' % (itemNumber)
+        }
+    })
     return partDict
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
@@ -462,6 +470,15 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
 
     context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber)
+
+
+    context_dic.update({
+        'headerDict':{
+            'companyName':'Custom Molders Group',
+            'reportName':'Job Report',
+            'documentName':'Job Number: %s' % (jobNumber)
+        }
+    })
 
 
     return context_dic
