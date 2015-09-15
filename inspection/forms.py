@@ -12,7 +12,7 @@ class rangeInspectionForm(forms.ModelForm):
     class Meta:
         model = rangeInspection
         fields = ['rangeTestName','jobID','machineOperator','inspectorName','isFullShot',
-                  'headCavID','numVal','inspectionResult']
+                  'headCavID','numVal']
 
 class textInspectionForm(forms.ModelForm):
     class Meta:
