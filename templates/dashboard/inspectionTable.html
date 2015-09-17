@@ -14,26 +14,10 @@
             </thead>
             <tbody>
 
-            {% for valuePF in value.pfTests %}
+            {% for testDict in value.testDict %}
                 <tr>
-                <td> {{ valuePF.testName }}</td>
-                <td> 0 </td>
-                <td> 0 </td>
-                </tr>
-            {% endfor %}
-
-            {% for valueRT in value.rangeTests %}
-                <tr>
-                <td> {{ valueRT.testName }}</td>
-                <td> 0 </td>
-                <td> 0 </td>
-                </tr>
-            {% endfor %}
-
-            {% for valueTT in value.textTests %}
-                <tr>
-                <td> {{ valueTT.testName }}</td>
-                <td> 0 </td>
+                <td> {{ testDict.testName }}</td>
+                <td> {{ testDict.n_tests }} </td>
                 <td> 0 </td>
                 </tr>
             {% endfor %}

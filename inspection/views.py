@@ -573,6 +573,7 @@ def checkMoldCavs(item_Number=None,mold_Number=None):
 
 def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=None):
     create_log = False
+    errorDescription = 'None'
 
     shiftID = getShift()
     jobID = activeJob[0].jobNumber
@@ -598,10 +599,6 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
         if measured_val>rangeInfo.rangeMax:
             errorDescription = 'Measured value is %1.3f which is greater than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMax)
             create_log = True
-
-    # if inspectionType == 'textInspection':
-
-
 
     if create_log:
         newForm = errorLog(

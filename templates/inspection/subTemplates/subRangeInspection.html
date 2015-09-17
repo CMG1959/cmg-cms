@@ -12,22 +12,18 @@
                         <th>Date</th>
                         <th>Cav</th>
                         <th>Measurement </th>
+                        <th>Result</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for ep in rangeDict %}
                         <tr>
-                            <td>
-                                {{ ep.machineOperator }}
-                            </td>
-                            <td>
-                                {{ ep.inspectorName }}
-                            </td>
-                            <td>
-                                {{ ep.dateCreated }}
-                            </td>
-                            <td> {{ ep.headCavID|default_if_none:"Full Shot" }}</td>
-                            <td> {{ ep.numVal }}  </td>
+                            <td>{{ ep.machineOperator }}</td>
+                            <td>{{ ep.inspectorName }}</td>
+                            <td>{{ ep.dateCreated }}</td>
+                            <td>{{ ep.headCavID|default_if_none:"Full Shot" }}</td>
+                            <td>{{ ep.numVal }}  </td>
+                            <td>{{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
