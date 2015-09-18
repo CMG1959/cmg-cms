@@ -50,7 +50,7 @@ def view_Inspections(request):
                 n_tests = textInspection.objects.filter(textTestName=each_test.testName,jobID__item = thisSUS.item).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
-
+            # added
             resultDict[str(n)] = {
                 'susInfo':thisSUS,
                 'testDict':testDict
