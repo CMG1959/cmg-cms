@@ -4,7 +4,7 @@ import datetime
 from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.template import RequestContext, loader
 from django.utils import timezone
-
+import collections
 from startupshot.models import MattecProd,startUpShot
 from inspection.models import passFailByPart, passFailInspection, rangeTestByPart, rangeInspection, textRecordByPart, \
     textInspection
@@ -26,7 +26,7 @@ def view_Inspections(request):
 
     jobList = MattecProd.objects.all().values_list('jobNumber', flat=True)
     n=0
-    resultDict = {}
+    resultDict = collections.OrderedDict()
     for eachJob in jobList:
         if startUpShot.objects.filter(jobNumber=eachJob).exists():
             thisSUS = startUpShot.objects.get(jobNumber=eachJob)
@@ -34,21 +34,21 @@ def view_Inspections(request):
             rangeTests = rangeTestByPart.objects.filter(item_Number = thisSUS.item)
             textTests = textRecordByPart.objects.filter(item_Number = thisSUS.item)
 
-            testDict = {}
+            testDict = collections.OrderedDict()
             m=0
             for each_test in pfTests:
-                n_tests = passFailInspection(passFailTestName=each_test,item_Number = thisSUS.item).count()
-                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
+                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName,jobID__item = thisSUS.item).count()
+                testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in rangeTests:
-                n_tests = rangeInspection(passFailTestName=each_test,item_Number = thisSUS.item).count()
-                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
+                n_tests = rangeInspection.objects.filter(rangeTestName=each_test,jobID__item = thisSUS.item).count()
+                testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in textTests:
-                n_tests = rangeInspection(passFailTestName=each_test,item_Number = thisSUS.item).count()
-                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
+                n_tests = textInspection.objects.filter(textTestName=each_test.testName,jobID__item = thisSUS.item).count()
+                testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             resultDict[str(n)] = {

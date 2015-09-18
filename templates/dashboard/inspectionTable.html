@@ -14,11 +14,15 @@
             </thead>
             <tbody>
 
-            {% for testDict in value.testDict %}
-                <tr>
-                <td> {{ testDict.testName }}</td>
-                <td> {{ testDict.n_tests }} </td>
-                <td> {{ testDict.req_tests }} </td>
+            {% for key,value in value.testDict.items %}
+                {% if value.n_tests < 3  %}
+                    <tr class="danger">
+                {% else %}
+                    <tr class="success">
+                {% endif %}
+                <td> {{ value.testName }}</td>
+                <td> {{ value.n_tests }} </td>
+                <td> {{ value.req_tests }} 
                 </tr>
             {% endfor %}
 
