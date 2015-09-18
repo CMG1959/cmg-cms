@@ -47,6 +47,7 @@ class passFailByPart(models.Model):
 
     testName = models.ForeignKey('passFailTest', verbose_name = "Pass Fail Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
+    inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
 
     def __unicode__(self):
         return '%s - %s' % (self.testName, self.item_Number)
@@ -101,6 +102,7 @@ class rangeTestByPart(models.Model):
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
     rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
+    inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -153,6 +155,7 @@ class textRecordByPart(models.Model):
 
     testName = models.ForeignKey('textRecord', verbose_name = "Text Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
+    inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
 
     def __unicode__(self):
         return '%s' % (self.testName)

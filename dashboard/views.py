@@ -38,17 +38,17 @@ def view_Inspections(request):
             m=0
             for each_test in pfTests:
                 n_tests = passFailInspection(passFailTestName=each_test,item_Number = thisSUS.item).count()
-                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests}
+                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in rangeTests:
                 n_tests = rangeInspection(passFailTestName=each_test,item_Number = thisSUS.item).count()
-                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests}
+                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in textTests:
                 n_tests = rangeInspection(passFailTestName=each_test,item_Number = thisSUS.item).count()
-                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests}
+                testDict[str(m)] = {'testName':each_test,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             resultDict[str(n)] = {

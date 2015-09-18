@@ -8,8 +8,8 @@
             <thead>
             <tr>
                 <th>Inspection Name </th>
-                <th>Required Inspections </th>
                 <th>Completed Inspections </th>
+                <th>Required Inspections </th>
             </tr>
             </thead>
             <tbody>
@@ -18,7 +18,7 @@
                 <tr>
                 <td> {{ testDict.testName }}</td>
                 <td> {{ testDict.n_tests }} </td>
-                <td> 0 </td>
+                <td> {{ testDict.req_tests }} </td>
                 </tr>
             {% endfor %}
 
