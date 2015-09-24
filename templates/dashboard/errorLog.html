@@ -65,7 +65,7 @@
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-    d3.csv("/dashboard/jsonError", type, function(error, data) {
+    d3.json("/dashboard/jsonError", type, function(error, data) {
         if (error) throw error;
         console.log(data);
     });
