@@ -10,6 +10,7 @@ from startupshot.models import MattecProd,startUpShot
 from inspection.models import passFailByPart, passFailInspection, rangeTestByPart, rangeInspection, textRecordByPart, \
     textInspection
 from django.core import serializers
+from collections import Counter, OrderedDict
 from django.shortcuts import render
 # Create your views here.
 
@@ -25,9 +26,14 @@ def view_errorLog(request):
 def view_jsonError(request):
     dt_yesterday = datetime.date.today()-datetime.timedelta(days=1)
     production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
-    count_errors = production_errors.annotate(Count('inspectionName',distinct=True))
-    data = serializers.serialize('json', count_errors)
-    return JsonResponse(data)
+    production_errors = production_errors.values_list('inspectionName',flat=True)
+    count_errors = Counter(production_errors)
+    sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
+    count_orderd = OrderedDict()
+    for k,v in sort_jawn:
+        count_orderd.update({k:v})
+    data = serializers.serialize('json', count_orderd)
+    return JsonResponse(data,safe=False)
 
 def view_Inspections(request):
 
