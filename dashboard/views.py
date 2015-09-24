@@ -1,26 +1,33 @@
 from django.shortcuts import render
 from models import errorLog
 import datetime
-from django.http import HttpResponse, HttpResponseRedirect,Http404
+from django.http import HttpResponse, HttpResponseRedirect,Http404, JsonResponse
 from django.template import RequestContext, loader
 from django.utils import timezone
 import collections
+from django.db.models import Count
 from startupshot.models import MattecProd,startUpShot
 from inspection.models import passFailByPart, passFailInspection, rangeTestByPart, rangeInspection, textRecordByPart, \
     textInspection
+from django.core import serializers
 from django.shortcuts import render
 # Create your views here.
 
 def view_errorLog(request):
     dt_yesterday = datetime.date.today()-datetime.timedelta(days=1)
-    production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
     template = loader.get_template('dashboard/errorLog.html')
+    production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
     context = RequestContext(request, {
         'prodErrors':production_errors
     })
     return HttpResponse(template.render(context))
 
-
+def view_jsonError(request):
+    dt_yesterday = datetime.date.today()-datetime.timedelta(days=1)
+    production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
+    count_errors = production_errors.annotate(Count('inspectionName',distinct=True))
+    data = serializers.serialize('json', count_errors)
+    return JsonResponse(data)
 
 def view_Inspections(request):
 
