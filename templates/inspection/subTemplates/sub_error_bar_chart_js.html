@@ -1,29 +1,16 @@
+{% load staticfiles %}
 <script src="{% static "amcharts_3/amcharts/amcharts.js" %}"></script>
 <script src="{% static "amcharts_3/amcharts/serial.js" %}"></script>
 <script src="{% static "amcharts_3/amcharts/themes/light.js" %}"></script>
 <script src="{% static "bootcard/js/bootcards.min.js" %}"></script>
 
-<script>
-    var myData = {"date_from":"{{ plot_info.date_form }}" , "date_to": "{{ plot_info.date_to }}", "job_number": "{{plot_info.job_number}}"};
-   console.log(myData);
-    $.ajax({
-  dataType: "json",
-  data:  JSON.stringify(myData),
-  url: "/inspection/job_errors",
-  success: function(result){
-      console.log(result);
-      myBarChart(result);
-  }
-});
-</script>
 
 
 <script>
-    function myBarChart(my_JSON) {
 var chart = AmCharts.makeChart( "chartdiv", {
   "type": "serial",
   "theme": "light",
-  "dataProvider": my_JSON,
+  "dataProvider": {{ plot_info|safe }},
   "valueAxes": [ {
     "gridColor": "#FFFFFF",
     "gridAlpha": 0.2,
@@ -36,24 +23,25 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "fillAlphas": 0.8,
     "lineAlpha": 0.2,
     "type": "column",
-    "valueField": "number_of_errors"
+    "valueField": "error_count"
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,
     "cursorAlpha": 0,
     "zoomable": false
   },
-  "categoryField": "inspection_name",
+  "categoryField": "error_name",
   "categoryAxis": {
     "gridPosition": "start",
     "gridAlpha": 0,
     "tickPosition": "start",
-    "tickLength": 20
+    "tickLength": 20,
+      "autoWrap": true
   },
   "export": {
     "enabled": true
   }
 
-}) }
+})
 </script>
 

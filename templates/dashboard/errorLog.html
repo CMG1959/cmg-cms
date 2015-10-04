@@ -21,8 +21,11 @@
 {% include "nav/nav.html" %}
 
 <div class="col-sm-10 bootcards-cards">
-
+ <div class="panel panel-default">
+        <div class="panel-body">
     <div id="chartdiv"></div>
+        </div>
+ </div>
 
 {% if prodErrors %}
     <div class="panel panel-default">
@@ -74,10 +77,11 @@
 </html>
 
 
-<script src="http://www.amcharts.com/lib/3/amcharts.js"></script>
-<script src="http://www.amcharts.com/lib/3/serial.js"></script>
-<script src="http://www.amcharts.com/lib/3/themes/light.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+{% load staticfiles %}
+<script src="{% static "amcharts_3/amcharts/amcharts.js" %}"></script>
+<script src="{% static "amcharts_3/amcharts/serial.js" %}"></script>
+<script src="{% static "amcharts_3/amcharts/themes/light.js" %}"></script>
+<script src="{% static "bootcard/js/bootcards.min.js" %}"></script>
 
 
 

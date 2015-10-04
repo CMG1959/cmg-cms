@@ -20,7 +20,6 @@ from employee.models import Employees
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch
-
 import collections
 import json
 
@@ -307,25 +306,22 @@ def view_jobReport(request, jobNumber):
     return HttpResponse(template.render(context))
 
 ####### Section for generating data for plots ###########
+def view_jsonError(job_number, date_from, date_to):
+    date_from, date_to = createDateRange(date_from,date_to)
+    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to))
+    ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to))
+    production_errors = []
+    for eachpf in pf:
+        production_errors.append(eachpf.passFailTestName.testName)
+    for eachri in ri:
+        production_errors.append(eachri.rangeTestName.testName.testName)
 
-def view_jsonError(request):
-    if request.is_ajax():
-        if request.method == 'POST':
-            jsonData = json.loads(request.body)
-            date_from = jsonData['date_from']
-            date_to = jsonData['date_to']
-            job_number = jsonData['job_number']
-            date_from, date_to = createDateRange(date_from,date_to)
-            pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to)).values_list('passFailTestName__testName',flat=True)
-            ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to)).values_list('rangeTestName__testName',flat=True)
-            production_errors = pf.extend(ri)
-            count_errors = collections.Counter(production_errors)
-            sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
-            counted_errors = []
-            for k,v in sort_jawn:
-                counted_errors.append({'error_name':k,'error_count':v})
-            str_info = json.dumps(counted_errors)
-            return HttpResponse(str_info, content_type='text')
+    count_errors = collections.Counter(production_errors)
+    sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
+    counted_errors = []
+    for k,v in sort_jawn:
+        counted_errors.append({'error_name':k,'error_count':v})
+    return json.dumps(counted_errors, ensure_ascii=False).encode('utf8')
 
 ####### Helper functions ###########
 
@@ -422,11 +418,9 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
     context_dic = {}
-    context_dic['plot_info'] = {"date_from":date_from,"date_to":date_to,"job_number":jobNumber}
+    context_dic['plot_info'] = view_jsonError(job_number=jobNumber, date_from=date_from, date_to=date_to)
 
     date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
-
-
 
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
