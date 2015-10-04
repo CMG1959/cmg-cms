@@ -13,6 +13,7 @@ from django.core import serializers
 from collections import Counter, OrderedDict
 from django.shortcuts import render
 # Create your views here.
+import json
 
 def view_errorLog(request):
     dt_yesterday = datetime.date.today()-datetime.timedelta(days=1)
@@ -29,11 +30,11 @@ def view_jsonError(request):
     production_errors = production_errors.values_list('inspectionName',flat=True)
     count_errors = Counter(production_errors)
     sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
-    count_orderd = OrderedDict()
+    counted_errors = []
     for k,v in sort_jawn:
-        count_orderd.update({k:v})
-    data = serializers.serialize('json', count_orderd)
-    return JsonResponse(data,safe=False)
+        counted_errors.append({'error_name':k,'error_count':v})
+    str_info = json.dumps(counted_errors)
+    return HttpResponse(str_info, content_type='text')
 
 def view_Inspections(request):
 
