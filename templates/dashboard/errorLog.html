@@ -21,6 +21,9 @@
 {% include "nav/nav.html" %}
 
 <div class="col-sm-10 bootcards-cards">
+
+    <div id="chartdiv"></div>
+
 {% if prodErrors %}
     <div class="panel panel-default">
         <div class="panel-body">
@@ -76,7 +79,7 @@
 <script src="http://www.amcharts.com/lib/3/themes/light.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
-<div id="chartdiv"></div>
+
 
 <script>
    $.ajax({
@@ -122,7 +125,8 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "gridPosition": "start",
     "gridAlpha": 0,
     "tickPosition": "start",
-    "tickLength": 20
+    "tickLength": 20,
+      "autoWrap": true
   },
   "export": {
     "enabled": true

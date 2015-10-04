@@ -16,7 +16,7 @@ from django.shortcuts import render
 import json
 
 def view_errorLog(request):
-    dt_yesterday = datetime.date.today()-datetime.timedelta(days=1)
+    dt_yesterday = datetime.date.today()-datetime.timedelta(days=10)
     template = loader.get_template('dashboard/errorLog.html')
     production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
     context = RequestContext(request, {
@@ -25,7 +25,7 @@ def view_errorLog(request):
     return HttpResponse(template.render(context))
 
 def view_jsonError(request):
-    dt_yesterday = datetime.date.today()-datetime.timedelta(days=1)
+    dt_yesterday = datetime.date.today()-datetime.timedelta(days=10)
     production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
     production_errors = production_errors.values_list('inspectionName',flat=True)
     count_errors = Counter(production_errors)
