@@ -22,7 +22,7 @@ from production_and_mold_history.models import ProductionHistory
 from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch
 
 import collections
-
+import json
 
 ######################################
 #
@@ -306,7 +306,26 @@ def view_jobReport(request, jobNumber):
     context = RequestContext(request, context_dic)
     return HttpResponse(template.render(context))
 
+####### Section for generating data for plots ###########
 
+def view_jsonError(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            jsonData = json.loads(request.body)
+            date_from = jsonData['date_from']
+            date_to = jsonData['date_to']
+            job_number = jsonData['job_number']
+            date_from, date_to = createDateRange(date_from,date_to)
+            pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to)).values_list('passFailTestName__testName',flat=True)
+            ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to)).values_list('rangeTestName__testName',flat=True)
+            production_errors = pf.extend(ri)
+            count_errors = collections.Counter(production_errors)
+            sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
+            counted_errors = []
+            for k,v in sort_jawn:
+                counted_errors.append({'error_name':k,'error_count':v})
+            str_info = json.dumps(counted_errors)
+            return HttpResponse(str_info, content_type='text')
 
 ####### Helper functions ###########
 
@@ -402,9 +421,12 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     return partDict
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
+    context_dic = {}
+    context_dic['plot_info'] = {"date_from":date_from,"date_to":date_to,"job_number":jobNumber}
+
     date_from, date_to = createDateRange(date_from=date_from, date_to=date_to)
 
-    context_dic = {}
+
 
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
