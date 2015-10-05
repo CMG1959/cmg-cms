@@ -76,6 +76,14 @@
 </body>
 </html>
 
+<script>
+   jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
+
 
 {% load staticfiles %}
 <script src="{% static "amcharts_3/amcharts/amcharts.js" %}"></script>
