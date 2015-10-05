@@ -44,7 +44,7 @@
                 </thead>
             <tbody>
             {% for eachProdError in prodErrors %}
-                <tr>
+                <tr class='clickable-row' data-href='/inspection/jobReport/{{ eachProdError.jobID }}/' >
                 <td>
                     {{ eachProdError.shiftID }}
                 </td>
