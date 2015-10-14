@@ -9,6 +9,7 @@ from django.db.models import Count
 from startupshot.models import MattecProd,startUpShot
 from inspection.models import passFailByPart, passFailInspection, rangeTestByPart, rangeInspection, textRecordByPart, \
     textInspection
+from production_and_mold_history.models import ProductionHistory
 from django.core import serializers
 from collections import Counter, OrderedDict
 from django.shortcuts import render
@@ -35,6 +36,15 @@ def view_jsonError(request):
         counted_errors.append({'error_name':k,'error_count':v})
     str_info = json.dumps(counted_errors)
     return HttpResponse(str_info, content_type='text')
+
+def view_shortPHL(request):
+    dt_yesterday = datetime.date.today()-datetime.timedelta(days=4)
+    template = loader.get_template('dashboard/errorProdLog.html')
+    production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
+    context = RequestContext(request, {
+        'prodErrors':production_errors
+    })
+    return HttpResponse(template.render(context))
 
 def view_Inspections(request):
 
