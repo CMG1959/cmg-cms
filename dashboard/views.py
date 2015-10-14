@@ -37,7 +37,7 @@ def view_jsonError(request):
     str_info = json.dumps(counted_errors)
     return HttpResponse(str_info, content_type='text')
 
-def view_shortPHL(request):
+def view_errorProdLog(request):
     dt_yesterday = datetime.date.today()-datetime.timedelta(days=4)
     template = loader.get_template('dashboard/errorProdLog.html')
     production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
