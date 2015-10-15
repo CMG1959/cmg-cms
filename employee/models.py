@@ -11,7 +11,7 @@ class Employees(models.Model):
     EmpLName = models.CharField(verbose_name='Last Name', max_length=25, null=True)
     EmpFName = models.CharField(verbose_name='First Name', max_length=25, null=True)
     EmpManNum = models.IntegerField(verbose_name='Employee Man Number', null=True)
-    EmpShift = models.CharField(verbose_name='Shift', null=True)
+    EmpShift = models.CharField(verbose_name='Shift', max_length=1, null=True)
     StatusActive =  models.BooleanField(verbose_name="Status Active",default=True)
     IsAdmin = models.BooleanField(verbose_name="Is Admin",default=False)
     IsQCStaff = models.BooleanField(verbose_name="Is QC Staff",default=False)
