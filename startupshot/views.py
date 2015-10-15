@@ -108,8 +108,8 @@ def createNewStartUpShot(request, jobNo):
 
         else:
             form = startupShotForm()
-            form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
-            form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
+            # form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9)
+            # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6)
 
             shotWeightName = startUpShotWeightLinkage.objects.all()[0]
 
