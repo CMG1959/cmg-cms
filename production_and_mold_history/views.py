@@ -98,7 +98,8 @@ def view_specific_phl_form(request, jobNo):
         form = phlForm()
         form.fields["inspectorName"].queryset = (Employees.objects.filter(IsQCStaff=True) |
                                                 Employees.objects.filter(IsSupervStaff=True) |
-                                                Employees.objects.filter(IsOpStaff=True)).order_by('EmpLName')
+                                                Employees.objects.filter(IsToolStaff=True)|
+                                                Employees.objects.filter(IsMgmtStaff=True)).order_by('EmpLName')
 
 
         context = RequestContext(request, {
