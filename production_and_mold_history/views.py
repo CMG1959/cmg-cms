@@ -96,9 +96,9 @@ def view_specific_phl_form(request, jobNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlForm()
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6) | \
-        #                                         Employees.objects.filter(EmpJob__JobNum=2) | \
-        #                                         Employees.objects.filter(EmpJob__JobNum=1)
+        form.fields["inspectorName"].queryset = Employees.objects.filter(IsQCStaff=True) | \
+                                                Employees.objects.filter(IsSupervStaff=True) | \
+                                                Employees.objects.filter(IsOpStaff=True)
 
 
         context = RequestContext(request, {
@@ -139,7 +139,7 @@ def view_specific_mold_form(request, moldNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = mhlForm()
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=1)
+        form.fields["inspectorName"].queryset = Employees.objects.filter(IsToolStaff=True)
 
         context = RequestContext(request, {
             'form': form,

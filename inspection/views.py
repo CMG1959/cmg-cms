@@ -428,8 +428,8 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     # Job number 6 and 9 should be QA and
     context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber,
-                                                          dateCreated__range=(date_from, date_to))#_,
-                                                          # inspectorName__EmpJob__JobNum=6)
+                                                          dateCreated__range=(date_from, date_to),
+                                                          inspectorName__IsQCStaff=True)
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
@@ -521,11 +521,10 @@ def createDateRange(date_from=None, date_to=None):
 def presetStandardFields(my_form, jobID, test_type, test_name):
     # this will preset machine and qa fields
     ### Filter the machine operators
-    # my_form.fields["machineOperator"].queryset = Employees.objects.filter(EmpJob__JobNum=9).order_by('EmpShift')
-                                                                         # EmpShift=getShift())
+    my_form.fields["machineOperator"].queryset = Employees.objects.filter(IsOpStaff=True).order_by('EmpShift')
     ### Filter the QA ladies
-    # my_form.fields["inspectorName"].queryset = Employees.objects.filter(EmpJob__JobNum=6).order_by('EmpShift')
-                                                                       # EmpShift=getShift())
+    my_form.fields["inspectorName"].queryset = Employees.objects.filter(IsQCStaf=True).order_by('EmpShift')
+
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
     if test_type == 'pf':
