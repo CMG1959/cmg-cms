@@ -43,11 +43,14 @@ def view_index(request):
 
 @login_required
 def view_detailJob(request, jobNumber):
+    isFAS = False
     jobNumber = str(jobNumber).strip()
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if not active_job.exists():
+    if ((not active_job.exists()) and (MattecProd.objects.get(jobNumber=jobNumber).machNo != 'FAS01')):
         redir_url = '/startupshot/create/%s/' % jobNumber
         return HttpResponseRedirect(redir_url)
+
+
 
     # if  PartInspection object hasnt be created, make it now.
     checkPartInspection(active_job[0].item)
@@ -546,18 +549,20 @@ def getShift():
     return shift
 
 def checkPartInspection(item_Number):
+
     for requiredTests in passFailTest.objects.filter(requireAll=True):
         if not passFailByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
             newPartInspection = passFailByPart(item_Number = Part.objects.get(item_Number=item_Number),
                                            testName = requiredTests)
             newPartInspection.save()
 
+
     for requiredTests in rangeTest.objects.filter(requireAll=True):
         if not rangeTestByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
             newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
-                                           testName = requiredTests,
-                                            rangeMin=0,
-                                            rangeMax=9999999)
+                                               testName = requiredTests,
+                                                rangeMin=0,
+                                                rangeMax=9999999)
             newPartInspection.save()
 
 

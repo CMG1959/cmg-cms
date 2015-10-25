@@ -105,12 +105,6 @@ def createNewStartUpShot(request, jobNo):
         if startUpShot.objects.filter(jobNumber=jobNo).exists():
             redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
             return HttpResponseRedirect(redirect_url)
-
-        elif MattecInfo.machNo == 'FAS01':
-            template = loader.get_template('startupshot/viewFAS.html')
-            context = RequestContext(request)
-            return HttpResponse(template.render(context))
-
         else:
             form = startupShotForm()
             form.fields["machineOperator"].queryset = Employees.objects.filter(IsOpStaff=True).order_by('EmpLName')
