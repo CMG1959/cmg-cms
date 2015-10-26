@@ -20,7 +20,7 @@ import json
 
 def view_errorLog(request):
     if errorLogTime.objects.first():
-        n_days = errorLogTime.first().number_of_days
+        n_days = errorLogTime.objects.first().number_of_days
     else:
         n_days = 1
 
