@@ -14,6 +14,7 @@ from django.utils import timezone
 from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart,\
     rangeInspection, textRecord, textRecordByPart, textInspection, rangeTest
 from dashboard.models import errorLog
+from equipment.models import EquipmentInfo
 from part.models import Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees
@@ -43,6 +44,7 @@ def view_index(request):
 
 @login_required
 def view_detailJob(request, jobNumber):
+    MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
     jobNumber = str(jobNumber).strip()
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if not active_job.exists():
@@ -50,6 +52,16 @@ def view_detailJob(request, jobNumber):
             redir_url = '/startupshot/create/%s/' % jobNumber
             return HttpResponseRedirect(redir_url)
         else:
+            newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
+                jobNumber=jobNumber, \
+                moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber),
+                inspectorName=Employees.objects.get(EmpNum=10075), \
+                machineOperator=Employees.objects.get(EmpNum=10075), \
+                shotWeight=0.0, \
+                activeCavities=MattecInfo.activeCavities, \
+                cycleTime=MattecInfo.cycleTime, \
+                machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
+            newForm.save()
 
 
 
