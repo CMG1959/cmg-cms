@@ -16,3 +16,5 @@ class errorLogTime(models.Model):
     number_of_days = models.IntegerField(verbose_name="Number of days to show errors:",
                                          default=1,
                                          validators=[MinValueValidator(1)])
+    def __unicode__(self):
+        return '%s' % self.number_of_days
