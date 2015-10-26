@@ -43,12 +43,14 @@ def view_index(request):
 
 @login_required
 def view_detailJob(request, jobNumber):
-    isFAS = False
     jobNumber = str(jobNumber).strip()
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if ((not active_job.exists()) and (MattecProd.objects.get(jobNumber=jobNumber).machNo != 'FAS01')):
-        redir_url = '/startupshot/create/%s/' % jobNumber
-        return HttpResponseRedirect(redir_url)
+    if not active_job.exists():
+        if MattecProd.objects.get(jobNumber=jobNumber).machNo.strip() != 'FAS01':
+            redir_url = '/startupshot/create/%s/' % jobNumber
+            return HttpResponseRedirect(redir_url)
+        else:
+
 
 
 
@@ -311,8 +313,8 @@ def view_jobReport(request, jobNumber):
 ####### Section for generating data for plots ###########
 def view_jsonError(job_number, date_from, date_to):
     date_from, date_to = createDateRange(date_from,date_to)
-    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to))
-    ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to))
+    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to),inspectionResult=0)
+    ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),inspectionResult=0)
     production_errors = []
     for eachpf in pf:
         production_errors.append(eachpf.passFailTestName.testName)

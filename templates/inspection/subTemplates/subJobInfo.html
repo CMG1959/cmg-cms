@@ -56,7 +56,9 @@
                         <td>{{ ep.jobNumber }} </td>
                         <td>{{ ep.shotWeight }}</td>
                         <td>{{ ep.activeCavities }}</td>
-                        <td>{{ ep.shotWeight|div:ep.activeCavities }}</td>
+                        {% with  ep.shotWeight|div:ep.activeCavities as avgptWeight  %}
+                                <td>{{ avgptWeight|floatformat:3 }}</td>
+                                {% endwith %}
                         <td>{{ ep.machNo }}</td>
                         <td>{{ ep.cycleTime }}</td>
                     </tr>

@@ -46,7 +46,9 @@
                                 <td>{{ eachJob.inspectorName }}</td>
                                 <td>{{ eachJob.shotWeight }}</td>
                                 <td>{{ eachJob.activeCavities }}</td>
-                                <td>{{ eachJob.shotWeight|div:eachJob.activeCavities }}</td>
+                                {% with  eachJob.shotWeight|div:eachJob.activeCavities as avgptWeight  %}
+                                <td>{{ avgptWeight|floatformat:3 }}</td>
+                                {% endwith %}
                             </tr>
                         {% endfor %}
                         </tbody>
