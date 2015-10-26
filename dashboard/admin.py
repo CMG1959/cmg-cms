@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import errorLog
+from .models import errorLog, errorLogTime
 
 
 class errorLogAdmin(admin.ModelAdmin):
@@ -9,4 +9,6 @@ class errorLogAdmin(admin.ModelAdmin):
     list_display = ('shiftID','dateCreated','machNo','partDesc','jobID','inspectionName','errorDescription')
 
 
+
 admin.site.register(errorLog,errorLogAdmin)
+admin.site.register(errorLogTime)

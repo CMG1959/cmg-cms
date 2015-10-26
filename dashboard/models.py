@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -10,3 +11,8 @@ class errorLog(models.Model):
     jobID = models.CharField(verbose_name="Job ID", max_length=10)
     inspectionName = models.CharField(verbose_name = 'Inspection Name', max_length=75)
     errorDescription = models.CharField(verbose_name="Error Description", max_length=250)
+
+class errorLogTime(models.Model):
+    number_of_days = models.IntegerField(verbose_name="Number of days to show errors:",
+                                         default=1,
+                                         validators=[MinValueValidator(1)])

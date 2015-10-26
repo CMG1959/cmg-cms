@@ -327,6 +327,13 @@ def view_jsonError(job_number, date_from, date_to):
     date_from, date_to = createDateRange(date_from,date_to)
     pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to),inspectionResult=0)
     ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),inspectionResult=0)
+
+
+    if (not ri.exists()) and (not pf.exists()):
+        no_errors = True
+    else:
+        no_errors = False
+
     production_errors = []
     for eachpf in pf:
         production_errors.append(eachpf.passFailTestName.testName)
@@ -338,7 +345,11 @@ def view_jsonError(job_number, date_from, date_to):
     counted_errors = []
     for k,v in sort_jawn:
         counted_errors.append({'error_name':k,'error_count':v})
-    return json.dumps(counted_errors, ensure_ascii=False).encode('utf8')
+
+    if no_errors:
+        return None
+    else:
+        return json.dumps(counted_errors, ensure_ascii=False).encode('utf8')
 
 ####### Helper functions ###########
 

@@ -6,6 +6,7 @@ from django.template import RequestContext, loader
 from django.utils import timezone
 import collections
 from django.db.models import Count
+from models import errorLogTime
 from startupshot.models import MattecProd,startUpShot
 from inspection.models import passFailByPart, passFailInspection, rangeTestByPart, rangeInspection, textRecordByPart, \
     textInspection
@@ -16,18 +17,31 @@ from django.shortcuts import render
 # Create your views here.
 import json
 
+
 def view_errorLog(request):
-    dt_yesterday = datetime.date.today()-datetime.timedelta(days=4)
+    if errorLogTime.objects.all().exists():
+        n_days = errorLogTime[-1].number_of_days
+    else:
+        n_days = 1
+
+    dt_time = datetime.date.today()-datetime.timedelta(days=n_days)
+
     template = loader.get_template('dashboard/errorLog.html')
-    production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
+    production_errors = errorLog.objects.filter(dateCreated__gte=dt_time).order_by('-dateCreated')
     context = RequestContext(request, {
         'prodErrors':production_errors
     })
     return HttpResponse(template.render(context))
 
 def view_jsonError(request):
-    dt_yesterday = datetime.date.today()-datetime.timedelta(days=4)
-    production_errors = errorLog.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
+    if errorLogTime.objects.all().exists():
+        n_days = errorLogTime[-1].number_of_days
+    else:
+        n_days = 1
+
+    dt_time = datetime.date.today()-datetime.timedelta(days=n_days)
+
+    production_errors = errorLog.objects.filter(dateCreated__gte=dt_time).order_by('-dateCreated')
     production_errors = production_errors.values_list('inspectionName',flat=True)
     count_errors = Counter(production_errors)
     sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
@@ -38,9 +52,15 @@ def view_jsonError(request):
     return HttpResponse(str_info, content_type='text')
 
 def view_errorProdLog(request):
-    dt_yesterday = datetime.date.today()-datetime.timedelta(days=4)
+    if errorLogTime.objects.all().exists():
+        n_days = errorLogTime[-1].number_of_days
+    else:
+        n_days = 1
+
+    dt_time = datetime.date.today()-datetime.timedelta(days=n_days)
     template = loader.get_template('dashboard/errorProdLog.html')
-    production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_yesterday).order_by('-dateCreated')
+
+    production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_time).order_by('-dateCreated')
     context = RequestContext(request, {
         'prodErrors':production_errors
     })
