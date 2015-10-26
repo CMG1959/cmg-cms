@@ -19,8 +19,8 @@ import json
 
 
 def view_errorLog(request):
-    if errorLogTime.objects.all().exists():
-        n_days = errorLogTime[-1].number_of_days
+    if errorLogTime.objects.first():
+        n_days = errorLogTime.first().number_of_days
     else:
         n_days = 1
 
@@ -34,8 +34,8 @@ def view_errorLog(request):
     return HttpResponse(template.render(context))
 
 def view_jsonError(request):
-    if errorLogTime.objects.all().exists():
-        n_days = errorLogTime[-1].number_of_days
+    if errorLogTime.objects.first():
+        n_days = errorLogTime.objects.first().number_of_days
     else:
         n_days = 1
 
@@ -52,8 +52,8 @@ def view_jsonError(request):
     return HttpResponse(str_info, content_type='text')
 
 def view_errorProdLog(request):
-    if errorLogTime.objects.all().exists():
-        n_days = errorLogTime[-1].number_of_days
+    if errorLogTime.objects.first():
+        n_days = errorLogTime.objects.first().number_of_days
     else:
         n_days = 1
 
