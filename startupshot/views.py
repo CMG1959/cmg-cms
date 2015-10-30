@@ -107,8 +107,8 @@ def createNewStartUpShot(request, jobNo):
             return HttpResponseRedirect(redirect_url)
         else:
             form = startupShotForm()
-            form.fields["machineOperator"].queryset = Employees.objects.filter(IsOpStaff=True).order_by('EmpLName')
-            form.fields["inspectorName"].queryset = Employees.objects.filter(IsQCStaff=True).order_by('EmpLName')
+            form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpLName')
+            form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True, IsQCStaff=True).order_by('EmpLName')
 
             shotWeightName = startUpShotWeightLinkage.objects.all()[0]
 
