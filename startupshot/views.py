@@ -94,7 +94,7 @@ def createNewStartUpShot(request, jobNo):
                                   cycleTime=MattecInfo.cycleTime, \
                                   machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
 
-
+# add status active
             newForm.save()
             # process the data in form.cleaned_data as required
             redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
@@ -107,8 +107,10 @@ def createNewStartUpShot(request, jobNo):
             return HttpResponseRedirect(redirect_url)
         else:
             form = startupShotForm()
-            form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpLName')
-            form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True, IsQCStaff=True).order_by('EmpLName')
+            form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True,
+                                                                               IsOpStaff=True).order_by('EmpLName')
+            form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True,
+                                                                             IsQCStaff=True).order_by('EmpLName')
 
             shotWeightName = startUpShotWeightLinkage.objects.all()[0]
 
