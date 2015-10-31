@@ -21,6 +21,8 @@ from employee.models import Employees
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch
+
+from reports import JobReport
 import collections
 import json
 
@@ -268,6 +270,8 @@ def view_jobReportSearch(request):
 
             context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
             template = loader.get_template('inspection/reports/jobReport.html')
+
+            my_report = JobReport(job_number,date_from,date_to)
 
             context = RequestContext(request, context_dic)
             return HttpResponse(template.render(context))

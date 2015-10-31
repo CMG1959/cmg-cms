@@ -71,7 +71,7 @@ class JobReport:
         self.range_inspection_summary = OrderedDict()
         for each_inspection in self.required_inspections['range_inspections']:
 
-            self.range_inspections.update({each_inspection.test_name.test_name:
+            self.range_inspections.update({each_inspection.testName.testName:
                 rangeInspection.objects.filter(
                     rangeTestName__testName=each_inspection.testName,
                     jobID__jobNumber=self.job_number,
@@ -79,39 +79,43 @@ class JobReport:
 
             range_report = [['Date', 'Machine Operator', 'Inspector', 'Is Full Shot', 'Cavity', 'Numeric Value',
                              'Inspection Result']]
-            for row in self.range_inspections[each_inspection.test_name.test_name]:
+            for row in self.range_inspections[each_inspection.testName.testName]:
                 range_report.append(
                     [row.dateCreated, row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.numVal,
                      row.inspectionResult])
-            self.extended_tables.update({each_inspection.test_name.test_name: range_report})
+            self.extended_tables.update({each_inspection.testName.testName: range_report})
 
             result_dict, result_list = self.__calc_range_stats(
-                self.range_inspections[each_inspection.test_name.test_name])
+                self.range_inspections[each_inspection.testName.testName])
 
             self.range_summarized.append(result_list)
-            self.range_inspection_summary.update({each_inspection.test_name.test_name: result_dict})
+            self.range_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_pass_fail_inspections(self):
         self.pass_fail_inspections = OrderedDict()
         self.pass_fail_inspection_summary = OrderedDict()
+        print self.required_inspections['pf_inspections']
         for each_inspection in self.required_inspections['pf_inspections']:
-            self.pass_fail_inspections.update({each_inspection.test_name.test_name:
+
+            self.pass_fail_inspections.update({each_inspection.testName.testName:
                 passFailInspection.objects.filter(
                     passFailTestName__testName=each_inspection.testName.testName,
                     jobID__jobNumber=self.job_number,
                     dateCreated__range=self.date_range)})
 
             pass_fail_report = [['Date', 'Machine Operator', 'Inspector', 'Cavity', 'Inspection Result', 'Defect']]
-            for row in self.pass_fail_inspections[each_inspection.test_name.test_name]:
-                pass_fail_report.append(
-                    [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
-                     row.defectType])
-            self.extended_tables.update({each_inspection.test_name.test_name: pass_fail_report})
 
-            result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
-                                                                  each_inspection.test_name.test_name])
-            self.pf_summarized.append(result_list)
-            self.pass_fail_inspection_summary.update({each_inspection.test_name.test_name: result_dict})
+            if self.pass_fail_inspections[each_inspection.testName.testName]:
+                for row in self.pass_fail_inspections[each_inspection.testName.testName]:
+                    pass_fail_report.append(
+                        [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
+                         row.defectType])
+                self.extended_tables.update({each_inspection.testName.testName: pass_fail_report})
+
+                result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
+                                                                      each_inspection.testName.testName])
+                self.pf_summarized.append(result_list)
+                self.pass_fail_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_text_inspections(self):
         self.text_inspections = OrderedDict()
@@ -124,23 +128,26 @@ class JobReport:
                     dateCreated__range=self.date_range)}})
 
             text_inspection = [['Date', 'Machine Operator', 'Inspector', 'Full Shot?', 'Cav ID', 'Inspection Result']]
-            for row in self.text_inspections[each_inspection.test_name]:
+            print self.text_inspections[each_inspection.testName]
+
+            for row in self.text_inspections[each_inspection.testName]['text_dict']:
+
                 text_inspection.append(
                     [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
                      row.defectType])
 
-            self.extended_tables.update({each_inspection.test_name: text_inspection})
+            self.extended_tables.update({each_inspection.testName: text_inspection})
 
     def __get_date_range(self):
 
-        my_inspections = textInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated')
-        my_inspections.append(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated'))
-        my_inspections.append(rangeInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated'))
-        self.report_date_end = max(my_inspections)
-        self.report_date_start = min(my_inspections)
+        my_inspection = list(textInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True))
+        my_inspection.append(list(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
+        my_inspection.append(list(rangeInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
+        self.report_date_end = max(my_inspection)
+        self.report_date_start = min(my_inspection)
 
 
-    def __create_pf_stats(qSet):
+    def __create_pf_stats(self, qSet):
         result_dict = {}
         if qSet:
             result_dict = OrderedDict({
@@ -158,7 +165,7 @@ class JobReport:
 
         return result_dict
 
-    def __calc_range_stats(range_list):
+    def __calc_range_stats(self, range_list):
         if range_list:
             result_dict = OrderedDict({
                 'range_count': '%i' % (len(range_list)),
@@ -213,7 +220,7 @@ class JobReport:
 
 
     def __build_report(self):
-        doc = SimpleDocTemplate("phello.pdf")
+        doc = SimpleDocTemplate("C:\CIMC_static\phello.pdf")
         Story = [Spacer(1,2*inch)]
         style = self.styles["Normal"]
 
@@ -253,5 +260,5 @@ class JobReport:
                 ]))
             Story.append(t)
 
-        doc.build(Story, onFirstPage=self.__my_first_page(), onLaterPages=self.__my_later_pages())
+        doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
 
