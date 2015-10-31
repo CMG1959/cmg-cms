@@ -1,4 +1,12 @@
 __author__ = 'mike'
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.rl_config import defaultPageSize
+from reportlab.lib.units import inch
+
 from startupshot.models import startUpShot
 from collections import OrderedDict
 import datetime
@@ -30,6 +38,16 @@ class JobReport:
         self.__get_pass_fail_inspections()
         self.__get_range_inspections()
         self.__get_text_inspections()
+        self.__get_date_range()
+
+
+
+        self.PAGE_HEIGHT=defaultPageSize[1]
+        self.PAGE_WIDTH=defaultPageSize[0]
+        self.styles = getSampleStyleSheet()
+        self.Title = "Job Report"
+        self.pageinfo = "QSR-123-456"
+        self.__build_report()
 
     def __get_item_number(self):
         return startUpShot.objects.get(jobNumber=self.job_number).item.item_Number
@@ -113,6 +131,15 @@ class JobReport:
 
             self.extended_tables.update({each_inspection.test_name: text_inspection})
 
+    def __get_date_range(self):
+
+        my_inspections = textInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated')
+        my_inspections.append(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated'))
+        my_inspections.append(rangeInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated'))
+        self.report_date_end = max(my_inspections)
+        self.report_date_start = min(my_inspections)
+
+
     def __create_pf_stats(qSet):
         result_dict = {}
         if qSet:
@@ -155,6 +182,7 @@ class JobReport:
 
         return result_dict, result_list
 
+
     def __create_date_range(self):
         if self.date_from is None:
             self.date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
@@ -166,6 +194,64 @@ class JobReport:
 
         return self.date_from, self.date_to
 
+    def __my_first_page(self, canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Bold',16)
+        canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT-108, self.Title)
+        canvas.setFont('Times-Roman',9)
+        canvas.drawString(inch, 0.75 * inch,"%s" % self.pageinfo)
+    #     canvas.showPage()
+        canvas.restoreState()
+
+
+
+    def __my_later_pages(self, canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Roman', 9)
+        canvas.drawString(inch, 0.75 * inch,"%s: Page %d" % (self.pageinfo, doc.page))
+        canvas.restoreState()
+
+
     def __build_report(self):
-        pass
+        doc = SimpleDocTemplate("phello.pdf")
+        Story = [Spacer(1,2*inch)]
+        style = self.styles["Normal"]
+
+        #### Do first page stuff
+        sus_info = [['date','name'],['Today!','Mike']]
+        t = Table(sus_info)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+
+        Story.append(t)
+        Story.append(Spacer(1,0.2*inch))
+        part_info = [['part number','part name'],['123-456789','Some part']]
+        t = Table(part_info)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+
+        Story.append(t)
+        Story.append(PageBreak())
+
+        my_header = ['col1','col2','col3']
+        my_data = [my_header]
+        for x in range(3):
+            new_list = []
+            for y in range(3):
+                new_list.append(str(y))
+            my_data.append(new_list)
+
+        table_names = ['Startup shot','shot weight','visual inspections']
+        table_data = [my_data, my_data, my_data]
+
+        for n in range(len(table_names)):
+            p = Paragraph(table_names[n],style)
+            Story.append(p)
+            Story.append(Spacer(1,0.2*inch))
+            t = Table(table_data[n])
+            t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+            Story.append(t)
+
+        doc.build(Story, onFirstPage=self.__my_first_page(), onLaterPages=self.__my_later_pages())
 
