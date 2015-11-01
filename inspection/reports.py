@@ -31,6 +31,7 @@ class JobReport:
         self.summary_tables = OrderedDict()
         self.extended_tables = OrderedDict()
         self.pf_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
+        self.text_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
         self.range_summarized = [['Inspection Name', 'Count', 'Min', 'Max', 'Average', 'Std Dev']]
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
@@ -164,12 +165,23 @@ class JobReport:
             print self.text_inspections[each_inspection.testName]
 
             for row in self.text_inspections[each_inspection.testName]['text_dict']:
-
                 text_inspection.append(
                     [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
                      row.defectType])
 
             self.extended_tables.update({each_inspection.testName: text_inspection})
+
+            if self.text_inspections[each_inspection.testName]:
+                result_dict, result_list = self.__create_pf_stats(self.text_inspections[
+                                                                   each_inspection.testName])
+            else:
+                result_list = ['None']*(len(self.text_summarized[0])-1)
+
+            text_id = [each_inspection.testName]
+            text_id.extend(result_list)
+            self.text_summarized.append(text_id)
+
+
 
     def __get_date_range(self):
 
