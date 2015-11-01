@@ -106,7 +106,8 @@ class JobReport:
             result_dict, result_list = self.__calc_range_stats(
                 self.range_inspections[each_inspection.testName.testName])
 
-            self.range_summarized.append(result_list)
+            range_id = [each_inspection.testName.testName]
+            self.range_summarized.append(range_id.extend(result_list))
             self.range_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_pass_fail_inspections(self):
@@ -132,7 +133,9 @@ class JobReport:
 
                 result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
                                                                       each_inspection.testName.testName])
-                self.pf_summarized.append(result_list)
+
+                pf_id = [each_inspection.testName.testName]
+                self.pf_summarized.append(pf_id.extend(result_list))
                 self.pass_fail_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_text_inspections(self):
