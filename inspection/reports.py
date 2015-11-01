@@ -107,7 +107,8 @@ class JobReport:
                 self.range_inspections[each_inspection.testName.testName])
 
             range_id = [each_inspection.testName.testName]
-            self.range_summarized.append(range_id.extend(result_list))
+            range_id.extend(result_list)
+            self.range_summarized.append(range_id)
             self.range_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_pass_fail_inspections(self):
@@ -135,7 +136,8 @@ class JobReport:
                                                                       each_inspection.testName.testName])
 
                 pf_id = [each_inspection.testName.testName]
-                self.pf_summarized.append(pf_id.extend(result_list))
+                pf_id.extend(result_list)
+                self.pf_summarized.append(pf_id)
                 self.pass_fail_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_text_inspections(self):
