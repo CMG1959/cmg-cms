@@ -171,9 +171,9 @@ class JobReport:
 
             self.extended_tables.update({each_inspection.testName: text_inspection})
 
-            if self.text_inspections[each_inspection.testName]:
+            if self.text_inspections[each_inspection.testName]['text_dict']:
                 result_dict, result_list = self.__create_pf_stats(self.text_inspections[
-                                                                   each_inspection.testName])
+                                                                   each_inspection.testName]['text_dict'])
             else:
                 result_list = ['None']*(len(self.text_summarized[0])-1)
 
@@ -271,7 +271,7 @@ class JobReport:
 
     def __build_report(self):
         doc = SimpleDocTemplate("C:\CIMC_static\JobReport.pdf")
-        my_spacer = Spacer(1,2*inch)
+        my_spacer = Spacer(1,1*inch)
         caption_spacer = Spacer(1,0.25*inch)
 
 
@@ -323,6 +323,15 @@ class JobReport:
         Story.append(t)
         Story.append(caption_spacer)
         ptext = 'Summary of Pass Fail Tests'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(my_spacer)
+
+        t = Table(self.text_summarized)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+        Story.append(t)
+        Story.append(caption_spacer)
+        ptext = 'Summary of other tests'
         Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
