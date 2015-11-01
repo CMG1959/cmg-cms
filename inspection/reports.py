@@ -72,7 +72,7 @@ class JobReport:
                           'Date Started','Date Ended'],
                          [self.job_number,self.item_number,self.startup_shot.item.item_Description,
                           self.startup_shot.moldNumber,self.startup_shot.moldNumber.mold_description,
-                          self.report_date_end,self.report_date_start]]
+                          self.report_date_end, self.report_date_start]]
         self.job_info =  map(list, zip(*self.job_info))
 
 
