@@ -266,18 +266,33 @@ class JobReport:
                 ]))
         Story.append(t)
 
-        for k in self.range_inspection_summary.keys():
-            print self.range_inspection_summary[k]
-            t = Table(self.range_inspection_summary[k])
-            t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-                ]))
-            Story.append(t)
 
-        for k in self.pass_fail_inspection_summary.keys():
-            t = Table(self.pass_fail_inspection_summary[k])
-            t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+        print self.range_summarized
+        t = Table(self.range_summarized)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
-            Story.append(t)
+        Story.append(t)
+
+
+        t = Table(self.pf_summarized)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+        Story.append(t)
+
+
+
+        # for k in self.range_summarized.keys():
+        #     print self.range_summarized[k]
+        #     t = Table(self.range_summarized[k])
+        #     t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+        #         ]))
+        #     Story.append(t)
+        #
+        # for k in self.pf_summarized.keys():
+        #     t = Table(self.pf_summarized[k])
+        #     t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+        #         ]))
+        #     Story.append(t)
 
 
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
