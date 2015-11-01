@@ -128,20 +128,25 @@ class JobReport:
 
             pass_fail_report = [['Date', 'Machine Operator', 'Inspector', 'Cavity', 'Inspection Result', 'Defect']]
 
+            if self.pass_fail_inspections[each_inspection.testName.testName]:
+                for row in self.pass_fail_inspections[each_inspection.testName.testName]:
+                    pass_fail_report.append(
+                            [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
+                             row.defectType])
 
-            for row in self.pass_fail_inspections[each_inspection.testName.testName]:
-                pass_fail_report.append(
-                        [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
-                         row.defectType])
+                result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
+                                                                          each_inspection.testName.testName])
+                self.pass_fail_inspection_summary.update({each_inspection.testName.testName: result_dict})
+            else:
+                pass_fail_report.append(['None']*len(pass_fail_report[0]))
+                result_list = ['None']*(len(self.pf_summarized[0])-1)
+
             self.extended_tables.update({each_inspection.testName.testName: pass_fail_report})
-
-            result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
-                                                                      each_inspection.testName.testName])
 
             pf_id = [each_inspection.testName.testName]
             pf_id.extend(result_list)
             self.pf_summarized.append(pf_id)
-            self.pass_fail_inspection_summary.update({each_inspection.testName.testName: result_dict})
+
 
     def __get_text_inspections(self):
         self.text_inspections = OrderedDict()
