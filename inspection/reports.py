@@ -34,6 +34,7 @@ class JobReport:
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
         self.__get_startup_shot()
+        self.__get_job_info()
         self.__get_required_inspections()
         self.__get_pass_fail_inspections()
         self.__get_range_inspections()
@@ -65,6 +66,23 @@ class JobReport:
             ['Inspector', 'Machine Operator', 'Mold Number', 'Active Cavities', 'Shot Weight', 'Cycle Time'],
             [self.startup_shot.inspectorName, self.startup_shot.machineOperator, self.startup_shot.moldNumber,
              self.startup_shot.activeCavities, self.startup_shot.shotWeight, self.startup_shot.cycleTime]]
+
+    def __get_job_info(self):
+        self.job_info = [['Job Number','Item Number','Item Description','Mold Number','Mold Description'],
+                         [self.job_number,self.item_number,self.startup_shot.item.item_Description,self.startup_shot.moldNumber,self.startup_shot.moldNumber.mold_description]]
+        self.job_info =  map(list, zip(*self.job_info))
+
+
+        # <th>Item #</th>
+        # <th>Description</th>
+        # <th>TMM Part Weight (g)</th>
+        # <th>TMM Cycle (s)</th>
+        #
+        #     <td>{{ active_job.0.item.item_Number }}</td>
+        #     <td>{{ active_job.0.item.item_Description }}</td>
+        #     <td>{{ active_job.0.item.exp_part_weight }}</td>
+        #     <td>{{ active_job.0.item.exp_cycle_time }}</td>
+
 
     def __get_range_inspections(self):
         self.range_inspections = OrderedDict()
@@ -225,40 +243,38 @@ class JobReport:
         style = self.styles["Normal"]
 
         #### Do first page stuff
-        sus_info = [['date','name'],['Today!','Mike']]
-        t = Table(sus_info)
-        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-                ]))
+        # sus_info = [['date','name'],['Today!','Mike']]
+        # t = Table(self.job_info)
+        # t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+        #         ]))
+        # Story.append(t)
+        #
+        # Story.append(Spacer(1,0.2*inch))
+        # part_info = [['part number','part name'],['123-456789','Some part']]
+        # t = Table(part_info)
+        # t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+        #         ]))
+        #
+        # Story.append(t)
 
-        Story.append(t)
-        Story.append(Spacer(1,0.2*inch))
-        part_info = [['part number','part name'],['123-456789','Some part']]
-        t = Table(part_info)
-        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-                ]))
-
-        Story.append(t)
         Story.append(PageBreak())
+        t = Table(self.startup_shot_report)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+        Story.append(t)
 
-        my_header = ['col1','col2','col3']
-        my_data = [my_header]
-        for x in range(3):
-            new_list = []
-            for y in range(3):
-                new_list.append(str(y))
-            my_data.append(new_list)
-
-        table_names = ['Startup shot','shot weight','visual inspections']
-        table_data = [my_data, my_data, my_data]
-
-        for n in range(len(table_names)):
-            p = Paragraph(table_names[n],style)
-            Story.append(p)
-            Story.append(Spacer(1,0.2*inch))
-            t = Table(table_data[n])
+        for k in self.range_inspection_summary.keys():
+            t = Table(self.range_inspection_summary[k])
             t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
             Story.append(t)
+
+        for k in self.pass_fail_inspection_summary.keys():
+            t = Table(self.pass_fail_inspection_summary[k])
+            t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+            Story.append(t)
+
 
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
 
