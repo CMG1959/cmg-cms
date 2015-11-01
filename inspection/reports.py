@@ -3,7 +3,7 @@ __author__ = 'mike'
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 
@@ -46,6 +46,7 @@ class JobReport:
         self.PAGE_HEIGHT=defaultPageSize[1]
         self.PAGE_WIDTH=defaultPageSize[0]
         self.styles = getSampleStyleSheet()
+        self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
         self.Title = "Job Report"
         self.pageinfo = "QSR-123-456"
         self.__build_report()
@@ -265,6 +266,7 @@ class JobReport:
 
         style = self.styles["Normal"]
 
+
         #### Do first page stuff
         # sus_info = [['date','name'],['Today!','Mike']]
         # t = Table(self.job_info)
@@ -287,8 +289,8 @@ class JobReport:
                 ]))
         Story.append(t)
         Story.append(caption_spacer)
-        ptext = '<alignment TA_CENTER>Startup Shot</center>'
-        Story.append(Paragraph(ptext, style))
+        ptext = 'Startup Shot'
+        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
 
@@ -299,7 +301,7 @@ class JobReport:
         Story.append(t)
         Story.append(caption_spacer)
         ptext = 'Summary of Range Tests'
-        Story.append(Paragraph(ptext, style))
+        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
         t = Table(self.pf_summarized)
@@ -308,7 +310,7 @@ class JobReport:
         Story.append(t)
         Story.append(caption_spacer)
         ptext = 'Summary of Pass Fail Tests'
-        Story.append(Paragraph(ptext, style))
+        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
 
