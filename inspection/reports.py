@@ -172,10 +172,15 @@ class JobReport:
     def __get_date_range(self):
 
         my_inspection = list(textInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True))
-        my_inspection.append(list(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
-        my_inspection.append(list(rangeInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
-        self.report_date_end = max(my_inspection)
-        self.report_date_start = min(my_inspection)
+        my_inspection.extend(list(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
+        my_inspection.extend(list(rangeInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
+
+        if my_inspection:
+            self.report_date_end = max(my_inspection)
+            self.report_date_start = min(my_inspection)
+        else:
+            self.report_date_end = 'No Inspections'
+            self.report_date_start = self.report_date_end
 
 
     def __create_pf_stats(self, qSet):
@@ -278,6 +283,8 @@ class JobReport:
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
+        ptext = 'Startup Shot'
+        Story.append(Paragraph(ptext, style))
         Story.append(my_spacer)
 
 
