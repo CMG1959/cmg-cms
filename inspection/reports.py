@@ -34,12 +34,12 @@ class JobReport:
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
         self.__get_startup_shot()
-        self.__get_job_info()
         self.__get_required_inspections()
         self.__get_pass_fail_inspections()
         self.__get_range_inspections()
         self.__get_text_inspections()
         self.__get_date_range()
+        self.__get_job_info()
 
 
 
@@ -68,8 +68,11 @@ class JobReport:
              self.startup_shot.activeCavities, self.startup_shot.shotWeight, self.startup_shot.cycleTime]]
 
     def __get_job_info(self):
-        self.job_info = [['Job Number','Item Number','Item Description','Mold Number','Mold Description'],
-                         [self.job_number,self.item_number,self.startup_shot.item.item_Description,self.startup_shot.moldNumber,self.startup_shot.moldNumber.mold_description]]
+        self.job_info = [['Job Number','Item Number','Item Description','Mold Number','Mold Description',
+                          'Date Started','Date Ended'],
+                         [self.job_number,self.item_number,self.startup_shot.item.item_Description,
+                          self.startup_shot.moldNumber,self.startup_shot.moldNumber.mold_description,
+                          self.report_date_end,self.report_date_start]]
         self.job_info =  map(list, zip(*self.job_info))
 
 
