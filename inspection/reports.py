@@ -264,6 +264,7 @@ class JobReport:
         Story.append(t)
 
         for k in self.range_inspection_summary.keys():
+            print self.range_inspection_summary[k]
             t = Table(self.range_inspection_summary[k])
             t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
