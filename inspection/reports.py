@@ -3,7 +3,7 @@ __author__ = 'mike'
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 
@@ -259,7 +259,7 @@ class JobReport:
         doc = SimpleDocTemplate("C:\CIMC_static\phello.pdf")
         my_spacer = Spacer(1,2*inch)
         caption_spacer = Spacer(1,0.25*inch)
-        styleCentered = ParagraphStyle(name="centeredStyle", alignment="TA_CENTER")
+
 
         Story = [my_spacer]
 
@@ -287,8 +287,8 @@ class JobReport:
                 ]))
         Story.append(t)
         Story.append(caption_spacer)
-        ptext = 'Startup Shot'
-        Story.append(Paragraph(ptext, styleCentered))
+        ptext = '<alignment TA_CENTER>Startup Shot</center>'
+        Story.append(Paragraph(ptext, style))
         Story.append(my_spacer)
 
 
@@ -299,7 +299,7 @@ class JobReport:
         Story.append(t)
         Story.append(caption_spacer)
         ptext = 'Summary of Range Tests'
-        Story.append(Paragraph(ptext, styleCentered))
+        Story.append(Paragraph(ptext, style))
         Story.append(my_spacer)
 
         t = Table(self.pf_summarized)
@@ -308,7 +308,7 @@ class JobReport:
         Story.append(t)
         Story.append(caption_spacer)
         ptext = 'Summary of Pass Fail Tests'
-        Story.append(Paragraph(ptext, styleCentered))
+        Story.append(Paragraph(ptext, style))
         Story.append(my_spacer)
 
 
