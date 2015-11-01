@@ -244,7 +244,9 @@ class JobReport:
 
     def __build_report(self):
         doc = SimpleDocTemplate("C:\CIMC_static\phello.pdf")
-        Story = [Spacer(1,2*inch)]
+        my_spacer = Spacer(1,2*inch)
+        Story = [my_spacer]
+
         style = self.styles["Normal"]
 
         #### Do first page stuff
@@ -256,17 +258,19 @@ class JobReport:
         #
         # Story.append(Spacer(1,0.2*inch))
         # part_info = [['part number','part name'],['123-456789','Some part']]
-        # t = Table(part_info)
-        # t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-        #         ]))
-        #
-        # Story.append(t)
-
+        t = Table(self.job_info)
+        t.setStyle(TableStyle([('INNERGRID',(0,0),(-1,-1),1,colors.black),
+                               ('BOX',(0,0),(-1,-1),1,colors.black)
+                ]))
+        Story.append(t)
         Story.append(PageBreak())
+
+
         t = Table(self.startup_shot_report)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
+        Story.append(my_spacer)
 
 
         print self.range_summarized
@@ -274,13 +278,13 @@ class JobReport:
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
-
+        Story.append(my_spacer)
 
         t = Table(self.pf_summarized)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
-
+        Story.append(my_spacer)
 
 
         # for k in self.range_summarized.keys():
