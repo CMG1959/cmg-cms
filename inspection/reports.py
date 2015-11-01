@@ -2,7 +2,7 @@ __author__ = 'mike'
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.enums import TA_JUSTIFY
+from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
@@ -270,7 +270,7 @@ class JobReport:
 
 
     def __build_report(self):
-        doc = SimpleDocTemplate("C:\CIMC_static\phello.pdf")
+        doc = SimpleDocTemplate("C:\CIMC_static\JobReport.pdf")
         my_spacer = Spacer(1,2*inch)
         caption_spacer = Spacer(1,0.25*inch)
 
