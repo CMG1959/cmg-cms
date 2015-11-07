@@ -3,7 +3,7 @@ __author__ = 'mike'
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.enums import TA_CENTER
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
@@ -15,6 +15,7 @@ from django.utils import timezone
 from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart, \
     rangeInspection, textRecord, textRecordByPart, textInspection, rangeTest
 from startupshot.models import startUpShot
+from production_and_mold_history.models import ProductionHistory
 import numpy as np
 
 
@@ -42,7 +43,7 @@ class JobReport:
         self.__get_text_inspections()
         self.__get_date_range()
         self.__get_job_info()
-
+        self.__get_phl()
 
 
         self.PAGE_HEIGHT=defaultPageSize[1]
@@ -88,6 +89,12 @@ class JobReport:
         #     <td>{{ active_job.0.item.item_Description }}</td>
         #     <td>{{ active_job.0.item.exp_part_weight }}</td>
         #     <td>{{ active_job.0.item.exp_cycle_time }}</td>
+
+    def __get_phl(self):
+        self.phl = [['Date','Name','Description']]
+        phl_info = ProductionHistory.objects.filter(jobNumber__jobNumber=self.job_number)
+        for row in phl_info:
+            self.phl.append([phl_info.dateCreated, phl_info.inspectorName, phl_info.descEvent])
 
 
     def __get_range_inspections(self):
@@ -278,17 +285,12 @@ class JobReport:
         Story = [my_spacer]
 
         style = self.styles["Normal"]
+        im = Image('CMGlogo-white-small.jpeg')
+        im.hAlign = 'CENTER'
 
+        Story.append(im)
 
         #### Do first page stuff
-        # sus_info = [['date','name'],['Today!','Mike']]
-        # t = Table(self.job_info)
-        # t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-        #         ]))
-        # Story.append(t)
-        #
-        # Story.append(Spacer(1,0.2*inch))
-        # part_info = [['part number','part name'],['123-456789','Some part']]
         t = Table(self.job_info)
         t.setStyle(TableStyle([('INNERGRID',(0,0),(-1,-1),1,colors.black),
                                ('BOX',(0,0),(-1,-1),1,colors.black)
@@ -297,57 +299,54 @@ class JobReport:
         Story.append(PageBreak())
 
 
+        ptext = 'Startup Shot'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
         t = Table(self.startup_shot_report)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
-        Story.append(caption_spacer)
-        ptext = 'Startup Shot'
-        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
-
-        print self.range_summarized
+        ptext = 'Summary of Range Tests'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
         t = Table(self.range_summarized)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
-        Story.append(caption_spacer)
-        ptext = 'Summary of Range Tests'
-        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
+
+        ptext = 'Summary of Pass Fail Tests'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
         t = Table(self.pf_summarized)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
-        Story.append(caption_spacer)
-        ptext = 'Summary of Pass Fail Tests'
-        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
+
+        ptext = 'Summary of other tests'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
         t = Table(self.text_summarized)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
-        Story.append(caption_spacer)
-        ptext = 'Summary of other tests'
-        Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(my_spacer)
 
 
-        # for k in self.range_summarized.keys():
-        #     print self.range_summarized[k]
-        #     t = Table(self.range_summarized[k])
-        #     t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-        #         ]))
-        #     Story.append(t)
-        #
-        # for k in self.pf_summarized.keys():
-        #     t = Table(self.pf_summarized[k])
-        #     t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-        #         ]))
-        #     Story.append(t)
+        ptext = 'Production History Log'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
+        t = Table(self.phl)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+        Story.append(t)
+        Story.append(my_spacer)
+
 
 
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
