@@ -50,6 +50,7 @@ class JobReport:
         self.PAGE_WIDTH=defaultPageSize[0]
         self.styles = getSampleStyleSheet()
         self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
+        self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
         self.Title = "Job Report"
         self.pageinfo = "QSR-123-456"
         self.__build_report()
@@ -261,7 +262,7 @@ class JobReport:
     def __my_first_page(self, canvas, doc):
         canvas.saveState()
         canvas.setFont('Times-Bold',16)
-        canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT-108, self.Title)
+        # canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT-108, self.Title)
         canvas.setFont('Times-Roman',9)
         canvas.drawString(inch, 0.75 * inch,"%s" % self.pageinfo)
     #     canvas.showPage()
@@ -281,14 +282,18 @@ class JobReport:
         my_spacer = Spacer(1,1*inch)
         caption_spacer = Spacer(1,0.25*inch)
 
-
-        Story = [my_spacer]
+        Story = []
+        # Story = [my_spacer]
 
         style = self.styles["Normal"]
-        im = Image('CMGlogo-white-small.jpeg')
+        im = Image('C:\CIMC_static\images\CMGlogo-white-small.jpeg')
         im.hAlign = 'CENTER'
-
         Story.append(im)
+
+        Story.append(caption_spacer)
+        ptext = 'Job Report'
+        Story.append(Paragraph(ptext, self.styles['titlePage']))
+        Story.append(caption_spacer)
 
         #### Do first page stuff
         t = Table(self.job_info)
