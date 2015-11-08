@@ -8,7 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 
-from startupshot.models import startUpShot
+
 from collections import OrderedDict
 import datetime
 from django.utils import timezone
@@ -17,6 +17,7 @@ from models import passFailByPart, passFailTest, passFailInspection, passFailTes
 from startupshot.models import startUpShot
 from production_and_mold_history.models import ProductionHistory
 import numpy as np
+from django.http import HttpResponse
 
 
 class JobReport:
@@ -36,24 +37,8 @@ class JobReport:
         self.range_summarized = [['Inspection Name', 'Count', 'Min', 'Max', 'Average', 'Std Dev']]
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
-        self.__get_startup_shot()
-        self.__get_required_inspections()
-        self.__get_pass_fail_inspections()
-        self.__get_range_inspections()
-        self.__get_text_inspections()
-        self.__get_date_range()
-        self.__get_job_info()
-        self.__get_phl()
-
-
-        self.PAGE_HEIGHT=defaultPageSize[1]
-        self.PAGE_WIDTH=defaultPageSize[0]
-        self.styles = getSampleStyleSheet()
-        self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
-        self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
-        self.Title = "Job Report"
-        self.pageinfo = "QSR-123-456"
         self.__build_report()
+
 
     def __get_item_number(self):
         return startUpShot.objects.get(jobNumber=self.job_number).item.item_Number
@@ -278,7 +263,32 @@ class JobReport:
 
 
     def __build_report(self):
-        doc = SimpleDocTemplate("C:\CIMC_static\JobReport.pdf")
+        self.__get_startup_shot()
+        self.__get_required_inspections()
+        self.__get_pass_fail_inspections()
+        self.__get_range_inspections()
+        self.__get_text_inspections()
+        self.__get_date_range()
+        self.__get_job_info()
+        self.__get_phl()
+
+
+        self.PAGE_HEIGHT=defaultPageSize[1]
+        self.PAGE_WIDTH=defaultPageSize[0]
+        self.styles = getSampleStyleSheet()
+        self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
+        self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
+        self.Title = "Job Report"
+        self.pageinfo = "QSR-123-456"
+        self.__build_report()
+
+    def get_report(self):
+
+        # Create the HttpResponse object with the appropriate PDF headers.
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+
+        doc = SimpleDocTemplate(response)
         my_spacer = Spacer(1,1*inch)
         caption_spacer = Spacer(1,0.25*inch)
 
@@ -352,7 +362,6 @@ class JobReport:
         Story.append(t)
         Story.append(my_spacer)
 
-
-
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
 
+        return response

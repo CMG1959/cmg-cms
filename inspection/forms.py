@@ -20,6 +20,9 @@ class textInspectionForm(forms.ModelForm):
         fields = ['textTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
 
 class jobReportSearch(forms.Form):
+    CHOICES=[('htmlReport','Web'),
+         ('pdfReport','PDF')]
+    report_type = forms.ChoiceField(label='Report Type', choices=CHOICES, widget=forms.RadioSelect())
     job_Number = forms.CharField(label="Job Number:", max_length=15)
     date_from = forms.DateField(label="Date From:", required=False)
     date_to = forms.DateField(label="Date To:", required=False)
