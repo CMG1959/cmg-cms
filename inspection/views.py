@@ -279,9 +279,7 @@ def view_jobReportSearch(request):
                     my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)
                     return my_report.get_report()
                 else:
-                    template = '404.html'
-                    context = RequestContext(request)
-                    return HttpResponse(template.render(context))
+                    return render(request,'404.html')
 
     # if a GET (or any other method) we'll create a blank form
     else:
