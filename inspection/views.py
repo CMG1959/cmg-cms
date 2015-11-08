@@ -264,7 +264,7 @@ def view_jobReportSearch(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            report_type = form.cleaned_date['report_type']
+            report_type = form.cleaned_data['report_type']
             job_number = form.cleaned_data['job_Number']
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
