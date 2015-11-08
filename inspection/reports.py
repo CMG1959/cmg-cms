@@ -8,6 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 
+from cStringIO import StringIO
 
 from collections import OrderedDict
 import datetime
@@ -287,6 +288,7 @@ class JobReport:
         # Create the HttpResponse object with the appropriate PDF headers.
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        tmp = StringIO()
 
         doc = SimpleDocTemplate(response)
         my_spacer = Spacer(1,1*inch)
@@ -363,5 +365,8 @@ class JobReport:
         Story.append(my_spacer)
 
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
-
+        # Get the data out and close the buffer cleanly
+        pdf = tmp.getvalue()
+        tmp.close()
+        response.write(pdf)
         return response
