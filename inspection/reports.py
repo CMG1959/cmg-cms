@@ -286,7 +286,7 @@ class JobReport:
 
         # Create the HttpResponse object with the appropriate PDF headers.
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = ('attachment; filename="Job Report %s .pdf"') % str(self.job_number)
+        response['Content-Disposition'] = 'attachment; filename="Job Report %s .pdf"' % str(self.job_number)
         tmp = StringIO()
 
         doc = SimpleDocTemplate(tmp)
