@@ -275,8 +275,13 @@ def view_jobReportSearch(request):
                 context = RequestContext(request, context_dic)
                 return HttpResponse(template.render(context))
             else:
-                my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)
-                return my_report.get_report()
+                if startUpShot.objects.filter(job_number=job_number).exists():
+                    my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)
+                    return my_report.get_report()
+                else:
+                    template = '404.html'
+                    context = RequestContext(request)
+                    return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:

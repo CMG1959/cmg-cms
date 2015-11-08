@@ -281,7 +281,7 @@ class JobReport:
         self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
         self.Title = "Job Report"
         self.pageinfo = "QSR-123-456"
-        self.__build_report()
+
 
     def get_report(self):
 
