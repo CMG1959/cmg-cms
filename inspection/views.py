@@ -275,7 +275,7 @@ def view_jobReportSearch(request):
                 context = RequestContext(request, context_dic)
                 return HttpResponse(template.render(context))
             else:
-                if startUpShot.objects.filter(job_number=job_number).exists():
+                if startUpShot.objects.filter(jobNumber=job_number).exists():
                     my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)
                     return my_report.get_report()
                 else:

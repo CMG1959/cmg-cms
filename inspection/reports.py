@@ -282,15 +282,14 @@ class JobReport:
         self.Title = "Job Report"
         self.pageinfo = "QSR-123-456"
 
-
     def get_report(self):
 
         # Create the HttpResponse object with the appropriate PDF headers.
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Disposition'] = ('attachment; filename="Job Report %s .pdf"') % str(self.job_number)
         tmp = StringIO()
 
-        doc = SimpleDocTemplate(response)
+        doc = SimpleDocTemplate(tmp)
         my_spacer = Spacer(1,1*inch)
         caption_spacer = Spacer(1,0.25*inch)
 
