@@ -103,8 +103,15 @@ class JobReport:
                      row.inspectionResult])
             self.extended_tables.update({each_inspection.testName.testName: range_report})
 
-            result_dict, result_list = self.__calc_range_stats(
-                self.range_inspections[each_inspection.testName.testName])
+
+            rangeList = []
+            for eachShot in self.range_inspections[each_inspection.testName.testName]:
+                if ((eachShot.isFullShot) and (not each_inspection.testName.calcAvg)):
+                    rangeList.append(eachShot.numVal / self.startup_shot.activeCavities)
+                else:
+                    rangeList.append(eachShot.numVal)
+
+            result_dict, result_list = self.__calc_range_stats(rangeList)
 
             range_id = [each_inspection.testName.testName]
             range_id.extend(result_list)
