@@ -293,7 +293,7 @@ class JobReport:
         self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
         self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
         self.Title = "Job Report"
-        self.pageinfo = "QSR-123-456"
+        self.pageinfo = "QSR-752-538/Part\nRev A Dated 11/9/15"
 
     def get_report(self):
 
