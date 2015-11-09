@@ -28,13 +28,17 @@
                             <p class="list-group-item-text">Click here to view the current job report</p>
                         </a>
 
+                        <a class="list-group-item" href="/inspection/jobReport/{{ ep.jobNumber.strip }}/pdf/">
+                            <h4 class="list-group-item-heading">PDF Job Report</h4>
+                            <p class="list-group-item-text">Click here to get printable job report</p>
+                        </a>
+
                         {% for eachPF in pf_inspectionType %}
                             <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/pf/{{ eachPF.testName }}/">
                             <h4 class="list-group-item-heading">{{ eachPF.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachPF.testName }} </p>
                             </a>
                         {% endfor %}
-
 
                         {% for eachRI in range_inspectionType %}
                             <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/rangeInspection/{{ eachRI.testName }}/">

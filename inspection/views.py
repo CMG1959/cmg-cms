@@ -288,6 +288,8 @@ def view_jobReportSearch(request):
     return render(request, 'inspection/searchForms/jobReportSearch.html', {'form': form})
 
 
+
+
 @login_required
 def view_itemReportSearch(request):
     # if this is a POST request we need to process the form data
@@ -330,6 +332,15 @@ def view_jobReport(request, jobNumber):
     template = loader.get_template('inspection/reports/jobReport.html')
     context = RequestContext(request, context_dic)
     return HttpResponse(template.render(context))
+
+@login_required
+def view_jobReport_pdf(request, jobNumber):
+    if startUpShot.objects.filter(jobNumber=jobNumber).exists():
+        my_report = JobReport(job_number=jobNumber)
+        return my_report.get_report()
+    else:
+        return render(request,'404.html')
+
 
 ####### Section for generating data for plots ###########
 def view_jsonError(job_number, date_from, date_to):

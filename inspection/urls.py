@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^itemReport/$', views.view_itemReportSearch, name='view_itemReportSearch'),
     ### link to view for job report
     url(r'^jobReport/(?P<jobNumber>[0-9]+(.[0-9]+)+)/$', views.view_jobReport, name='view_jobReport'),
+    ### link to view for pdf job report
+    url(r'^jobReport/(?P<jobNumber>[0-9]+(.[0-9]+)+)/pdf/$', views.view_jobReport_pdf, name='view_jobReport_pdf'),
     ### link to view for item report
     url(r'^itemReport/(?P<itemNumber>[0-9]+(.[0-9]+)+)/$', views.view_itemReport, name='view_itemReport'),
     ### link to show which inspections can be performed on a given job
