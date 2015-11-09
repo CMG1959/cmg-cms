@@ -212,7 +212,7 @@ class JobReport:
         for k, v in result_dict.iteritems():
             result_list.append(v)
 
-        return result_dict
+        return result_dict, result_list
 
     def __calc_range_stats(self, range_list):
         if range_list:
