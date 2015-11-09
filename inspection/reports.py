@@ -220,6 +220,8 @@ class JobReport:
 
         return result_dict, result_list
 
+
+
     def __calc_range_stats(self, range_list):
         if range_list:
             result_dict = OrderedDict({
@@ -242,7 +244,7 @@ class JobReport:
         for k, v in result_dict.iteritems():
             result_list.append(v)
 
-        return result_dict, result_list
+        return result_dict, [result_dict['range_count'],result_dict['range_min'],result_dict['range_max'],result_dict['range_avg'],result_dict['range_stddev'],]
 
 
     def __create_date_range(self):
