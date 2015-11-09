@@ -81,7 +81,7 @@ class JobReport:
         self.phl = [['Date','Name','Description']]
         phl_info = ProductionHistory.objects.filter(jobNumber__jobNumber=self.job_number)
         for row in phl_info:
-            self.phl.append([phl_info.dateCreated, phl_info.inspectorName, phl_info.descEvent])
+            self.phl.append([row.dateCreated, row.inspectorName, row.descEvent])
 
 
     def __get_range_inspections(self):
