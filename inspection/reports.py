@@ -264,6 +264,7 @@ class JobReport:
         # canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT-108, self.Title)
         canvas.setFont('Times-Roman',9)
         canvas.drawString(inch, 0.75 * inch,"%s" % self.pageinfo)
+        canvas.drawString(self.PAGE_WIDTH - 2*inch, 0.75 * inch, "%s" % self.dateinfo)
     #     canvas.showPage()
         canvas.restoreState()
 
@@ -273,6 +274,7 @@ class JobReport:
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
         canvas.drawString(inch, 0.75 * inch,"%s: Page %d" % (self.pageinfo, doc.page))
+        canvas.drawString(self.PAGE_WIDTH - 2*inch, 0.75 * inch, "%s" % self.dateinfo)
         canvas.restoreState()
 
 
@@ -293,7 +295,8 @@ class JobReport:
         self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
         self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
         self.Title = "Job Report"
-        self.pageinfo = "QSR-752-538/Part\nRev A Dated 11/9/15"
+        self.pageinfo = "QSR-752-538/Part"
+        self.dateinfo = "Rev A Dated 11/9/15"
 
     def get_report(self):
 
