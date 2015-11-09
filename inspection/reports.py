@@ -109,7 +109,7 @@ class JobReport:
                 if ((eachShot.isFullShot) and (not each_inspection.testName.calcAvg)):
                     rangeList.append(eachShot.numVal / self.startup_shot.activeCavities)
                 else:
-                    rangeList.append(eachShot.numVal)
+                    rangeList.append(float(eachShot.numVal))
 
             result_dict, result_list = self.__calc_range_stats(rangeList)
 
