@@ -127,9 +127,14 @@ class JobReport:
 
             if self.pass_fail_inspections[each_inspection.testName.testName]:
                 for row in self.pass_fail_inspections[each_inspection.testName.testName]:
-                    pass_fail_report.append(
+                    if len(row.defectType.all())> 1:
+                        pass_fail_report.append(
                             [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
-                             row.defectType])
+                              "\n".join([r.passFail for r in row.defectType.all()])])
+                    else:
+                        pass_fail_report.append(
+                            [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
+                              " ".join([r.passFail for r in row.defectType.all()])])
 
                 result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
                                                                           each_inspection.testName.testName])
