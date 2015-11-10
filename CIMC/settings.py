@@ -186,3 +186,11 @@ STATICFILES_FINDERS = (
 
 #### SETTINGS FOR SESSIONS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+BOOTSTRAP3 = {
+    # The URL to the jQuery JavaScript file
+    'jquery_url': 'external/jquery/jquery.js',
+
+    # The Bootstrap base URL
+    'base_url': 'external/bootstrap/',
+}

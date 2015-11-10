@@ -264,6 +264,7 @@ class JobReport:
         # canvas.drawCentredString(self.PAGE_WIDTH/2.0, self.PAGE_HEIGHT-108, self.Title)
         canvas.setFont('Times-Roman',9)
         canvas.drawString(inch, 0.75 * inch,"%s" % self.pageinfo)
+        canvas.drawString(self.PAGE_WIDTH/2 - 0.25*inch, 0.75 * inch, "Page %d" % doc.page)
         canvas.drawString(self.PAGE_WIDTH - 2*inch, 0.75 * inch, "%s" % self.dateinfo)
     #     canvas.showPage()
         canvas.restoreState()
@@ -273,7 +274,8 @@ class JobReport:
     def __my_later_pages(self, canvas, doc):
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
-        canvas.drawString(inch, 0.75 * inch,"%s: Page %d" % (self.pageinfo, doc.page))
+        canvas.drawString(inch, 0.75 * inch,"%s" % self.pageinfo)
+        canvas.drawString(self.PAGE_WIDTH/2 - 0.25*inch, 0.75 * inch, "Page %d" % doc.page)
         canvas.drawString(self.PAGE_WIDTH - 2*inch, 0.75 * inch, "%s" % self.dateinfo)
         canvas.restoreState()
 
