@@ -24,6 +24,8 @@
  <div class="panel panel-default">
         <div class="panel-body">
     <div id="chartdiv"></div>
+
+            <div id="chartdiv2"></div>
         </div>
  </div>
 
@@ -98,8 +100,10 @@
   dataType: "json",
   url: "/dashboard/jsonError/",
   success: function(result){
-      console.log(result);
-      myBarChart(result);
+
+      console.log(result['errors']);
+      myBarChart(result['errors'], "chartdiv", "error_count", "error_name");
+      myBarChart(result['mach'], "chartdiv", "mach_count", "mach_name");
   }
 });
 </script>
@@ -108,8 +112,8 @@
 
 
 <script>
-    function myBarChart(my_JSON) {
-var chart = AmCharts.makeChart( "chartdiv", {
+    function myBarChart(my_JSON, chartID, x_axis_id, y_axis_id) {
+var chart = AmCharts.makeChart( chartID, {
   "type": "serial",
   "theme": "light",
   "dataProvider": my_JSON,
@@ -125,14 +129,14 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "fillAlphas": 0.8,
     "lineAlpha": 0.2,
     "type": "column",
-    "valueField": "error_count"
+    "valueField": y_axis_id
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,
     "cursorAlpha": 0,
     "zoomable": false
   },
-  "categoryField": "error_name",
+  "categoryField": x_axis_id,
   "categoryAxis": {
     "gridPosition": "start",
     "gridAlpha": 0,

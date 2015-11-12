@@ -49,7 +49,19 @@ def view_jsonError(request):
     counted_errors = []
     for k,v in sort_jawn:
         counted_errors.append({'error_name':k,'error_count':v})
-    str_info = json.dumps(counted_errors)
+
+
+    production_errors = production_errors.values_list('machNo',flat=True)
+
+    count_errors = Counter(production_errors)
+    sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
+    counted_mach_errors = []
+    for k,v in sort_jawn:
+        counted_mach_errors.append({'mach_name':k,'mach_count':v})
+
+    my_dict = {'mach':counted_mach_errors, 'errors': counted_errors}
+
+    str_info = json.dumps(my_dict)
     return HttpResponse(str_info, content_type='text')
 
 def view_errorProdLog(request):
