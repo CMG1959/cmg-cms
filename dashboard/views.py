@@ -43,6 +43,7 @@ def view_jsonError(request):
 
     production_errors = errorLog.objects.filter(dateCreated__gte=dt_time).order_by('-dateCreated')
     production_errors = production_errors.values_list('inspectionName',flat=True)
+
     count_errors = Counter(production_errors)
     sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
     counted_errors = []
