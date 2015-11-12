@@ -102,6 +102,7 @@
   success: function(result){
 
       console.log(result['errors']);
+      console.log(result['mach']);
       myBarChart(result['errors'], "chartdiv", "error_count", "error_name");
       myBarChart(result['mach'], "chartdiv2", "mach_count", "mach_name");
   }
