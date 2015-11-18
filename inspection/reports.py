@@ -63,7 +63,7 @@ class JobReport:
                           'Date Started','Date Ended'],
                          [self.job_number,self.item_number,self.startup_shot.item.item_Description,
                           self.startup_shot.moldNumber,self.startup_shot.moldNumber.mold_description,
-                          self.report_date_end.date(), self.report_date_start.date()]]
+                          self.report_date_start.date(), self.report_date_end.date()]]
         self.job_info =  map(list, zip(*self.job_info))
 
 
@@ -159,6 +159,7 @@ class JobReport:
 
     def __get_text_inspections(self):
         self.text_inspections = OrderedDict()
+        self.text_inspections_report = OrderedDict()
         for each_inspection in self.required_inspections['text_inspections']:
             self.text_inspections.update({each_inspection.testName: {
                 'test_name': each_inspection.testName,
@@ -175,6 +176,8 @@ class JobReport:
                     [row.dateCreated, row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.inspectionResult])
 
             self.extended_tables.update({each_inspection.testName: text_inspection})
+
+            self.text_inspections_report.update({each_inspection.testName: textInspection})
 
             if self.text_inspections[each_inspection.testName]['text_dict']:
                 result_dict, result_list = self.__create_pf_stats(self.text_inspections[
@@ -297,8 +300,8 @@ class JobReport:
         self.styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
         self.styles.add(ParagraphStyle(name='titlePage',alignment=TA_CENTER,fontSize=16))
         self.Title = "Job Report"
-        self.pageinfo = "QSR-752-538/Part"
-        self.dateinfo = "Rev A Dated 11/9/15"
+        self.pageinfo = "QSR-752-538/Job"
+        self.dateinfo = "Rev A Dated 11/17/15"
 
     def get_report(self):
 
@@ -361,15 +364,15 @@ class JobReport:
         Story.append(t)
         Story.append(my_spacer)
 
-
-        ptext = 'Summary of other tests'
-        Story.append(Paragraph(ptext, self.styles['Center']))
-        Story.append(caption_spacer)
-        t = Table(self.text_summarized)
-        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-                ]))
-        Story.append(t)
-        Story.append(my_spacer)
+        for k,v in self.text_inspections_report.iteritems():
+            ptext = k
+            Story.append(Paragraph(ptext, self.styles['Center']))
+            Story.append(caption_spacer)
+            t = Table(v)
+            t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                    ]))
+            Story.append(t)
+            Story.append(my_spacer)
 
 
         ptext = 'Production History Log'
