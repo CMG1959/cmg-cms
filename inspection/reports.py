@@ -177,7 +177,7 @@ class JobReport:
 
             self.extended_tables.update({each_inspection.testName: text_inspection})
 
-            self.text_inspections_report.update({each_inspection.testName: textInspection})
+            self.text_inspections_report.update({each_inspection.testName: text_inspection})
 
             if self.text_inspections[each_inspection.testName]['text_dict']:
                 result_dict, result_list = self.__create_pf_stats(self.text_inspections[
