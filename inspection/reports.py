@@ -173,7 +173,7 @@ class JobReport:
 
             for row in self.text_inspections[each_inspection.testName]['text_dict']:
                 text_inspection.append(
-                    [row.dateCreated, row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.inspectionResult])
+                    [(row.dateCreated).strftime('%Y-%m-%d %I:%M %p'), row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.inspectionResult])
 
             self.extended_tables.update({each_inspection.testName: text_inspection})
 
