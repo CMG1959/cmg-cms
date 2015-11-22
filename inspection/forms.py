@@ -1,5 +1,5 @@
 from django import forms
-from inspection.models import passFailInspection, rangeInspection, textInspection
+from inspection.models import passFailInspection, rangeInspection, textInspection, IntegerInspection, FloatInspection
 
 
 class passFailInspectionForm(forms.ModelForm):
@@ -18,6 +18,17 @@ class textInspectionForm(forms.ModelForm):
     class Meta:
         model = textInspection
         fields = ['textTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
+
+class IntegerInspectionForm(forms.ModelForm):
+    class Meta:
+        model = IntegerInspection
+        fields = ['integerTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
+
+class FloatInspectionForm(forms.ModelForm):
+    class Meta:
+        model = FloatInspection
+        fields = ['floatTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
+
 
 class jobReportSearch(forms.Form):
     CHOICES=[('htmlReport','Web'),

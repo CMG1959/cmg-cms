@@ -22,6 +22,7 @@ class passFailTest(models.Model):
 
     testName = models.CharField(max_length=75, verbose_name="Pass Fail Test Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
+    isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -88,6 +89,7 @@ class rangeTest(models.Model):
     testName = models.CharField(max_length=75, verbose_name="Range Test Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     calcAvg = models.BooleanField(verbose_name="Report raw data (do not take average)?",default=False)
+    isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -131,26 +133,27 @@ class rangeInspection(models.Model):
 #######################################################################################################################
 #
 #
-# Text Record
+# Small Text Record
 #
 #
 #######################################################################################################################
 
 class textRecord(models.Model):
     class Meta:
-        verbose_name = 'Name - Text type Inspection'
-        verbose_name_plural = 'Name - Text type Inspection'
+        verbose_name = 'Name - Small Text type Inspection'
+        verbose_name_plural = 'Name - Small Text type Inspection'
 
     testName = models.CharField(max_length=75, verbose_name="Text Box Inspection Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
+    isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
 
 class textRecordByPart(models.Model):
     class Meta:
-        verbose_name = 'Part Assignment - Text Test'
-        verbose_name_plural = 'Part Assignment - Text Test'
+        verbose_name = 'Part Assignment - Small Text Test'
+        verbose_name_plural = 'Part Assignment - Small Text Test'
         unique_together = ("testName", "item_Number")
 
     testName = models.ForeignKey('textRecord', verbose_name = "Text Test Name")
@@ -162,8 +165,8 @@ class textRecordByPart(models.Model):
 
 class textInspection(models.Model):
     class Meta:
-        verbose_name = 'Record - Inspection'
-        verbose_name_plural = 'Record - Text Inspections'
+        verbose_name = 'Record - Small Text Inspection'
+        verbose_name_plural = 'Record - Small Text Inspections'
 
     textTestName = models.ForeignKey('textRecord',verbose_name='Inspection Name')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ti_jobID')
@@ -174,7 +177,112 @@ class textInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
-    inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
+    inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=20)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.jobID, self.dateCreated)
+
+
+#######################################################################################################################
+#
+#
+# Integer Record
+#
+#
+#######################################################################################################################
+
+class IntegerRecord(models.Model):
+    class Meta:
+        verbose_name = 'Name - Integer Type Inspection'
+        verbose_name_plural = 'Name - Integer Type Inspection'
+
+    testName = models.CharField(max_length=75, verbose_name="Integer Inspection Name",unique=True)
+    requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
+    isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+
+    def __unicode__(self):
+        return '%s' % (self.testName)
+
+class IntegerRecordByPart(models.Model):
+    class Meta:
+        verbose_name = 'Part Assignment - Integer Type Test'
+        verbose_name_plural = 'Part Assignment - Integer Type Test'
+        unique_together = ("testName", "item_Number")
+
+    testName = models.ForeignKey('IntegerRecord', verbose_name = "Integer Test Name")
+    item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
+    inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
+
+    def __unicode__(self):
+        return '%s' % (self.testName)
+
+class IntegerInspection(models.Model):
+    class Meta:
+        verbose_name = 'Record - Integer Inspection'
+        verbose_name_plural = 'Record - Integer Inspections'
+
+    integerTestName = models.ForeignKey('IntegerRecord',verbose_name='Inspection Name')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ti_jobID')
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
+                                        related_name='Integer_machineOperator')
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
+                                      related_name='Integer_inspectorName')
+    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+    isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
+    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
+    inspectionResult = models.BigIntegerField(verbose_name="Enter Inspection Information:")
+
+    def __unicode__(self):
+        return '%s - %s' % (self.jobID, self.dateCreated)
+
+#######################################################################################################################
+#
+#
+# Float Record
+#
+#
+#######################################################################################################################
+
+class FloatRecord(models.Model):
+    class Meta:
+        verbose_name = 'Name - Float Type Inspection'
+        verbose_name_plural = 'Name - Float Type Inspection'
+
+    testName = models.CharField(max_length=75, verbose_name="Float Inspection Name",unique=True)
+    requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
+    isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+
+    def __unicode__(self):
+        return '%s' % (self.testName)
+
+class FloatRecordByPart(models.Model):
+    class Meta:
+        verbose_name = 'Part Assignment - Float Type Test'
+        verbose_name_plural = 'Part Assignment - Float Type Test'
+        unique_together = ("testName", "item_Number")
+
+    testName = models.ForeignKey('FloatRecord', verbose_name = "Float Test Name")
+    item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
+    inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
+
+    def __unicode__(self):
+        return '%s' % (self.testName)
+
+class FloatInspection(models.Model):
+    class Meta:
+        verbose_name = 'Record - Float Inspection'
+        verbose_name_plural = 'Record - Float Inspections'
+
+    floatTestName = models.ForeignKey('FloatRecord',verbose_name='Inspection Name')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ti_jobID')
+    machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
+                                        related_name='float_machineOperator')
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
+                                      related_name='float_inspectorName')
+    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+    isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
+    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
+    inspectionResult = models.FloatField(verbose_name="Enter Inspection Information:")
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)

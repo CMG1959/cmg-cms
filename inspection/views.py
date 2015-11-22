@@ -11,8 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart,\
-    rangeInspection, textRecord, textRecordByPart, textInspection, rangeTest
+from models import *
 from dashboard.models import errorLog
 from equipment.models import EquipmentInfo
 from part.models import Part
@@ -73,15 +72,19 @@ def view_detailJob(request, jobNumber):
     # better go ahead and take care of the Mold now
     checkMoldCavs(item_Number=active_job[0].item)
 
-    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-    range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-    text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
+    range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
+    text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
+    int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
+    float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
         'active_job': active_job,
         'pf_inspectionType' : pf_inspectionType,
         'range_inspectionType': range_inspectionType,
-        'text_inspectionType':text_inspectionType
+        'text_inspectionType':text_inspectionType,
+        'int_inspectionType': int_inspectionType,
+        'float_inspectionType': float_inspectionType
     })
     return HttpResponse(template.render(context))
 
@@ -245,6 +248,83 @@ def view_textInspection(request, jobNumber, inspectionName):
             'idSelect':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
+
+@login_required
+def view_IntegerInspection(request, jobNumber, inspectionName):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = textInspectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = textInspectionForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
+                     'textTestName':textRecord.objects.get(testName=inspectionName).id}
+        )
+        form = presetStandardFields(form, jobID=jobNumber,test_type='IntegerType', test_name=inspectionName)
+
+        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
+            mold_number__mold_number=active_job[0].moldNumber)
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : inspectionName,
+            'form': form,
+            'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_headCavID'
+        })
+        return HttpResponse(template.render(context))
+
+@login_required
+def view_FloatInspection(request, jobNumber, inspectionName):
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = textInspectionForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # part_number = form.cleaned_data['jobID']
+            redirect_url = '/inspection/%s/' % (jobNumber)
+            # save the data
+            form.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(redirect_url)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = textInspectionForm(
+            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
+                     'textTestName':textRecord.objects.get(testName=inspectionName).id}
+        )
+        form = presetStandardFields(form, jobID=jobNumber,test_type='FloatType', test_name=inspectionName)
+
+        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
+            mold_number__mold_number=active_job[0].moldNumber)
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, {
+            'form_title' : inspectionName,
+            'form': form,
+            'active_job': active_job,
+            'use_checkbox' : True,
+            'id_check':'#id_inspectionResult',
+            'idSelect':'#id_headCavID'
+        })
+        return HttpResponse(template.render(context))
+
 
 
 

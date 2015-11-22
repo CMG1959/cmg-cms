@@ -54,6 +54,22 @@
                             </a>
                         {% endfor %}
 
+                        {% for eachInt in int_inspectionType %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/IntegerInspection/{{ eachInt.testName }}/">
+                            <h4 class="list-group-item-heading">{{ eachInt.testName }}</h4>
+                            <p class="list-group-item-text">Click Here to record a record for {{ eachInt.testName }} </p>
+                            </a>
+                        {% endfor %}
+
+                        {% for eachFloat in float_inspectionType %}
+                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/FloatInspection/{{ eachFloat.testName }}/">
+                            <h4 class="list-group-item-heading">{{ eachFloat.testName }}</h4>
+                            <p class="list-group-item-text">Click Here to record a record for {{ eachFloat.testName }} </p>
+                            </a>
+                        {% endfor %}
+
+
+
 {#                        {% if inspectionTypes.visual_inspection %}#}
 {#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/visual">#}
 {#                            <h4 class="list-group-item-heading">Visual Inspection</h4>#}
