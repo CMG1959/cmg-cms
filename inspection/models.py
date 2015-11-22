@@ -222,7 +222,7 @@ class IntegerInspection(models.Model):
         verbose_name_plural = 'Record - Integer Inspections'
 
     integerTestName = models.ForeignKey('IntegerRecord',verbose_name='Inspection Name')
-    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ti_jobID')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='Integer_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='Integer_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
@@ -274,7 +274,7 @@ class FloatInspection(models.Model):
         verbose_name_plural = 'Record - Float Inspections'
 
     floatTestName = models.ForeignKey('FloatRecord',verbose_name='Inspection Name')
-    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ti_jobID')
+    jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='Float_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='float_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",

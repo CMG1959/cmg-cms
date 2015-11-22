@@ -63,7 +63,7 @@
 
                         {% for eachFloat in float_inspectionType %}
                             <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/FloatInspection/{{ eachFloat.testName }}/">
-                            <h4 class="list-group-item-heading">{{ eachFloat.testName }}</h4>
+                            <h4 class="list-group-item-heading">{{ eachFloatEn.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachFloat.testName }} </p>
                             </a>
                         {% endfor %}
