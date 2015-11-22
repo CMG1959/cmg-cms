@@ -224,6 +224,10 @@ def view_textInspection(request, jobNumber, inspectionName):
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
             form.save()
+            # save the data
+            checkFormForLog(form, inspectionType = 'textInspection',
+                            inspectionName = inspectionName,
+                            activeJob=active_job)
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
@@ -262,6 +266,10 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
             form.save()
+            # save the data
+            checkFormForLog(form, inspectionType = 'IntegerInspection',
+                            inspectionName = inspectionName,
+                            activeJob=active_job)
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
@@ -300,6 +308,10 @@ def view_FloatInspection(request, jobNumber, inspectionName):
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
             form.save()
+            # save the data
+            checkFormForLog(form, inspectionType = 'FloatInspection',
+                            inspectionName = inspectionName,
+                            activeJob=active_job)
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
@@ -700,6 +712,17 @@ def checkPartInspection(item_Number):
         if not textRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
             newPartInspection = textRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
+
+    for requiredTests in IntegerRecord.objects.filter(requireAll=True):
+        if not IntegerRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
+            newPartInspection = IntegerRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
+            newPartInspection.save()
+
+    for requiredTests in FloatRecord.objects.filter(requireAll=True):
+        if not FloatRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
+            newPartInspection = FloatRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
+            newPartInspection.save()
+
     # Will probably need to create something for shot weights...
 
 
@@ -748,6 +771,21 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
             create_log = True
         if measured_val>rangeInfo.rangeMax:
             errorDescription = 'Measured value is %1.3f which is greater than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMax)
+            create_log = True
+
+    if inspectionType == 'textInspection':
+        if not form.cleaned_data['inspectionResult']:
+            errorDescription = '%s' % form.cleaned_data['inspectionResult']
+            create_log = True
+
+    if inspectionType == 'IntegerInspection':
+        if not form.cleaned_data['inspectionResult']:
+            errorDescription = '%s' % form.cleaned_data['inspectionResult']
+            create_log = True
+
+    if inspectionType == 'FloatInspection':
+        if not form.cleaned_data['inspectionResult']:
+            errorDescription = '%s' % form.cleaned_data['inspectionResult']
             create_log = True
 
     if create_log:
