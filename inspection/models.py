@@ -177,7 +177,7 @@ class textInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
-    inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=20)
+    inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
