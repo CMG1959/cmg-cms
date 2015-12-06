@@ -32,7 +32,7 @@ class MattecProd(models.Model):
         verbose_name_plural = 'MATTEC Current Job Information'
 
     ### This information will be taken from MATTEC via SQL script
-    jobNumber = models.CharField(max_length=15, verbose_name="Job Number")
+    jobNumber = models.CharField(max_length=20, verbose_name="Job Number")
     machNo = models.CharField(max_length=10, verbose_name="Machine Number")
     itemDesc = models.CharField(max_length=50, verbose_name="Item Description")
     itemNo = models.CharField(max_length=15, verbose_name="Item Number")
