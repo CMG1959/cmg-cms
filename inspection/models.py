@@ -90,6 +90,7 @@ class rangeTest(models.Model):
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     calcAvg = models.BooleanField(verbose_name="Report raw data (do not take average)?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+    hasTimeDelayInspection = models.BooleanField(verbose_name="Inspect Again After Time Period?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -125,6 +126,7 @@ class rangeInspection(models.Model):
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
+    timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time")
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
