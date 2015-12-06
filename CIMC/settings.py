@@ -55,7 +55,8 @@ INSTALLED_APPS = (
     'part',
     'production_and_mold_history',
     'startupshot',
-    'supplier')
+    'supplier',
+    'rest_framework',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
