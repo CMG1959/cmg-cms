@@ -74,8 +74,25 @@ def view_errorProdLog(request):
     template = loader.get_template('dashboard/errorProdLog.html')
 
     production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_time).order_by('-dateCreated')
+    prod_errors = []
+    for each_error in production_errors:
+        susInfo = startUpShot.objects.filter(jobNumber = each_error.jobNumber)[0]
+        if susInfo:
+            machNo = susInfo.machNo
+            item_Description = susInfo.item.item_Description
+        else:
+            machNo = 'N/A'
+            item_Description = 'N/A'
+        prod_errors.append({
+            'dateCreated': each_error.dateCreated,
+            'inspectorName': each_error.inspectorName,
+            'machNo': machNo,
+            'item_Description': item_Description,
+            'descEven': each_error.descEvent
+        })
+
     context = RequestContext(request, {
-        'prodErrors':production_errors
+        'prodErrors':prod_errors
     })
     return HttpResponse(template.render(context))
 
