@@ -88,7 +88,7 @@ def view_errorProdLog(request):
             'inspectorName': each_error.inspectorName,
             'machNo': machNo,
             'item_Description': item_Description,
-            'descEven': each_error.descEvent
+            'descEvent': each_error.descEvent
         })
 
     context = RequestContext(request, {
