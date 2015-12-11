@@ -1,8 +1,5 @@
 # Create your views here.
-import datetime
 import numpy as np
-
-
 from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
@@ -24,7 +21,7 @@ from forms import passFailInspectionForm, rangeInspectionForm, textInspectionFor
 from reports import JobReport
 import collections
 import json
-
+import datetime
 ######################################
 #
 #  Section for generating indexes, etc
