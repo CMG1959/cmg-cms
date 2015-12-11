@@ -54,26 +54,6 @@ def view_mold_form(request):
 def view_specific_phl_form(request, jobNo):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
-    if not active_job.exists():
-        mattecInfo = MattecProd.objects.get(jobNumber=jobNo)
-
-        machInfo = EquipmentInfo.objects.filter(part_identifier=mattecInfo.machNo,
-                                                equipment_type__equipment_type='Injection Molding Machine') | \
-                   EquipmentInfo.objects.filter(part_identifier=mattecInfo.machNo,
-                                                equipment_type__equipment_type='Injection Stretch Blow Molding Machine')
-
-        newSUS = startUpShot(
-            item=Part.objects.get(item_Number=mattecInfo.itemNo),
-            jobNumber=mattecInfo.jobNumber,
-            moldNumber=Mold.objects.get(mold_number=mattecInfo.moldNumber),
-            activeCavities=mattecInfo.activeCavities,
-            machNo=machInfo[0],
-            machineOperator=Employees.objects.get(EmpLName='McCabe', EmpFName='Bernie'),
-            inspectorName=Employees.objects.get(EmpLName='McCabe', EmpFName='Bernie'),
-            shotWeight=0.0,
-            cycleTime=mattecInfo.cycleTime,
-        )
-        newSUS.save()
 
 
     if request.method == 'POST':
@@ -84,7 +64,7 @@ def view_specific_phl_form(request, jobNo):
             # process the data in form.cleaned_data as required
             newForm = ProductionHistory(
                 inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
-                jobNumber=startUpShot.objects.get(jobNumber=jobNo),
+                jobNumber=jobNo.strip(),
                 descEvent=form.cleaned_data['descEvent'],
             )
             newForm.save()
@@ -170,7 +150,7 @@ def view_phl_report_search(request):
             if item_type == 'Job Number':
                 my_dict[str(n)] = {}
                 my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=item_id)
-                my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=item_id, \
+                my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
                                                                           dateCreated__range=(date_from, date_to))
             else:
                 # mold list
@@ -178,7 +158,7 @@ def view_phl_report_search(request):
                 for eachJob in active_list:
                     my_dict[str(n)] = {}
                     my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=eachJob.jobNumber)
-                    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=eachJob.jobNumber, \
+                    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
                                                                               dateCreated__range=(date_from, date_to))
                     n += 1
                     # for each_job in
@@ -237,7 +217,7 @@ def view_mold_report_search(request):
 @login_required
 def view_phl_report(request, jobNo):
     start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
-    PHL = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNo)
+    PHL = ProductionHistory.objects.filter(jobNumber=jobNo)
     print PHL
     my_dict = {}
     my_dict['0'] = {}

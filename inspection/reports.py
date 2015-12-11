@@ -79,7 +79,7 @@ class JobReport:
 
     def __get_phl(self):
         self.phl = [['Date','Name','Description']]
-        phl_info = ProductionHistory.objects.filter(jobNumber__jobNumber=self.job_number)
+        phl_info = ProductionHistory.objects.filter(jobNumber=self.job_number)
         for row in phl_info:
             self.phl.append([row.dateCreated, row.inspectorName, row.descEvent])
 
@@ -188,7 +188,6 @@ class JobReport:
             text_id = [each_inspection.testName]
             text_id.extend(result_list)
             self.text_summarized.append(text_id)
-
 
 
     def __get_date_range(self):

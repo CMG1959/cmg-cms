@@ -12,7 +12,7 @@ class ProductionHistory(models.Model):
 
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
-    jobNumber = models.ForeignKey('startupshot.startUpShot', verbose_name="Job Number")
+    jobNumber = models.ForeignKey('startupshot.startUpShot', verbose_name="Job Number", blank=True, null=True)
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
 
     def __unicode__(self):

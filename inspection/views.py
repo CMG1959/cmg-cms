@@ -547,14 +547,18 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
         n += 1
 
-    partDict['phl'] = ProductionHistory.objects.filter(jobNumber__item__item_Number=itemNumber)
+    partDict['phl']=[]
+    for eaJob in eachJob:
+        partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob))
+
+    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist]
     partDict['useJobNo'] = True
 
     partDict.update({
         'headerDict':{
             'companyName':'Custom Molders Group',
             'reportName':'Part Report',
-            'documentName':'Part Number: %s' % (itemNumber)
+            'documentName':'Part Number: %s' % itemNumber
         }
     })
     return partDict
@@ -570,7 +574,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     context_dic['active_job'] = active_job
 
     # Job number 6 and 9 should be QA and
-    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber,
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber,
                                                           dateCreated__range=(date_from, date_to),
                                                           inspectorName__IsQCStaff=True)
 
@@ -628,7 +632,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         n += 1
 
 
-    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber__jobNumber=jobNumber)
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber)
 
 
     context_dic.update({

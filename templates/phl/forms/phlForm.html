@@ -12,7 +12,18 @@
 {% include "nav/nav.html" %}
 
 <div class="col-sm-10 bootcards-cards">
-{% include "inspection/subTemplates/subJobInfo.html" %}
+    {% if active_job %}
+        {% include "inspection/subTemplates/subJobInfo.html" %}
+    {% else %}
+        <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> Warning!</h3>
+        </div>
+        <div class="panel-body">
+            No startup shot created yet.
+        </div>
+        </div>
+    {% endif %}
 
 
     <p>Record a production related event.</p>
@@ -22,9 +33,6 @@
             {% include "project_form_templates/gen_form.html" %}
     </div>
 </div>
-
-
-
 
 
 </body>
