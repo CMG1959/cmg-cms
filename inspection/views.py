@@ -548,7 +548,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     for eaJob in eachJob:
         partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob))
 
-    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist]
+    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist] #change?
     partDict['useJobNo'] = True
 
     partDict.update({
