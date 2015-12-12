@@ -90,7 +90,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CIMC.wsgi.application'
 
-config_dict = json.load('config.json')
+config_dict = json.load(open('config.json'))
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
