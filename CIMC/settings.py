@@ -90,17 +90,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CIMC.wsgi.application'
 
-def byteify(input):
-    if isinstance(input, dict):
-        return {byteify(key):byteify(value) for key,value in input.iteritems()}
-    elif isinstance(input, list):
-        return [byteify(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
-    else:
-        return input
-
-config_dict = byteify(json.load(open('CIMC\config.json')))
+config_dict = json.load(open(os.path.join(SETTINGS_DIR, 'config.json')))
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
@@ -116,11 +106,10 @@ config_dict = byteify(json.load(open('CIMC\config.json')))
 #
 #     },
 
-print config_dict['default_database'].decode
-
 DATABASES = {
         'default': config_dict['default_database'],
-        },
+        }
+
 print DATABASES
     # DATABASES = {
     #             'default': {
@@ -145,7 +134,7 @@ print DATABASES
     #         'driver': 'SQL Server Native Client 11.0',
     #     },
     # }
-}
+
 #     DATABASES = {
 #             'default': {
 #                 'NAME': 'CIMC_DB',
