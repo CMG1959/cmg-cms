@@ -90,7 +90,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CIMC.wsgi.application'
 
-config_dict = json.load(open('config.json'))
+config_dict = json.load(open('CIMC\config.json'))
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
@@ -105,9 +105,13 @@ config_dict = json.load(open('config.json'))
 #         'PASSWORD': '1959Cmg1',
 #
 #     },
+
+print config_dict['default_database'].decode
+
 DATABASES = {
         'default': config_dict['default_database'],
         },
+print DATABASES
     # DATABASES = {
     #             'default': {
     #                 'NAME': 'CIMC_DB',
@@ -131,7 +135,7 @@ DATABASES = {
     #         'driver': 'SQL Server Native Client 11.0',
     #     },
     # }
-}
+
 #     DATABASES = {
 #             'default': {
 #                 'NAME': 'CIMC_DB',
