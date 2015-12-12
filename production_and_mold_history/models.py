@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 import uuid
 # class YourAppConfig(AppConfig):
 #     name = 'production_and_mold_history'
@@ -33,6 +34,7 @@ class MoldHistory(models.Model):
     pm = models.BooleanField(default=False, verbose_name="Preventative Maintenance")
     repair = models.BooleanField(default=False, verbose_name="Repair")
     hours_worked = models.DecimalField(verbose_name="Hours worked", max_digits=10, decimal_places=2)
+    loc_id = models.SmallIntegerField(verbose_name="Location ID",default=int(settings.PLANT_LOC))
 
     def __unicode__(self):
         return '%s - %s' % (self.moldNumber, self.dateCreated)

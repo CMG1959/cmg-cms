@@ -2,21 +2,21 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import uuid
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('molds', '0001_initial'),
-        ('employee', '0001_initial'),
-        ('startupshot', '0001_initial'),
+        ('molds', '0003_auto_20150721_1556'),
+        ('employee', '0004_auto_20151209_2300'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='MoldHistory',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, primary_key=True)),
                 ('dateCreated', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
                 ('descEvent', models.CharField(max_length=1000, verbose_name=b'Event Description')),
                 ('pm', models.BooleanField(default=False, verbose_name=b'Preventative Maintenance')),
@@ -33,11 +33,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductionHistory',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, primary_key=True)),
                 ('dateCreated', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
+                ('jobNumber', models.CharField(max_length=20, verbose_name=b'Job Number', blank=True)),
                 ('descEvent', models.CharField(max_length=1000, verbose_name=b'Event Description')),
+                ('shift', models.IntegerField(null=True, verbose_name=b'Shift', blank=True)),
+                ('shortDate', models.DateField(null=True, verbose_name=b'Short Date', blank=True)),
                 ('inspectorName', models.ForeignKey(verbose_name=b'Inspector Name', to='employee.Employees')),
-                ('jobNumber', models.ForeignKey(verbose_name=b'Job Number', to='startupshot.startUpShot')),
             ],
             options={
                 'verbose_name': 'Production History Log Entry',

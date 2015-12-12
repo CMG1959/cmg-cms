@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 # Create your models here.
 
 class Mold(models.Model):
@@ -12,6 +12,7 @@ class Mold(models.Model):
     mold_number = models.CharField(verbose_name="Mold Number", max_length=20)
     mold_description = models.CharField(verbose_name="Mold Description", max_length=50)
     num_cavities = models.IntegerField(verbose_name="Number of Cavities")
+    loc_id = models.SmallIntegerField(verbose_name="Location ID",default=int(settings.PLANT_LOC))
 
     def __unicode__(self):
         return self.mold_number
