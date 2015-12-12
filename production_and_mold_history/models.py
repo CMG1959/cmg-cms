@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 # class YourAppConfig(AppConfig):
 #     name = 'production_and_mold_history'
 #     verbose_name = 'Production and Mold History Logs'
@@ -9,7 +9,7 @@ class ProductionHistory(models.Model):
     class Meta:
         verbose_name = 'Production History Log Entry'
         verbose_name_plural = 'Production History Log Entries'
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     jobNumber = models.CharField(max_length=20, verbose_name="Job Number", blank=True)
@@ -25,7 +25,7 @@ class MoldHistory(models.Model):
     class Meta:
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")

@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -89,7 +90,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CIMC.wsgi.application'
 
-
+config_dict = json.load('config.json')
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # Database
@@ -105,16 +106,7 @@ WSGI_APPLICATION = 'CIMC.wsgi.application'
 #
 #     },
 DATABASES = {
-        'default': {
-            'NAME': 'cmg_qms',
-            'ENGINE': 'sql_server.pyodbc',
-            'HOST': 'CMG-SQL1',
-            'PORT': '',
-            'USER': 'webappUser',
-            'PASSWORD': '1959Cmg1',
-            'OPTIONS': {
-                'driver': 'SQL Server Native Client 11.0',
-            },
+        'default': config_dict['default_database'],
         },
     # DATABASES = {
     #             'default': {
