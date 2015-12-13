@@ -109,28 +109,38 @@ def view_Inspections(request):
             testDict = collections.OrderedDict()
             m=0
             for each_test in pfTests:
-                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
+                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName,
+                                                            jobID__jobNumber = eachJob.jobNumber,
+                                                            dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in rangeTests:
-                n_tests = rangeInspection.objects.filter(rangeTestName=each_test, jobID__jobNumber = eachJob.jobNumber).count()
+                n_tests = rangeInspection.objects.filter(rangeTestName=each_test,
+                                                         jobID__jobNumber = eachJob.jobNumber,
+                                                         dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in textTests:
-                n_tests = textInspection.objects.filter(textTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
+                n_tests = textInspection.objects.filter(textTestName=each_test.testName,
+                                                        jobID__jobNumber = eachJob.jobNumber,
+                                                        dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
 
             for each_test in intTests:
-                n_tests = IntegerInspection.objects.filter(integerTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
+                n_tests = IntegerInspection.objects.filter(integerTestName=each_test.testName,
+                                                           jobID__jobNumber = eachJob.jobNumber,
+                                                           dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in floatTests:
-                n_tests = FloatInspection.objects.filter(floatTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
+                n_tests = FloatInspection.objects.filter(floatTestName=each_test.testName,
+                                                         jobID__jobNumber = eachJob.jobNumber,
+                                                         dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
@@ -149,6 +159,18 @@ def view_Inspections(request):
     template = loader.get_template('dashboard/completedInspections.html')
     context = RequestContext(request, {'resultDict':my_order})
     return HttpResponse(template.render(context))
+
+def getShift():
+    currentHour = datetime.datetime.time(datetime.datetime.now()).hour
+
+    if (currentHour >= 7) and (currentHour < 15):
+        shift = 1
+    elif (currentHour >= 15) and (currentHour < 23):
+        shift = 2
+    else:
+        shift = 3
+
+    return shift
 
 def get_shift_range(shift_num):
 
