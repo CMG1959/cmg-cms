@@ -15,7 +15,7 @@ from collections import Counter, OrderedDict
 from django.shortcuts import render
 # Create your views here.
 import json
-
+from natsort import natsorted
 
 def view_errorLog(request):
     if errorLogTime.objects.first():
@@ -109,43 +109,45 @@ def view_Inspections(request):
             testDict = collections.OrderedDict()
             m=0
             for each_test in pfTests:
-                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
+                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in rangeTests:
-                n_tests = rangeInspection.objects.filter(rangeTestName=each_test, jobID__item__item_Number = eachJob.itemNo).count()
+                n_tests = rangeInspection.objects.filter(rangeTestName=each_test, jobID__jobNumber = eachJob.jobNumber).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in textTests:
-                n_tests = textInspection.objects.filter(textTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
+                n_tests = textInspection.objects.filter(textTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
 
             for each_test in intTests:
-                n_tests = IntegerInspection.objects.filter(integerTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
+                n_tests = IntegerInspection.objects.filter(integerTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in floatTests:
-                n_tests = FloatInspection.objects.filter(floatTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
+                n_tests = FloatInspection.objects.filter(floatTestName=each_test.testName, jobID__jobNumber = eachJob.jobNumber).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
 
             # added
-            resultDict[str(n)] = {
+            resultDict['%s - %s' % (eachJob.machNo, eachJob.jobNumber)] = {
                 'mattecInfo':eachJob,
                 'testDict':testDict
             }
 
             n+=1
-
+    my_order = OrderedDict()
+    for each_key in natsorted(resultDict.keys()):
+        my_order[each_key] = resultDict[each_key]
 
     template = loader.get_template('dashboard/completedInspections.html')
-    context = RequestContext(request, {'resultDict':resultDict})
+    context = RequestContext(request, {'resultDict':my_order})
     return HttpResponse(template.render(context))
 
 def get_shift_range(shift_num):
