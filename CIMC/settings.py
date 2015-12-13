@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'dashboard',
     'employee',
     'equipment',
+    'locations',
     'home',
     'inspection',
     'mobile_views',
