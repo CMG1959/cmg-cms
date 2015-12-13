@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from models import errorLog
-import datetime
 from django.http import HttpResponse, HttpResponseRedirect,Http404, JsonResponse
 from django.template import RequestContext, loader
 from django.utils import timezone
@@ -16,6 +15,7 @@ from django.shortcuts import render
 # Create your views here.
 import json
 from natsort import natsorted
+import datetime
 
 def view_errorLog(request):
     if errorLogTime.objects.first():
