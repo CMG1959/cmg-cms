@@ -8,8 +8,7 @@ import collections
 from django.db.models import Count
 from models import errorLogTime
 from startupshot.models import MattecProd,startUpShot
-from inspection.models import passFailByPart, passFailInspection, rangeTestByPart, rangeInspection, textRecordByPart, \
-    textInspection
+from inspection.models import *
 from production_and_mold_history.models import ProductionHistory
 from django.core import serializers
 from collections import Counter, OrderedDict
@@ -98,35 +97,47 @@ def view_errorProdLog(request):
 
 def view_Inspections(request):
 
-    jobList = MattecProd.objects.all().values_list('jobNumber', flat=True)
+    jobList = MattecProd.objects.all()
     n=0
     resultDict = collections.OrderedDict()
     for eachJob in jobList:
-        if startUpShot.objects.filter(jobNumber=eachJob).exists():
-            thisSUS = startUpShot.objects.get(jobNumber=eachJob)
-            pfTests = passFailByPart.objects.filter(item_Number = thisSUS.item)
-            rangeTests = rangeTestByPart.objects.filter(item_Number = thisSUS.item)
-            textTests = textRecordByPart.objects.filter(item_Number = thisSUS.item)
-
+            pfTests = passFailByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
+            rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
+            textTests = textRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
+            intTests = IntegerRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
+            floatTests = FloatRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
             testDict = collections.OrderedDict()
             m=0
             for each_test in pfTests:
-                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName,jobID__item = thisSUS.item).count()
+                n_tests = passFailInspection.objects.filter(passFailTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in rangeTests:
-                n_tests = rangeInspection.objects.filter(rangeTestName=each_test,jobID__item = thisSUS.item).count()
+                n_tests = rangeInspection.objects.filter(rangeTestName=each_test, jobID__item__item_Number = eachJob.itemNo).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
             for each_test in textTests:
-                n_tests = textInspection.objects.filter(textTestName=each_test.testName,jobID__item = thisSUS.item).count()
+                n_tests = textInspection.objects.filter(textTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
+
+
+            for each_test in intTests:
+                n_tests = IntegerInspection.objects.filter(integerTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
+                testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
+                m += 1
+
+            for each_test in floatTests:
+                n_tests = FloatInspection.objects.filter(floatTestName=each_test.testName, jobID__item__item_Number = eachJob.itemNo).count()
+                testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
+                m += 1
+
+
             # added
             resultDict[str(n)] = {
-                'susInfo':thisSUS,
+                'mattecInfo':eachJob,
                 'testDict':testDict
             }
 
