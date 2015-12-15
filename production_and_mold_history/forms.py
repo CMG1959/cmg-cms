@@ -29,11 +29,12 @@ class phlForm(forms.ModelForm):
 
 class mhlForm(forms.Form):
     inspectorName = forms.ModelChoiceField(queryset=Employees.objects.filter(StatusActive=True,
-                                                                         IsToolStaff=True).order_by('EmpLName'))
-    pm = forms.NullBooleanField()
-    repair = forms.NullBooleanField()
-    hours_worked = forms.DecimalField(decimal_places=2, max_digits=10, min_value=0)
-    descEvent = forms.CharField(max_length=1000)
+                                                                         IsToolStaff=True).order_by('EmpLName'),
+                                           label="Name")
+    pm = forms.NullBooleanField(label="Preventative Maintenance")
+    repair = forms.NullBooleanField(label="Repair")
+    hours_worked = forms.DecimalField(label="Hours worked",decimal_places=2, max_digits=10, min_value=0)
+    descEvent = forms.CharField(label="Event Description",max_length=1000)
     # class Meta: ##
     #     model = MoldHistory
     #     fields = ['inspectorName', 'pm', 'repair', 'hours_worked', 'descEvent']
