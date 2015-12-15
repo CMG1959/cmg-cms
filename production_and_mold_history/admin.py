@@ -19,5 +19,5 @@ class MoldHistoryAdmin(admin.ModelAdmin):
 
 admin.site.register(ProductionHistory, ProductionHistoryAdmin)
 admin.site.register(MoldHistory, MoldHistoryAdmin)
-admin.site.register(MaintanenceRequests, MaintenanceRequestAdmin)
+admin.site.register(MaintenanceRequests, MaintenanceRequestAdmin)
 
