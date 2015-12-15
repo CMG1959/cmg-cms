@@ -22,7 +22,7 @@ class ProductionHistory(models.Model):
     def __unicode__(self):
         return '%s - %s: %s' % (self.dateCreated, self.jobNumber, self.descEvent)
 
-class MaintanenceRequests(models.Model):
+class MaintenanceRequests(models.Model):
     class Meta:
         verbose_name = 'Maintenance Requests'
         verbose_name_plural = 'Maintenance Requests'
