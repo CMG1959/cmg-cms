@@ -34,6 +34,6 @@ class mhlForm(forms.ModelForm):
     repair = forms.NullBooleanField()
     hours_worked = forms.DecimalField(decimal_places=2, max_digits=10, min_value=0)
     descEvent = forms.CharField(max_length=1000)
-    # class Meta:
+    # class Meta: ##
     #     model = MoldHistory
     #     fields = ['inspectorName', 'pm', 'repair', 'hours_worked', 'descEvent']
