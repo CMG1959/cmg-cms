@@ -75,10 +75,10 @@ def view_errorProdLog(request):
     production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_time).order_by('-dateCreated')
     prod_errors = []
     for each_error in production_errors:
-        susInfo = startUpShot.objects.filter(jobNumber = each_error.jobNumber.strip())[0]
+        susInfo = startUpShot.objects.filter(jobNumber = each_error.jobNumber.strip())
         if susInfo:
-            machNo = susInfo.machNo
-            item_Description = susInfo.item.item_Description
+            machNo = susInfo[0].machNo
+            item_Description = susInfo[0].item.item_Description
         else:
             machNo = 'N/A'
             item_Description = 'N/A'
