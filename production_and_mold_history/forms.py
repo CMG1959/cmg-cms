@@ -27,7 +27,7 @@ class phlForm(forms.ModelForm):
         fields = ['inspectorName', 'descEvent']
 
 
-class mhlForm(forms.ModelForm):
+class mhlForm(forms.Form):
     inspectorName = forms.ModelChoiceField(queryset=Employees.objects.filter(StatusActive=True,
                                                                          IsToolStaff=True).order_by('EmpLName'))
     pm = forms.NullBooleanField()
