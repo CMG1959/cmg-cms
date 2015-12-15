@@ -17,9 +17,26 @@ class ProductionHistory(models.Model):
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
     shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)
     shortDate = models.DateField(verbose_name="Short Date", null=True, blank=True)
+    notifyToolroom = models.BooleanField(verbose_name="Notify toolroom", default=False)
 
     def __unicode__(self):
-        return '%s - %s' % (self.jobNumber, self.dateCreated)
+        return '%s - %s: %s' % (self.dateCreated, self.jobNumber, self.descEvent)
+
+class MaintanenceRequests(models.Model):
+    class Meta:
+        verbose_name = 'Maintenance Requests'
+        verbose_name_plural = 'Maintenance Requests'
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    inspectorName = models.CharField(max_length=20, verbose_name="Inspector Name")
+    dateCreated = models.DateTimeField(verbose_name="Date Created")
+    jobNumber = models.CharField(max_length=20, verbose_name="Job Number", blank=True)
+    descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
+    shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)
+    shortDate = models.DateField(verbose_name="Short Date", null=True, blank=True)
+
+    def __unicode__(self):
+        return '%s - %s: %s' % (self.dateCreated, self.jobNumber, self.descEvent)
+
 
 
 class MoldHistory(models.Model):
@@ -27,9 +44,9 @@ class MoldHistory(models.Model):
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Name")
+    inspectorName = models.CharField(max_length=20, verbose_name="Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
-    moldNumber = models.ForeignKey('molds.Mold', verbose_name="Mold Number")
+    moldNumber = models.CharField(max_length=12, verbose_name="Mold Number")
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
     pm = models.BooleanField(default=False, verbose_name="Preventative Maintenance")
     repair = models.BooleanField(default=False, verbose_name="Repair")
@@ -37,4 +54,4 @@ class MoldHistory(models.Model):
     loc_id = models.SmallIntegerField(verbose_name="Location ID",default=int(settings.PLANT_LOC))
 
     def __unicode__(self):
-        return '%s - %s' % (self.moldNumber, self.dateCreated)
+        return '%s - %s: %s' % (self.moldNumber, self.dateCreated, self.descEvent)
