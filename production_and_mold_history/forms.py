@@ -31,8 +31,8 @@ class mhlForm(forms.Form):
     inspectorName = forms.ModelChoiceField(queryset=Employees.objects.filter(StatusActive=True,
                                                                          IsToolStaff=True).order_by('EmpLName'),
                                            label="Name")
-    pm = forms.NullBooleanField(label="Preventative Maintenance")
-    repair = forms.NullBooleanField(label="Repair")
+    pm = forms.BooleanField(label="Preventative Maintenance")
+    repair = forms.BooleanField(label="Repair")
     hours_worked = forms.DecimalField(label="Hours worked",decimal_places=2, max_digits=10, min_value=0)
     descEvent = forms.CharField(label="Event Description",max_length=1000)
     # class Meta: ##
