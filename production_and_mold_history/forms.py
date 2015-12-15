@@ -1,6 +1,6 @@
 from django import forms
 from production_and_mold_history.models import ProductionHistory, MoldHistory
-
+from employee.models import Employees
 
 class phlLookup(forms.Form):
     choices = (
@@ -28,6 +28,12 @@ class phlForm(forms.ModelForm):
 
 
 class mhlForm(forms.ModelForm):
-    class Meta:
-        model = MoldHistory
-        fields = ['inspectorName', 'pm', 'repair', 'hours_worked', 'descEvent']
+    inspectorName = forms.ModelChoiceField(queryset=Employees.objects.filter(StatusActive=True,
+                                                                         IsToolStaff=True).order_by('EmpLName'))
+    pm = forms.NullBooleanField()
+    repair = forms.NullBooleanField()
+    hours_worked = forms.DecimalField(decimal_places=2, max_digits=10, min_value=0)
+    descEvent = forms.CharField(max_length=1000)
+    # class Meta:
+    #     model = MoldHistory
+    #     fields = ['inspectorName', 'pm', 'repair', 'hours_worked', 'descEvent']
