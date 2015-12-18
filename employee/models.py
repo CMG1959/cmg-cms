@@ -23,7 +23,7 @@ class Employees(models.Model):
     IsMaintStaff = models.BooleanField(verbose_name="Is Maint Staff",default=False)
     IsPTLStaff = models.BooleanField(verbose_name="Is PTL Staff",default=False)
     DeviceToken = models.CharField(verbose_name='User GUID', null=True, max_length=36)
-    DevTokenExpiry = models.DateTimeField(verbose_name='Device Expire',null=True)
+    DevTokenExpires = models.DateTimeField(verbose_name='Device Expire', null=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.EmpLName,self.EmpFName)
