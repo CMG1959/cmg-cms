@@ -18,6 +18,7 @@ class ProductionHistory(models.Model):
     shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)
     shortDate = models.DateField(verbose_name="Short Date", null=True, blank=True)
     notifyToolroom = models.BooleanField(verbose_name="Notify toolroom", default=False)
+    STA_Reported = models.IntegerField(verbose_name='Reported Workstation',default=0, blank=True)
 
     def __unicode__(self):
         return '%s - %s: %s' % (self.dateCreated, self.jobNumber, self.descEvent)
