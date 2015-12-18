@@ -54,7 +54,12 @@ def view_mold_form(request):
 def view_specific_phl_form(request, jobNo):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
-
+    mattec_prod = MattecProd.objects.filter(jobNumber=jobNo)
+    sta = 0 # preset machine number
+    if mattec_prod[0]:
+        machInfo = EquipmentInfo.objects.filter(part_identifier=mattec_prod[0].machNo, is_active=True)
+        if machInfo[0]:
+            sta = machInfo[0].id
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -66,6 +71,7 @@ def view_specific_phl_form(request, jobNo):
                 inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
                 jobNumber=jobNo.strip(),
                 descEvent=form.cleaned_data['descEvent'],
+                STA_Reported=sta
             )
             newForm.save()
 
