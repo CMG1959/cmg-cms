@@ -158,16 +158,16 @@ def view_phl_report_search(request):
             if item_type == 'Job Number':
                 my_dict[str(n)] = {}
                 my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=item_id)
-                my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
-                                                                          dateCreated__range=(date_from, date_to))
+                # my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
+                #                                                           dateCreated__range=(date_from, date_to))
             else:
                 # mold list
                 active_list = startUpShot.objects.filter(moldNumber__mold_number=item_id)
                 for eachJob in active_list:
                     my_dict[str(n)] = {}
                     my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=eachJob.jobNumber)
-                    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
-                                                                              dateCreated__range=(date_from, date_to))
+                    # my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
+                    #                                                           dateCreated__range=(date_from, date_to))
                     n += 1
                     # for each_job in
             # Format PHL report
@@ -225,12 +225,12 @@ def view_mold_report_search(request):
 @login_required
 def view_phl_report(request, jobNo):
     start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
-    PHL = ProductionHistory.objects.filter(jobNumber=jobNo)
-    print PHL
+    # PHL = ProductionHistory.objects.filter(jobNumber=jobNo)
+    # print PHL
     my_dict = {}
     my_dict['0'] = {}
     my_dict['0']['sus'] = start_up_info
-    my_dict['0']['phl'] = PHL
+    # my_dict['0']['phl'] = PHL
 
     context_dict = {'my_dict' : my_dict}
     template = loader.get_template('phl/reports/phl.html')
