@@ -11,7 +11,7 @@ class ProductionHistory(models.Model):
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     jobNumber = models.CharField(max_length=20, verbose_name="Job Number", blank=True)
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
-    Prod_Shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)
+    Prod_shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)
     Prod_Date = models.DateField(verbose_name="Short Date", null=True, blank=True)
     notifyToolroom = models.BooleanField(verbose_name="Notify toolroom", default=False)
     STA_Reported = models.IntegerField(verbose_name='Reported Workstation',default=0, blank=True)

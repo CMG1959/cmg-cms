@@ -71,7 +71,8 @@ def view_specific_phl_form(request, jobNo):
                 inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
                 jobNumber=jobNo.strip(),
                 descEvent=form.cleaned_data['descEvent'],
-                STA_Reported=sta
+                STA_Reported=sta,
+                Prod_shift=getShift()
             )
             newForm.save()
 
@@ -274,7 +275,8 @@ def createDateRange(date_from=None, date_to=None):
 
 # def view_mold_report(request,moldNo):
 def getShift():
-    currentHour = datetime.datetime.time(datetime.datetime.now()).hour
+    currentHour = timezone.make_aware(datetime.datetime.now(), timezone.get_current_timezone())
+    currentHour = datetime.datetime.time(currentHour).hour
 
     if (currentHour >= 7) and (currentHour < 15):
         shift = 1
