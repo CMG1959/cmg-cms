@@ -24,7 +24,7 @@ class moldLookupForm(forms.Form):
 class phlForm(forms.ModelForm):
     class Meta:
         model = ProductionHistory
-        fields = ['inspectorName', 'descEvent']
+        fields = ['inspectorName', 'descEvent','notifyToolroom']
 
 
 class mhlForm(forms.Form):

@@ -72,7 +72,9 @@ def view_specific_phl_form(request, jobNo):
                 jobNumber=jobNo.strip(),
                 descEvent=form.cleaned_data['descEvent'],
                 STA_Reported=sta,
-                Prod_shift=getShift()
+                Prod_shift=getShift(),
+                Prod_Date=timezone.localtime(timezone.now()).date(),
+                notifyToolroom = form.cleaned_data['notifyToolroom']
             )
             newForm.save()
 
