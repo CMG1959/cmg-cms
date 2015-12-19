@@ -1,10 +1,7 @@
 from django.db import models
 from django.conf import settings
 import uuid
-# class YourAppConfig(AppConfig):
-#     name = 'production_and_mold_history'
-#     verbose_name = 'Production and Mold History Logs'
-# # Create your models here.
+
 
 class ProductionHistory(models.Model):
     class Meta:
