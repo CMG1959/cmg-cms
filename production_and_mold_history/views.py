@@ -161,16 +161,16 @@ def view_phl_report_search(request):
             if item_type == 'Job Number':
                 my_dict[str(n)] = {}
                 my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=item_id)
-                # my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
-                #                                                           dateCreated__range=(date_from, date_to))
+                my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
+                                                                          dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
             else:
                 # mold list
                 active_list = startUpShot.objects.filter(moldNumber__mold_number=item_id)
                 for eachJob in active_list:
                     my_dict[str(n)] = {}
                     my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=eachJob.jobNumber)
-                    # my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
-                    #                                                           dateCreated__range=(date_from, date_to))
+                    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
+                                                                              dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
                     n += 1
                     # for each_job in
             # Format PHL report

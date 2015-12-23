@@ -544,11 +544,11 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
         n += 1
 
-    # partDict['phl']=[]
-    # for eaJob in eachJob:
-    #     partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob))
-    #
-    # partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist] #change?
+    partDict['phl']=[]
+    for eaJob in eachJob:
+        partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated'))
+
+    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist] #change?
     partDict['useJobNo'] = True
 
     partDict.update({
@@ -570,10 +570,10 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     context_dic['active_job'] = active_job
 
-    # # Job number 6 and 9 should be QA and
-    # context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber,
-    #                                                       dateCreated__range=(date_from, date_to),
-    #                                                       inspectorName__IsQCStaff=True)
+    # Job number 6 and 9 should be QA and
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber,
+                                                          dateCreated__range=(date_from, date_to),
+                                                          inspectorName__IsQCStaff=True).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
@@ -629,7 +629,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         n += 1
 
 
-    # context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber)
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
 
 
     context_dic.update({

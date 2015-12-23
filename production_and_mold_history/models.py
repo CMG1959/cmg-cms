@@ -9,6 +9,7 @@ class ProductionHistory(models.Model):
         verbose_name_plural = 'Production History Log Entries'
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
+    dateCreatedL = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     jobNumber = models.CharField(max_length=20, verbose_name="Job Number", blank=True)
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
     Prod_shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)

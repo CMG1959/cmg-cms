@@ -76,12 +76,14 @@ class JobReport:
         #     <td>{{ active_job.0.item.item_Description }}</td>
         #     <td>{{ active_job.0.item.exp_part_weight }}</td>
         #     <td>{{ active_job.0.item.exp_cycle_time }}</td>
-    #
-    # def __get_phl(self):
-    #     self.phl = [['Date','Name','Description']]
-    #     phl_info = ProductionHistory.objects.filter(jobNumber=self.job_number)
-    #     for row in phl_info:
-    #         self.phl.append([row.dateCreated, row.inspectorName, row.descEvent])
+
+    def __get_phl(self):
+        self.phl = [['Date','Name','Description']]
+        phl_info = ProductionHistory.objects.filter(jobNumber=self.job_number).values_list('dateCreated','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+        for row in phl_info:
+            phl_dt = datetime.datetime.strftime(timezone.localtime(row[0]),
+                                                '%Y:%m:%d %H:%M:%S %p')
+            self.phl.append([phl_dt, row[1], row[2]])
 
 
     def __get_range_inspections(self):
@@ -290,7 +292,7 @@ class JobReport:
         self.__get_text_inspections()
         self.__get_date_range()
         self.__get_job_info()
-        # self.__get_phl()
+        self.__get_phl()
 
 
         self.PAGE_HEIGHT=defaultPageSize[1]
@@ -374,14 +376,14 @@ class JobReport:
             Story.append(my_spacer)
 
 
-        # ptext = 'Production History Log'
-        # Story.append(Paragraph(ptext, self.styles['Center']))
-        # Story.append(caption_spacer)
-        # t = Table(self.phl)
-        # t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-        #         ]))
-        # Story.append(t)
-        # Story.append(my_spacer)
+        ptext = 'Production History Log'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
+        t = Table(self.phl)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+        Story.append(t)
+        Story.append(my_spacer)
 
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
         # Get the data out and close the buffer cleanly
