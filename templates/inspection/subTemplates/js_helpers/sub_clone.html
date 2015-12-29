@@ -1,12 +1,16 @@
 <script>
-	$('.clone_me').click(function() {
-		var current_url = $(location).attr('href');
-		var made_up_shit = $("form").serializeArray();
-		made_up_shit.push({"clone_me":"True"});
-		var posting = $.post(current_url, made_up_shit);
-		posting.done(function( data ) {
-			// open up a modal dialog
-			alert("Made up shit form works!");
-		})
-	})
+        $("button[name='clone_me']").click(function() {
+            var current_url = $(location).attr('href');
+            var made_up_shit = $("form").serializeArray();
+            console.log(current_url);
+            console.log(made_up_shit);
+
+            var posting = $.post(current_url, made_up_shit);
+            posting.done(function( data ) {
+                // open up a modal dialog
+                alert("Record saved!");
+
+            });
+            console.log(posting);
+        });
 </script>

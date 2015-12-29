@@ -1,3 +1,5 @@
+{% load bootstrap3 %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -45,3 +47,5 @@
 {% if id_result %}
     {% include "inspection/subTemplates/js_helpers/subCheckRange.html" %}
 {% endif %}
+
+{% include "inspection/subTemplates/js_helpers/sub_clone.html" %}
