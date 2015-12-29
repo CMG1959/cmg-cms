@@ -112,8 +112,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
             # save the data
             form.save()
 
-
-
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
