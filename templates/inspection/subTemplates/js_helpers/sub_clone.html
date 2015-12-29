@@ -10,10 +10,10 @@
                 // open up a modal dialog
 {#                alert("Record saved!");#}
             $('<div></div>')
-            .html('<div><h6>Are you sure?</h6></div>')
+            .html('<div><h6>Do you want to enter another inspection?</h6></div>')
             .dialog({
                 modal: true,
-                title: 'Saved. Enter another?',
+                title: 'Repeat Inspection?',
                 zIndex: 10000,
                 autoOpen: true,
                 width: 'auto',
@@ -21,10 +21,10 @@
                 buttons: {
                     Yes: function () {
                         $(this).dialog("close");
-                        window.location.replace('/')
                     },
                     No: function () {
                         $(this).dialog("close");
+                        window.location.replace('/')
                     }
                 },
                 close: function (event, ui) {
