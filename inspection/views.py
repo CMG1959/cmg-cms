@@ -124,7 +124,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
-
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 
@@ -188,7 +187,8 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                      'rangeTestName':rangeInfo.id}
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='rangeInspection', test_name=inspectionName)
-
+        form.fields["rangeTestName"].queryset = rangeTestByPart.objects.filter(item_Number__item_Number = active_job[0].item.item_Number,
+                                                                            testName__testName=inspectionName)
         form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
             mold_number__mold_number=active_job[0].moldNumber)
 

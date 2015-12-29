@@ -77,6 +77,8 @@ class JobReport:
         #     <td>{{ active_job.0.item.exp_part_weight }}</td>
         #     <td>{{ active_job.0.item.exp_cycle_time }}</td>
 
+
+
     def __get_phl(self):
         self.phl = [['Date','Name','Description']]
         phl_info = ProductionHistory.objects.filter(jobNumber=self.job_number).values_list('dateCreated','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
@@ -379,7 +381,16 @@ class JobReport:
         ptext = 'Production History Log'
         Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(caption_spacer)
-        t = Table(self.phl)
+
+        phl_list = []
+        for row in self.phl:
+            row_list = []
+            for each_item in row:
+                row_list.append(Paragraph(each_item, style))
+            phl_list.append(row_list)
+
+        # phl_text = [Paragraph(each_item, style) for row in self.phl for each_item in row]
+        t = Table(phl_list)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
