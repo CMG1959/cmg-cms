@@ -20,6 +20,8 @@
             <h3 class="panel-title pull-left">{{ form_title }}</h3>
         </div>
             {% include "project_form_templates/gen_form.html" %}
+
+        {% bootstrap_button "Clone Me" button_class="btn-primary" name="clone_me" %}
     </div>
 </div>
 
@@ -29,17 +31,17 @@
 
 
 {% if use_checkbox %}
-    {% include "inspection/subTemplates/subcheckBoxSelectLock.html" %}
+    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock.html" %}
 {% endif %}
 
 {% if use_checkbox2 %}
-    {% include "inspection/subTemplates/subcheckBoxSelectLock2.html" %}
+    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock2.html" %}
 {% endif %}
 
 {% if use_minmax %}
-    {% include "inspection/subTemplates/subMinMaxChecker.html" %}
+    {% include "inspection/subTemplates/js_helpers/subMinMaxChecker.html" %}
 {% endif %}
 
 {% if id_result %}
-    {% include "inspection/subTemplates/subCheckRange.html" %}
+    {% include "inspection/subTemplates/js_helpers/subCheckRange.html" %}
 {% endif %}
