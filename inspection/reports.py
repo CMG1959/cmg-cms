@@ -3,7 +3,7 @@ __author__ = 'mike'
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image, KeepTogether
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image, KeepTogether, LongTable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
@@ -391,7 +391,7 @@ class JobReport:
             phl_list.append(row_list)
 
         # phl_text = [Paragraph(each_item, style) for row in self.phl for each_item in row]
-        t = Table(phl_list)
+        t = LongTable(phl_list)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
