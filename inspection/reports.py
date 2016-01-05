@@ -9,7 +9,7 @@ from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
 
 from cStringIO import StringIO
-
+import textwrap
 from collections import OrderedDict
 import datetime
 from django.utils import timezone
@@ -385,9 +385,8 @@ class JobReport:
         commentParagraphStyle = ParagraphStyle("Comment", fontName="Helvetica", fontSize = 10, alignment=TA_LEFT)
         phl_list = []
         for row in self.phl:
-            row_list = []
-            for each_item in row:
-                row_list.append(KeepTogether(Paragraph(each_item, commentParagraphStyle)))
+            row_list = row
+            row_list[-1] = textwrap.wrap(row_list[-1],30)
             phl_list.append(row_list)
 
         # phl_text = [Paragraph(each_item, style) for row in self.phl for each_item in row]
