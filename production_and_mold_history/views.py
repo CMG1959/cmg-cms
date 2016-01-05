@@ -206,7 +206,7 @@ def view_mold_report_search(request):
             date_from, date_to = createDateRange(date_from, date_to)
             # Get information from DB
             mold_info = Mold.objects.get(mold_number=mold_Number)
-            MHL = MoldHistory.objects.filter(moldNumber__mold_number=mold_Number,
+            MHL = MoldHistory.objects.filter(moldNumber=mold_Number,
                                              dateCreated__range=(date_from, date_to))
             # Format dictionaries
             context_dict = {'mold_info': mold_info, 'MHL': MHL}
