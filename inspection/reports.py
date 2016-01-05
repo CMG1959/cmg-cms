@@ -382,18 +382,19 @@ class JobReport:
         Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(caption_spacer)
 
-        commentParagraphStyle = ParagraphStyle("Comment", fontName="Helvetica", fontSize = 10, alignment=TA_LEFT)
-        phl_list = []
-        for row in self.phl:
-            row_list = row
-            row_list[-1] = textwrap.fill(row_list[-1],30).replace('\n','<br />\n')
-            phl_list.append(row_list)
-
-        # phl_text = [Paragraph(each_item, style) for row in self.phl for each_item in row]
-        t = LongTable(phl_list)
-        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
-                ]))
-        Story.append(t)
+        # commentParagraphStyle = ParagraphStyle("Comment", fontName="Helvetica", fontSize = 10, alignment=TA_LEFT)
+        # phl_list = []
+        # for row in self.phl:
+        #     row_list = row
+        #     row_list[-1] = ''
+        #     # row_list[-1] = textwrap.fill(row_list[-1],30).replace('\n','<br />\n')
+        #     phl_list.append(row_list)
+        #
+        # # phl_text = [Paragraph(each_item, style) for row in self.phl for each_item in row]
+        # t = Table(phl_list)
+        # t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+        #         ]))
+        # Story.append(t)
         Story.append(my_spacer)
 
         doc.build(Story, onFirstPage=self.__my_first_page, onLaterPages=self.__my_later_pages)
