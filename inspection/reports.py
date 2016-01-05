@@ -375,7 +375,7 @@ class JobReport:
             t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                     ]))
             Story.append(t)
-            Story.append(my_spacer)
+            Story.append(PageBreak())
 
 
         ptext = 'Production History Log'
