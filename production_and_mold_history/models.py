@@ -42,6 +42,7 @@ class MoldHistory(models.Model):
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    parent_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     inspectorName = models.CharField(max_length=20, verbose_name="Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     moldNumber = models.CharField(max_length=12, verbose_name="Mold Number")
