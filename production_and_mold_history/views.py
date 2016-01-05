@@ -248,7 +248,7 @@ def view_mold_report(request, moldNo):
     except ObjectDoesNotExist:
         raise Http404("The mold has not been created in the system yet.")
 
-    MHL = MoldHistory.objects.filter(moldNumber__mold_number=moldNo)
+    MHL = MoldHistory.objects.filter(moldNumber=moldNo)
 
 
     context_dict = {'mold_info': mold_info, 'MHL': MHL}
