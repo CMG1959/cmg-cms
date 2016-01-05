@@ -386,7 +386,7 @@ class JobReport:
         phl_list = []
         for row in self.phl:
             row_list = row
-            row_list[-1] = textwrap.wrap(row_list[-1],30)
+            row_list[-1] = textwrap.wrap(row_list[-1],30).replace('\n','<br />\n')
             phl_list.append(row_list)
 
         # phl_text = [Paragraph(each_item, style) for row in self.phl for each_item in row]
