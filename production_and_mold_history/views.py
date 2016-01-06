@@ -112,10 +112,10 @@ def view_specific_mold_form(request, moldNo):
         if form.is_valid():
             # process the data in form.cleaned_data as required
 
-            lm_name = Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk)
+            # lm_name = Employees.objects.get(pk=form.cleaned_data['inspectorName'])
 
             newForm = MoldHistory(
-                inspectorName= lm_name.EmpLMName,
+                inspectorName= 'Test',
                 moldNumber=moldNo,
                 descEvent=form.cleaned_data['descEvent'],
                 pm=form.cleaned_data['pm'],
