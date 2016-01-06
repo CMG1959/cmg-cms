@@ -131,8 +131,8 @@ def view_specific_mold_form(request, moldNo):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = mhlForm()
-        form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True,
-                                                                         IsToolStaff=True).order_by('EmpLName')
+        # form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True,
+        #                                                                  IsToolStaff=True).order_by('EmpLName')
 
         context = RequestContext(request, {
             'form': form,
