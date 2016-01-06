@@ -11,7 +11,7 @@ from molds.models import Mold
 from part.models import Part
 from equipment.models import EquipmentInfo
 from equipment.models import EquipmentInfo
-from .models import ProductionHistory, MoldHistory
+from .models import ProductionHistory, MoldHistory, MaintenanceRequests
 import datetime
 from django.utils import timezone
 
@@ -78,6 +78,9 @@ def view_specific_phl_form(request, jobNo):
             )
             newForm.save()
 
+            if form.cleaned_data['notifyToolroom']:
+                pass
+
         redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
         # redirect to a new URL:
         return HttpResponseRedirect(redirect_url)
@@ -112,10 +115,10 @@ def view_specific_mold_form(request, moldNo):
         if form.is_valid():
             # process the data in form.cleaned_data as required
 
-            # lm_name = Employees.objects.get(pk=form.cleaned_data['inspectorName'])
+            lm_name = Employees.objects.get(pk=form.cleaned_data['inspectorName'])
 
             newForm = MoldHistory(
-                inspectorName= 'Test',
+                inspectorName= lm_name.EmpLMName,
                 moldNumber=moldNo,
                 descEvent=form.cleaned_data['descEvent'],
                 pm=form.cleaned_data['pm'],
