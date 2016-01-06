@@ -163,23 +163,26 @@ def view_phl_report_search(request):
                 my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=item_id)
                 my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
                                                                           dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+                context_dict = {'my_dict': my_dict}
+                template = loader.get_template('phl/reports/phl.html')
+                context = RequestContext(request, context_dict)
+
             else:
                 # mold list
                 active_list = startUpShot.objects.filter(moldNumber__mold_number=item_id)
+                my_dict = {'sus':[],'phl':[]}
                 for eachJob in active_list:
-                    my_dict[str(n)] = {}
-                    my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=eachJob.jobNumber)
-                    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
-                                                                              dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
-                    n += 1
-                    # for each_job in
-            # Format PHL report
-            #     Figure out how to plot the shit in a report
+                    my_dict['sus'].append(eachJob)
+                    for each_entry in ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
+                                                                              dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated'):
+                        my_dict['phl'].append(each_entry)
+                    # my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=eachJob.jobNumber, \
+                    #                                                           dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+                    # n += 1
 
-            # Format dictionaries
-            context_dict = {'my_dict': my_dict}
-            template = loader.get_template('phl/reports/phl.html')
-            context = RequestContext(request, context_dict)
+                context_dict = {'my_dict': my_dict}
+                template = loader.get_template('phl/reports/phl_by_mold.html')
+                context = RequestContext(request, context_dict)
             # Return new page
             return HttpResponse(template.render(context))
 
