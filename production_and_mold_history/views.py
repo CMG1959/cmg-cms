@@ -270,15 +270,11 @@ def view_mold_report_search(request):
 
 @login_required
 def view_phl_report(request, jobNo):
-    start_up_info = startUpShot.objects.filter(jobNumber=jobNo)
-    # PHL = ProductionHistory.objects.filter(jobNumber=jobNo)
-    # print PHL
-    my_dict = {}
-    my_dict['0'] = {}
-    my_dict['0']['sus'] = start_up_info
-    # my_dict['0']['phl'] = PHL
-
-    context_dict = {'my_dict' : my_dict}
+    n = 1
+    my_dict={}
+    my_dict[str(n)] = {}
+    my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=jobNo)
+    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=jobNo).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')            context_dict = {'my_dict': my_dict}
     template = loader.get_template('phl/reports/phl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
