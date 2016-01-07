@@ -43,9 +43,9 @@ def view_tooling_requests(request):
         report_list.append({
             'moldNo':moldNo,
             'machNo':machNo,
-            'dateCreated':phl_item.dateCreated,
-            'inspectorName': phl_item.inspectorName__EmpLMName,
-            'descEvent':phl_item.descEvent
+            'dateCreated':phl_item['dateCreated'],
+            'inspectorName': phl_item['inspectorName__EmpLMName'],
+            'descEvent':phl_item['descEvent']
         })
 
     template = loader.get_template('phl/reports/mhl_request.html')
