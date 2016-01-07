@@ -18,7 +18,7 @@ urlpatterns = [
     ### link to view mold report
     url(r'^mold_report$', views.view_mold_report_search, name='view_mold_report_search'),
     ### link to view mold maint requests
-    url(r'^mold_maintence_request$', views.view_tooling_requests, name='view_tooling_requests'),
+    url(r'^mold_maintence_request/$', views.view_tooling_requests, name='view_tooling_requests'),
     ### link to view specific production history log
     url(r'^production_report/(?P<jobNo>[0-9]+(.[0-9]+)+)$', views.view_phl_report, name='view_phl_report'),
     ### link to view specific mold report

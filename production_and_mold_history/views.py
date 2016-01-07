@@ -27,12 +27,12 @@ def view_tooling_requests(request):
 
     report_list = []
     for phl_item in phl_list:
-        susInfo = startUpShot.objects.filter(jobNumber = phl_item.jobNumber)
+        susInfo = startUpShot.objects.filter(jobNumber = phl_item['jobNumber'])
         if susInfo:
             moldNo = susInfo[0].moldNumber.mold_number
             machNo = susInfo[0].machNo
         else:
-            mattec_info = MattecProd.objects.filter(jobNumber= phl_item.jobNumber)
+            mattec_info = MattecProd.objects.filter(jobNumber= phl_item['jobNumber'])
             if mattec_info[0]:
                 moldNo = mattec_info[0].moldNumber
                 machNo = mattec_info[0].machNo
