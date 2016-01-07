@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                     {% for row in reportList %}
-                        <tr class='clickable-row' data-href='/production_and_mold_history/mold/{{ row.moldNo }}/' >
+                        <tr class='clickable-row' data-href='/production_and_mold_history/mold/{{ row.moldNo }}' >
                             <td> {{ row.dateCreated }}</td>
                             <td> {{ row.inspectorName }}  </td>
                             <td>  {{ row.moldNo }} </td>
