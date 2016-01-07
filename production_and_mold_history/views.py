@@ -274,7 +274,8 @@ def view_phl_report(request, jobNo):
     my_dict={}
     my_dict[str(n)] = {}
     my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=jobNo)
-    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=jobNo).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')            context_dict = {'my_dict': my_dict}
+    my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=jobNo).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+    context_dict = {'my_dict': my_dict}
     template = loader.get_template('phl/reports/phl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))
