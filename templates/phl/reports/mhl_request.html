@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Production History Log [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+
+<div class="col-sm-10 bootcards-cards">
+
+
+        {% if reportList %}
+            <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title pull-left"> Mold Maintenance Request Log</h3>
+                    </div>
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Date Createdr</th>
+                                    <th>Requestor Name</th>
+                                    <th>Mold Number</th>
+                                    <th>Workstation</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in reportList %}
+                                    <tr class='clickable-row' data-href='/production_and_mold_history/mold/{{ row.moldNo }}/' >
+                                        <td> {{ row.dateCreated }}</td>
+                                        <td>
+                                            {{ row.inspectorName }}
+                                        </td>
+                                        <td>
+                                            {{ row.moldNo }}
+                                        </td>
+                                        <td>
+                                            {{ row.machNo }}
+                                        </td>
+                                        <td>
+                                            {{ row.descEvent }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            {% endif %}
+
+
+</div>
+
+
+</body>
+</html>

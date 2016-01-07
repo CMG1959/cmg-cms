@@ -21,6 +21,43 @@ def view_index(request):
 
 
 @login_required
+def view_tooling_requests(request):
+    dt_time = datetime.date.today()-datetime.timedelta(days=10)
+    phl_list = ProductionHistory.objects.filter(notifyToolroom=True, dateCreated__gte=dt_time).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+
+    report_list = []
+    for phl_item in phl_list:
+        susInfo = startUpShot.objects.filter(jobNumber = phl_item.jobNumber)
+        if susInfo:
+            moldNo = susInfo[0].moldNumber.mold_number
+            machNo = susInfo[0].machNo
+        else:
+            mattec_info = MattecProd.objects.filter(jobNumber= phl_item.jobNumber)
+            if mattec_info[0]:
+                moldNo = mattec_info[0].moldNumber
+                machNo = mattec_info[0].machNo
+            else:
+                moldNo = 'N/A'
+                machNo = 'N/A'
+
+        report_list.append({
+            'moldNo':moldNo,
+            'machNo':machNo,
+            'dateCreated':phl_item.dateCreated,
+            'inspectorName': phl_item.inspectorName__EmpLMName,
+            'descEvent':phl_item.descEvent
+        })
+
+    template = loader.get_template('phl/reports/mhl_request.html')
+    context = RequestContext(request, {
+            'reportList': report_list,
+        })
+
+    return HttpResponse(template.render(context))
+
+
+
+@login_required
 def view_phl_form(request):
     activeInMattec = MattecProd.objects.all().order_by('machNo')
     template = loader.get_template('phl/phl_index.html')
