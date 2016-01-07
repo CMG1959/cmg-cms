@@ -24,16 +24,23 @@ class MaintenanceRequests(models.Model):
     class Meta:
         verbose_name = 'Maintenance Requests'
         verbose_name_plural = 'Maintenance Requests'
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    inspectorName = models.CharField(max_length=20, verbose_name="Inspector Name")
-    dateCreated = models.DateTimeField(verbose_name="Date Created")
-    jobNumber = models.CharField(max_length=20, verbose_name="Job Number", blank=True)
-    descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
-    shift = models.IntegerField(verbose_name="Shift", null=True, blank=True)
-    shortDate = models.DateField(verbose_name="Short Date", null=True, blank=True)
+    id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
+    Requestor_Name = models.CharField(max_length=20, verbose_name="Requestor Name")
+    Request_Time = models.DateTimeField(verbose_name="Date Requested", auto_now_add=True)
+    Request_Shift = models.SmallIntegerField(verbose_name='Shift')
+    Request_Loc = models.SmallIntegerField(verbose_name= 'Request Location')
+    Request_Source = models.SmallIntegerField(verbose_name= 'Request Location')
+    Tool_id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
+    Tool_Number = models.CharField(max_length=20, verbose_name="Tool Number")
+    Request_Desc = models.CharField(max_length=1000, verbose_name="Request Description")
+    Ack_Acknowledged = models.BooleanField(verbose_name="Ackknowledged", default=False)
+    Ack_Time =  models.DateTimeField(verbose_name="Date Acknowledged", auto_now_add=True)
+    Ack_Name =  models.CharField(max_length=20, verbose_name="Acknowledger Name")
+    Ack_Notes =  models.CharField(max_length=1000, verbose_name="Acknowledger Comments")
+    Ack_Link_WO = models.IntegerField(verbose_name="WO")
 
     def __unicode__(self):
-        return '%s - %s: %s' % (self.dateCreated, self.jobNumber, self.descEvent)
+        return '%s - %s' % (self.Tool_Number, self.Requestor_Name)
 
 
 
