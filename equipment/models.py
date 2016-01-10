@@ -72,12 +72,14 @@ class EquipmentPM(models.Model):
         verbose_name = 'Perform PM'
         verbose_name_plural = 'Performed PM'
 
+    Date_Performed = models.DateField(verbose_name='Date Performed')
     employee = models.ForeignKey('employee.Employees', verbose_name="Technician")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     pm_frequency = models.ForeignKey('PMFreq', verbose_name="PM Frequency")
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
     logged_pm = models.ManyToManyField('PM', verbose_name="PM Items")
     comments = models.CharField(max_length=1000, verbose_name="Event Description",null=True,blank=True)
+
 
     def __unicode__(self):
         return '%s - %s - %s' % (self.equipment_ID, self.pm_frequency, self.dateCreated)
@@ -88,6 +90,7 @@ class EquipmentRepair(models.Model):
         verbose_name = 'Repair Equipment'
         verbose_name_plural = 'Repair Equipment'
 
+    Date_Performed = models.DateField(verbose_name='Date Performed')
     employee = models.ForeignKey('employee.Employees', verbose_name="Technician")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")

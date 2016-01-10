@@ -7,6 +7,8 @@ class ProductionHistory(models.Model):
     class Meta:
         verbose_name = 'Production History Log Entry'
         verbose_name_plural = 'Production History Log Entries'
+        managed = False
+
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     dateCreatedL = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
@@ -24,6 +26,7 @@ class MaintenanceRequests(models.Model):
     class Meta:
         verbose_name = 'Maintenance Requests'
         verbose_name_plural = 'Maintenance Requests'
+        managed = False
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     Requestor_Name = models.CharField(max_length=20, verbose_name="Requestor Name")
     Request_Time = models.DateTimeField(verbose_name="Date Requested", auto_now_add=True)
@@ -48,6 +51,7 @@ class MoldHistory(models.Model):
     class Meta:
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
+        managed = False
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     parent_id = models.CharField(max_length=36,default=uuid.uuid4,editable=False)
     inspectorName = models.CharField(max_length=20, verbose_name="Name")
