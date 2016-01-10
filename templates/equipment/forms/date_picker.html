@@ -1,0 +1,17 @@
+{% load static %}
+<link rel="stylesheet" href="{% static "jquery-ui/jquery-ui.min.css" %}">
+<script src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
+
+
+<script>
+    $(function () {
+        $("#id_Date_Performed").datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 1,
+            onClose: function (selectedDate) {
+                $("#id_date_to").datepicker("option", "minDate", selectedDate);
+            }
+        });
+    });
+</script>

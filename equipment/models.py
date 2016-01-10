@@ -72,7 +72,7 @@ class EquipmentPM(models.Model):
         verbose_name = 'Perform PM'
         verbose_name_plural = 'Performed PM'
 
-    Date_Performed = models.DateField(verbose_name='Date Performed')
+    Date_Performed = models.DateField(verbose_name='Date Performed', default=date.today)
     employee = models.ForeignKey('employee.Employees', verbose_name="Technician")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     pm_frequency = models.ForeignKey('PMFreq', verbose_name="PM Frequency")
@@ -90,7 +90,7 @@ class EquipmentRepair(models.Model):
         verbose_name = 'Repair Equipment'
         verbose_name_plural = 'Repair Equipment'
 
-    Date_Performed = models.DateField(verbose_name='Date Performed')
+    Date_Performed = models.DateField(verbose_name='Date Performed', default=date.today)
     employee = models.ForeignKey('employee.Employees', verbose_name="Technician")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")

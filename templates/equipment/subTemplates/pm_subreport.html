@@ -16,7 +16,7 @@
                 {% for each_PM in PM_info %}
                     <tr>
                         <td>{{ each_PM.employee }}</td>
-                        <td>{{ each_PM.dateCreated }}</td>
+                        <td>{{ each_PM.Date_Performed }}</td>
                         <td>{{ each_PM.pm_frequency }}</td>
                         <td> {% for pmt in each_PM.logged_pm.all %} <p>{{ pmt.pm_item }}</p> {% endfor %}</td>
                         <td> {{ each_PM.comments }}</td>

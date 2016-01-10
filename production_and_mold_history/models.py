@@ -52,6 +52,7 @@ class MoldHistory(models.Model):
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
         managed = False
+
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     parent_id = models.CharField(max_length=36,default=uuid.uuid4,editable=False)
     inspectorName = models.CharField(max_length=20, verbose_name="Name")

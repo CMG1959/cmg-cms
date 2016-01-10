@@ -13,11 +13,11 @@ class PMAdmin(admin.ModelAdmin):
 
 class EquipmentPMAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier']
-    list_display = ('employee','dateCreated','equipment_ID','pm_frequency')
+    list_display = ('employee','Date_Performed','equipment_ID','pm_frequency')
 
 class EquipmentRepairAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier','po_num']
-    list_display = ('employee','dateCreated','equipment_ID','po_num')
+    list_display = ('employee','Date_Performed','equipment_ID','po_num')
 
 admin.site.register(EquipmentType)
 admin.site.register(EquipmentManufacturer)

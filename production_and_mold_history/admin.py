@@ -8,9 +8,9 @@ class ProductionHistoryAdmin(admin.ModelAdmin):
     list_display = ('dateCreated', 'jobNumber', 'inspectorName', 'descEvent','notifyToolroom')
 
 
-class MaintenanceRequestAdmin(admin.ModelAdmin):
-    search_fields = ['dateCreated', 'jobNumber','inspectorName', 'descEvent']
-    list_display = ('dateCreated', 'jobNumber', 'inspectorName', 'descEvent')
+# class MaintenanceRequestAdmin(admin.ModelAdmin):
+#     search_fields = ['dateCreated', 'jobNumber','inspectorName', 'descEvent']
+#     list_display = ('dateCreated', 'jobNumber', 'inspectorName', 'descEvent')
 
 
 class MoldHistoryAdmin(admin.ModelAdmin):
@@ -19,5 +19,5 @@ class MoldHistoryAdmin(admin.ModelAdmin):
 
 admin.site.register(ProductionHistory, ProductionHistoryAdmin)
 admin.site.register(MoldHistory, MoldHistoryAdmin)
-admin.site.register(MaintenanceRequests, MaintenanceRequestAdmin)
+# admin.site.register(MaintenanceRequests, MaintenanceRequestAdmin)
 
