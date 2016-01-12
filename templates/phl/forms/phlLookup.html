@@ -14,15 +14,20 @@
 
 
 <div class="col-sm-10 bootcards-cards">
-    <p>Type in a job number view a production history log.</p>
+
     <div class="panel panel-default ">
-            {% include "project_form_templates/gen_form.html" %}
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">Search for older jobs </h3>
+        </div>
+        {% include "project_form_templates/gen_form.html" %}
     </div>
-</div>
 
     {% if activeInMattec %}
         <div class="bootcards-list">
             <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Active Jobs</h3>
+                </div>
                 <div class="list-group">
                     {% for eachActive in activeInMattec %}
                         <a class="list-group-item"
@@ -35,7 +40,7 @@
             </div>
         </div>
     {% endif %}
-
+</div>
 
 </body>
 </html>
