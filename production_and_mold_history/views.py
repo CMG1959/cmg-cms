@@ -268,7 +268,7 @@ def view_mold_report_search(request):
     else:
         form = moldLookup()
         activeInMattec = MattecProd.objects.all().order_by('machNo')
-        return render(request, 'phl/forms/moldLookup.html', {'form': form, 'activeInMattec': activeInMattec})
+        return render(request, 'phl/forms/moldReportLookup.html', {'form': form, 'activeInMattec': activeInMattec})
 
 
 @login_required
