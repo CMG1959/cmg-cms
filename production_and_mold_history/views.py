@@ -231,7 +231,8 @@ def view_phl_report_search(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlLookup()
-        return render(request, 'phl/forms/phlLookup.html', {'form': form})
+        activeInMattec = MattecProd.objects.all().order_by('machNo')
+        return render(request, 'phl/forms/phlLookup.html', {'form': form, 'activeInMattec': activeInMattec})
 
 
 @login_required
@@ -265,8 +266,8 @@ def view_mold_report_search(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = moldLookup()
-
-        return render(request, 'phl/forms/moldLookup.html', {'form': form})
+        activeInMattec = MattecProd.objects.all().order_by('machNo')
+        return render(request, 'phl/forms/moldLookup.html', {'form': form, 'activeInMattec': activeInMattec})
 
 
 @login_required

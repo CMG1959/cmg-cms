@@ -17,6 +17,22 @@
     <div class="panel panel-default ">
             {% include "project_form_templates/gen_form.html" %}
     </div>
+
+        {% if activeInMattec %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    {% for eachActive in activeInMattec %}
+                        <a class="list-group-item"
+                           href="/production_and_mold_history/mold_report/{{ eachActive.moldNumber.mold_number }}">
+                            <h4 class="list-group-item-heading">{{ eachActive.machNo }}</h4>
+                            <p class="list-group-item-text">{{ eachActive.moldNumber.moldNumber }} - {{ eachActive.moldNumber.mold_description }} </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 </body>
