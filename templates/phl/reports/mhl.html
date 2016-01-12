@@ -25,7 +25,7 @@
                     <thead>
                     <tr>
                         <th>Inspector Name</th>
-                        <th>Date Created</th>
+                        <th>Date Performed</th>
                         <th>PM</th>
                         <th>Repair</th>
                         <th>Hours Worked</th>
@@ -36,7 +36,7 @@
                     {% for ep in MHL %}
                         <tr>
                             <td> {{ ep.inspectorName }} </td>
-                            <td> {{ ep.dateCreated }} </td>
+                            <td> {{ ep.Date_Performed }} </td>
                             <td> {{ ep.pm }}</td>
                             <td> {{ ep.repair }} </td>
                             <td> {{ ep.hours_worked }} </td>

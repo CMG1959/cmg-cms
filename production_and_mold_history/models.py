@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 import uuid
+from datetime import date
 
 
 class ProductionHistory(models.Model):
@@ -51,10 +52,11 @@ class MoldHistory(models.Model):
     class Meta:
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
-        managed = False
+        managed = True
 
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     parent_id = models.CharField(max_length=36,default=uuid.uuid4,editable=False)
+    Date_Performed = models.DateField(verbose_name='Date Performed', default=date.today)
     inspectorName = models.CharField(max_length=20, verbose_name="Name")
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     moldNumber = models.CharField(max_length=12, verbose_name="Mold Number")

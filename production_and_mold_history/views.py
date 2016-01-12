@@ -155,6 +155,7 @@ def view_specific_mold_form(request, moldNo):
             lm_name = Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk)
 
             newForm = MoldHistory(
+                Date_Performed=form.cleaned_data['Date_Performed'],
                 inspectorName= lm_name.EmpLMName,
                 moldNumber=moldNo,
                 descEvent=form.cleaned_data['descEvent'],
@@ -288,7 +289,7 @@ def view_mold_report(request, moldNo):
     except ObjectDoesNotExist:
         raise Http404("The mold has not been created in the system yet.")
 
-    MHL = MoldHistory.objects.filter(moldNumber=moldNo)
+    MHL = MoldHistory.objects.filter(moldNumber=moldNo).order_by('-Date_Performed')
 
 
     context_dict = {'mold_info': mold_info, 'MHL': MHL}

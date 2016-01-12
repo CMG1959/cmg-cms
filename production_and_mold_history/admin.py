@@ -14,8 +14,8 @@ class ProductionHistoryAdmin(admin.ModelAdmin):
 
 
 class MoldHistoryAdmin(admin.ModelAdmin):
-    search_fields = ['dateCreated', 'moldNumber', 'inspectorName','pm', 'descEvent']
-    list_display = ('dateCreated', 'moldNumber', 'inspectorName','pm', 'descEvent')
+    search_fields = ['Date_Performed', 'moldNumber', 'inspectorName','pm', 'descEvent']
+    list_display = ('Date_Performed', 'moldNumber', 'inspectorName','pm', 'descEvent')
 
 admin.site.register(ProductionHistory, ProductionHistoryAdmin)
 admin.site.register(MoldHistory, MoldHistoryAdmin)

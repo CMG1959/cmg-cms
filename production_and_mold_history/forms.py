@@ -28,6 +28,7 @@ class phlForm(forms.ModelForm):
 
 
 class mhlForm(forms.Form):
+    Date_Performed = forms.DateField(label="Date Performed", required=True)
     inspectorName = forms.ModelChoiceField(queryset=Employees.objects.filter(StatusActive=True,
                                                                          IsToolStaff=True).order_by('EmpLName'),
                                            label="Name", required=True)
