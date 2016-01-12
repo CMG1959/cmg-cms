@@ -8,6 +8,7 @@
 </head>
 <body>
 
+{% load mathfilters %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery=1 %}
@@ -19,45 +20,134 @@
 
     {% if my_dict %}
         {% with my_dict.sus as active_job %}
-            {% include "inspection/subTemplates/subJobInfo.html" %}
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left"> Part Information</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Item #</th>
+                            <th>Description</th>
+                            <th>TMM Part Weight (g)</th>
+                            <th>TMM Cycle (s)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ active_job.0.item.item_Number }}</td>
+                            <td>{{ active_job.0.item.item_Description }}</td>
+                            <td>{{ active_job.0.item.exp_part_weight }}</td>
+                            <td>{{ active_job.0.item.exp_cycle_time }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Start Up Shot Information</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Machine Operator</th>
+                            <th>Inspector</th>
+                            <th>Job Number</th>
+                            <th>Shot Weight</th>
+                            <th>Active Cavitation</th>
+                            <th>Average Part Weight (g)</th>
+                            <th>Machine Number</th>
+                            <th>Cycle Time (s)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ep in active_job %}
+                            <tr>
+                                <td> {{ ep.machineOperator }}</td>
+                                <td> {{ ep.inspectorName }}</td>
+                                <td>{{ ep.jobNumber }} </td>
+                                <td>{{ ep.shotWeight }}</td>
+                                <td>{{ ep.activeCavities }}</td>
+                                {% with  ep.shotWeight|div:ep.activeCavities as avgptWeight %}
+                                    <td>{{ avgptWeight|floatformat:3 }}</td>
+                                {% endwith %}
+                                <td>{{ ep.machNo }}</td>
+                                <td>{{ ep.cycleTime }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left"> Mold Information</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Mold ID</th>
+                            <th>Mold Description</th>
+                            <th>Total Cavities</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>{{ active_job.0.moldNumber }}</td>
+                                <td>{{ active_job.0.moldNumber.mold_description }}</td>
+                                <td>{{ active_job.0.moldNumber.num_cavities }}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         {% endwith %}
 
         {% with my_dict.phl as PHL %}
-                    <div class="panel panel-default">
-                    <div class="panel-heading clearfix">
-                        <h3 class="panel-title pull-left"> Production History Log</h3>
-                    </div>
-                        <div class="panel-body">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Job Number</th>
-                                    <th>Inspector Name</th>
-                                    <th>Date Created</th>
-                                    <th>Description of Event</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for ep in PHL %}
-                                    <tr>
-                                        <td> {{ ep.jobNumber }}</td>
-                                        <td>
-                                            {{ ep.inspectorName__EmpLMName }}
-                                        </td>
-                                        <td>
-                                            {{ ep.dateCreated }}
-                                        </td>
-                                        <td>
-                                            {{ ep.descEvent }}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                {% endwith %}
-            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left"> Production History Log</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Job Number</th>
+                            <th>Inspector Name</th>
+                            <th>Date Created</th>
+                            <th>Description of Event</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ep in PHL %}
+                            <tr>
+                                <td> {{ ep.jobNumber }}</td>
+                                <td>
+                                    {{ ep.inspectorName__EmpLMName }}
+                                </td>
+                                <td>
+                                    {{ ep.dateCreated }}
+                                </td>
+                                <td>
+                                    {{ ep.descEvent }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endwith %}
+    {% endif %}
 
 </div>
 

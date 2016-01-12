@@ -210,7 +210,7 @@ def view_phl_report_search(request):
 
             else:
                 # mold list
-                active_list = startUpShot.objects.filter(moldNumber__mold_number=item_id)
+                active_list = startUpShot.objects.filter(moldNumber__mold_number=item_id).order_by('-dateCreated')
                 my_dict = {'sus':[],'phl':[]}
                 for eachJob in active_list:
                     my_dict['sus'].append(eachJob)
@@ -251,7 +251,7 @@ def view_mold_report_search(request):
             # Get information from DB
             mold_info = Mold.objects.get(mold_number=mold_Number)
             MHL = MoldHistory.objects.filter(moldNumber=mold_Number,
-                                             dateCreated__range=(date_from, date_to))
+                                             dateCreated__range=(date_from, date_to)).order_by('-Date_Performed')
             # Format dictionaries
             context_dict = {'mold_info': mold_info, 'MHL': MHL}
             template = loader.get_template('phl/reports/mhl.html')
@@ -274,7 +274,7 @@ def view_phl_report(request, jobNo):
     n = 1
     my_dict={}
     my_dict[str(n)] = {}
-    my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=jobNo)
+    my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=jobNo).order_by('-dateCreated')
     my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=jobNo).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
     context_dict = {'my_dict': my_dict}
     template = loader.get_template('phl/reports/phl.html')

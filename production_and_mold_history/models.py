@@ -52,7 +52,7 @@ class MoldHistory(models.Model):
     class Meta:
         verbose_name = 'Mold History Log Entry'
         verbose_name_plural = 'Mold History Log Entries'
-        managed = True
+        managed = False
 
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     parent_id = models.CharField(max_length=36,default=uuid.uuid4,editable=False)
