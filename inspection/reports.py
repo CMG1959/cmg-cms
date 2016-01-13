@@ -97,7 +97,7 @@ class JobReport:
                 rangeInspection.objects.filter(
                     rangeTestName__testName=each_inspection.testName,
                     jobID__jobNumber=self.job_number,
-                    dateCreated__range=self.date_range)})
+                    dateCreated__range=self.date_range).order_by('-dateCreated')})
 
             range_report = [['Date', 'Machine Operator', 'Inspector', 'Is Full Shot', 'Cavity', 'Numeric Value',
                              'Inspection Result']]
@@ -132,7 +132,7 @@ class JobReport:
                 passFailInspection.objects.filter(
                     passFailTestName__testName=each_inspection.testName.testName,
                     jobID__jobNumber=self.job_number,
-                    dateCreated__range=self.date_range)})
+                    dateCreated__range=self.date_range).order_by('-dateCreated')})
 
             pass_fail_report = [['Date', 'Machine Operator', 'Inspector', 'Cavity', 'Inspection Result', 'Defect']]
 
@@ -170,7 +170,7 @@ class JobReport:
                 'text_dict': textInspection.objects.filter( \
                     textTestName__testName=each_inspection.testName,
                     jobID__jobNumber=self.job_number,
-                    dateCreated__range=self.date_range)}})
+                    dateCreated__range=self.date_range).order_by('-dateCreated')}})
 
             text_inspection = [['Date', 'Machine Operator', 'Inspector', 'Full Shot?', 'Cav ID', 'Inspection Result']]
             print self.text_inspections[each_inspection.testName]

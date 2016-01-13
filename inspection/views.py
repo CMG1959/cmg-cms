@@ -486,7 +486,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
             partDict['pf'][eachInspection][str(n)]={}
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
             partDict['pf'][eachInspection][str(n)]['jobID'] = eachJob
             partDict['pf'][eachInspection][str(n)].update(createPFStats(thisInspectionbyJob))
             n += 1
@@ -501,14 +501,14 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
 
         thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection,
-                                                           dateCreated__range=(date_from1, date_to1))
+                                                           dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated')
         n=0
         totalRangeList = []
         for eachJob in jobList:
             partDict['rangeTest'][eachInspection][str(n)] = {}
             partDict['rangeTest'][eachInspection][str(n)]['jobID']=eachJob
 
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob)
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
             active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
 
             rangeList = []
@@ -584,7 +584,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     for each_pf_inspection in pf_inspectionType:
         context_dic['pf'][str(n)] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName.testName,
                                                                       jobID__jobNumber=jobNumber,
-                                                                      dateCreated__range=(date_from, date_to))
+                                                                      dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
 
         context_dic['pfSummary'][str(n)] = {}
         context_dic['pfSummary'][str(n)]['pfName'] = each_pf_inspection.testName.testName
@@ -597,7 +597,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     for each_range_inspection in rangeTests:
         context_dic['rangeTests'][str(n)] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
                                                                            jobID__jobNumber=jobNumber,
-                                                                           dateCreated__range=(date_from, date_to))
+                                                                           dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['rangeTestSummary'][str(n)] = {}
         context_dic['rangeTestSummary'][str(n)]['rangeName'] = each_range_inspection.testName.testName
 
