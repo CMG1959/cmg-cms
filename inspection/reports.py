@@ -19,7 +19,7 @@ from startupshot.models import startUpShot
 from production_and_mold_history.models import ProductionHistory
 import numpy as np
 from django.http import HttpResponse
-
+import pytz as tz
 
 class JobReport:
     '''
@@ -83,8 +83,9 @@ class JobReport:
         self.phl = [['Date','Name','Description']]
         phl_info = ProductionHistory.objects.filter(jobNumber=self.job_number).values_list('dateCreated','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
         for row in phl_info:
-            phl_dt = datetime.datetime.strftime(timezone.localtime(row[0]),
-                                                '%Y:%m:%d %H:%M:%S %p')
+            phl_dt = self.__make_local_str(row[0])
+            # phl_dt = datetime.datetime.strftime(timezone.localtime(row[0]),
+            #                                     '%Y:%m:%d %H:%M:%S %p')
             self.phl.append([phl_dt, row[1], row[2]])
 
 
@@ -103,7 +104,7 @@ class JobReport:
                              'Inspection Result']]
             for row in self.range_inspections[each_inspection.testName.testName]:
                 range_report.append(
-                    [row.dateCreated, row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.numVal,
+                    [self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.numVal,
                      row.inspectionResult])
             self.extended_tables.update({each_inspection.testName.testName: range_report})
 
@@ -140,11 +141,11 @@ class JobReport:
                 for row in self.pass_fail_inspections[each_inspection.testName.testName]:
                     if len(row.defectType.all())> 1:
                         pass_fail_report.append(
-                            [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
+                            [self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
                               "\n".join([r.passFail for r in row.defectType.all()])])
                     else:
                         pass_fail_report.append(
-                            [row.dateCreated, row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
+                            [self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.headCavID, row.inspectionResult,
                               " ".join([r.passFail for r in row.defectType.all()])])
 
                 result_dict, result_list = self.__create_pf_stats(self.pass_fail_inspections[
@@ -177,7 +178,7 @@ class JobReport:
 
             for row in self.text_inspections[each_inspection.testName]['text_dict']:
                 text_inspection.append(
-                    [(row.dateCreated).strftime('%Y-%m-%d %I:%M %p'), row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.inspectionResult])
+                    [self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.inspectionResult])
 
             self.extended_tables.update({each_inspection.testName: text_inspection})
 
@@ -251,6 +252,12 @@ class JobReport:
             result_list.append(v)
 
         return result_dict, [result_dict['range_count'],result_dict['range_min'],result_dict['range_max'],result_dict['range_avg'],result_dict['range_stddev'],]
+
+
+    def __make_local_str(self, date_time_obj):
+        loc_time = timezone.localtime(date_time_obj)
+        str_time = (loc_time).strftime('%Y-%m-%d %I:%M %p')
+        return str_time
 
 
     def __create_date_range(self):
