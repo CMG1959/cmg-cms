@@ -621,7 +621,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['textTests'][str(n)] = {
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter(\
-            textTestName__testName=eachTextTest.testName,jobID__jobNumber=jobNumber)
+            textTestName__testName=eachTextTest.testName,jobID__jobNumber=jobNumber).order_by('-dateCreated')
         }
 
         n += 1
