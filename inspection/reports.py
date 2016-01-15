@@ -231,6 +231,7 @@ class JobReport:
 
     def __calc_range_stats(self, range_list):
         if range_list:
+            range_list = map(float,range_list)
             result_dict = OrderedDict({
                 'range_count': '%i' % (len(range_list)),
                 'range_min': '%1.3f' % (np.amin(range_list)),
