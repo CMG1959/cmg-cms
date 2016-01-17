@@ -560,6 +560,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     return partDict
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
+    collapse_list = []
     context_dic = {}
     context_dic['plot_info'] = view_jsonError(job_number=jobNumber, date_from=date_from, date_to=date_to)
 
@@ -583,10 +584,11 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     context_dic['pfSummary']={}
     n = 0
     for each_pf_inspection in pf_inspectionType:
-        context_dic['pf'][str(n)] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName.testName,
+        key = 'pf'+str(n)
+        collapse_list.append('#'+key)
+        context_dic['pf'][key] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName.testName,
                                                                       jobID__jobNumber=jobNumber,
                                                                       dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
-
         context_dic['pfSummary'][str(n)] = {}
         context_dic['pfSummary'][str(n)]['pfName'] = each_pf_inspection.testName.testName
         context_dic['pfSummary'][str(n)].update(createPFStats(context_dic['pf'][str(n)]))
@@ -596,7 +598,9 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     context_dic['rangeTests']={}
     context_dic['rangeTestSummary']={}
     for each_range_inspection in rangeTests:
-        context_dic['rangeTests'][str(n)] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
+        key = 'rt'+str(n)
+        collapse_list.append('#'+key)
+        context_dic['rangeTests'][key] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
                                                                            jobID__jobNumber=jobNumber,
                                                                            dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['rangeTestSummary'][str(n)] = {}
@@ -619,7 +623,9 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     n = 0
     context_dic['textTests']={}
     for eachTextTest in textTests:
-        context_dic['textTests'][str(n)] = {
+        key = 'tt'+n
+        collapse_list.append('#'+key)
+        context_dic['textTests'][key] = {
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter(\
             textTestName__testName=eachTextTest.testName,jobID__jobNumber=jobNumber).order_by('-dateCreated')
@@ -629,7 +635,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
 
     context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
-
+    collapse_list.append('#'+'phl')
 
     context_dic.update({
         'headerDict':{
@@ -639,7 +645,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         }
     })
 
-
+    context_dic.update({'collapse_list':collapse_list})
     return context_dic
 
 

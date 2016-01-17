@@ -38,3 +38,14 @@
 {% include "inspection/subTemplates/js_helpers/sub_error_bar_chart_js.html" %}
 
 {% include "inspection/subTemplates/js_helpers/collapse_tables.html" %}
+
+
+col
+<script>
+$(function() {
+    var collapse_list = {{ colapse_list }};
+    for (var i = 0; i < collapse_list.length; i++) {
+        $(collapse_list[i]).click();
+    }
+});
+</script>
