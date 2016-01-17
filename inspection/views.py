@@ -45,6 +45,7 @@ def view_detailJob(request, jobNumber):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
     jobNumber = str(jobNumber).strip()
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+
     if not active_job.exists():
         if MattecProd.objects.get(jobNumber=jobNumber).machNo.strip() != 'FAS01':
             redir_url = '/startupshot/create/%s/' % jobNumber
