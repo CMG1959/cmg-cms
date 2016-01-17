@@ -623,7 +623,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     n = 0
     context_dic['textTests']={}
     for eachTextTest in textTests:
-        key = 'tt'+n
+        key = 'tt'+ str(n)
         collapse_list.append('#'+key)
         context_dic['textTests'][key] = {
             'testName': eachTextTest.testName,
