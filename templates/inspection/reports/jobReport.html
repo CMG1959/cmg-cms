@@ -43,7 +43,7 @@
 col
 <script>
 $(function() {
-    var collapse_list = [{{ collapse_list }}];
+    var collapse_list = {{ collapse_list|safe }};
     for (var i = 0; i < collapse_list.length; i++) {
         $(collapse_list[i]).click();
     }
