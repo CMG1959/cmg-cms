@@ -589,9 +589,9 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['pf'][key] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName.testName,
                                                                       jobID__jobNumber=jobNumber,
                                                                       dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
-        context_dic['pfSummary'][str(n)] = {}
-        context_dic['pfSummary'][str(n)]['pfName'] = each_pf_inspection.testName.testName
-        context_dic['pfSummary'][str(n)].update(createPFStats(context_dic['pf'][str(n)]))
+        context_dic['pfSummary'][key] = {}
+        context_dic['pfSummary'][key]['pfName'] = each_pf_inspection.testName.testName
+        context_dic['pfSummary'][key].update(createPFStats(context_dic['pf'][key]))
         n+=1
 
     n = 0
@@ -603,19 +603,19 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['rangeTests'][key] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
                                                                            jobID__jobNumber=jobNumber,
                                                                            dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
-        context_dic['rangeTestSummary'][str(n)] = {}
-        context_dic['rangeTestSummary'][str(n)]['rangeName'] = each_range_inspection.testName.testName
+        context_dic['rangeTestSummary'][key] = {}
+        context_dic['rangeTestSummary'][key]['rangeName'] = each_range_inspection.testName.testName
 
 
 
         rangeList = []
-        for eachShot in context_dic['rangeTests'][str(n)]:
+        for eachShot in context_dic['rangeTests'][key]:
             if ((eachShot.isFullShot) and (not each_range_inspection.testName.calcAvg)):
                 rangeList.append(eachShot.numVal / active_job[0].activeCavities)
             else:
                 rangeList.append(eachShot.numVal)
 
-        context_dic['rangeTestSummary'][str(n)]['rangeStats']=calcRangeStats(rangeList)
+        context_dic['rangeTestSummary'][key]['rangeStats']=calcRangeStats(rangeList)
 
         n += 1
 
