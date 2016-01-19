@@ -465,6 +465,8 @@ def view_jsonError(job_number, date_from, date_to):
 ####### Helper functions ###########
 
 def createItemReportDict(itemNumber, date_from=None, date_to=None):
+    collapse_list = []
+
     date_from1, date_to1 = createDateRange(date_from=date_from, date_to=date_to)
 
     jobList = startUpShot.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from1, date_to1))
@@ -484,17 +486,20 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                            dateCreated__range=(date_from1, date_to1))
         n=0
         for eachJob in jobList:
-
+            key = 'pf'+str(n)
+            collapse_list.append('#'+key)
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
-            partDict['pf'][eachInspection][str(n)]={}
+            partDict['pf'][eachInspection][key]={}
             thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
-            partDict['pf'][eachInspection][str(n)]['jobID'] = eachJob
-            partDict['pf'][eachInspection][str(n)].update(createPFStats(thisInspectionbyJob))
+            partDict['pf'][eachInspection][key]['jobID'] = eachJob
+            partDict['pf'][eachInspection][key].update(createPFStats(thisInspectionbyJob))
             n += 1
 
-        partDict['pf'][eachInspection][str(n)]={}
-        partDict['pf'][eachInspection][str(n)]['jobID'] = 'Total'
-        partDict['pf'][eachInspection][str(n)].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
+        key = 'pf'+str(n)
+        collapse_list.append('#'+key)
+        partDict['pf'][eachInspection][key]={}
+        partDict['pf'][eachInspection][key]['jobID'] = 'Total'
+        partDict['pf'][eachInspection][key].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
 
     for eachInspection1 in rangeTests:
         eachInspection = eachInspection1.testName.testName
@@ -506,8 +511,10 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         n=0
         totalRangeList = []
         for eachJob in jobList:
-            partDict['rangeTest'][eachInspection][str(n)] = {}
-            partDict['rangeTest'][eachInspection][str(n)]['jobID']=eachJob
+            key = 'rt'+str(n)
+            collapse_list.append('#'+key)
+            partDict['rangeTest'][eachInspection][key] = {}
+            partDict['rangeTest'][eachInspection][key]['jobID']=eachJob
 
             thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
             active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
@@ -522,10 +529,12 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                     rangeList.append(eachShot.numVal)
                     totalRangeList.append(rangeList[-1])
 
-            partDict['rangeTest'][eachInspection][str(n)]['rangeStats'] = calcRangeStats(rangeList)
+            partDict['rangeTest'][eachInspection][key]['rangeStats'] = calcRangeStats(rangeList)
             n += 1
 
-        partDict['rangeTest'][eachInspection][str(n)] = {'jobID' :'Total',
+        key = 'rt'+str(n)
+        collapse_list.append('#'+key)
+        partDict['rangeTest'][eachInspection][key] = {'jobID' :'Total',
                                                          'rangeStats':calcRangeStats(totalRangeList)}
 
 
@@ -534,7 +543,9 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     n = 0
     partDict['textTests']=collections.OrderedDict()
     for eachTextTest in textTests:
-        partDict['textTests'][str(n)] = {
+        key = 'tt'+str(n)
+        collapse_list.append('#'+key)
+        partDict['textTests'][key] = {
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter(\
             textTestName__testName=eachTextTest.testName,
@@ -550,6 +561,13 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist] #change?
     partDict['useJobNo'] = True
 
+
+    collapse_list.append('#phl')
+
+    partDict.update({
+        collapse_list : collapse_list
+    })
+
     partDict.update({
         'headerDict':{
             'companyName':'Custom Molders Group',
@@ -557,6 +575,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             'documentName':'Part Number: %s' % itemNumber
         }
     })
+
     return partDict
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):

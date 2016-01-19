@@ -54,3 +54,13 @@
 </html>
 
 {% include "inspection/subTemplates/js_helpers/collapse_tables.html" %}
+
+
+<script>
+$(function() {
+    var collapse_list = {{ collapse_list|safe }};
+    for (var i = 0; i < collapse_list.length; i++) {
+        $(collapse_list[i]).click();
+    }
+});
+</script>
