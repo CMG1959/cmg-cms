@@ -535,7 +535,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                     rangeList.append(eachShot.numVal)
                     totalRangeList.append(rangeList[-1])
 
-            partDict['rangeTest'][eachInspection][key]['rangeStats'] = calcRangeStats(rangeList)
+            partDict['rangeTest'][eachInspection][n]['rangeStats'] = calcRangeStats(rangeList)
             n += 1
 
         partDict['rangeTest'][eachInspection][n] = {'jobID' :'Total',
