@@ -485,23 +485,26 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         thisInspection = passFailInspection.objects.filter(passFailTestName__testName = eachInspection,
                                                            dateCreated__range=(date_from1, date_to1))
         n=0
-        for eachJob in jobList:
-            key = 'pf'+str(n)
-            collapse_list.append('#'+key)
-            partDict['pf'][eachInspection]['inspectionName'] = eachInspection
-            partDict['pf'][eachInspection][key]={}
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
-            partDict['pf'][eachInspection][key]['jobID'] = eachJob
-            partDict['pf'][eachInspection][key].update(createPFStats(thisInspectionbyJob))
-            n += 1
 
         key = 'pf'+str(n)
         collapse_list.append('#'+key)
-        partDict['pf'][eachInspection][key]={}
-        partDict['pf'][eachInspection][key]['jobID'] = 'Total'
-        partDict['pf'][eachInspection][key].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
+        partDict['pf'][eachInspection]['html_id'] = key
+
+        for eachJob in jobList:
+            partDict['pf'][eachInspection]['inspectionName'] = eachInspection
+            partDict['pf'][eachInspection][n]={}
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
+            partDict['pf'][eachInspection][n]['jobID'] = eachJob
+            partDict['pf'][eachInspection][n].update(createPFStats(thisInspectionbyJob))
+            n += 1
+
+        partDict['pf'][eachInspection][n]={}
+        partDict['pf'][eachInspection][n]['jobID'] = 'Total'
+        partDict['pf'][eachInspection][n].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
 
     for eachInspection1 in rangeTests:
+
+
         eachInspection = eachInspection1.testName.testName
         partDict['rangeTest'][eachInspection] = collections.OrderedDict()
         partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
@@ -509,12 +512,15 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection,
                                                            dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated')
         n=0
+
+        key = 'rt'+str(n)
+        collapse_list.append('#'+key)
+        partDict['rangeTest'][eachInspection]['html_id'] = key
+
         totalRangeList = []
         for eachJob in jobList:
-            key = 'rt'+str(n)
-            collapse_list.append('#'+key)
-            partDict['rangeTest'][eachInspection][key] = {}
-            partDict['rangeTest'][eachInspection][key]['jobID']=eachJob
+            partDict['rangeTest'][eachInspection][n] = {}
+            partDict['rangeTest'][eachInspection][n]['jobID']=eachJob
 
             thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
             active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
@@ -532,9 +538,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             partDict['rangeTest'][eachInspection][key]['rangeStats'] = calcRangeStats(rangeList)
             n += 1
 
-        key = 'rt'+str(n)
-        collapse_list.append('#'+key)
-        partDict['rangeTest'][eachInspection][key] = {'jobID' :'Total',
+        partDict['rangeTest'][eachInspection][n] = {'jobID' :'Total',
                                                          'rangeStats':calcRangeStats(totalRangeList)}
 
 
@@ -545,7 +549,8 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     for eachTextTest in textTests:
         key = 'tt'+str(n)
         collapse_list.append('#'+key)
-        partDict['textTests'][key] = {
+        partDict['textTests'][n] = {
+            'html_id': key
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter(\
             textTestName__testName=eachTextTest.testName,
