@@ -479,6 +479,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
     partDict = {'pf':{},'rangeTest':{},'activeJob':susList}
 
+    k=0
     for eachInspection1 in pf_inspectionType:
         eachInspection = eachInspection1.testName
         partDict['pf'][eachInspection] = collections.OrderedDict()
@@ -486,9 +487,10 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                            dateCreated__range=(date_from1, date_to1))
         n=0
 
-        key = 'pf'+str(n)
+        key = 'pf'+str(k)
         collapse_list.append('#'+key)
         partDict['pf'][eachInspection]['html_id'] = key
+        k+=1
 
         for eachJob in jobList:
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
@@ -502,6 +504,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['pf'][eachInspection][n]['jobID'] = 'Total'
         partDict['pf'][eachInspection][n].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
 
+    k = 0
     for eachInspection1 in rangeTests:
 
 
@@ -513,9 +516,10 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                                                            dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated')
         n=0
 
-        key = 'rt'+str(n)
+        key = 'rt'+str(k)
         collapse_list.append('#'+key)
         partDict['rangeTest'][eachInspection]['html_id'] = key
+        k +=1
 
         totalRangeList = []
         for eachJob in jobList:
