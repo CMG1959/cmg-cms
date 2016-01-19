@@ -550,7 +550,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         key = 'tt'+str(n)
         collapse_list.append('#'+key)
         partDict['textTests'][n] = {
-            'html_id': key
+            'html_id': key,
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter(\
             textTestName__testName=eachTextTest.testName,
