@@ -565,7 +565,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     collapse_list.append('#phl')
 
     partDict.update({
-        collapse_list : collapse_list
+        'collapse_list' : collapse_list
     })
 
     partDict.update({
