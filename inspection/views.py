@@ -490,7 +490,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         key = 'pf'+str(k)
         collapse_list.append('#'+key)
         partDict['pf'][eachInspection]['html_id'] = key
-        k+=1
+        k=k+1
 
         for eachJob in jobList:
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
@@ -519,7 +519,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         key = 'rt'+str(k)
         collapse_list.append('#'+key)
         partDict['rangeTest'][eachInspection]['html_id'] = key
-        k +=1
+        k=k+1
 
         totalRangeList = []
         for eachJob in jobList:
