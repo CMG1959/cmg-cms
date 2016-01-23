@@ -6,28 +6,28 @@ class passFailInspectionForm(forms.ModelForm):
     class Meta:
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectorName','inspectionResult',
-                  'defectType','headCavID']
+                  'defectType','headCav']
 
 class rangeInspectionForm(forms.ModelForm):
     class Meta:
         model = rangeInspection
         fields = ['rangeTestName','jobID','machineOperator','inspectorName','isFullShot',
-                  'headCavID','numVal']
+                  'headCav','numVal']
 
 class textInspectionForm(forms.ModelForm):
     class Meta:
         model = textInspection
-        fields = ['textTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
+        fields = ['textTestName','jobID','machineOperator','inspectorName','isFullShot','headCav','inspectionResult']
 
 class IntegerInspectionForm(forms.ModelForm):
     class Meta:
         model = IntegerInspection
-        fields = ['integerTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
+        fields = ['integerTestName','jobID','machineOperator','inspectorName','isFullShot','headCav','inspectionResult']
 
 class FloatInspectionForm(forms.ModelForm):
     class Meta:
         model = FloatInspection
-        fields = ['floatTestName','jobID','machineOperator','inspectorName','isFullShot','headCavID','inspectionResult']
+        fields = ['floatTestName','jobID','machineOperator','inspectorName','isFullShot','headCav','inspectionResult']
 
 
 class jobReportSearch(forms.Form):
