@@ -68,7 +68,7 @@ def view_detailJob(request, jobNumber):
     # if  PartInspection object hasnt be created, make it now.
     checkPartInspection(active_job[0].item)
     # better go ahead and take care of the Mold now
-    checkMoldCavs(item_Number=active_job[0].item)
+
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
     range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
@@ -123,8 +123,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
-            mold_number__mold_number=active_job[0].moldNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -188,8 +186,6 @@ def view_rangeInspection(request, jobNumber, inspectionName):
         form = presetStandardFields(form, jobID=jobNumber,test_type='rangeInspection', test_name=inspectionName)
         form.fields["rangeTestName"].queryset = rangeTestByPart.objects.filter(item_Number__item_Number = active_job[0].item.item_Number,
                                                                             testName__testName=inspectionName)
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
-            mold_number__mold_number=active_job[0].moldNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -235,8 +231,6 @@ def view_textInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='tex', test_name=inspectionName)
 
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
-            mold_number__mold_number=active_job[0].moldNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -277,8 +271,6 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='IntegerType', test_name=inspectionName)
 
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
-            mold_number__mold_number=active_job[0].moldNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -319,8 +311,6 @@ def view_FloatInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='FloatType', test_name=inspectionName)
 
-        form.fields["headCavID"].queryset = PartIdentifier.objects.filter(
-            mold_number__mold_number=active_job[0].moldNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -756,24 +746,6 @@ def checkPartInspection(item_Number):
             newPartInspection.save()
 
     # Will probably need to create something for shot weights...
-
-
-def checkMoldCavs(item_Number=None,mold_Number=None):
-    if item_Number:
-        mattec_info = MattecProd.objects.get(itemNo=item_Number)
-        mold_Number = mattec_info.moldNumber
-
-    if not PartIdentifier.objects.filter(mold_number__mold_number=mold_Number).exists():
-        ### grab the mold information
-        mold_info = Mold.objects.get(mold_number = mold_Number)
-        ### add all the cavities
-        for n in range(1,mold_info.num_cavities+1):
-            newCavID = PartIdentifier(mold_number=mold_info,head_code='A',cavity_id = '%i' % (n))
-            newCavID.save()
-
-        newCavID = PartIdentifier(mold_number=mold_info,head_code='A',cavity_id = 'All')
-        newCavID.save()
-
 
 
 def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=None):
