@@ -67,7 +67,6 @@ class passFailInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
-    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     headCav = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
 
     def __unicode__(self):
@@ -124,7 +123,6 @@ class rangeInspection(models.Model):
                                       related_name='ri_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
     timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time", blank=True,
@@ -181,7 +179,6 @@ class textInspection(models.Model):
                                       related_name='ti_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
     headCav = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     def __unicode__(self):
@@ -286,7 +283,6 @@ class FloatInspection(models.Model):
                                       related_name='float_inspectorName')
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     inspectionResult = models.FloatField(verbose_name="Enter Inspection Information:")
     headCav = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
 
