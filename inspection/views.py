@@ -1,5 +1,6 @@
 # Create your views here.
 import numpy as np
+import re
 from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
@@ -111,7 +112,10 @@ def view_pfInspection(request, jobNumber, inspectionName):
                             activeJob=active_job, rangeInfo=None)
 
             # save the data
-            form.save()
+            my_form = form.save(commit=False)
+            if my_form.headCavID:
+                my_form.headCavID = check_HeadCavID(my_form.headCavID)
+            my_form.save()
 
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
@@ -161,17 +165,12 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             else:
                 inspectionResult = False
 
-            newForm = rangeInspection(
-                rangeTestName=form.cleaned_data['rangeTestName'],
-                jobID=form.cleaned_data['jobID'],
-                machineOperator=form.cleaned_data['machineOperator'],
-                inspectorName=form.cleaned_data['inspectorName'],
-                isFullShot=form.cleaned_data['isFullShot'],
-                numVal=form.cleaned_data['numVal'],
-                inspectionResult=inspectionResult,
-            )
+           # save the data
+            my_form = form.save(commit=False)
+            if my_form.headCavID:
+                my_form.headCavID = check_HeadCavID(my_form.headCavID)
+            my_form.save()
 
-            newForm.save()
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
 
@@ -215,7 +214,11 @@ def view_textInspection(request, jobNumber, inspectionName):
             # part_number = form.cleaned_data['jobID']
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
-            form.save()
+            # save the data
+            my_form = form.save(commit=False)
+            if my_form.headCavID:
+                my_form.headCavID = check_HeadCavID(my_form.headCavID)
+            my_form.save()
             # save the data
             checkFormForLog(form, inspectionType = 'textInspection',
                             inspectionName = inspectionName,
@@ -295,7 +298,10 @@ def view_FloatInspection(request, jobNumber, inspectionName):
             # part_number = form.cleaned_data['jobID']
             redirect_url = '/inspection/%s/' % (jobNumber)
             # save the data
-            form.save()
+            my_form = form.save(commit=False)
+            if my_form.headCavID:
+                my_form.headCavID = check_HeadCavID(my_form.headCavID)
+            my_form.save()
             # save the data
             checkFormForLog(form, inspectionType = 'FloatInspection',
                             inspectionName = inspectionName,
@@ -834,3 +840,14 @@ def calcRangeStats(rangeList):
                     'rangeList__stddev': '%1.3f' % (0)
                 }
     return resultDict
+
+
+def check_HeadCavID(cav_str):
+    cav_str.strip(' ')
+    cav_str.lower()
+    re_pattern = '[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none'
+    possible_match = re.search(re_pattern, cav_str)
+    if possible_match:
+        return possible_match.group(0)
+    else:
+        return None
