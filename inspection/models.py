@@ -68,8 +68,8 @@ class passFailInspection(models.Model):
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=RegexValidator(regex='[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           flags=[re.IGNORECASE]))
+                                 validators=RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
+                                                           re.IGNORECASE)))
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
@@ -130,8 +130,8 @@ class rangeInspection(models.Model):
     timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time", blank=True,
                                           null=True)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=RegexValidator(regex='[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           flags=[re.IGNORECASE]))
+                                 validators=RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
+                                                           re.IGNORECASE)))
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
@@ -185,8 +185,8 @@ class textInspection(models.Model):
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=RegexValidator(regex='[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           flags=[re.IGNORECASE]))
+                                 validators=RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
+                                                           re.IGNORECASE)))
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
@@ -240,8 +240,8 @@ class IntegerInspection(models.Model):
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     inspectionResult = models.BigIntegerField(verbose_name="Enter Inspection Information:")
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=RegexValidator(regex='[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           flags=[re.IGNORECASE]))
+                                 validators=RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
+                                                           re.IGNORECASE)))
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
@@ -293,8 +293,8 @@ class FloatInspection(models.Model):
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.FloatField(verbose_name="Enter Inspection Information:")
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=RegexValidator(regex='[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           flags=[re.IGNORECASE]))
+                                 validators=RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
+                                                           re.IGNORECASE)))
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
