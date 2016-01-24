@@ -729,9 +729,6 @@ def presetStandardFields(my_form, jobID, test_type, test_name):
     ### Filter the machine operators
     my_form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True,
                                                                           IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
-    ### Filter the QA ladies
-    my_form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True,
-                                                                        IsQCStaff=True).order_by('EmpShift').order_by('EmpLName')
 
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
