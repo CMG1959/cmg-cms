@@ -160,7 +160,7 @@ def view_specific_mold_form(request, moldNo):
                 # process the data in form.cleaned_data as required
                 newForm = MoldHistory(
                     Date_Performed=form.cleaned_data['Date_Performed'],
-                    inspectorName= is_user,
+                    inspectorName= is_user.EmpLMName,
                     moldNumber=moldNo,
                     descEvent=form.cleaned_data['descEvent'],
                     pm=form.cleaned_data['pm'],
