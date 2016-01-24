@@ -96,7 +96,7 @@ def view_specific_phl_form(request, jobNo):
     sta = 0 # preset machine number
     if mattec_prod[0]:
         machInfo = EquipmentInfo.objects.filter(part_identifier=mattec_prod[0].machNo, is_active=True)
-        if machInfo[0]:
+        if machInfo:
             sta = machInfo[0].id
 
     if request.method == 'POST':
