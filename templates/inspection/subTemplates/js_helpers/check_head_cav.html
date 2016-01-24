@@ -6,19 +6,22 @@
 </script>
 
 <script>
-    function isValidHeadCav(head_cav_id) {
+    function isValidHeadCav(my_hc_id) {
+        console.log(my_hc_id);
         var pattern = /[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none/;
-    return pattern.test(head_cav_id);
+    return pattern.test(my_hc_id);
     }
 
-    $('{{ head_cav_id }}').change(function() {
-        if( !isValidHeadCav( this ) ) {
+    $('{{ head_cav_id }}').keyup(function() {
+        if( !isValidHeadCav( $(this).val() ) ) {
             if(!$('.popover').hasClass('in')) {
                 $(this).popover('toggle');
             }
         }
         else {
-            if(!$('.popover').hasClass('in')) {
+            console.log("Shit is valid");
+            if($('.popover').hasClass('in')) {
+                console.log("Shit is valid and out");
                 $(this).popover('toggle');
             }
         }
