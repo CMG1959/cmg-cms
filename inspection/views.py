@@ -126,7 +126,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
             else:
-                template = loader.get_template('inspection/bad_user.html.html')
+                template = loader.get_template('inspection/bad_user.html')
                 context = RequestContext(request)
                 return HttpResponse(template.render(context))
         else:
