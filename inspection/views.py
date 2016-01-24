@@ -103,22 +103,32 @@ def view_pfInspection(request, jobNumber, inspectionName):
         form = passFailInspectionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
 
-            checkFormForLog(form, inspectionType = 'pf',
-                            inspectionName = passFailTest.objects.get(testName=inspectionName).testName,
-                            activeJob=active_job, rangeInfo=None)
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
 
-            # save the data
-            my_form = form.save(commit=False)
-            if my_form.headCavID:
-                my_form.headCavID = check_HeadCavID(my_form.headCavID)
-            my_form.save()
+                checkFormForLog(form, inspectionType = 'pf',
+                                inspectionName = passFailTest.objects.get(testName=inspectionName).testName,
+                                activeJob=active_job, rangeInfo=None)
 
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
+                # save the data
+                my_form = form.save(commit=False)
+
+                my_form.inspectorName = is_user
+
+                if my_form.headCavID:
+                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                my_form.save()
+
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
         else:
             template = loader.get_template('inspection/bad_cav.html')
             context = RequestContext(request)
@@ -876,3 +886,11 @@ def check_HeadCavID(cav_str):
         return possible_match.group(0)
     else:
         return None
+
+
+def get_user_info(first_name, last_name):
+    try:
+        this_user = Employees.objects.get(EmpFName=first_name, EmpLName=last_name)
+    except Employees.DoesNotExist:
+        this_user = None
+    return this_user

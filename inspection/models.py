@@ -63,7 +63,7 @@ class passFailInspection(models.Model):
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='pf_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='pf_inspectorName')
+                                      related_name='pf_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
@@ -122,7 +122,7 @@ class rangeInspection(models.Model):
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ri_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='ri_inspectorName')
+                                      related_name='ri_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement")
@@ -180,7 +180,7 @@ class textInspection(models.Model):
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ti_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='ti_inspectorName')
+                                      related_name='ti_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
@@ -234,7 +234,7 @@ class IntegerInspection(models.Model):
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='Integer_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='Integer_inspectorName')
+                                      related_name='Integer_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
@@ -288,7 +288,7 @@ class FloatInspection(models.Model):
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='float_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
-                                      related_name='float_inspectorName')
+                                      related_name='float_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.FloatField(verbose_name="Enter Inspection Information:")
