@@ -71,6 +71,8 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
                     # save the data
                 my_form = form.save(commit=False)
                 my_form.employee = is_user
+                my_form.save()
+
                 return HttpResponseRedirect(redirect_url)
 
             else:
@@ -130,6 +132,8 @@ def view_repair_form(request, equip_type, equip_name):
                 #     # redirect to a new URL:
                 my_form = form.save(commit=False)
                 my_form.employee = is_user
+                my_form.save()
+
                 return HttpResponseRedirect(redirect_url)
 
             else:
