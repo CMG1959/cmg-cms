@@ -120,7 +120,9 @@ def view_pfInspection(request, jobNumber, inspectionName):
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
         else:
-            return HttpResponse(render(request, 'inspection/bad_cav.html'))
+            template = loader.get_template('inspection/bad_cav.html')
+            context = RequestContext(request)
+            return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -177,7 +179,9 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
         else:
-            return HttpResponse(render(request, 'inspection/bad_cav.html'))
+            template = loader.get_template('inspection/bad_cav.html')
+            context = RequestContext(request)
+            return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -232,7 +236,9 @@ def view_textInspection(request, jobNumber, inspectionName):
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
         else:
-            return HttpResponse(render(request, 'inspection/bad_cav.html'))
+            template = loader.get_template('inspection/bad_cav.html')
+            context = RequestContext(request)
+            return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -275,7 +281,9 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
         else:
-            return HttpResponse(render(request, 'inspection/bad_cav.html'))
+            template = loader.get_template('inspection/bad_cav.html')
+            context = RequestContext(request)
+            return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -321,7 +329,9 @@ def view_FloatInspection(request, jobNumber, inspectionName):
             # redirect to a new URL:
             return HttpResponseRedirect(redirect_url)
         else:
-            return HttpResponse(render(request, 'inspection/bad_cav.html'))
+            template = loader.get_template('inspection/bad_cav.html')
+            context = RequestContext(request)
+            return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
