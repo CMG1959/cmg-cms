@@ -1,5 +1,7 @@
 from django import forms
 from inspection.models import passFailInspection, rangeInspection, textInspection, IntegerInspection, FloatInspection
+from django.core.validators import RegexValidator
+import re
 
 
 class passFailInspectionForm(forms.ModelForm):
@@ -7,6 +9,7 @@ class passFailInspectionForm(forms.ModelForm):
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectorName','inspectionResult',
                   'defectType','headCavID']
+
 
 class rangeInspectionForm(forms.ModelForm):
     class Meta:

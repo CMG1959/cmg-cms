@@ -136,7 +136,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
             'use_checkbox2' : True,
             'id_check':'#id_inspectionResult',
             'idSelect':'#id_defectType',
-            'idSelect2':'#id_headCavID'
+            'idSelect2':'#id_headCavID',
+            'head_cav_id':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
@@ -199,6 +200,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             'min_val':rangeInfo.rangeMin,
             'max_val':rangeInfo.rangeMax,
             'id_result':'#id_inspectionResult',
+            'head_cav_id':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
@@ -242,7 +244,8 @@ def view_textInspection(request, jobNumber, inspectionName):
             'active_job': active_job,
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
-            'idSelect':'#id_headCavID'
+            'idSelect':'#id_headCavID',
+            'head_cav_id':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
@@ -282,7 +285,8 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
             'active_job': active_job,
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
-            'idSelect':'#id_headCavID'
+            'idSelect':'#id_headCavID',
+            'head_cav_id':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
@@ -325,7 +329,8 @@ def view_FloatInspection(request, jobNumber, inspectionName):
             'active_job': active_job,
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
-            'idSelect':'#id_headCavID'
+            'idSelect':'#id_headCavID',
+            'head_cav_id':'#id_headCavID'
         })
         return HttpResponse(template.render(context))
 
