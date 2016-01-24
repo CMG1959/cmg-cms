@@ -10,7 +10,7 @@ class ProductionHistory(models.Model):
         verbose_name_plural = 'Production History Log Entries'
         managed = False
 
-    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name")
+    inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name", blank=True)
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     dateCreatedL = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     jobNumber = models.CharField(max_length=20, verbose_name="Job Number", blank=True)
@@ -57,7 +57,7 @@ class MoldHistory(models.Model):
     id = models.CharField(max_length=36, primary_key=True, default=uuid.uuid4, editable=False)
     parent_id = models.CharField(max_length=36,default=uuid.uuid4,editable=False)
     Date_Performed = models.DateField(verbose_name='Date Performed', default=date.today)
-    inspectorName = models.CharField(max_length=20, verbose_name="Name")
+    inspectorName = models.CharField(max_length=20, verbose_name="Name", blank=True)
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     moldNumber = models.CharField(max_length=12, verbose_name="Mold Number")
     descEvent = models.CharField(max_length=1000, verbose_name="Event Description")

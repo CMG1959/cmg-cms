@@ -10,7 +10,7 @@ class Employees(models.Model):
     EmpNum = models.IntegerField(verbose_name='Employee Number', null=True)
     EmpLName = models.CharField(verbose_name='Last Name', max_length=50, null=True)
     EmpFName = models.CharField(verbose_name='First Name', max_length=50, null=True)
-    EmpLMName = models.CharField(verbose_name='First Name', max_length=20, null=True, default=' ')
+    EmpLMName = models.CharField(verbose_name='Alias', max_length=20, null=True, default=' ')
     EmpManNum = models.IntegerField(verbose_name='Employee Man Number', null=True)
     EmpShift = models.CharField(verbose_name='Shift', max_length=1, null=True)
     StatusActive =  models.BooleanField(verbose_name="Status Active",default=True)

@@ -168,26 +168,40 @@ def view_rangeInspection(request, jobNumber, inspectionName):
         form = rangeInspectionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            checkFormForLog(form, inspectionType = 'rangeInspection',
-                            inspectionName = rangeInfo.testName,
-                            activeJob=active_job, rangeInfo=rangeInfo)
 
-            if ((form.cleaned_data['numVal'] >=  rangeInfo.rangeMin) and (form.cleaned_data['numVal'] <= rangeInfo.rangeMax)):
-                inspectionResult = True
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+
+                # process the data in form.cleaned_data as required
+                redirect_url = '/inspection/%s/' % (jobNumber)
+                # save the data
+                checkFormForLog(form, inspectionType = 'rangeInspection',
+                                inspectionName = rangeInfo.testName,
+                                activeJob=active_job, rangeInfo=rangeInfo)
+
+                if ((form.cleaned_data['numVal'] >=  rangeInfo.rangeMin) and (form.cleaned_data['numVal'] <= rangeInfo.rangeMax)):
+                    inspectionResult = True
+                else:
+                    inspectionResult = False
+
+               # save the data
+                my_form = form.save(commit=False)
+
+                my_form.inspectorName = is_user
+
+                if my_form.headCavID:
+                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                my_form.save()
+
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
             else:
-                inspectionResult = False
-
-           # save the data
-            my_form = form.save(commit=False)
-            if my_form.headCavID:
-                my_form.headCavID = check_HeadCavID(my_form.headCavID)
-            my_form.save()
-
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
         else:
             template = loader.get_template('inspection/bad_cav.html')
             context = RequestContext(request)
@@ -230,21 +244,36 @@ def view_textInspection(request, jobNumber, inspectionName):
         form = textInspectionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            # save the data
-            my_form = form.save(commit=False)
-            if my_form.headCavID:
-                my_form.headCavID = check_HeadCavID(my_form.headCavID)
-            my_form.save()
-            # save the data
-            checkFormForLog(form, inspectionType = 'textInspection',
-                            inspectionName = inspectionName,
-                            activeJob=active_job)
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
+
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+                # save the data
+                # save the data
+                my_form = form.save(commit=False)
+
+                my_form.inspectorName = is_user
+
+                if my_form.headCavID:
+                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                my_form.save()
+                # save the data
+                checkFormForLog(form, inspectionType = 'textInspection',
+                                inspectionName = inspectionName,
+                                activeJob=active_job)
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
+
         else:
             template = loader.get_template('inspection/bad_cav.html')
             context = RequestContext(request)
@@ -279,17 +308,35 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
         form = textInspectionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            form.save()
-            # save the data
-            checkFormForLog(form, inspectionType = 'IntegerInspection',
-                            inspectionName = inspectionName,
-                            activeJob=active_job)
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
+
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+
+                # save the data
+                my_form = form.save(commit=False)
+
+                my_form.inspectorName = is_user
+
+                if my_form.headCavID:
+                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                my_form.save()
+
+                checkFormForLog(form, inspectionType = 'IntegerInspection',
+                                inspectionName = inspectionName,
+                                activeJob=active_job)
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
         else:
             template = loader.get_template('inspection/bad_cav.html')
             context = RequestContext(request)
@@ -324,20 +371,31 @@ def view_FloatInspection(request, jobNumber, inspectionName):
         form = textInspectionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # part_number = form.cleaned_data['jobID']
-            redirect_url = '/inspection/%s/' % (jobNumber)
-            # save the data
-            my_form = form.save(commit=False)
-            if my_form.headCavID:
-                my_form.headCavID = check_HeadCavID(my_form.headCavID)
-            my_form.save()
-            # save the data
-            checkFormForLog(form, inspectionType = 'FloatInspection',
-                            inspectionName = inspectionName,
-                            activeJob=active_job)
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
+
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+
+                # process the data in form.cleaned_data as required
+                # part_number = form.cleaned_data['jobID']
+                redirect_url = '/inspection/%s/' % (jobNumber)
+                # save the data
+                my_form = form.save(commit=False)
+                if my_form.headCavID:
+                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                my_form.save()
+                # save the data
+                checkFormForLog(form, inspectionType = 'FloatInspection',
+                                inspectionName = inspectionName,
+                                activeJob=active_job)
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
         else:
             template = loader.get_template('inspection/bad_cav.html')
             context = RequestContext(request)

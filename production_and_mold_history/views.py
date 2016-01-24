@@ -104,33 +104,36 @@ def view_specific_phl_form(request, jobNo):
         form = phlForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            newForm = ProductionHistory(
-                inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk),
-                jobNumber=jobNo.strip(),
-                descEvent=form.cleaned_data['descEvent'],
-                STA_Reported=sta,
-                Prod_shift=getShift(),
-                Prod_Date=timezone.localtime(timezone.now()).date(),
-                notifyToolroom = form.cleaned_data['notifyToolroom']
-            )
-            newForm.save()
 
-            if form.cleaned_data['notifyToolroom']:
-                pass
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                newForm = ProductionHistory(
+                    inspectorName=is_user,
+                    jobNumber=jobNo.strip(),
+                    descEvent=form.cleaned_data['descEvent'],
+                    STA_Reported=sta,
+                    Prod_shift=getShift(),
+                    Prod_Date=timezone.localtime(timezone.now()).date(),
+                    notifyToolroom = form.cleaned_data['notifyToolroom']
+                )
+                newForm.save()
 
-        redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
-        # redirect to a new URL:
-        return HttpResponseRedirect(redirect_url)
+                if form.cleaned_data['notifyToolroom']:
+                    pass
+
+                redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
+
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = phlForm()
-        form.fields["inspectorName"].queryset = (Employees.objects.filter(StatusActive=True,  IsQCStaff=True) |
-                                                Employees.objects.filter(StatusActive=True,  IsSupervStaff=True) |
-                                                Employees.objects.filter(StatusActive=True,  IsToolStaff=True)|
-                                                Employees.objects.filter(StatusActive=True,  IsMgmtStaff=True)).order_by('EmpLName')
-
 
         context = RequestContext(request, {
             'form': form,
@@ -151,30 +154,32 @@ def view_specific_mold_form(request, moldNo):
         form = mhlForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
 
-            lm_name = Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk)
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                newForm = MoldHistory(
+                    Date_Performed=form.cleaned_data['Date_Performed'],
+                    inspectorName= is_user,
+                    moldNumber=moldNo,
+                    descEvent=form.cleaned_data['descEvent'],
+                    pm=form.cleaned_data['pm'],
+                    repair=form.cleaned_data['repair'],
+                    hours_worked=form.cleaned_data['hours_worked'],
+                )
+                newForm.save()
 
-            newForm = MoldHistory(
-                Date_Performed=form.cleaned_data['Date_Performed'],
-                inspectorName= lm_name.EmpLMName,
-                moldNumber=moldNo,
-                descEvent=form.cleaned_data['descEvent'],
-                pm=form.cleaned_data['pm'],
-                repair=form.cleaned_data['repair'],
-                hours_worked=form.cleaned_data['hours_worked'],
-            )
-            newForm.save()
-
-        redirect_url = '/production_and_mold_history/mold_report/%s' % (moldNo)
-        # redirect to a new URL:
-        return HttpResponseRedirect(redirect_url)
+                redirect_url = '/production_and_mold_history/mold_report/%s' % (moldNo)
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = mhlForm()
-        # form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True,
-        #                                                                  IsToolStaff=True).order_by('EmpLName')
 
         context = RequestContext(request, {
             'form': form,
@@ -331,3 +336,10 @@ def getShift():
         shift = 3
 
     return shift
+
+def get_user_info(first_name, last_name):
+    try:
+        this_user = Employees.objects.get(EmpFName=first_name, EmpLName=last_name)
+    except Employees.DoesNotExist:
+        this_user = None
+    return this_user

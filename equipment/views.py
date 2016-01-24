@@ -62,12 +62,21 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
         form = equipmentPMForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # job_number = form.cleaned_data['job_Number']
-            redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
-            #     # redirect to a new URL:
-            form.save()
-        return HttpResponseRedirect(redirect_url)
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # job_number = form.cleaned_data['job_Number']
+                redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
+                #     # redirect to a new URL:
+                    # save the data
+                my_form = form.save(commit=False)
+                my_form.employee = is_user
+                return HttpResponseRedirect(redirect_url)
+
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -80,7 +89,6 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
                      'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type).id},
         )
         form.fields["pm_frequency"].queryset = PMFreq.objects.filter(pm_frequency=pm_type)
-        form.fields["employee"].queryset = Employees.objects.filter(StatusActive=True, IsMaintStaff=True).order_by('EmpLName') # admin
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
                                                               pm_frequency__pm_frequency=pm_type)
 
@@ -114,12 +122,20 @@ def view_repair_form(request, equip_type, equip_name):
         form = equipmentRepairForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # job_number = form.cleaned_data['job_Number']
-            redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
-            #     # redirect to a new URL:
-            form.save()
-        return HttpResponseRedirect(redirect_url)
+            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            if is_user:
+                # process the data in form.cleaned_data as required
+                # job_number = form.cleaned_data['job_Number']
+                redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
+                #     # redirect to a new URL:
+                my_form = form.save(commit=False)
+                my_form.employee = is_user
+                return HttpResponseRedirect(redirect_url)
+
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -127,7 +143,6 @@ def view_repair_form(request, equip_type, equip_name):
             initial={'equipment_ID': equip_info.id,
                      },
         )
-        form.fields["employee"].queryset = Employees.objects.filter(StatusActive=True, IsMaintStaff=True).order_by('EmpLName') # admin
 
     return render(request, 'equipment/forms/repair.html', {'form': form, 'equip_info': equip_info})
 
@@ -143,3 +158,10 @@ def view_repair_report(request, equip_type, equip_name):
         'repair_info': repair_report,
     })
     return HttpResponse(template.render(context))
+
+def get_user_info(first_name, last_name):
+    try:
+        this_user = Employees.objects.get(EmpFName=first_name, EmpLName=last_name)
+    except Employees.DoesNotExist:
+        this_user = None
+    return this_user

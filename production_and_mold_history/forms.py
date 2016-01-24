@@ -24,14 +24,11 @@ class moldLookupForm(forms.Form):
 class phlForm(forms.ModelForm):
     class Meta:
         model = ProductionHistory
-        fields = ['inspectorName', 'descEvent','notifyToolroom']
+        fields = [ 'descEvent','notifyToolroom']
 
 
 class mhlForm(forms.Form):
     Date_Performed = forms.DateField(label="Date Performed", required=True)
-    inspectorName = forms.ModelChoiceField(queryset=Employees.objects.filter(StatusActive=True,
-                                                                         IsToolStaff=True).order_by('EmpLName'),
-                                           label="Name", required=True)
     pm = forms.BooleanField(label="Preventative Maintenance", required=False)
     repair = forms.BooleanField(label="Repair", required=False)
     hours_worked = forms.DecimalField(label="Hours worked",decimal_places=2, max_digits=10, min_value=0, required=True)
