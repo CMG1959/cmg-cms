@@ -60,7 +60,7 @@ class MoldHistory(models.Model):
     inspectorName = models.CharField(max_length=20, verbose_name="Name", blank=True)
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     moldNumber = models.CharField(max_length=12, verbose_name="Mold Number")
-    descEvent = models.CharField(max_length=1000, verbose_name="Event Description")
+    descEvent = models.CharField(max_length=1000, verbose_name="Event Description", blank=True, null=True)
     pm = models.BooleanField(default=False, verbose_name="Preventative Maintenance")
     repair = models.BooleanField(default=False, verbose_name="Repair")
     hours_worked = models.DecimalField(verbose_name="Hours worked", max_digits=10, decimal_places=2)
