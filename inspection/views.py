@@ -191,6 +191,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                 my_form = form.save(commit=False)
 
                 my_form.inspectorName = is_user
+                my_form.inspectionResult = inspectionResult
 
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
