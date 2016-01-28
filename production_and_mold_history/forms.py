@@ -28,7 +28,7 @@ class phlForm(forms.ModelForm):
 
 
 class mhlForm(forms.Form):
-    Date_Performed = forms.DateField(label="Date Performed", required=True, inital=datetime.date.today)
+    Date_Performed = forms.DateField(label="Date Performed", required=True)
     pm = forms.BooleanField(label="Preventative Maintenance", required=False)
     repair = forms.BooleanField(label="Repair", required=False)
     hours_worked = forms.DecimalField(label="Hours worked",decimal_places=2, max_digits=10, min_value=0, required=True)
