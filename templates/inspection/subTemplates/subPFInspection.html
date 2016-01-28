@@ -31,7 +31,7 @@
                                 {{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}
                             </td>
                             <td> {{ ep.headCavID|default_if_none:"Full Shot" }}</td>
-                            {% if not ep.inspectionResult %}
+                            {% if ep.inspectionResult %}
                             <td>None</td>
                             {% else %}
                             <td>  {% for dt in ep.defectType.all %} {{ dt.passFail }}. <br> {% endfor %}  </td>
