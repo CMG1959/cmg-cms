@@ -123,6 +123,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
+                form.save_m2m()
+
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
             else:

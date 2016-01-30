@@ -69,7 +69,6 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
                 redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
                 #     # redirect to a new URL:
                     # save the data
-                print form
                 my_form = form.save(commit=False)
                 my_form.employee = is_user
                 my_form.save()
