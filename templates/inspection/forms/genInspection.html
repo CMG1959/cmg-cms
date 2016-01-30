@@ -57,6 +57,9 @@
 
 {% include "inspection/subTemplates/js_helpers/check_head_cav.html" %}
 
-<script>
-    $("#id_machineOperator").val({{ machine_operator }})
-</script>
+{% if machine_operator %}
+    <script>
+        $("#id_machineOperator").val({{ machine_operator }})
+    </script>
+{% endif %}
+
