@@ -146,14 +146,9 @@ def view_pfInspection(request, jobNumber, inspectionName):
         initial_dictionary = {'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
 
-
         form = passFailInspectionForm(initial=initial_dictionary)
 
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
-
-        if machine_operator:
-            form.fields['machineOperator'].queryset = Employees.objects.filter(EmpNum=machine_operator.EmpNum)
-
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -164,7 +159,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
             'id_check':'#id_inspectionResult',
             'idSelect':'#id_defectType',
             'idSelect2':'#id_headCavID',
-            'head_cav_id':'#id_headCavID'
+            'head_cav_id':'#id_headCavID',
+            'machine_operator': machine_operator.id
         })
         return HttpResponse(template.render(context))
 
