@@ -143,11 +143,14 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
         machine_operator = get_previous_mach_op(jobNumber)
 
-        form = passFailInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
-                     'passFailTestName':passFailTest.objects.get(testName=inspectionName).id,
-                     'machineOperator': machine_operator.id}
-        )
+        initial_dictionary = {'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
+                     'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
+
+        if machine_operator:
+            initial_dictionary.update({'machineOperator': machine_operator.id})
+
+        form = passFailInspectionForm(initial=initial_dictionary)
+
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
 
         template = loader.get_template('inspection/forms/genInspection.html')
