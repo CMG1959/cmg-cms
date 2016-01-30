@@ -5,8 +5,8 @@ from django.db import models
 # Create your models here.
 class EquipmentType(models.Model):
     class Meta:
-        verbose_name = 'Equipment Type'
-        verbose_name_plural = 'Equipment Types'
+        verbose_name = 'Equipment: Type'
+        verbose_name_plural = 'Equipment: Types'
 
     equipment_type = models.CharField(verbose_name="Equipment Type", max_length=50)  # Robot, IMM, ISBM
 
@@ -16,8 +16,8 @@ class EquipmentType(models.Model):
 
 class EquipmentManufacturer(models.Model):
     class Meta:
-        verbose_name = 'Equipment Manufacturer'
-        verbose_name_plural = 'Equipment Manufacturers'
+        verbose_name = 'Equipment: Manufacturer'
+        verbose_name_plural = 'Equipment: Manufacturers'
 
     manufacturer_name = models.CharField(verbose_name="Manufacturer Name", max_length=50)  # e.g. Wittmann
 
@@ -27,8 +27,8 @@ class EquipmentManufacturer(models.Model):
 
 class EquipmentInfo(models.Model):
     class Meta:
-        verbose_name = 'Equipment Information'
-        verbose_name_plural = 'Equipment Information'
+        verbose_name = 'Equipment: Information'
+        verbose_name_plural = 'Equipment: Information'
 
     equipment_type = models.ForeignKey(EquipmentType, verbose_name="Equipment Type")
     part_identifier = models.CharField(verbose_name="Identifier", max_length=25)  # common name like IMM02
@@ -43,8 +43,8 @@ class EquipmentInfo(models.Model):
 
 class PMFreq(models.Model):
     class Meta:
-        verbose_name = 'Preventative Maintenance Frequency'
-        verbose_name_plural = 'Preventative Maintenance Frequencies'
+        verbose_name = 'Equipment: Preventative Maintenance Frequency'
+        verbose_name_plural = 'Equipment: Preventative Maintenance Frequencies'
 
     # Month, Quarterly, Weekly, Yearly
     pm_frequency = models.CharField(verbose_name="PM Frequency", max_length=25)
@@ -55,8 +55,8 @@ class PMFreq(models.Model):
 
 class PM(models.Model):
     class Meta:
-        verbose_name = 'Preventative Maintenance Item'
-        verbose_name_plural = 'Preventative Maintenance Items'
+        verbose_name = 'Equipment: Preventative Maintenance Item'
+        verbose_name_plural = 'Equipment: Preventative Maintenance Items'
 
     # This is for adding PM information such as grease, inspect, etc
     equipment_type = models.ForeignKey('EquipmentType', verbose_name='Equipment Type')
@@ -69,8 +69,8 @@ class PM(models.Model):
 
 class EquipmentPM(models.Model):
     class Meta:
-        verbose_name = 'Perform PM'
-        verbose_name_plural = 'Performed PM'
+        verbose_name = 'Record - Performed PM'
+        verbose_name_plural = 'Record - Performed PM'
 
     Date_Performed = models.DateField(verbose_name='Date Performed', default=date.today)
     employee = models.ForeignKey('employee.Employees', verbose_name="Technician", blank=True)
@@ -87,8 +87,8 @@ class EquipmentPM(models.Model):
 
 class EquipmentRepair(models.Model):
     class Meta:
-        verbose_name = 'Repair Equipment'
-        verbose_name_plural = 'Repair Equipment'
+        verbose_name = 'Record - Equipment Repairs'
+        verbose_name_plural = 'Record - Equipment Repairs'
 
     Date_Performed = models.DateField(verbose_name='Date Performed', default=date.today)
     employee = models.ForeignKey('employee.Employees', verbose_name="Technician", blank=True)
