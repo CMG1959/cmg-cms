@@ -30,6 +30,7 @@
 <script src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
 <link href="{% static "jquery-ui/jquery-ui.min.css" %}" rel="stylesheet">
 
+
 <script>
     $(function() {
     $( "#id_Date_Performed" ).datepicker({
@@ -38,4 +39,9 @@
       changeYear: true
     });
   });
+</script>
+
+<script>
+    var today = new Date();
+    $('#id_Date_Performed').attr('value', today);
 </script>
