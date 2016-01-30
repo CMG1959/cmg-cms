@@ -107,7 +107,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
 
-                set_new_mach_op(jobNumber, is_user)
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -127,6 +126,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 form.save_m2m()
 
+                set_new_mach_op(jobNumber, my_form.inspectorName)
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -146,12 +146,14 @@ def view_pfInspection(request, jobNumber, inspectionName):
         initial_dictionary = {'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
 
-        if machine_operator:
-            initial_dictionary.update({'machineOperator': machine_operator.id})
 
         form = passFailInspectionForm(initial=initial_dictionary)
 
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
+
+        if machine_operator:
+            form.fields['machineOperator'].queryset = Employees.objects.filter(EmpNum=machine_operator.EmpNum)
+
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -968,6 +970,7 @@ def get_previous_mach_op(job_number):
         this_machine_operator = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
         employee_info = this_machine_operator.employee
     except Exception as e:
+        print str(e)
         employee_info = None
     return employee_info
 
