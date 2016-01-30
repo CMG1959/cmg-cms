@@ -28,11 +28,12 @@ for employee in Employees.objects.all():
     try:
         fname = employee.EmpFName
         lname = employee.EmpLName
-        man_num = employee.EmpManNum
+        man_num = employee.EmpNum
 
         user_obj = User.objects.get(first_name=fname,last_name=lname)
 
-        web_app_user = WebAppEmployee(user=user_obj,EmpManNum=man_num)
+        web_app_user = WebAppEmployee.objects.get(user=user_obj)
+        web_app_user.EmpNum=man_num
         web_app_user.save()
     except Exception as e:
         print str(e)

@@ -81,26 +81,31 @@ def createNewStartUpShot(request, jobNo):
         form = startupShotForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            print form.cleaned_data['inspectorName'].pk
-            # head, cavID = str(form.cleaned_data.get('headCavID')).replace(" ", "").split('-')
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
 
-            newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
-                                  jobNumber=jobNo, \
-                                  moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
-                                  inspectorName=Employees.objects.get(pk=form.cleaned_data['inspectorName'].pk), \
-                                  machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk), \
-                                  shotWeight=form.cleaned_data['shotWeight'], \
-                                  activeCavities=MattecInfo.activeCavities, \
-                                  cycleTime=MattecInfo.cycleTime, \
-                                  machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
+            if is_user:
 
-# add status active
-            newForm.save()
-            # process the data in form.cleaned_data as required
-            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
-    # if a GET (or any other method) we'll create a blank form
+                newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
+                                      jobNumber=jobNo, \
+                                      moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
+                                      inspectorName=is_user,\
+                                      machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk), \
+                                      shotWeight=form.cleaned_data['shotWeight'], \
+                                      activeCavities=MattecInfo.activeCavities, \
+                                      cycleTime=MattecInfo.cycleTime, \
+                                      machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
+
+    # add status active
+                newForm.save()
+                # process the data in form.cleaned_data as required
+                redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+        # if a GET (or any other method) we'll create a blank form
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
     else:
         if startUpShot.objects.filter(jobNumber=jobNo).exists():
             redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
@@ -108,8 +113,6 @@ def createNewStartUpShot(request, jobNo):
         else:
             form = startupShotForm()
             form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True,
-                                                                               IsOpStaff=True).order_by('EmpLName')
-            form.fields["inspectorName"].queryset = Employees.objects.filter(StatusActive=True,
                                                                              IsQCStaff=True).order_by('EmpLName')
 
             shotWeightName = startUpShotWeightLinkage.objects.all()[0]
@@ -130,3 +133,10 @@ def createNewStartUpShot(request, jobNo):
                             'min_val':min_val,
                             'max_val':max_val
                            })
+
+def get_user_info(man_num):
+    try:
+        this_user = Employees.objects.get(EmpNum=man_num)
+    except Employees.DoesNotExist:
+        this_user = None
+    return this_user

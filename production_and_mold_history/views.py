@@ -105,7 +105,7 @@ def view_specific_phl_form(request, jobNo):
         # check whether it's valid:
         if form.is_valid():
 
-            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
                 # process the data in form.cleaned_data as required
                 newForm = ProductionHistory(
@@ -155,7 +155,7 @@ def view_specific_mold_form(request, moldNo):
         # check whether it's valid:
         if form.is_valid():
 
-            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
                 # process the data in form.cleaned_data as required
                 newForm = MoldHistory(
@@ -337,9 +337,10 @@ def getShift():
 
     return shift
 
-def get_user_info(first_name, last_name):
+def get_user_info(man_num):
     try:
-        this_user = Employees.objects.get(EmpFName=first_name, EmpLName=last_name)
+        this_user = Employees.objects.get(EmpNum=man_num)
     except Employees.DoesNotExist:
         this_user = None
     return this_user
+    

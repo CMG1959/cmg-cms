@@ -62,7 +62,7 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
         form = equipmentPMForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
                 # process the data in form.cleaned_data as required
                 # job_number = form.cleaned_data['job_Number']
@@ -124,7 +124,7 @@ def view_repair_form(request, equip_type, equip_name):
         form = equipmentRepairForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            is_user = get_user_info(request.user.first_name, request.user.last_name)
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
                 # process the data in form.cleaned_data as required
                 # job_number = form.cleaned_data['job_Number']
@@ -163,9 +163,10 @@ def view_repair_report(request, equip_type, equip_name):
     })
     return HttpResponse(template.render(context))
 
-def get_user_info(first_name, last_name):
+def get_user_info(man_num):
     try:
-        this_user = Employees.objects.get(EmpFName=first_name, EmpLName=last_name)
+        this_user = Employees.objects.get(EmpNum=man_num)
     except Employees.DoesNotExist:
         this_user = None
     return this_user
+    

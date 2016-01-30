@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class WebAppEmployee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    EmpManNum = models.IntegerField(verbose_name='Employee Man Number', null=True)
+    EmpNum = models.IntegerField(verbose_name='Employee Number', null=True)
 
 
 class Employees(models.Model):
