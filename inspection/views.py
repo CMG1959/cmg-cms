@@ -956,4 +956,4 @@ def get_user_info(man_num):
     return this_user
 
 def get_previous_mach_op(inspection_type, job_number):
-
+    pass
