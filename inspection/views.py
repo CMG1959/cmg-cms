@@ -138,6 +138,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
     # if a GET (or any other method) we'll create a blank form
     else:
+
+
         form = passFailInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
@@ -952,3 +954,6 @@ def get_user_info(man_num):
     except Employees.DoesNotExist:
         this_user = None
     return this_user
+
+def get_previous_mach_op(inspection_type, job_number):
+

@@ -31,3 +31,11 @@ class Employees(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.EmpLName,self.EmpFName)
+
+class EmployeeAtWorkstation(models.Model):
+    class Meta:
+        verbose_name = 'Employee at workstation'
+        verbose_name = 'Employee at workstation'
+
+    employee = models.ForeignKey('Employees', verbose_name='Employee')
+    workstation = models.CharField(max_length=20, verbose_name="Job Number", unique=True)
