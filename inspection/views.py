@@ -14,7 +14,7 @@ from dashboard.models import errorLog
 from equipment.models import EquipmentInfo
 from part.models import Part
 from startupshot.models import startUpShot, MattecProd
-from employee.models import Employees
+from employee.models import Employees, EmployeeAtWorkstation
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch
@@ -106,6 +106,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
+
+                set_new_mach_op(jobNumber, is_user)
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -139,10 +141,12 @@ def view_pfInspection(request, jobNumber, inspectionName):
     # if a GET (or any other method) we'll create a blank form
     else:
 
+        machine_operator = get_previous_mach_op(jobNumber)
 
         form = passFailInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
-                     'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
+                     'passFailTestName':passFailTest.objects.get(testName=inspectionName).id,
+                     'machineOperator': machine_operator.id}
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
 
@@ -955,5 +959,23 @@ def get_user_info(man_num):
         this_user = None
     return this_user
 
-def get_previous_mach_op(inspection_type, job_number):
-    pass
+def get_previous_mach_op(job_number):
+    try:
+        mattec_info = MattecProd.objects.get(jobNumber=job_number)
+        this_machine_operator = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
+        employee_info = this_machine_operator.employee
+    except Exception as e:
+        employee_info = None
+    return employee_info
+
+
+def set_new_mach_op(job_number, employee_info):
+    try:
+        mattec_info = MattecProd.objects.get(jobNumber=job_number)
+        this_machine_operator = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
+        this_machine_operator.employee = employee_info
+    except EmployeeAtWorkstation.DoesNotExist:
+        mattec_info = MattecProd.objects.get(jobNumber=job_number)
+        EmployeeAtWorkstation(workstation=mattec_info.machNo, employee=employee_info).save()
+    except Exception as e:
+        pass
