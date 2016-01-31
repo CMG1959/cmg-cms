@@ -1021,8 +1021,7 @@ def get_previous_mach_op(job_number):
 def set_new_mach_op(job_number, employee_info):
     try:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
-        this_machine_operator = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
-        this_machine_operator.employee = employee_info
+        EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo).update(employee=employee_info)
     except EmployeeAtWorkstation.DoesNotExist:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
         EmployeeAtWorkstation(workstation=mattec_info.machNo, employee=employee_info).save()
