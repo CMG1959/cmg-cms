@@ -220,6 +220,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
     # if a GET (or any other method) we'll create a blank form
     else:
 
+        machine_operator = get_previous_mach_op(jobNumber)
 
         form = rangeInspectionForm(
             initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
@@ -242,7 +243,8 @@ def view_rangeInspection(request, jobNumber, inspectionName):
             'min_val':rangeInfo.rangeMin,
             'max_val':rangeInfo.rangeMax,
             'id_result':'#id_inspectionResult',
-            'head_cav_id':'#id_headCavID'
+            'head_cav_id':'#id_headCavID',
+            'machine_operator': machine_operator.id
         })
         return HttpResponse(template.render(context))
 
@@ -297,6 +299,7 @@ def view_textInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='tex', test_name=inspectionName)
 
+        machine_operator = get_previous_mach_op(jobNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -306,7 +309,8 @@ def view_textInspection(request, jobNumber, inspectionName):
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
             'idSelect':'#id_headCavID',
-            'head_cav_id':'#id_headCavID'
+            'head_cav_id':'#id_headCavID',
+            'machine_operator': machine_operator.id
         })
         return HttpResponse(template.render(context))
 
@@ -360,6 +364,7 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='IntegerType', test_name=inspectionName)
 
+        machine_operator = get_previous_mach_op(jobNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -369,7 +374,8 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
             'idSelect':'#id_headCavID',
-            'head_cav_id':'#id_headCavID'
+            'head_cav_id':'#id_headCavID',
+            'machine_operator': machine_operator.id
         })
         return HttpResponse(template.render(context))
 
@@ -419,6 +425,7 @@ def view_FloatInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='FloatType', test_name=inspectionName)
 
+        machine_operator = get_previous_mach_op(jobNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, {
@@ -428,7 +435,8 @@ def view_FloatInspection(request, jobNumber, inspectionName):
             'use_checkbox' : True,
             'id_check':'#id_inspectionResult',
             'idSelect':'#id_headCavID',
-            'head_cav_id':'#id_headCavID'
+            'head_cav_id':'#id_headCavID',
+            'machine_operator': machine_operator.id
         })
         return HttpResponse(template.render(context))
 
