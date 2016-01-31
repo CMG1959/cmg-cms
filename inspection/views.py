@@ -107,6 +107,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
 
+
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -117,6 +118,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 # save the data
                 my_form = form.save(commit=False)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 my_form.inspectorName = is_user
 
@@ -126,7 +128,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 form.save_m2m()
 
-                set_new_mach_op(jobNumber, form.machineOperator)
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -203,6 +204,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
                # save the data
                 my_form = form.save(commit=False)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 my_form.inspectorName = is_user
                 my_form.inspectionResult = inspectionResult
@@ -210,8 +212,6 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
-
-                set_new_mach_op(jobNumber, form.machineOperator)
 
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
@@ -281,6 +281,7 @@ def view_textInspection(request, jobNumber, inspectionName):
                 # save the data
                 # save the data
                 my_form = form.save(commit=False)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 my_form.inspectorName = is_user
 
@@ -292,7 +293,6 @@ def view_textInspection(request, jobNumber, inspectionName):
                                 inspectionName = inspectionName,
                                 activeJob=active_job)
                 # redirect to a new URL:
-                set_new_mach_op(jobNumber, form.machineOperator)
 
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -353,14 +353,13 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
 
                 # save the data
                 my_form = form.save(commit=False)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 my_form.inspectorName = is_user
 
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
-
-                set_new_mach_op(jobNumber, form.machineOperator)
 
                 checkFormForLog(form, inspectionType = 'IntegerInspection',
                                 inspectionName = inspectionName,
@@ -423,6 +422,8 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                 redirect_url = '/inspection/%s/' % (jobNumber)
                 # save the data
                 my_form = form.save(commit=False)
+                set_new_mach_op(jobNumber, form.machineOperator)
+
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
