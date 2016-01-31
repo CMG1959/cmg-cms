@@ -106,7 +106,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.machineOperator)
+                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
 
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
@@ -186,7 +186,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.machineOperator)
+                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -272,7 +272,7 @@ def view_textInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.machineOperator)
+                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -343,7 +343,7 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.machineOperator)
+                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -412,7 +412,7 @@ def view_FloatInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.machineOperator)
+                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
