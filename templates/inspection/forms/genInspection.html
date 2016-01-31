@@ -59,7 +59,8 @@
 
 {% if machine_operator %}
     <script>
-        $("#id_machineOperator").val("{{ machine_operator }}")
+        $("#id_machineOperator").val("{{ machine_operator }}");
+        $("#id_machineOperator").selectmenu("refresh");
     </script>
 {% endif %}
 
