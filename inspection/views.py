@@ -126,7 +126,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 form.save_m2m()
 
-                set_new_mach_op(jobNumber, my_form.inspectorName)
+                set_new_mach_op(jobNumber, form.machineOperator)
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -211,7 +211,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
-                set_new_mach_op(jobNumber, my_form.inspectorName)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
@@ -292,7 +292,7 @@ def view_textInspection(request, jobNumber, inspectionName):
                                 inspectionName = inspectionName,
                                 activeJob=active_job)
                 # redirect to a new URL:
-                set_new_mach_op(jobNumber, my_form.inspectorName)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -360,7 +360,7 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
-                set_new_mach_op(jobNumber, my_form.inspectorName)
+                set_new_mach_op(jobNumber, form.machineOperator)
 
                 checkFormForLog(form, inspectionType = 'IntegerInspection',
                                 inspectionName = inspectionName,
@@ -426,7 +426,7 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
-                set_new_mach_op(jobNumber, my_form.inspectorName)
+                set_new_mach_op(jobNumber, form.machineOperator)
                 # save the data
                 checkFormForLog(form, inspectionType = 'FloatInspection',
                                 inspectionName = inspectionName,
