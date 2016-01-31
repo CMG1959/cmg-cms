@@ -106,7 +106,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
 
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
@@ -119,12 +118,15 @@ def view_pfInspection(request, jobNumber, inspectionName):
                 # save the data
                 my_form = form.save(commit=False)
 
+                set_new_mach_op(jobNumber, my_form.machineOperator)
 
                 my_form.inspectorName = is_user
 
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
+
+
 
                 form.save_m2m()
 
@@ -186,7 +188,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
+                
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -205,8 +207,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
                # save the data
                 my_form = form.save(commit=False)
-
-
+                set_new_mach_op(jobNumber, my_form.machineOperator)
                 my_form.inspectorName = is_user
                 my_form.inspectionResult = inspectionResult
 
@@ -272,7 +273,7 @@ def view_textInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
+                
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -283,6 +284,9 @@ def view_textInspection(request, jobNumber, inspectionName):
                 # save the data
                 # save the data
                 my_form = form.save(commit=False)
+
+                set_new_mach_op(jobNumber, my_form.machineOperator)
+
                 my_form.inspectorName = is_user
 
                 if my_form.headCavID:
@@ -343,7 +347,7 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
+                
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -354,6 +358,9 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
 
                 # save the data
                 my_form = form.save(commit=False)
+
+                set_new_mach_op(jobNumber, my_form.machineOperator)
+
                 my_form.inspectorName = is_user
 
                 if my_form.headCavID:
@@ -412,7 +419,7 @@ def view_FloatInspection(request, jobNumber, inspectionName):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                set_new_mach_op(jobNumber, form.cleaned_data["machineOperator"])
+                
                 # process the data in form.cleaned_data as required
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
@@ -422,6 +429,8 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                 redirect_url = '/inspection/%s/' % (jobNumber)
                 # save the data
                 my_form = form.save(commit=False)
+
+                set_new_mach_op(jobNumber, my_form.machineOperator)
 
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
