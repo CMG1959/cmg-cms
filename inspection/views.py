@@ -206,6 +206,8 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
+                set_new_mach_op(jobNumber, my_form.inspectorName)
+
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -280,6 +282,8 @@ def view_textInspection(request, jobNumber, inspectionName):
                                 inspectionName = inspectionName,
                                 activeJob=active_job)
                 # redirect to a new URL:
+                set_new_mach_op(jobNumber, my_form.inspectorName)
+
                 return HttpResponseRedirect(redirect_url)
             else:
                 template = loader.get_template('inspection/bad_user.html')
@@ -342,6 +346,8 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
+                set_new_mach_op(jobNumber, my_form.inspectorName)
+
                 checkFormForLog(form, inspectionType = 'IntegerInspection',
                                 inspectionName = inspectionName,
                                 activeJob=active_job)
@@ -402,6 +408,7 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
+                set_new_mach_op(jobNumber, my_form.inspectorName)
                 # save the data
                 checkFormForLog(form, inspectionType = 'FloatInspection',
                                 inspectionName = inspectionName,
