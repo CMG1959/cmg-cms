@@ -1019,11 +1019,15 @@ def get_previous_mach_op(job_number):
 
 
 def set_new_mach_op(job_number, employee_info):
+    print 'trying to set shit'
     try:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
-        EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo).update(employee=employee_info)
+        current_station = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
+        current_station.employee=employee_info
+        current_station.save()
     except EmployeeAtWorkstation.DoesNotExist:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
         EmployeeAtWorkstation(workstation=mattec_info.machNo, employee=employee_info).save()
+        print 'Shit does not exist'
     except Exception as e:
         pass
