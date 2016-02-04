@@ -17,7 +17,7 @@ class passFailByPartAdmin(admin.ModelAdmin):
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class passFailInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['passFailTestName','jobID','dateCreated','inspectionResult']
+    search_fields = ['passFailTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('passFailTestName','jobID','dateCreated','inspectionResult')
 
 
@@ -32,7 +32,7 @@ class rangeTestByPartAdmin(admin.ModelAdmin):
 
 
 class rangeInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['rangeTestName','jobID','dateCreated','inspectionResult']
+    search_fields = ['rangeTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('rangeTestName','jobID','dateCreated','inspectionResult')
 
 
@@ -47,7 +47,7 @@ class textRecordByPartAdmin(admin.ModelAdmin):
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class textInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['textTestName','jobID','dateCreated','inspectionResult']
+    search_fields = ['textTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('textTestName','jobID','dateCreated','inspectionResult')
 
 
@@ -62,7 +62,7 @@ class IntegerRecordByPartAdmin(admin.ModelAdmin):
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class IntegerInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['integerTestName','jobID','dateCreated','inspectionResult']
+    search_fields = ['integerTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('integerTestName','jobID','dateCreated','inspectionResult')
 
 
@@ -76,7 +76,7 @@ class FloatRecordByPartAdmin(admin.ModelAdmin):
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class FloatInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['floatTestName','jobID','dateCreated','inspectionResult']
+    search_fields = ['floatTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('floatTestName','jobID','dateCreated','inspectionResult')
 
 

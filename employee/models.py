@@ -38,4 +38,4 @@ class EmployeeAtWorkstation(models.Model):
         verbose_name = 'Employee at workstation'
 
     employee = models.ForeignKey('Employees', verbose_name='Employee')
-    workstation = models.CharField(max_length=20, verbose_name="Job Number", unique=True)
+    workstation = models.CharField(max_length=20, verbose_name="Workstation", unique=True)
