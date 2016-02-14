@@ -1,12 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Mold, PartIdentifier
-
-
-class PartIdentifierInline(admin.StackedInline):
-    model = PartIdentifier
-
+from .models import Mold
 
 class MoldAdmin(admin.ModelAdmin):
     list_display = ('mold_number','mold_description')
@@ -14,8 +9,6 @@ class MoldAdmin(admin.ModelAdmin):
     fields = ['mold_number',
               'mold_description',
               'num_cavities']
-
-    inlines = [PartIdentifierInline]
 
     search_fields = ['mold_number']
 

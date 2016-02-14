@@ -9,11 +9,11 @@ class passFailTestAdmin(admin.ModelAdmin):
     list_display = ('testName', 'isSystemInspection')
 
 class passFailTestCriteriaAdmin(admin.ModelAdmin):
-    search_fields = ['testName','passFail']
+    search_fields = ['testName__testName','passFail']
     list_display = ('testName','passFail')
 
 class passFailByPartAdmin(admin.ModelAdmin):
-    search_fields = ['testName','item_Number']
+    search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class passFailInspectionAdmin(admin.ModelAdmin):
@@ -27,7 +27,7 @@ class rangeTestAdmin(admin.ModelAdmin):
     list_display = ('testName', 'isSystemInspection')
 
 class rangeTestByPartAdmin(admin.ModelAdmin):
-    search_fields = ['testName','item_Number']
+    search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift', 'rangeMin','rangeMax')
 
 
@@ -43,7 +43,7 @@ class textRecordAdmin(admin.ModelAdmin):
     list_display = ('testName','requireAll', 'isSystemInspection')
 
 class textRecordByPartAdmin(admin.ModelAdmin):
-    search_fields = ['testName','item_Number']
+    search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class textInspectionAdmin(admin.ModelAdmin):
@@ -58,7 +58,7 @@ class IntegerRecordAdmin(admin.ModelAdmin):
     list_display = ('testName','requireAll', 'isSystemInspection')
 
 class IntegerRecordByPartAdmin(admin.ModelAdmin):
-    search_fields = ['testName','item_Number']
+    search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class IntegerInspectionAdmin(admin.ModelAdmin):
@@ -72,7 +72,7 @@ class FloatRecordAdmin(admin.ModelAdmin):
     list_display = ('testName', 'requireAll', 'isSystemInspection')
 
 class FloatRecordByPartAdmin(admin.ModelAdmin):
-    search_fields = ['testName','item_Number']
+    search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
 class FloatInspectionAdmin(admin.ModelAdmin):
