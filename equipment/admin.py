@@ -5,10 +5,10 @@ from .models import EquipmentType, EquipmentManufacturer, EquipmentInfo, PM, PMF
 
 class EquipInfoAdmin(admin.ModelAdmin):
     search_fields = ['part_identifier']
-    list_display = ('equipment_type__equipment_type','part_identifier','manufacturer_name')
+    list_display = ('equipment_type', 'part_identifier','manufacturer_name')
 
 class PMAdmin(admin.ModelAdmin):
-    list_display = ('equipment_type__equipment_type','pm_frequency','pm_item')
+    list_display = ('equipment_type','pm_frequency','pm_item')
 
 
 class EquipmentPMAdmin(admin.ModelAdmin):
