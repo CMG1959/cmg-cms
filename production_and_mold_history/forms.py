@@ -25,6 +25,9 @@ class phlForm(forms.ModelForm):
     class Meta:
         model = ProductionHistory
         fields = [ 'descEvent','notifyToolroom']
+        widgets = {
+                'descEvent': forms.Textarea(attrs={'rows':10}),
+            }
 
 
 class mhlForm(forms.Form):
@@ -33,6 +36,12 @@ class mhlForm(forms.Form):
     repair = forms.BooleanField(label="Repair", required=False)
     hours_worked = forms.DecimalField(label="Hours worked",decimal_places=2, max_digits=10, min_value=0, required=True)
     descEvent = forms.CharField(label="Event Description",max_length=1000, required=False)
+
+    class Meta:
+        widgets = {
+                'descEvent': forms.Textarea(attrs={'rows':10}),
+            }
+
     # class Meta: ##
     #     model = MoldHistory
     #     fields = ['inspectorName', 'pm', 'repair', 'hours_worked', 'descEvent']
