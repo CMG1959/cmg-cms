@@ -35,12 +35,8 @@ class mhlForm(forms.Form):
     pm = forms.BooleanField(label="Preventative Maintenance", required=False)
     repair = forms.BooleanField(label="Repair", required=False)
     hours_worked = forms.DecimalField(label="Hours worked",decimal_places=2, max_digits=10, min_value=0, required=True)
-    descEvent = forms.CharField(label="Event Description",max_length=1000, required=False)
+    descEvent = forms.CharField(label="Event Description",max_length=1000, required=False, widget=forms.Textarea(attrs={'rows':10, 'spellcheck': True}))
 
-    class Meta:
-        widgets = {
-                'descEvent': forms.Textarea(attrs={'rows':10, 'spellcheck': True}),
-            }
 
     # class Meta: ##
     #     model = MoldHistory
