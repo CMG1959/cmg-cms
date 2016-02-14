@@ -95,11 +95,11 @@ class EquipmentRepair(models.Model):
     dateCreated = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
     equipment_ID = models.ForeignKey('EquipmentInfo', verbose_name="Equipment ID")
     po_num = models.CharField(verbose_name='PO Number', max_length=25, null=True, blank=True)
-    part_supplier = models.ForeignKey('supplier.supplier', verbose_name='Part Supplier')
-    part_name = models.CharField(verbose_name='Part Name', max_length=50)
+    part_supplier = models.ForeignKey('supplier.supplier', verbose_name='Part Supplier', null=True, blank=True)
+    part_name = models.CharField(verbose_name='Part Name', max_length=50, null=True, blank=True)
     part_number = models.CharField(verbose_name='Part Number', max_length=25, null=True, blank=True)
-    part_cost = models.DecimalField(verbose_name='Unit Cost', max_digits=12, decimal_places=2)
-    part_quantity = models.IntegerField(verbose_name='Quantity')
+    part_cost = models.DecimalField(verbose_name='Unit Cost', max_digits=12, decimal_places=2, null=True, blank=True)
+    part_quantity = models.IntegerField(verbose_name='Quantity', null=True, blank=True)
     comments = models.CharField(max_length=1000, verbose_name="Event Description", null=True,blank=True)
 
     def __unicode__(self):
