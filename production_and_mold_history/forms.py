@@ -26,7 +26,7 @@ class phlForm(forms.ModelForm):
         model = ProductionHistory
         fields = [ 'descEvent','notifyToolroom']
         widgets = {
-                'descEvent': forms.Textarea(attrs={'rows':10}),
+                'descEvent': forms.Textarea(attrs={'rows':10, 'spellcheck': True}),
             }
 
 
@@ -39,7 +39,7 @@ class mhlForm(forms.Form):
 
     class Meta:
         widgets = {
-                'descEvent': forms.Textarea(attrs={'rows':10}),
+                'descEvent': forms.Textarea(attrs={'rows':10, 'spellcheck': True}),
             }
 
     # class Meta: ##
