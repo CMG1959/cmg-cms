@@ -9,79 +9,30 @@
 <script src="{% static "bootcard/js/bootcards.min.js" %}"></script>
 
 
-{% if user.is_authenticated %}
-    <div class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle"
-                            data-toggle="collapse" data-target="#qms-navbar" >
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="#" class="navbar-brand">QMS</a>
-                </div>
 
-                <div class="collapse navbar-collapse" id="qms-navbar">
-                    <ul class="nav navbar-nav">
-                        <li><a href="/">Home</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Dashboards <b class="caret"></b> </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="downloads">Inspection Log</a></li>
-                                <li><a href="downloads">Error Log</a></li>
-                                <li><a href="downloads">Tooling Requests</a></li>
-                            </ul>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Inspections <b class="caret"></b> </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="downloads">Record: Startup Shot</a></li>
-                                <li><a href="downloads">Record: Inspection</a></li>
-                                <li><a href="downloads">Report: Startup Shot</a></li>
-                                <li class="divider"></li>
-                                <li><a href="downloads">Record: Part</a></li>
-                                <li><a href="downloads">Record: Job</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">PHL</a></li>
-                        <li><a href="#">Equipment</a></li>
-                    </ul>
-                </div>
 
-                <div class="navbar-right">
-                    <ul class="nav navbar-nav">
-                        <li class="active">{{ request.user.username }}</li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-{% endif %}
-{##}
-{#<div class="col-sm-2 hidden-xs">#}
-{#    <div class="docs-menu affix">#}
-{#        <ul class="nav nav-pills nav-stacked">#}
-{#            {% if user.is_authenticated %}#}
-{#                Welcome, {{ request.user.username }}#}
-{#            <li><a href="/">Home</a></li>#}
-{#            <li><a href="/startupshot/">Startup Shot</a></li>#}
-{#            <li><a href="/startupshot/view">Startup Shot Report</a></li>#}
-{#            <li><a href="/inspection/">Inspection</a></li>#}
-{#            <li><a href="/inspection/itemReport/">Part Report</a></li>#}
-{#            <li><a href="/inspection/jobReport/">Job Report</a></li>#}
-{#            <li><a href="/production_and_mold_history/">PHL</a></li>#}
-{#            <li><a href="/equipment/">Equipment</a></li>#}
-{#            <li><a href="/dashboard/errorLog/">Error Log</a></li>#}
-{#            <li><a href="/production_and_mold_history/mold_maintence_request/">Tooling Requests</a></li>#}
-{#            <li><a href="/dashboard/errorProdLog/">Production Comments</a></li>#}
-{#            <li><a href="/dashboard/inspectionLog/">Inspection Log</a></li>#}
-{#                <li><a href="/logout">Log out</a></li>#}
-{#            {% endif %}#}
-{#        </ul>#}
-{#    </div>#}
-{#</div>#}
+<div class="col-sm-2 hidden-xs">
+    <div class="docs-menu affix">
+        <ul class="nav nav-pills nav-stacked">
+            {% if user.is_authenticated %}
+                Welcome, {{ request.user.username }}
+            <li><a href="/">Home</a></li>
+            <li><a href="/startupshot/">Startup Shot</a></li>
+            <li><a href="/startupshot/view">Startup Shot Report</a></li>
+            <li><a href="/inspection/">Inspection</a></li>
+            <li><a href="/inspection/itemReport/">Part Report</a></li>
+            <li><a href="/inspection/jobReport/">Job Report</a></li>
+            <li><a href="/production_and_mold_history/">PHL</a></li>
+            <li><a href="/equipment/">Equipment</a></li>
+            <li><a href="/dashboard/errorLog/">Error Log</a></li>
+            <li><a href="/production_and_mold_history/mold_maintence_request/">Tooling Requests</a></li>
+            <li><a href="/dashboard/errorProdLog/">Production Comments</a></li>
+            <li><a href="/dashboard/inspectionLog/">Inspection Log</a></li>
+                <li><a href="/logout">Log out</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
 
 
 
