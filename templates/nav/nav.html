@@ -19,7 +19,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="#" class="navbar-brand">QMS - {{ request.user.username }}</a>
+                    <a href="#" class="navbar-brand">QMS</a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="qms-navbar">
@@ -47,6 +47,12 @@
                         </li>
                         <li><a href="#">PHL</a></li>
                         <li><a href="#">Equipment</a></li>
+                    </ul>
+                </div>
+
+                <div class="navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li class="active">{{ request.user.username }}</li>
                     </ul>
                 </div>
 
