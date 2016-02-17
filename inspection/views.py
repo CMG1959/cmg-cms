@@ -23,6 +23,7 @@ from reports import JobReport
 import collections
 import json
 import datetime
+from decimal import Decimal
 ######################################
 #
 #  Section for generating indexes, etc
@@ -876,14 +877,19 @@ def checkPartInspection(item_Number):
 
     for requiredTests in rangeTest.objects.filter(requireAll=True):
         if not rangeTestByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
-            exp_part_weight = Part.objects.get(item_Number=item_Number).exp_part_weight
-            low_exp = round(exp_part_weight*0.95, 3)
-            high_exp = round(exp_part_weight*1.05, 3)
-
-            newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
-                                               testName = requiredTests,
-                                                rangeMin=low_exp,
-                                                rangeMax=high_exp)
+            try:
+                exp_part_weight = Part.objects.get(item_Number=item_Number).exp_part_weight
+                low_exp = Decimal(exp_part_weight*0.95)
+                high_exp = Decimal(exp_part_weight*1.05)
+                newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
+                                                    testName = requiredTests,
+                                                    rangeMin=low_exp,
+                                                    rangeMax=high_exp)
+            except Exception as e:
+                newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
+                                                    testName = requiredTests,
+                                                    rangeMin=0,
+                                                    rangeMax=999999)
             newPartInspection.save()
 
 
