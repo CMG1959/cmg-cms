@@ -1,5 +1,6 @@
 from django.conf.urls import url
-
+from CIMC.shared_router import SharedAPIRootRouter
+from rest_views import EquipmentTypeViewSet, EquipmentManufacturerViewSet, EquipmentInfoViewSet
 from . import views
 
 urlpatterns = [
@@ -21,3 +22,8 @@ urlpatterns = [
     ### Go to Repair form
     url(r'^(?P<equip_type>[^/]+)/(?P<equip_name>[^/]+)/Repair$', views.view_repair_form, name='view_repair_form'),
 ]
+
+router = SharedAPIRootRouter()
+router.register(r'EquipmentType', EquipmentTypeViewSet)
+router.regiser(r'EquipmentManufacturer', EquipmentManufacturerViewSet)
+router.regiser(r'EquipmentInfo', EquipmentInfoViewSet)

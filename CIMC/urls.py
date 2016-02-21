@@ -20,7 +20,14 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from shared_router import SharedAPIRootRouter
 
+
 def api_urls():
+    from importlib import import_module
+    for app in settings.INSTALLED_APPS:
+        try:
+            import_module(app + '.urls')
+        except (ImportError, AttributeError):
+            pass
     return SharedAPIRootRouter.shared_router.urls
 
 urlpatterns = [
