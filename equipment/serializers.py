@@ -19,4 +19,4 @@ class EquipmentInfoSerializer(serializers.ModelSerializer):
     # equipment_types = serializers.StringRelatedField(many=False)
     # equipment_manufacturer = serializers.StringRelatedField(many=False)
     equipment_type = EquipmentTypeSerializer(many=False)
-    equipment_manufacturer = EquipmentManufacturerSerializer(many=False)
+    manufacturer_name = EquipmentManufacturerSerializer(many=False)
