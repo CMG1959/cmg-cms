@@ -31,10 +31,9 @@ class EquipmentInfo(models.Model):
         verbose_name = 'Equipment - Information'
         verbose_name_plural = 'Equipment - Information'
 
-    equipment_type = models.ForeignKey(EquipmentType, verbose_name="Equipment Type", related_name='equipment_types')
+    equipment_type = models.ForeignKey(EquipmentType, verbose_name="Equipment Type")
     part_identifier = models.CharField(verbose_name="Identifier", max_length=25)  # common name like IMM02
-    manufacturer_name = models.ForeignKey(EquipmentManufacturer, verbose_name="Manufacturer Name",
-                                          related_name='equipment_manufacturer')
+    manufacturer_name = models.ForeignKey(EquipmentManufacturer, verbose_name="Manufacturer Name")
     serial_number = models.CharField(verbose_name="Serial Number", max_length=25)
     date_of_manufacture = models.DateField(verbose_name="Date of Manufacture", default=date.today)
     is_active = models.BooleanField(verbose_name="Is Active", default=True)
