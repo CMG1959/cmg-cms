@@ -8,7 +8,7 @@ class EquipmentType(models.Model):
         verbose_name = 'Equipment - Type'
         verbose_name_plural = 'Equipment - Types'
 
-    equipment_type = models.CharField(verbose_name="Equipment Type", max_length=50)  # Robot, IMM, ISBM
+    equipment_type = models.CharField(verbose_name="Equipment Type", max_length=50, unique=True)  # Robot, IMM, ISBM
 
     def __unicode__(self):
         return self.equipment_type
@@ -20,7 +20,7 @@ class EquipmentManufacturer(models.Model):
         verbose_name = 'Equipment - Manufacturer'
         verbose_name_plural = 'Equipment - Manufacturers'
 
-    manufacturer_name = models.CharField(verbose_name="Manufacturer Name", max_length=50)  # e.g. Wittmann
+    manufacturer_name = models.CharField(verbose_name="Manufacturer Name", max_length=50, unique=True)  # e.g. Wittmann
 
     def __unicode__(self):
         return self.manufacturer_name
