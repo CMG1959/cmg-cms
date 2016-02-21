@@ -25,5 +25,5 @@ urlpatterns = [
 
 router = SharedAPIRootRouter()
 router.register(r'EquipmentType', EquipmentTypeViewSet)
-router.regiser(r'EquipmentManufacturer', EquipmentManufacturerViewSet)
-router.regiser(r'EquipmentInfo', EquipmentInfoViewSet)
+router.register(r'EquipmentManufacturer', EquipmentManufacturerViewSet)
+router.register(r'EquipmentInfo', EquipmentInfoViewSet)
