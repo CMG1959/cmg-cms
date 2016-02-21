@@ -19,10 +19,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from rest_framework import routers
-from equipment.rest_views import EquipmentTypeSerializer
+from equipment.rest_views import EquipmentTypeViewSet
 
 router = routers.DefaultRouter()
-router.register(r'EquipmentType', EquipmentTypeSerializer)
+router.register(r'EquipmentType', EquipmentTypeViewSet)
 
 
 urlpatterns = [
