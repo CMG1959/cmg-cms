@@ -12,8 +12,8 @@ class EquipmentManufacturerSerializer(serializers.ModelSerializer):
         fields = ('id', 'manufacturer_name')
 
 class EquipmentInfoSerializer(serializers.ModelSerializer):
-    equipment_type = serializers.StringRelatedField()
-    equipment_manufacturer = serializers.StringRelatedField()
+    equipment_type = serializers.StringRelatedField(many=False)
+    equipment_manufacturer = serializers.StringRelatedField(many=False)
 
     class Meta:
         model = EquipmentInfo
