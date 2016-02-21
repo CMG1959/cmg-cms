@@ -18,6 +18,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from rest_framework import routers
+from equipment.rest_views import EquipmentTypeSerializer
+
+router = routers.DefaultRouter()
+router.register(r'EquipmentType', EquipmentTypeSerializer)
+
 
 urlpatterns = [
                   url(r'^/?$', 'home.views.index'),
@@ -30,5 +36,6 @@ urlpatterns = [
                   url(r'^accounts/login/$', auth_views.login),
                   url(r'^mobile/', include('mobile_views.urls')),
                   url(r'^logout$', auth_views.logout, {'next_page': '/'}),
+                  url(r'rest_api/', include(router.urls)),
                   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

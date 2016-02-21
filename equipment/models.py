@@ -1,6 +1,6 @@
 from datetime import date
-
 from django.db import models
+
 
 # Create your models here.
 class EquipmentType(models.Model):
@@ -12,6 +12,7 @@ class EquipmentType(models.Model):
 
     def __unicode__(self):
         return self.equipment_type
+
 
 
 class EquipmentManufacturer(models.Model):
