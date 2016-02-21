@@ -17,5 +17,5 @@ class EquipmentInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EquipmentInfo
-        fields = ('id', 'equipment_type', 'part_identifier', 'manufacturer_name',
+        fields = ('id', 'equipment_type', 'part_identifier', 'equipment_manufacturer',
                   'serial_number', 'date_of_manufacture', 'is_active')
