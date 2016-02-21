@@ -27,3 +27,5 @@ class EquipmentInfoSerializer(serializers.ModelSerializer):
 
         equipment_info = EquipmentInfo.objects.create(**validated_data)
 
+        return equipment_info
+
