@@ -12,10 +12,10 @@ class EquipmentManufacturerSerializer(serializers.ModelSerializer):
         fields = ('id', 'manufacturer_name')
 
 class EquipmentInfoSerializer(serializers.ModelSerializer):
-    equipment_type = serializers.StringRelatedField()
-    equipment_manufacturer = serializers.StringRelatedField()
+    equipment_types = serializers.StringRelatedField()
+    equipment_manufacturers = serializers.StringRelatedField()
 
     class Meta:
         model = EquipmentInfo
-        fields = ('id', 'equipment_type', 'part_identifier', 'equipment_manufacturer',
+        fields = ('id', 'equipment_types', 'part_identifier', 'equipment_manufacturers',
                   'serial_number', 'date_of_manufacture', 'is_active')
