@@ -36,6 +36,6 @@ urlpatterns = [
                   url(r'^accounts/login/$', auth_views.login),
                   url(r'^mobile/', include('mobile_views.urls')),
                   url(r'^logout$', auth_views.logout, {'next_page': '/'}),
-                  url(r'rest_api/', include(router.urls)),
+                  url(r'^rest_api/', include(router.urls)),
                   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
