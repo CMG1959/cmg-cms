@@ -4,12 +4,12 @@ from rest_framework import serializers
 class EquipmentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EquipmentType
-        fields = ('equipment_type')
+        fields = ('equipment_type',)
 
 class EquipmentManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = EquipmentManufacturer
-        fields = ('manufacturer_name')
+        fields = ('manufacturer_name',)
 
 class EquipmentInfoSerializer(serializers.ModelSerializer):
     class Meta:
