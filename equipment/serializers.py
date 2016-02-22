@@ -12,15 +12,10 @@ class EquipmentManufacturerSerializer(serializers.ModelSerializer):
         fields = ('id', 'manufacturer_name',)
 
 class EquipmentInfoSerializer(serializers.ModelSerializer):
-    manufacturer_names = serializers.SlugRelatedField(
-        many=False,
-        read_only=True,
-        slug_field='manufacturer_name'
-     )
 
     class Meta:
         model = EquipmentInfo
-        fields = ('id', 'equipment_type', 'part_identifier', 'manufacturer_names',
+        fields = ('id', 'equipment_type', 'part_identifier', 'manufacturer_name__manufacturer_name',
                   'serial_number', 'date_of_manufacture', 'is_active')
 
     equipment_type = EquipmentTypeSerializer(many=False)
