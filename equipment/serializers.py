@@ -16,16 +16,13 @@ class EquipmentInfoSerializer(serializers.ModelSerializer):
         model = EquipmentInfo
         fields = ('id', 'equipment_type', 'part_identifier', 'manufacturer_name',
                   'serial_number', 'date_of_manufacture', 'is_active')
-    # equipment_types = serializers.StringRelatedField(many=False)
-    # equipment_manufacturer = serializers.StringRelatedField(many=False)
+
     equipment_type = EquipmentTypeSerializer(many=False)
     manufacturer_name = EquipmentManufacturerSerializer(many=False)
 
     def create(self, validated_data):
-        equipment_type = validated_data.pop('equipment_type')
-        manufacturer_name = validated_data.pop('manufacturer_name')
-
+        # equipment_type = validated_data.pop('equipment_type')
+        # manufacturer_name = validated_data.pop('manufacturer_name')
         equipment_info = EquipmentInfo.objects.create(**validated_data)
-
         return equipment_info
 
