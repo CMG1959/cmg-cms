@@ -19,6 +19,7 @@ class EquipmentType(models.Model):
         verbose_name_plural = 'Equipment - Types'
 
     equipment_type = models.CharField(verbose_name="Equipment Type", max_length=50, unique=True)  # Robot, IMM, ISBM
+    equipment_class = models.ForeignKey(EquipmentClass, verbose_name="Equipment Class")
 
     def __unicode__(self):
         return self.equipment_type
