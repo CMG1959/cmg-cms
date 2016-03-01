@@ -22,9 +22,9 @@
         <div class="bootcards-list">
             <div class="panel panel-default">
                 <div class="list-group">
-                    {% for each_class in equipment_classes %}
-                        <a class="list-group-item" href="/equipment/{{ each_class.id }}">
-                            <h4 class="list-group-item-heading">{{ each_class.group_name }}</h4>
+                    {% for each_type in equipment_types %}
+                        <a class="list-group-item" href="/equipment/{{ equipment_class_id }}/{{ equipment_class }}/{{ each_type.equipment_type }}">
+                            <h4 class="list-group-item-heading">{{ each_type.equipment_type }}</h4>
                             <p class="list-group-item-text">Click here to record an activity </p>
                         </a>
                     {% endfor %}

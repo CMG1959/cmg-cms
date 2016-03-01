@@ -3,28 +3,43 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+
 from employee.models import Employees
 
-from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair
+from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair, EquipmentClass
 from forms import equipmentPMForm, equipmentRepairForm
 
 # Create your views here.
 @login_required
 def view_index(request):
-    equipmentTypes = EquipmentType.objects.order_by('equipment_type').all()
-
+    # equipmentTypes = EquipmentType.objects.order_by('equipment_type').all()
+    equipment_classes = EquipmentClass.objects.order_by('group_name').all()
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')
 
     template = loader.get_template('equipment/index.html')
     context = RequestContext(request, {
-        'equipmentTypes': equipmentTypes,
+        # 'equipmentTypes': equipmentTypes,
+        'equipment_classes': equipment_classes,
+    })
+    return HttpResponse(template.render(context))
+
+@login_required
+def view_equipment_types(request, equipment_class_id):
+    equipment_types = EquipmentType.objects.filter(equipment_class_id =equipment_class_id).order_by('equipment_type')
+    template = loader.get_template('equipment/equipment_types.html')
+    context = RequestContext(request, {
+        # 'equipmentTypes': equipmentTypes,
+        'equipment_class' : equipment_class_id,
+        'equipment_types': equipment_types,
     })
     return HttpResponse(template.render(context))
 
 
 @login_required
-def view_equipment(request, equip_type):
-    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__equipment_type=equip_type,is_active=True).order_by('part_identifier')
+def view_equipment(request, equipment_class_id, equip_type):
+    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__equipment_type=equip_type,
+                                                  equipment_type__equipment_class_id=equipment_class_id,
+                                                  is_active=True).order_by('part_identifier')
 
 
     # active_parts = Production.objects.filter(inProduction=True).select_related('item')
@@ -33,19 +48,23 @@ def view_equipment(request, equip_type):
 
     template = loader.get_template('equipment/equipment_index.html')
     context = RequestContext(request, {
+        'equipment_class_id': equipment_class_id,
         'equipmentTypes': equipmentTypes,
     })
     return HttpResponse(template.render(context))
 
 
 @login_required
-def view_equipment_info(request, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+def view_equipment_info(request, equipment_class_id, equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
+                                           equipment_type__equipment_class_id=equipment_class_id,
+                                           part_identifier=equip_name)
     PMinfo = PM.objects.filter(equipment_type__equipment_type=equip_type).values_list('pm_frequency__pm_frequency',
                                                                                       flat=True).distinct()
 
     template = loader.get_template('equipment/equipment_info.html')
     context = RequestContext(request, {
+        'equipment_class_id': equipment_class_id,
         'equip_info': equip_info,
         'PM_info': PMinfo,
     })
@@ -53,8 +72,10 @@ def view_equipment_info(request, equip_type, equip_name):
 
 
 @login_required
-def view_pm_form(request, equip_type, equip_name, pm_type):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+def view_pm_form(request, equipment_class_id, equip_type, equip_name, pm_type):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
+                                           equipment_type__equipment_class_id=equipment_class_id,
+                                           part_identifier=equip_name)
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -103,8 +124,10 @@ def view_pm_form(request, equip_type, equip_name, pm_type):
 
 
 @login_required
-def view_pm_report(request, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+def view_pm_report(request, equipment_class_id, equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
+                                           equipment_type__equipment_class_id=equipment_class_id,
+                                           part_identifier=equip_name)
     pm_report = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name).order_by('dateCreated').reverse()
 
     template = loader.get_template('equipment/reports/equipment_pm_report.html')
@@ -116,8 +139,10 @@ def view_pm_report(request, equip_type, equip_name):
 
 
 @login_required
-def view_repair_form(request, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+def view_repair_form(request, equipment_class_id, equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
+                                           equipment_type__equipment_class_id=equipment_class_id,
+                                           part_identifier=equip_name)
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -153,8 +178,10 @@ def view_repair_form(request, equip_type, equip_name):
 
 
 @login_required
-def view_repair_report(request, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type, part_identifier=equip_name)
+def view_repair_report(request, equipment_class_id,  equip_type, equip_name):
+    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
+                                           equipment_type__equipment_class_id=equipment_class_id,
+                                           part_identifier=equip_name)
     repair_report = EquipmentRepair.objects.filter(equipment_ID__part_identifier=equip_name).order_by('dateCreated').reverse()
 
     template = loader.get_template('equipment/reports/equipment_repair_report.html')
