@@ -9,6 +9,9 @@ class EquipmentClass(models.Model):
 
     group_name = models.CharField(verbose_name='Group Name', max_length=50, unique=True)
 
+    def __unicode__(self):
+        return self.group_name
+
 # Create your models here.
 class EquipmentType(models.Model):
     class Meta:
