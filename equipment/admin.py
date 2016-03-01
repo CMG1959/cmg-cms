@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import EquipmentType, EquipmentManufacturer, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair
+from .models import EquipmentType, EquipmentManufacturer, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair,\
+    EquipmentClass
 
 class EquipInfoAdmin(admin.ModelAdmin):
     search_fields = ['part_identifier']
@@ -26,3 +27,5 @@ admin.site.register(PM,PMAdmin)
 admin.site.register(PMFreq)
 admin.site.register(EquipmentPM,EquipmentPMAdmin)
 admin.site.register(EquipmentRepair,EquipmentRepairAdmin)
+
+admin.site.register(EquipmentClass)
