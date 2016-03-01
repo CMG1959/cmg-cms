@@ -17,7 +17,6 @@ def view_index(request):
 
     template = loader.get_template('equipment/index.html')
     context = RequestContext(request, {
-        # 'equipmentTypes': equipmentTypes,
         'equipment_classes': equipment_classes,
     })
     return HttpResponse(template.render(context))
