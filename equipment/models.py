@@ -2,6 +2,13 @@ from datetime import date
 from django.db import models
 
 
+class EquipmentClass(models.Model):
+    class Meta:
+        verbose_name = 'Equipment - Class'
+        verbose_name_plural = 'Equipment - Class'
+
+    group_name = models.CharField(verbose_name='Group Name', max_length=50, unique=True)
+
 # Create your models here.
 class EquipmentType(models.Model):
     class Meta:
