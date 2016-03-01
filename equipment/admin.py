@@ -20,12 +20,16 @@ class EquipmentRepairAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier','po_num']
     list_display = ('employee','Date_Performed','equipment_ID','po_num')
 
-admin.site.register(EquipmentType)
+class EquipmentTypeAdmin(admin.ModelAdmin):
+    search_fields = ['equipment_type']
+    list_display = ('equipment_class', 'equipment_type')
+
+admin.site.register(EquipmentType, EquipmentTypeAdmin)
+
 admin.site.register(EquipmentManufacturer)
 admin.site.register(EquipmentInfo,EquipInfoAdmin)
 admin.site.register(PM,PMAdmin)
 admin.site.register(PMFreq)
 admin.site.register(EquipmentPM,EquipmentPMAdmin)
 admin.site.register(EquipmentRepair,EquipmentRepairAdmin)
-
 admin.site.register(EquipmentClass)
