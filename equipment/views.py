@@ -13,9 +13,7 @@ from forms import equipmentPMForm, equipmentRepairForm
 @login_required
 def view_index(request):
     # equipmentTypes = EquipmentType.objects.order_by('equipment_type').all()
-    equipment_classes = EquipmentClass.objects.all().order_by('group_name')
-        # order_by('group_name').all()
-    # active_parts = Production.objects.filter(inProduction=True).select_related('item')
+    equipment_classes = EquipmentClass.objects.all().exclude(group_name='unknown / unspecified').order_by('group_name')
 
     template = loader.get_template('equipment/index.html')
     context = RequestContext(request, {
