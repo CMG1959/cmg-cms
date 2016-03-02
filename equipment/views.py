@@ -27,16 +27,17 @@ def view_equipment_types(request, equipment_class_id):
     template = loader.get_template('equipment/equipment_types.html')
     context = RequestContext(request, {
         # 'equipmentTypes': equipmentTypes,
-        'equipment_class' : equipment_class_id,
+        # 'equipment_class' : equipment_class_id,
         'equipment_types': equipment_types,
     })
     return HttpResponse(template.render(context))
 
 
 @login_required
-def view_equipment(request, equipment_class_id, equip_type):
-    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__equipment_type=equip_type,
-                                                  equipment_type__equipment_class_id=equipment_class_id,
+def view_equipment(request, equip_type_id):
+# def view_equipment(request, equipment_class_id, equip_type_id):
+    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__id=equip_type_id,
+                                                  # equipment_type__equipment_class_id=equipment_class_id,
                                                   is_active=True).order_by('part_identifier')
 
 
@@ -46,23 +47,21 @@ def view_equipment(request, equipment_class_id, equip_type):
 
     template = loader.get_template('equipment/equipment_index.html')
     context = RequestContext(request, {
-        'equipment_class_id': equipment_class_id,
+        # 'equipment_class_id': equipment_class_id,
         'equipmentTypes': equipmentTypes,
     })
     return HttpResponse(template.render(context))
 
 
 @login_required
-def view_equipment_info(request, equipment_class_id, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
-                                           equipment_type__equipment_class_id=equipment_class_id,
-                                           part_identifier=equip_name)
-    PMinfo = PM.objects.filter(equipment_type__equipment_type=equip_type).values_list('pm_frequency__pm_frequency',
+def view_equipment_info(request, equip_name_id):
+    equip_info = EquipmentInfo.objects.get(id=equip_name_id)
+    PMinfo = PM.objects.filter(equipment_type=equip_info.equipment_type).values_list('pm_frequency__pm_frequency',
                                                                                       flat=True).distinct()
 
     template = loader.get_template('equipment/equipment_info.html')
     context = RequestContext(request, {
-        'equipment_class_id': equipment_class_id,
+        # 'equipment_class_id': equipment_class_id,
         'equip_info': equip_info,
         'PM_info': PMinfo,
     })
@@ -70,10 +69,8 @@ def view_equipment_info(request, equipment_class_id, equip_type, equip_name):
 
 
 @login_required
-def view_pm_form(request, equipment_class_id, equip_type, equip_name, pm_type):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
-                                           equipment_type__equipment_class_id=equipment_class_id,
-                                           part_identifier=equip_name)
+def view_pm_form(request, equip_info_id, pm_type_id):
+    equip_info = EquipmentInfo.objects.get(id=equip_info_id)
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -85,7 +82,8 @@ def view_pm_form(request, equipment_class_id, equip_type, equip_name, pm_type):
             if is_user:
                 # process the data in form.cleaned_data as required
                 # job_number = form.cleaned_data['job_Number']
-                redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
+                redirect_url = '/equipment/view_equipment/view_pm_report/%s/' % (equip_info_id)
+
                 #     # redirect to a new URL:
                     # save the data
                 my_form = form.save(commit=False)
@@ -103,16 +101,15 @@ def view_pm_form(request, equipment_class_id, equip_type, equip_name, pm_type):
     # if a GET (or any other method) we'll create a blank form
     else:
 
-        lastPM = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name,
-                                            equipment_ID__equipment_type__equipment_type=equip_type).order_by('-dateCreated')[:3]
+        lastPM = EquipmentPM.objects.filter(equipment_ID__id=equip_info_id).order_by('-dateCreated')[:3]
 
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
-                     'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type).id},
+                     'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type_id).id},
         )
-        form.fields["pm_frequency"].queryset = PMFreq.objects.filter(pm_frequency=pm_type)
-        form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type__equipment_type=equip_type,
-                                                              pm_frequency__pm_frequency=pm_type)
+        form.fields["pm_frequency"].queryset = PMFreq.objects.filter(pm_frequency=pm_type_id)
+        form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type=equip_info.equipment_type,
+                                                              pm_frequency__pm_frequency=pm_type_id)
 
         context_dic = {'form': form, 'equip_info': equip_info, 'pm_id': '#id_logged_pm'}
         if lastPM:
@@ -122,11 +119,9 @@ def view_pm_form(request, equipment_class_id, equip_type, equip_name, pm_type):
 
 
 @login_required
-def view_pm_report(request, equipment_class_id, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
-                                           equipment_type__equipment_class_id=equipment_class_id,
-                                           part_identifier=equip_name)
-    pm_report = EquipmentPM.objects.filter(equipment_ID__part_identifier=equip_name).order_by('dateCreated').reverse()
+def view_pm_report(request, equip_info_id):
+    equip_info = EquipmentInfo.objects.get(id=equip_info_id)
+    pm_report = EquipmentPM.objects.filter(equipment_ID=equip_info).order_by('dateCreated').reverse()
 
     template = loader.get_template('equipment/reports/equipment_pm_report.html')
     context = RequestContext(request, {
@@ -137,10 +132,8 @@ def view_pm_report(request, equipment_class_id, equip_type, equip_name):
 
 
 @login_required
-def view_repair_form(request, equipment_class_id, equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
-                                           equipment_type__equipment_class_id=equipment_class_id,
-                                           part_identifier=equip_name)
+def view_repair_form(request, equip_info_id):
+    equip_info = EquipmentInfo.objects.get(id = equip_info_id)
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -152,7 +145,7 @@ def view_repair_form(request, equipment_class_id, equip_type, equip_name):
             if is_user:
                 # process the data in form.cleaned_data as required
                 # job_number = form.cleaned_data['job_Number']
-                redirect_url = '/equipment/%s/%s' % (equip_type, equip_name)
+                redirect_url = '/equipment/view_equipment/view_repair_report/%s/' % (equip_info_id)
                 #     # redirect to a new URL:
                 my_form = form.save(commit=False)
                 my_form.employee = is_user
@@ -176,11 +169,9 @@ def view_repair_form(request, equipment_class_id, equip_type, equip_name):
 
 
 @login_required
-def view_repair_report(request, equipment_class_id,  equip_type, equip_name):
-    equip_info = EquipmentInfo.objects.get(equipment_type__equipment_type=equip_type,
-                                           equipment_type__equipment_class_id=equipment_class_id,
-                                           part_identifier=equip_name)
-    repair_report = EquipmentRepair.objects.filter(equipment_ID__part_identifier=equip_name).order_by('dateCreated').reverse()
+def view_repair_report(request, equip_info_id):
+    equip_info = EquipmentInfo.objects.get(id=equip_info_id)
+    repair_report = EquipmentRepair.objects.filter(equipment_ID=equip_info_id).order_by('dateCreated').reverse()
 
     template = loader.get_template('equipment/reports/equipment_repair_report.html')
     context = RequestContext(request, {

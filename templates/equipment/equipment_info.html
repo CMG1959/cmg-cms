@@ -22,7 +22,7 @@
                 <div class="list-group">
                     {% if PM_info %}
                         {% for each_PM in PM_info %}
-                        <a class="list-group-item" href="/equipment/{{ equipment_class_id }}/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/PM/{{ each_PM }}">
+                        <a class="list-group-item" href="/equipment/view_equipment/pm_form/{{ equip_info.id }}/{{ each_PM.id }}/">
                             <h4 class="list-group-item-heading">Record </h4>
 
                             <p class="list-group-item-text">{{ each_PM }} Preventative
@@ -30,17 +30,17 @@
                         </a>
                     {% endfor %}
                     {% endif %}
-                <a class="list-group-item" href="/equipment/{{ equipment_class_id }}/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/Repair">
+                <a class="list-group-item" href="/equipment/view_equipment/repair_form/{{ equip_info.id }}/">
                             <h4 class="list-group-item-heading">Record </h4>
                             <p class="list-group-item-text">Record a repair</p>
                         </a>
 
-                <a class="list-group-item" href="/equipment/{{ equipment_class_id }}/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewRepair">
+                <a class="list-group-item" href="/equipment/view_equipment/view_repair_report/{{ equip_info.id }}/">
                             <h4 class="list-group-item-heading">Report </h4>
                             <p class="list-group-item-text">View repair Log</p>
                         </a>
 
-                <a class="list-group-item" href="/equipment/{{ equipment_class_id }}/{{ equip_info.equipment_type }}/{{ equip_info.part_identifier }}/ViewPM">
+                <a class="list-group-item" href="/equipment/view_equipment/view_pm_report/{{ equip_info.id }}/">
                             <h4 class="list-group-item-heading">Report </h4>
                             <p class="list-group-item-text">View PM Log</p>
                         </a>

@@ -4,25 +4,32 @@ from rest_views import EquipmentTypeViewSet, EquipmentManufacturerViewSet, Equip
 from . import views
 
 urlpatterns = [
-    ### link to view equipment types
+    ### classes
     url(r'^/?$', views.view_index, name='view_equipmentIndex'),
-    ### get equipment types
+
+    ### types
     url(r'^(?P<equipment_class_id>[^/]+)/?$', views.view_equipment_types, name='view_equipment_types'),
-    ### link to view specific equipment of certain type
-    url(r'^(?P<equipment_class_id>[^/]+)/(?P<equip_type>[^/]+)/?$', views.view_equipment, name='view_equipment'),
-    ### Display information related to specific piece of equipment
-    # url(r'^(?P<equip_type>[\w|\W]+)/(?P<equip_name>[\w|\W]+)$', views.view_equipment_info, name='view_equipment_info'),
-    url(r'^(?P<equipment_class_id>[^/]+)/(?P<equip_type>[^/]+)/(?P<equip_name>[^/]+)/?$', views.view_equipment_info, name='view_equipment_info'),
+
+    ### list filtered by type
+    url(r'^view_list/(?P<equip_type_id>[^/]+)/?$', views.view_equipment, name='view_equipment'),
+
+    ### specific equipment page
+    url(r'^view_equipment/(?P<equip_name_id>[^/]+)/?$', views.view_equipment_info, name='view_equipment_info'),
+
     ### Go to PM page
-    url(r'^(?P<equipment_class_id>[^/]+)/(?P<equip_type>[^/]+)/(?P<equip_name>[^/]+)/PM/(?P<pm_type>[^/]+)/?$', views.view_pm_form,
+    url(r'^view_equipment/pm_form/(?P<equip_name_id>[^/]+)/(?P<pm_type_id>[^/]+)/?$', views.view_pm_form,
         name='view_pm_form'),
-    ### Go to PM Report
-    url(r'^(?P<equipment_class_id>[^/]+)/(?P<equip_type>[^/]+)/(?P<equip_name>[^/]+)/ViewPM$', views.view_pm_report, name='view_pm_report'),
-    ### Go to Repair report
-    url(r'^(?P<equipment_class_id>[^/]+)/(?P<equip_type>[^/]+)/(?P<equip_name>[^/]+)/ViewRepair$', views.view_repair_report,
-        name='view_repair_report'),
+
     ### Go to Repair form
-    url(r'^(?P<equipment_class_id>[^/]+)/(?P<equip_type>[^/]+)/(?P<equip_name>[^/]+)/Repair$', views.view_repair_form, name='view_repair_form'),
+    url(r'^view_equipment/repair_form/(?P<equip_info_id>[^/]+)/$', views.view_repair_form, name='view_repair_form'),
+
+    ### Go to PM Report
+    url(r'^view_equipment/view_pm_report/(?P<equip_info_id>[^/]+)/$', views.view_pm_report, name='view_pm_report'),
+
+    ### Go to Repair report
+    url(r'^view_equipment/view_repair_report/(?P<equip_info_id>[^/]+)/$', views.view_repair_report,
+        name='view_repair_report'),
+
 ]
 
 router = SharedAPIRootRouter()

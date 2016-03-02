@@ -23,7 +23,7 @@
             <div class="panel panel-default">
                 <div class="list-group">
                     {% for each_type in equipment_types %}
-                        <a class="list-group-item" href="/equipment/{{ equipment_class }}/{{ each_type.equipment_type }}">
+                        <a class="list-group-item" href="/equipment/type/{{ each_type.id }}">
                             <h4 class="list-group-item-heading">{{ each_type.equipment_type }}</h4>
                             <p class="list-group-item-text">Click here to record an activity </p>
                         </a>
