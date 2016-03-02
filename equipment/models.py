@@ -20,6 +20,7 @@ class EquipmentType(models.Model):
 
     equipment_type = models.CharField(verbose_name="Equipment Type", max_length=50, unique=True)  # Robot, IMM, ISBM
     equipment_class = models.ForeignKey(EquipmentClass, verbose_name="Equipment Class")
+    tooltip_content = models.CharField(verbose_name= "Tooltip", max_length=256, null=True, default="")
 
     def __unicode__(self):
         return self.equipment_type

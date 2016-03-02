@@ -51,8 +51,8 @@ def view_equipment(request, equip_type_id):
 def view_equipment_info(request, equip_name_id):
     equip_info = EquipmentInfo.objects.get(id=equip_name_id)
 
-    PMinfo = PM.objects.filter(equipment_type=equip_info.equipment_type).values('pm_frequency__pm_frequency','id').distinct()
-
+    PMinfo = PM.objects.filter(equipment_type=equip_info.equipment_type).values('pm_frequency__pm_frequency','pm_frequency__id').distinct()
+    print PMinfo
     template = loader.get_template('equipment/equipment_info.html')
     context = RequestContext(request, {
         # 'equipment_class_id': equipment_class_id,
@@ -96,6 +96,8 @@ def view_pm_form(request, equip_info_id, pm_type_id):
     else:
 
         lastPM = EquipmentPM.objects.filter(equipment_ID__id=equip_info_id).order_by('-dateCreated')[:3]
+
+        PMinfo = PM.objects.get(id=pm_type_id)
 
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
