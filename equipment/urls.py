@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^view_equipment/(?P<equip_name_id>[^/]+)/?$', views.view_equipment_info, name='view_equipment_info'),
 
     ### Go to PM page
-    url(r'^view_equipment/pm_form/(?P<equip_name_id>[^/]+)/(?P<pm_type_id>[^/]+)/?$', views.view_pm_form,
+    url(r'^view_equipment/pm_form/(?P<equip_info_id>[^/]+)/(?P<pm_type_id>[^/]+)/?$', views.view_pm_form,
         name='view_pm_form'),
 
     ### Go to Repair form

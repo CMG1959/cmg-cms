@@ -35,15 +35,9 @@ def view_equipment_types(request, equipment_class_id):
 
 @login_required
 def view_equipment(request, equip_type_id):
-# def view_equipment(request, equipment_class_id, equip_type_id):
-    equipmentTypes = EquipmentInfo.objects.filter(equipment_type__id=equip_type_id,
+    equipmentTypes = EquipmentInfo.objects.filter(equipment_type_id=equip_type_id,
                                                   # equipment_type__equipment_class_id=equipment_class_id,
                                                   is_active=True).order_by('part_identifier')
-
-
-    # active_parts = Production.objects.filter(inProduction=True).select_related('item')
-
-
 
     template = loader.get_template('equipment/equipment_index.html')
     context = RequestContext(request, {
@@ -56,8 +50,8 @@ def view_equipment(request, equip_type_id):
 @login_required
 def view_equipment_info(request, equip_name_id):
     equip_info = EquipmentInfo.objects.get(id=equip_name_id)
-    PMinfo = PM.objects.filter(equipment_type=equip_info.equipment_type).values_list('pm_frequency__pm_frequency',
-                                                                                      flat=True).distinct()
+
+    PMinfo = PM.objects.filter(equipment_type=equip_info.equipment_type).values('pm_frequency__pm_frequency','id').distinct()
 
     template = loader.get_template('equipment/equipment_info.html')
     context = RequestContext(request, {
@@ -105,11 +99,12 @@ def view_pm_form(request, equip_info_id, pm_type_id):
 
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
-                     'pm_frequency': PMFreq.objects.get(pm_frequency=pm_type_id).id},
+                     'pm_frequency': PMFreq.objects.get(id=pm_type_id).id},
         )
-        form.fields["pm_frequency"].queryset = PMFreq.objects.filter(pm_frequency=pm_type_id)
+
+        form.fields["pm_frequency"].queryset = PMFreq.objects.filter(id=pm_type_id)
         form.fields["logged_pm"].queryset = PM.objects.filter(equipment_type=equip_info.equipment_type,
-                                                              pm_frequency__pm_frequency=pm_type_id)
+                                                              pm_frequency_id=pm_type_id)
 
         context_dic = {'form': form, 'equip_info': equip_info, 'pm_id': '#id_logged_pm'}
         if lastPM:
