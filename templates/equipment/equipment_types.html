@@ -23,7 +23,8 @@
             <div class="panel panel-default">
                 <div class="list-group">
                     {% for each_type in equipment_types %}
-                        <a class="list-group-item" href="/equipment/view_list/{{ each_type.id }}">
+                        <a class="list-group-item" href="/equipment/view_list/{{ each_type.id }}"
+                            data-toggle="tooltip" data-placement="right" title="{{ each_type.tooltip_content }}">
                             <h4 class="list-group-item-heading">{{ each_type.equipment_type }}</h4>
                             <p class="list-group-item-text">Click here to record an activity </p>
                         </a>
@@ -38,3 +39,10 @@
 
 </body>
 </html>
+
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
