@@ -21,6 +21,9 @@
 {% if equipment_types %}
         <div class="bootcards-list">
             <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left"></h3>
+                </div>
                 <div class="list-group">
                     {% for each_type in equipment_types %}
                         <a class="list-group-item" href="/equipment/view_list/{{ each_type.id }}"
