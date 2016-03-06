@@ -8,6 +8,7 @@ class EquipmentClass(models.Model):
         verbose_name_plural = 'Equipment - Class'
 
     group_name = models.CharField(verbose_name='Group Name', max_length=50, unique=True)
+    tooltip_content = models.CharField(verbose_name= "Tooltip", max_length=256, null=True, default="")
 
     def __unicode__(self):
         return self.group_name
