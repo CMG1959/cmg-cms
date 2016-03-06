@@ -24,7 +24,7 @@
                 <div class="list-group">
                     {% for each_class in equipment_classes %}
                         <a class="list-group-item" href="/equipment/{{ each_class.id }}"
-                            data-toggle="tooltip" data-placement="top" title="Hooray!">
+                            data-toggle="tooltip" data-placement="top" title="{{ each_class.tooltip_content }}!">
                             <h4 class="list-group-item-heading">{{ each_class.group_name }}</h4>
                             <p class="list-group-item-text">Click here to record an activity </p>
                         </a>
