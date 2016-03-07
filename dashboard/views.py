@@ -92,7 +92,8 @@ def view_errorProdLog(request):
             'inspectorName': each_error['inspectorName__EmpLMName'],
             'machNo': machNo,
             'item_Description': item_Description,
-            'descEvent': each_error['descEvent']
+            'descEvent': each_error['descEvent'],
+            'jobNumber': each_error['jobNumber']
         })
 
     context = RequestContext(request, {
