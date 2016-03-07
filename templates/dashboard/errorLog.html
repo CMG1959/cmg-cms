@@ -56,7 +56,11 @@
                 </thead>
             <tbody>
             {% for eachProdError in prodErrors %}
+                {% if eachProdError.jobNumber == '000000.000' %}
+                <tr>
+                {% else %}
                 <tr class='clickable-row' data-href='/inspection/jobReport/{{ eachProdError.jobNumber }}/' >
+                {% endif %}
                 <td>
                     {{ eachProdError.shiftID }}
                 </td>
