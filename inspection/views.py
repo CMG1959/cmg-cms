@@ -509,6 +509,11 @@ def view_jobReportSearch(request):
                 template = loader.get_template('inspection/reports/jobReport.html')
                 context = RequestContext(request, context_dic)
                 return HttpResponse(template.render(context))
+            elif report_type == 'htmlReport_noplot':
+                context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
+                template = loader.get_template('inspection/reports/jobReport_noplot.html')
+                context = RequestContext(request, context_dic)
+                return HttpResponse(template.render(context))
             else:
                 if startUpShot.objects.filter(jobNumber=job_number).exists():
                     my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)

@@ -35,6 +35,7 @@ class FloatInspectionForm(forms.ModelForm):
 
 class jobReportSearch(forms.Form):
     CHOICES=[('htmlReport','Web'),
+             ('htmlReport_noplot','Web (no charts)'),
          ('pdfReport','PDF')]
     report_type = forms.ChoiceField(label='Report Type', choices=CHOICES, widget=forms.RadioSelect())
     job_Number = forms.CharField(label="Job Number:", max_length=15)
