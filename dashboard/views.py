@@ -94,7 +94,7 @@ def view_errorProdLog(request):
                 item_Description = 'N/A'
 
         if each_error['inspectorName__IsSharedLM']:
-            reported_name = each_error['inspectorName__EmpFName'][0] + each_error['inspectorName__EmpLName']
+            reported_name = (each_error['inspectorName__EmpFName'][0] + each_error['inspectorName__EmpLName']).lower()
         else:
             reported_name = each_error['inspectorName__EmpLMName']
 
