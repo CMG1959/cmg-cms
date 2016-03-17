@@ -23,6 +23,8 @@ class passFailTest(models.Model):
     testName = models.CharField(max_length=75, verbose_name="Pass Fail Test Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+    IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
+
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -70,6 +72,8 @@ class passFailInspection(models.Model):
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
                                                            re.IGNORECASE))])
+    Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
+
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
@@ -93,6 +97,7 @@ class rangeTest(models.Model):
     calcAvg = models.BooleanField(verbose_name="Report raw data (do not take average)?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
     hasTimeDelayInspection = models.BooleanField(verbose_name="Inspect Again After Time Period?", default=False)
+    IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -132,6 +137,7 @@ class rangeInspection(models.Model):
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
                                                            re.IGNORECASE))])
+    Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
@@ -153,6 +159,7 @@ class textRecord(models.Model):
     testName = models.CharField(max_length=75, verbose_name="Text Box Inspection Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+    IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -187,6 +194,9 @@ class textInspection(models.Model):
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
                                                            re.IGNORECASE))])
+    Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
+
+
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
@@ -207,6 +217,7 @@ class IntegerRecord(models.Model):
     testName = models.CharField(max_length=75, verbose_name="Integer Inspection Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+    IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -242,6 +253,8 @@ class IntegerInspection(models.Model):
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
                                                            re.IGNORECASE))])
+    Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
+
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)
 
@@ -261,6 +274,7 @@ class FloatRecord(models.Model):
     testName = models.CharField(max_length=75, verbose_name="Float Inspection Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
+    IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -274,6 +288,7 @@ class FloatRecordByPart(models.Model):
     testName = models.ForeignKey('FloatRecord', verbose_name = "Float Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
+
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -295,6 +310,8 @@ class FloatInspection(models.Model):
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
                                                            re.IGNORECASE))])
+    Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
+
 
     def __unicode__(self):
         return '%s - %s' % (self.jobID, self.dateCreated)

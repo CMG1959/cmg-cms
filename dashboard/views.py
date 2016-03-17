@@ -74,6 +74,9 @@ def view_errorProdLog(request):
 
     production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_time).values('dateCreated','jobNumber',
                                                                                           'inspectorName__EmpLMName',
+                                                                                          'inspectorName__EmpLName',
+                                                                                          'inspectorName__EmpFName',
+                                                                                          'inspectorName__IsSharedLM',
                                                                                           'descEvent','STA_Reported')\
                                                                                           .order_by('-dateCreated')
     prod_errors = []
@@ -87,9 +90,15 @@ def view_errorProdLog(request):
                 item_Description = mattec_info[0].itemDesc
             else:
                 item_Description = 'N/A'
+
+        if each_error['inspectorName__IsSharedLM']:
+            reported_name = each_error['inspectorName__EmpFName'][0] + each_error['inspectorName__EmpLName']
+        else:
+            reported_name = each_error['inspectorName__EmpLMName']
+
         prod_errors.append({
             'dateCreated': each_error['dateCreated'],
-            'inspectorName': each_error['inspectorName__EmpLMName'],
+            'inspectorName': reported_name,
             'machNo': each_error['STA_Reported'],
             'item_Description': item_Description,
             'descEvent': each_error['descEvent'],
