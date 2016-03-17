@@ -28,6 +28,7 @@ class Employees(models.Model):
     IsPTLStaff = models.BooleanField(verbose_name="Is PTL Staff",default=False)
     DeviceToken = models.CharField(verbose_name='User GUID', null=True, max_length=36)
     DevTokenExpires = models.DateTimeField(verbose_name='Device Expire', null=True)
+    IsSharedLM = models.BooleanField(verbose_name="Is Shared LM Name", default=False)
 
     def __unicode__(self):
         return '%s - %s' % (self.EmpLName,self.EmpFName)
