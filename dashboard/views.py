@@ -72,25 +72,25 @@ def view_errorProdLog(request):
     dt_time = datetime.date.today()-datetime.timedelta(days=n_days)
     template = loader.get_template('dashboard/errorProdLog.html')
 
-    production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_time).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+    production_errors = ProductionHistory.objects.filter(dateCreated__gte=dt_time).values('dateCreated','jobNumber',
+                                                                                          'inspectorName__EmpLMName',
+                                                                                          'descEvent','STA_Reported')\
+                                                                                          .order_by('-dateCreated')
     prod_errors = []
     for each_error in production_errors:
         susInfo = startUpShot.objects.filter(jobNumber = each_error['jobNumber'])
         if susInfo:
-            machNo = susInfo[0].machNo
             item_Description = susInfo[0].item.item_Description
         else:
             mattec_info = MattecProd.objects.filter(jobNumber= each_error['jobNumber'])
             if mattec_info[0]:
-                machNo = mattec_info[0].machNo
                 item_Description = mattec_info[0].itemDesc
             else:
-                machNo = 'N/A'
                 item_Description = 'N/A'
         prod_errors.append({
             'dateCreated': each_error['dateCreated'],
             'inspectorName': each_error['inspectorName__EmpLMName'],
-            'machNo': machNo,
+            'machNo': each_error['STA_Reported'],
             'item_Description': item_Description,
             'descEvent': each_error['descEvent'],
             'jobNumber': each_error['jobNumber']
