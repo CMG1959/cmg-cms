@@ -16,6 +16,8 @@ from django.shortcuts import render
 import json
 from natsort import natsorted
 import datetime
+from equipment.models import EquipmentInfo
+
 
 def view_errorLog(request):
     if errorLogTime.objects.first():
@@ -96,10 +98,12 @@ def view_errorProdLog(request):
         else:
             reported_name = each_error['inspectorName__EmpLMName']
 
+        workstation_name = EquipmentInfo.objects.get(id=each_error['STA_Reported']).part_identifier
+
         prod_errors.append({
             'dateCreated': each_error['dateCreated'],
             'inspectorName': reported_name,
-            'machNo': each_error['STA_Reported'],
+            'machNo': workstation_name,
             'item_Description': item_Description,
             'descEvent': each_error['descEvent'],
             'jobNumber': each_error['jobNumber']
