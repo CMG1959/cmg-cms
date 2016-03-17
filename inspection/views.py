@@ -123,6 +123,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 my_form.inspectorName = is_user
 
+                my_form.Passed_Partial = False
+
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
@@ -211,6 +213,7 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                 set_new_mach_op(jobNumber, my_form.machineOperator)
                 my_form.inspectorName = is_user
                 my_form.inspectionResult = inspectionResult
+                my_form.Passed_Partial = False
 
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
@@ -286,6 +289,8 @@ def view_textInspection(request, jobNumber, inspectionName):
                 # save the data
                 my_form = form.save(commit=False)
 
+                my_form.Passed_Partial = False
+
                 set_new_mach_op(jobNumber, my_form.machineOperator)
 
                 my_form.inspectorName = is_user
@@ -360,6 +365,7 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
                 # save the data
                 my_form = form.save(commit=False)
 
+                my_form.Passed_Partial = False
                 set_new_mach_op(jobNumber, my_form.machineOperator)
 
                 my_form.inspectorName = is_user
@@ -431,6 +437,7 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                 # save the data
                 my_form = form.save(commit=False)
 
+                my_form.Passed_Partial = False
                 set_new_mach_op(jobNumber, my_form.machineOperator)
 
                 if my_form.headCavID:
