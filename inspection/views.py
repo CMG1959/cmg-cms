@@ -135,12 +135,13 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 if my_form.headCavID:
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
+
                 my_form.save()
 
                 if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
                     my_form.defectType.add(pf_test_unknown_reason)
 
-                form.save_m2m()
+                my_form.save_m2m()
 
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
