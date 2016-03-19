@@ -6,19 +6,19 @@ from .models import EquipmentType, EquipmentManufacturer, EquipmentInfo, PM, PMF
 
 class EquipInfoAdmin(admin.ModelAdmin):
     search_fields = ['part_identifier']
-    list_display = ('equipment_type', 'part_identifier','manufacturer_name')
+    list_display = ('part_identifier', 'equipment_type', 'manufacturer_name')
 
 class PMAdmin(admin.ModelAdmin):
-    list_display = ('equipment_type','pm_frequency','pm_item')
+    list_display = ('equipment_type', 'pm_frequency', 'pm_item')
 
 
 class EquipmentPMAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier']
-    list_display = ('employee','Date_Performed','equipment_ID','pm_frequency')
+    list_display = ('Date_Performed', 'equipment_ID', 'employee', 'pm_frequency')
 
 class EquipmentRepairAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier','po_num']
-    list_display = ('employee','Date_Performed','equipment_ID','po_num')
+    list_display = ('Date_Performed', 'equipment_ID',  'employee', 'po_num')
 
 class EquipmentTypeAdmin(admin.ModelAdmin):
     search_fields = ['equipment_type']
