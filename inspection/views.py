@@ -947,7 +947,7 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
 
     if inspectionType == 'pf':
         if not form.inspectionResult:
-            errorDescription = form.defectType
+            errorDescription = form.defectType.all()
             error_list = []
             for each_error in errorDescription:
                 error_list.append(each_error.passFail)
