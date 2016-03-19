@@ -45,7 +45,7 @@ class EquipmentInfo(models.Model):
         verbose_name_plural = 'Equipment - Information'
 
     equipment_type = models.ForeignKey(EquipmentType, verbose_name="Equipment Type")
-    part_identifier = models.CharField(verbose_name="Machine ID (alias)", max_length=25)
+    part_identifier = models.CharField(verbose_name="Asset ID (alias)", max_length=25)
     manufacturer_name = models.ForeignKey(EquipmentManufacturer, verbose_name="Manufacturer Name")
     serial_number = models.CharField(verbose_name="Serial Number", max_length=25)
     date_of_manufacture = models.DateField(verbose_name="Date of Manufacture", default=date.today)
