@@ -98,6 +98,10 @@ def view_detailJob(request, jobNumber):
 
 @login_required
 def view_pfInspection(request, jobNumber, inspectionName):
+
+    pf_test_unknown_reason = passFailTestCriteria.objects.get_or_create(testName__testName=inspectionName,
+                                                                        passFail = 'Other / Unknown')
+
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -129,7 +133,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
-
+                if my_form.inspectionResult == False and not my_form.defectType:
+                    my_form.defectType.add(pf_test_unknown_reason)
 
                 form.save_m2m()
 
