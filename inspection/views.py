@@ -99,8 +99,12 @@ def view_detailJob(request, jobNumber):
 @login_required
 def view_pfInspection(request, jobNumber, inspectionName):
 
-    pf_test_unknown_reason = passFailTestCriteria.objects.get_or_create(testName__testName=inspectionName,
+    try:
+        test_name = passFailTest.objects.get(testName=inspectionName)
+        pf_test_unknown_reason = passFailTestCriteria.objects.get_or_create(testName_id=test_name.id,
                                                                         passFail = 'Other / Unknown')
+    except Exception as e:
+        raise Http404(str(e))
 
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
     if request.method == 'POST':
