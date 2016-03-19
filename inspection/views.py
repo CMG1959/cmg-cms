@@ -101,7 +101,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
     try:
         test_name = passFailTest.objects.get(testName=inspectionName)
-        pf_test_unknown_reason = passFailTestCriteria.objects.get_or_create(testName_id=test_name.id,
+        pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=test_name.id,
                                                                         passFail = 'Other / Unknown')
     except Exception as e:
         raise Http404(str(e))
@@ -137,11 +137,12 @@ def view_pfInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
 
                 my_form.save()
+                form.save_m2m()
 
                 if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
                     my_form.defectType.add(pf_test_unknown_reason)
+                    my_form.save()
 
-                my_form.save_m2m()
 
                 # redirect to a new URL:
                 return HttpResponseRedirect(redirect_url)
