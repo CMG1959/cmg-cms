@@ -120,9 +120,6 @@ def view_pfInspection(request, jobNumber, inspectionName):
                 # part_number = form.cleaned_data['jobID']
                 redirect_url = '/inspection/%s/' % (jobNumber)
 
-                checkFormForLog(form, inspectionType = 'pf',
-                                inspectionName = passFailTest.objects.get(testName=inspectionName).testName,
-                                activeJob=active_job, rangeInfo=None)
 
                 # save the data
                 my_form = form.save(commit=False)
@@ -142,6 +139,10 @@ def view_pfInspection(request, jobNumber, inspectionName):
                 if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
                     my_form.defectType.add(pf_test_unknown_reason)
                     my_form.save()
+
+                checkFormForLog(my_form, inspectionType = 'pf',
+                                inspectionName = test_name.testName,
+                                activeJob=active_job, rangeInfo=None)
 
 
                 # redirect to a new URL:
@@ -945,8 +946,8 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
     inspectionName = inspectionName
 
     if inspectionType == 'pf':
-        if not form.cleaned_data['inspectionResult']:
-            errorDescription = form.cleaned_data['defectType']
+        if not form.inspectionResult:
+            errorDescription = form.defectType
             error_list = []
             for each_error in errorDescription:
                 error_list.append(each_error.passFail)
