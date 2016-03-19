@@ -950,9 +950,16 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
             errorDescription = form.defectType.all()
             error_list = []
             for each_error in errorDescription:
-                error_list.append(each_error.passFail)
-            errorDescription = ', '.join(error_list)
-            create_log = True
+
+                newForm = errorLog(
+                    shiftID = shiftID,
+                    machNo = machNo,
+                    partDesc = partDesc,
+                    jobID = jobID,
+                    inspectionName=inspectionName,
+                    errorDescription = each_error.passFail,
+                )
+                newForm.save()
 
     if inspectionType == 'rangeInspection':
         measured_val = form.cleaned_data['numVal']
