@@ -137,7 +137,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
                     my_form.headCavID = check_HeadCavID(my_form.headCavID)
                 my_form.save()
 
-                if my_form.inspectionResult == False and not my_form.defectType:
+                if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
                     my_form.defectType.add(pf_test_unknown_reason)
 
                 form.save_m2m()
