@@ -11,7 +11,7 @@ def build_cavs(cavs_str):
 def build_defects(defect_str):
     defect_array = []
     for each_item in defect_str.split('~'):
-        match = re.search('\[(?P<defect_key>\d+)\] + (?P<defect_str>.*)', each_item)
+        match = re.search('\[(?P<defect_key>\d+)\] (?P<defect_str>.*)', each_item)
         if match:
             defect_array.append((match.group('defect_key'),match.group('defect_str')))
 
