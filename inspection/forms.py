@@ -29,11 +29,14 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
         return False
 
 class passFailInspectionForm(forms.ModelForm):
-    # headCavID = forms.ChoiceField(required=True, choices=[(-1,-1)], label='Cavity')
+
     class Meta:
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectionResult',
                   'defectType','headCavID']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'})
+        }
 
 
 class rangeInspectionForm(forms.ModelForm):
