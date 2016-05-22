@@ -36,31 +36,31 @@
 </body>
 </html>
 
-{##}
-{#{% if use_checkbox %}#}
-{#    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock.html" %}#}
-{#{% endif %}#}
-{##}
-{#{% if use_checkbox2 %}#}
-{#    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock2.html" %}#}
-{#{% endif %}#}
-{##}
-{#{% if use_minmax %}#}
-{#    {% include "inspection/subTemplates/js_helpers/subMinMaxChecker.html" %}#}
-{#{% endif %}#}
-{##}
-{#{% if id_result %}#}
-{#    {% include "inspection/subTemplates/js_helpers/subCheckRange.html" %}#}
-{#{% endif %}#}
-{##}
-{#{% include "inspection/subTemplates/js_helpers/sub_clone.html" %}#}
-{##}
-{#{% include "inspection/subTemplates/js_helpers/check_head_cav.html" %}#}
-{##}
-{#{% if machine_operator %}#}
-{#    <script>#}
-{#        $("#id_machineOperator").val("{{ machine_operator }}");#}
-{#        $("#id_machineOperator").selectmenu("refresh");#}
-{#    </script>#}
-{#{% endif %}#}
+
+{% if use_checkbox %}
+    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock.html" %}
+{% endif %}
+
+{% if use_checkbox2 %}
+    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock2.html" %}
+{% endif %}
+
+{% if use_minmax %}
+    {% include "inspection/subTemplates/js_helpers/subMinMaxChecker.html" %}
+{% endif %}
+
+{% if id_result %}
+    {% include "inspection/subTemplates/js_helpers/subCheckRange.html" %}
+{% endif %}
+
+{% include "inspection/subTemplates/js_helpers/sub_clone.html" %}
+
+{% include "inspection/subTemplates/js_helpers/check_head_cav.html" %}
+
+{% if machine_operator %}
+    <script>
+        $("#id_machineOperator").val("{{ machine_operator }}");
+        $("#id_machineOperator").selectmenu("refresh");
+    </script>
+{% endif %}
 

@@ -13,7 +13,7 @@ def build_defects(defect_str):
     for each_item in defect_str.split('~'):
         match = re.search('\[(?P<defect_key>\d+)\] (?P<defect_str>.*)', each_item)
         if match:
-            defect_array.append((match.group('defect_key'),match.group('defect_str')))
+            defect_array.append((match.group('defect_key'), match.group('defect_str')))
     return defect_array
 
 def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
@@ -22,18 +22,14 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
                                         inspection_id=inspection_id, man_num=man_num)
     if inspection_type == 'Pass/Fail':
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
-        # headCavID_choices = forms.ChoiceField(required=True, choices=headCavID_fields)
-
         defectType_fields = build_defects(built_inspection['Critera_Array'])
-
-        # defectType_choices = forms.MultipleChoiceField(required=True, choices=defectType_fields)
 
         return headCavID_fields, defectType_fields
     else:
         return False
 
 class passFailInspectionForm(forms.ModelForm):
-    headCavID = forms.ChoiceField(required=True, choices=((-1,-1)), label='Cavity')
+    # headCavID = forms.ChoiceField(required=True, choices=[(-1,-1)], label='Cavity')
     class Meta:
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectionResult',
