@@ -22,13 +22,13 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
                                         inspection_id=inspection_id, man_num=man_num)
     if inspection_type == 'Pass/Fail':
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
-        headCavID_choices = forms.ChoiceField(required=True, choices=headCavID_fields)
+        # headCavID_choices = forms.ChoiceField(required=True, choices=headCavID_fields)
 
         defectType_fields = build_defects(built_inspection['Critera_Array'])
 
-        defectType_choices = forms.MultipleChoiceField(required=True, choices=defectType_fields)
+        # defectType_choices = forms.MultipleChoiceField(required=True, choices=defectType_fields)
 
-        return headCavID_choices, defectType_choices
+        return headCavID_fields, defectType_fields
     else:
         return False
 
