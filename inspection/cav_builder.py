@@ -29,7 +29,7 @@ from django.db import connection
 
 cursor = connection.cursor()
 
-cursor.execute("SELECT * FROM [CMG_Mfg].[dbo].[GetQMSInspDef] (?, ? , ?, ?)", 498, 1 ,11 ,7406 )
+cursor.execute("SELECT * FROM [CMG_Mfg].[dbo].[GetQMSInspDef] (?, ? , ?, ?)", [498, 1 ,11 ,7406] )
 
 row = cursor.fetchone()
 
