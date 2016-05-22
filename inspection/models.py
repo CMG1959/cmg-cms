@@ -71,7 +71,7 @@ class passFailInspection(models.Model):
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))])
+                                                           re.IGNORECASE))],db_column='CavID')
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
 
@@ -136,7 +136,7 @@ class rangeInspection(models.Model):
                                           null=True)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
                                  validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))])
+                                                           re.IGNORECASE))], db_column='CavID')
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
     def __unicode__(self):
