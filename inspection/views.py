@@ -177,7 +177,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
 
         form.fields["defectType"].choices = defectType_choices
-        # form.fields["headCavID"].choices = headCavID_choices
+        form.fields["headCavID"].choices = headCavID_choices
 
         template = loader.get_template('inspection/forms/genInspection.html')
 
