@@ -23,7 +23,7 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
         headCavID_choices = forms.ChoiceField(required=True, choices=headCavID_fields)
 
-        defectType_fields = build_defects(built_inspection['Criteria_Array'])
+        defectType_fields = build_defects(built_inspection['Critera_Array'])
 
         defectType_choices = forms.MultipleChoiceField(required=True, choices=defectType_fields)
 
