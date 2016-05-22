@@ -69,9 +69,7 @@ class passFailInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=True)
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
-    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))],db_column='CavID')
+    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
 
@@ -134,9 +132,7 @@ class rangeInspection(models.Model):
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
     timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time", blank=True,
                                           null=True)
-    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))], db_column='CavID')
+    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
     def __unicode__(self):
@@ -191,9 +187,7 @@ class textInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
-    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))])
+    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
 
@@ -248,11 +242,8 @@ class IntegerInspection(models.Model):
                                       related_name='Integer_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    headCavID = models.ForeignKey('molds.PartIdentifier', verbose_name="Head and Cavity ID", blank=True, null=True)
     inspectionResult = models.BigIntegerField(verbose_name="Enter Inspection Information:")
-    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))])
+    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
     def __unicode__(self):
@@ -307,9 +298,7 @@ class FloatInspection(models.Model):
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.FloatField(verbose_name="Enter Inspection Information:")
-    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True,
-                                 validators=[RegexValidator(regex=re.compile('[a-zA-Z]\s*-\s*\d{1,3}|[a-zA-Z]\s*-\s*all|\d{1,3}|all|none',
-                                                           re.IGNORECASE))])
+    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
 

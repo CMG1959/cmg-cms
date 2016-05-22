@@ -17,7 +17,8 @@ from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees, EmployeeAtWorkstation
 from molds.models import Mold,PartIdentifier
 from production_and_mold_history.models import ProductionHistory
-from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch
+from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch,\
+    build_inspection_fields
 
 from reports import JobReport
 import collections
@@ -167,6 +168,14 @@ def view_pfInspection(request, jobNumber, inspectionName):
         form = passFailInspectionForm(initial=initial_dictionary)
 
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
+
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=jobNumber,
+                                                                        inspection_type='Pass/Fail',
+                                                                        inspection_id=test_name.id,
+                                                                        man_num=request.user.webappemployee.EmpNum)
+
+        form.fields["defectType"].choices = defectType_choices
+        form.fields["headCavID"].choices = headCavID_choices
 
         template = loader.get_template('inspection/forms/genInspection.html')
 
@@ -872,8 +881,9 @@ def presetStandardFields(my_form, jobID, test_type, test_name):
 
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
-    if test_type == 'pf':
-        my_form.fields["defectType"].queryset = passFailTestCriteria.objects.filter(testName__testName=test_name)
+    #
+    # if test_type == 'pf':
+    #     my_form.fields["defectType"].queryset = passFailTestCriteria.objects.filter(testName__testName=test_name)
 
     return my_form
 
