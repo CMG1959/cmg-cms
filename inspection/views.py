@@ -175,6 +175,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
                                                                         inspection_id=test_name.id,
                                                                         man_num=request.user.webappemployee.EmpNum)
 
+
         form.fields["defectType"].choices = defectType_choices
         form.fields["headCavID"].choices = headCavID_choices
 

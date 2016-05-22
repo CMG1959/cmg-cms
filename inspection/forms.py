@@ -37,6 +37,7 @@ class passFailInspectionForm(forms.ModelForm):
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectionResult',
                   'defectType','headCavID']
+        widgets = {'headCavID': forms.ChoiceField()}
 
 
 class rangeInspectionForm(forms.ModelForm):
