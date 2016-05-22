@@ -14,6 +14,7 @@ def build_defects(defect_str):
         match = re.search('\[(?P<defect_key>\d+)\] (?P<defect_str>.*)', each_item)
         if match:
             defect_array.append((match.group('defect_key'),match.group('defect_str')))
+    return defect_array
 
 def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
     inspection_type_int = get_inspection_type(inspection_type)
