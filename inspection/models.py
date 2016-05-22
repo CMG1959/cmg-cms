@@ -132,7 +132,7 @@ class rangeInspection(models.Model):
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
     timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time", blank=True,
                                           null=True)
-    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
+    headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", choices=[('-1','-1')], null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
     def __unicode__(self):
