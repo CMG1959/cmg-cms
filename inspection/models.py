@@ -71,8 +71,8 @@ class passFailInspection(models.Model):
     defectType = models.ManyToManyField('passFailTestCriteria', verbose_name="Defect Type",  blank=True)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
-    CavID = models.CharField(max_length=8, verbose_name="Cavity ID", null=True, blank=True)
-    CavGroupID = models.CharField(max_length=8, verbose_name="Cavity Group", null=True, blank=True)
+    CavID = models.CharField(max_length=8, verbose_name="Cavity ID", default='-', null=True, blank=True)
+    CavGroupID = models.CharField(max_length=8, verbose_name="Cavity Group", default='-', null=True, blank=True)
 
 
     def __unicode__(self):
