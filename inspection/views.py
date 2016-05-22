@@ -163,14 +163,14 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
         machine_operator = get_previous_mach_op(jobNumber)
 
-        initial_dictionary = {'jobID': active_job.id,
+        initial_dictionary = {'jobID': active_job[0].id,
                      'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
 
         form = passFailInspectionForm(initial=initial_dictionary)
 
         form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
 
-        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job.id,
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
                                                                         inspection_type='Pass/Fail',
                                                                         inspection_id=test_name.id,
                                                                         man_num=request.user.webappemployee.EmpNum)
