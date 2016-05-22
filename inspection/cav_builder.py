@@ -27,10 +27,13 @@ from django.db import connection
 #
 # cnxn.close()
 
-cursor = connection.cursor()
+def demo():
 
-cursor.execute("SELECT * FROM [CMG_Mfg].[dbo].[GetQMSInspDef] (?, ? , ?, ?)", [498, 1 ,11 ,7406] )
+    cursor = connection.cursor()
 
-row = cursor.fetchone()
+    cursor.execute("SELECT * FROM [CMG_Mfg].[dbo].[GetQMSInspDef] (%s, %s , %s, %s)", [498, 1 ,11 ,7406] )
 
-print row
+    row = cursor.fetchone()
+
+    print row
+
