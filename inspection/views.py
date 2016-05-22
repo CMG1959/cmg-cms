@@ -132,8 +132,8 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
                 my_form.Passed_Partial = False
 
-                if my_form.headCavID:
-                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                if not my_form.headCavID:
+                    my_form.headCavID = '-'
 
                 my_form.save()
                 form.save_m2m()

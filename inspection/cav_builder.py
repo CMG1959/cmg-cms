@@ -24,5 +24,3 @@ def get_qms_insp_def(job_id=498, inspection_type=1, inspection_id=11, man_num=74
     return dict(zip(columns, cursor.fetchone()))
 
 
-
-
