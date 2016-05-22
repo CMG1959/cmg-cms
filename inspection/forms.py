@@ -35,7 +35,7 @@ class passFailInspectionForm(forms.ModelForm):
         fields = ['passFailTestName','jobID','machineOperator','inspectionResult',
                   'defectType','headCavID']
         widgets = {
-            'headCavID': forms.Select(attrs={'class':'select'})
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
         }
 
 
