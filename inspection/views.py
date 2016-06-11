@@ -1221,7 +1221,7 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
                 newForm.save()
 
     if inspectionType == 'Range':
-        measured_val = form.cleaned_data['numVal']
+        measured_val = form.numVal
 
         if measured_val<rangeInfo.rangeMin:
             errorDescription = 'Measured value is %1.3f which is less than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMin)
@@ -1231,18 +1231,18 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
             create_log = True
 
     if inspectionType == 'Text':
-        if not form.cleaned_data['inspectionResult']:
-            errorDescription = '%s' % form.cleaned_data['inspectionResult']
+        if not form.inspectionResult:
+            errorDescription = '%s' % form.inspectionResult
             create_log = True
 
     if inspectionType == 'Integer':
-        if not form.cleaned_data['inspectionResult']:
-            errorDescription = '%s' % form.cleaned_data['inspectionResult']
+        if not form.inspectionResult:
+            errorDescription = '%s' % form.inspectionResult
             create_log = True
 
     if inspectionType == 'Float':
-        if not form.cleaned_data['inspectionResult']:
-            errorDescription = '%s' % form.cleaned_data['inspectionResult']
+        if not form.inspectionResult:
+            errorDescription = '%s' % form.inspectionResult
             create_log = True
 
     if create_log:
