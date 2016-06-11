@@ -157,13 +157,13 @@ def view_inspection(request):
                     my_form.inspectionResult = inspectionResult
 
                 elif inspection_type == 'Text':
-                    my_form.textTestName = inspection_name_id
+                    my_form.textTestName_id = inspection_name_id
 
                 elif inspection_type == 'Integer':
-                    my_form.integerTestName = inspection_name_id
+                    my_form.integerTestName_id = inspection_name_id
 
                 elif inspection_type == 'Float':
-                    my_form.floatTestName = inspection_name_id
+                    my_form.floatTestName_id = inspection_name_id
                 else:
                     pass
 
