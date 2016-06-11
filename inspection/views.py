@@ -195,7 +195,7 @@ def view_inspection(request):
         template = loader.get_template('inspection/forms/genInspection.html')
         context = RequestContext(request, context_dict)
         return HttpResponse(template.render(context))
-
+        # as
         # except Exception as e:
         #     raise Http404(str(e))
 
