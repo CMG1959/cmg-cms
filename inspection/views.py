@@ -150,7 +150,7 @@ def view_inspection(request):
 
                 elif inspection_type == 'Range':
                     my_form.rangeTestName_id = inspection_name_id
-                    if ((form.cleaned_data['numVal'] >=  range_info.rangeMin) and (form.cleaned_data['numVal'] <= range_info.rangeMax)):
+                    if ((my_form.numVal >=  range_info.rangeMin) and (my_form.numVal <= range_info.rangeMax)):
                         inspectionResult = True
                     else:
                         inspectionResult = False
