@@ -167,10 +167,11 @@ def view_inspection(request):
 
 
         headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
-                                                                    inspection_type= inspection_type,
+                                                                    inspection_type=inspection_type,
                                                                     inspection_id=inspection_name_id,
                                                                     man_num=request.user.webappemployee.EmpNum)
-
+        print inspection_type
+        print headCavID_choices
         form.fields["headCavID"].widget.choices = headCavID_choices
 
         if defectType_choices:

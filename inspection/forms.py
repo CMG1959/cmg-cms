@@ -20,7 +20,7 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
     inspection_type_int = get_inspection_type(inspection_type)
     built_inspection = get_qms_insp_def(job_id=job_id, inspection_type=inspection_type_int,
                                         inspection_id=inspection_id, man_num=man_num)
-    if inspection_type == 'Pass/Fail':
+    if inspection_type in ['Pass/Fail','Pass-Fail']:
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
         defectType_fields = build_defects(built_inspection['Critera_Array'])
         return headCavID_fields, defectType_fields
