@@ -306,7 +306,14 @@ def view_rangeInspection(request, jobNumber, inspectionName):
 
 @login_required
 def view_textInspection(request, jobNumber, inspectionName):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    try:
+        test_name = textRecord.objects.get(testName=inspectionName)
+        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+
+    except Exception as e:
+        raise Http404(str(e))
+
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = textInspectionForm(request.POST)
@@ -361,6 +368,14 @@ def view_textInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='tex', test_name=inspectionName)
 
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
+                                                                        inspection_type='Text',
+                                                                        inspection_id=test_name.id,
+                                                                        man_num=request.user.webappemployee.EmpNum)
+
+        form.fields["headCavID"].widget.choices = headCavID_choices
+
+
         machine_operator = get_previous_mach_op(jobNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
@@ -382,7 +397,14 @@ def view_textInspection(request, jobNumber, inspectionName):
 
 @login_required
 def view_IntegerInspection(request, jobNumber, inspectionName):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+
+    try:
+        test_name = IntegerRecord.objects.get(testName=inspectionName)
+        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    except Exception as e:
+        raise Http404(str(e))
+
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = textInspectionForm(request.POST)
@@ -434,6 +456,13 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='IntegerType', test_name=inspectionName)
 
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
+                                                                        inspection_type='Integer',
+                                                                        inspection_id=test_name.id,
+                                                                        man_num=request.user.webappemployee.EmpNum)
+
+        form.fields["headCavID"].widget.choices = headCavID_choices
+
         machine_operator = get_previous_mach_op(jobNumber)
 
         template = loader.get_template('inspection/forms/genInspection.html')
@@ -455,7 +484,13 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
 
 @login_required
 def view_FloatInspection(request, jobNumber, inspectionName):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+
+    try:
+        test_name = FloatRecord.objects.get(testName=inspectionName)
+        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    except Exception as e:
+        raise Http404(str(e))
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = textInspectionForm(request.POST)
@@ -504,6 +539,14 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                      'textTestName':textRecord.objects.get(testName=inspectionName).id}
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='FloatType', test_name=inspectionName)
+
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
+                                                                        inspection_type='Float',
+                                                                        inspection_id=test_name.id,
+                                                                        man_num=request.user.webappemployee.EmpNum)
+
+        form.fields["headCavID"].widget.choices = headCavID_choices
+
 
         machine_operator = get_previous_mach_op(jobNumber)
 

@@ -25,7 +25,7 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
         defectType_fields = build_defects(built_inspection['Critera_Array'])
 
         return headCavID_fields, defectType_fields
-    if inspection_type == 'Range':
+    if inspection_type in ['Range', 'Text'] :
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
         return headCavID_fields, False
     else:
@@ -52,21 +52,32 @@ class rangeInspectionForm(forms.ModelForm):
             'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
         }
 
+
 class textInspectionForm(forms.ModelForm):
     class Meta:
         model = textInspection
         fields = ['textTestName','jobID','machineOperator','isFullShot','headCavID','inspectionResult']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
 
 class IntegerInspectionForm(forms.ModelForm):
     class Meta:
         model = IntegerInspection
         fields = ['integerTestName','jobID','machineOperator','isFullShot','headCavID','inspectionResult']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
 
 class FloatInspectionForm(forms.ModelForm):
     class Meta:
         model = FloatInspection
         fields = ['floatTestName','jobID','machineOperator','isFullShot','headCavID','inspectionResult']
-
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
 
 
 
