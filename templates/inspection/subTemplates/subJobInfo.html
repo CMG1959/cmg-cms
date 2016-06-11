@@ -19,10 +19,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ active_job.0.item.item_Number }}</td>
-                        <td>{{ active_job.0.item.item_Description }}</td>
-                        <td>{{ active_job.0.item.exp_part_weight }}</td>
-                        <td>{{ active_job.0.item.exp_cycle_time }}</td>
+                        <td>{{ active_job.item.item_Number }}</td>
+                        <td>{{ active_job.item.item_Description }}</td>
+                        <td>{{ active_job.item.exp_part_weight }}</td>
+                        <td>{{ active_job.item.exp_cycle_time }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -49,20 +49,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for ep in active_job %}
+                {% if active_job %}
                     <tr>
-                        <td> {{ ep.machineOperator }}</td>
-                        <td> {{ ep.inspectorName }}</td>
-                        <td>{{ ep.jobNumber }} </td>
-                        <td>{{ ep.shotWeight }}</td>
-                        <td>{{ ep.activeCavities }}</td>
-                        {% with  ep.shotWeight|div:ep.activeCavities as avgptWeight  %}
+                        <td> {{ active_job.machineOperator }}</td>
+                        <td> {{ active_job.inspectorName }}</td>
+                        <td>{{ active_job.jobNumber }} </td>
+                        <td>{{ active_job.shotWeight }}</td>
+                        <td>{{ active_job.activeCavities }}</td>
+                        {% with  active_job.shotWeight|div:active_job.activeCavities as avgptWeight  %}
                                 <td>{{ avgptWeight|floatformat:3 }}</td>
                                 {% endwith %}
-                        <td>{{ ep.machNo }}</td>
-                        <td>{{ ep.cycleTime }}</td>
+                        <td>{{ active_job.machNo }}</td>
+                        <td>{{ active_job.cycleTime }}</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>
@@ -83,14 +83,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for ep in active_job %}
+                {% if active_job %}
                     <tr>
-                        <td> {{ ep.jobNumber }}</td>
-                        <td>{{ ep.moldNumber }}</td>
-                        <td>{{ ep.moldNumber.mold_description }}</td>
-                        <td>{{ ep.moldNumber.num_cavities }}</td>
+                        <td> {{ active_job.jobNumber }}</td>
+                        <td>{{ active_job.moldNumber }}</td>
+                        <td>{{ active_job.moldNumber.mold_description }}</td>
+                        <td>{{ active_job.moldNumber.num_cavities }}</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>
