@@ -88,7 +88,7 @@ def view_errorProdLog(request):
             item_Description = susInfo[0].item.item_Description
         else:
             mattec_info = MattecProd.objects.filter(jobNumber= each_error['jobNumber'])
-            if mattec_info[0]:
+            if len(mattec_info) >=1:
                 item_Description = mattec_info[0].itemDesc
             else:
                 item_Description = 'N/A'
