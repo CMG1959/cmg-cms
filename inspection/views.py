@@ -1,7 +1,7 @@
 # Create your views here.
 import numpy as np
 import re
-from django.http import HttpResponse, HttpResponseRedirect,Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.db.models import Avg, Max, Min, StdDev
@@ -15,9 +15,9 @@ from equipment.models import EquipmentInfo
 from part.models import Part
 from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees, EmployeeAtWorkstation
-from molds.models import Mold,PartIdentifier
+from molds.models import Mold, PartIdentifier
 from production_and_mold_history.models import ProductionHistory
-from forms import passFailInspectionForm, rangeInspectionForm, textInspectionForm, jobReportSearch, itemReportSearch,\
+from forms import jobReportSearch, itemReportSearch, \
     build_inspection_fields, PassFailIns, RangeIns, TextIns, FloatIns, IntIns
 
 from reports import JobReport
@@ -25,6 +25,8 @@ import collections
 import json
 import datetime
 from decimal import Decimal
+
+
 ######################################
 #
 #  Section for generating indexes, etc
@@ -34,7 +36,6 @@ from decimal import Decimal
 @login_required
 def view_index(request):
     activeInMattec = MattecProd.objects.order_by('machNo').all()
-
 
     template = loader.get_template('inspection/index.html')
     context = RequestContext(request, {
@@ -54,17 +55,22 @@ def view_detailJob(request, jobNumber):
         # better go ahead and take care of the Mold now
 
 
-        pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-        range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-        text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-        int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-        float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+        pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item,
+                                                          testName__isSystemInspection=False)
+        range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job.item,
+                                                              testName__isSystemInspection=False)
+        text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
+                                                              testName__isSystemInspection=False)
+        int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
+                                                                testName__isSystemInspection=False)
+        float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
+                                                                testName__isSystemInspection=False)
         template = loader.get_template('inspection/detailJob.html')
         context = RequestContext(request, {
             'active_job': active_job,
-            'pf_inspectionType' : pf_inspectionType,
+            'pf_inspectionType': pf_inspectionType,
             'range_inspectionType': range_inspectionType,
-            'text_inspectionType':text_inspectionType,
+            'text_inspectionType': text_inspectionType,
             'int_inspectionType': int_inspectionType,
             'float_inspectionType': float_inspectionType
         })
@@ -79,9 +85,6 @@ def view_detailJob(request, jobNumber):
             raise Http404(str(e))
 
 
-
-
-
 ######################################
 #
 #  Section for generating forms
@@ -90,17 +93,16 @@ def view_detailJob(request, jobNumber):
 
 @login_required
 def view_inspection(request):
-
-    job_number_id = int(request.GET.get('job_number_id',-1))
-    inspection_type = request.GET.get('inspection_type','N/A')
-    inspection_name_id = int(request.GET.get('inspection_name_id',-1))
+    job_number_id = int(request.GET.get('job_number_id', -1))
+    inspection_type = request.GET.get('inspection_type', 'N/A')
+    inspection_name_id = int(request.GET.get('inspection_name_id', -1))
 
     if request.method == 'POST':
 
         # try:
         active_job = startUpShot.objects.filter(id=job_number_id).last()
         context_dict = {'active_job': active_job,
-                        'head_cav_id':'#id_headCavID'}
+                        'head_cav_id': '#id_headCavID'}
         range_info = None
 
         if inspection_type == 'Pass-Fail':
@@ -138,19 +140,19 @@ def view_inspection(request):
                 if not my_form.headCavID:
                     my_form.headCavID = '-'
 
-
                 if inspection_type == 'Pass-Fail':
                     my_form.passFailTestName_id = inspection_name_id
                     my_form.save()
                     form.save_m2m()
-                    if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
-                        pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=inspection_name_id,
-                                                                    passFail = 'Other / Unknown')
+                    if my_form.inspectionResult == False and len(my_form.defectType.all()) < 1:
+                        pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(
+                            testName_id=inspection_name_id,
+                            passFail='Other / Unknown')
                         my_form.defectType.add(pf_test_unknown_reason)
 
                 elif inspection_type == 'Range':
                     my_form.rangeTestName_id = inspection_name_id
-                    if ((my_form.numVal >=  range_info.rangeMin) and (my_form.numVal <= range_info.rangeMax)):
+                    if ((my_form.numVal >= range_info.rangeMin) and (my_form.numVal <= range_info.rangeMax)):
                         inspectionResult = True
                     else:
                         inspectionResult = False
@@ -170,10 +172,9 @@ def view_inspection(request):
                 my_form.save()
 
                 set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
-                checkFormForLog(my_form, inspectionType = inspection_type,
-                                inspectionName = test_info.testName,
+                checkFormForLog(my_form, inspectionType=inspection_type,
+                                inspectionName=test_info.testName,
                                 activeJob=active_job, rangeInfo=range_info)
-
 
                 redirect_url = '/inspection/%s/' % (active_job.jobNumber)
                 return HttpResponseRedirect(redirect_url)
@@ -182,24 +183,23 @@ def view_inspection(request):
                 context = RequestContext(request)
                 return HttpResponse(template.render(context))
 
-        # except Exception as e:
-        #     raise Http404(str(e))
+                # except Exception as e:
+                #     raise Http404(str(e))
 
     else:
         try:
             active_job = startUpShot.objects.filter(id=job_number_id).last()
             context_dict = {'active_job': active_job,
-                            'head_cav_id':'#id_headCavID'}
-
+                            'head_cav_id': '#id_headCavID'}
 
             if inspection_type == 'Pass-Fail':
                 test_info = passFailTest.objects.get(id=inspection_name_id)
                 form = PassFailIns()
                 context_dict_add = {
-                    'use_checkbox2' : True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_defectType',
-                    'idSelect2':'#id_headCavID',
+                    'use_checkbox2': True,
+                    'id_check': '#id_inspectionResult',
+                    'idSelect': '#id_defectType',
+                    'idSelect2': '#id_headCavID',
                 }
 
             elif inspection_type == 'Range':
@@ -209,14 +209,14 @@ def view_inspection(request):
                 form = RangeIns()
 
                 context_dict_add = {
-                    'use_checkbox' : True,
-                    'id_check':'#id_isFullShot',
-                    'idSelect':'#id_headCavID',
+                    'use_checkbox': True,
+                    'id_check': '#id_isFullShot',
+                    'idSelect': '#id_headCavID',
                     'use_minmax': True,
-                    'num_id':'#id_numVal',
-                    'min_val':range_info.rangeMin,
-                    'max_val':range_info.rangeMax,
-                    'id_result':'#id_inspectionResult',
+                    'num_id': '#id_numVal',
+                    'min_val': range_info.rangeMin,
+                    'max_val': range_info.rangeMax,
+                    'id_result': '#id_inspectionResult',
                 }
 
 
@@ -224,9 +224,9 @@ def view_inspection(request):
                 test_info = textRecord.objects.get(id=inspection_name_id)
                 form = TextIns()
                 context_dict_add = {
-                    'use_checkbox' : True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_headCavID',
+                    'use_checkbox': True,
+                    'id_check': '#id_inspectionResult',
+                    'idSelect': '#id_headCavID',
                 }
 
 
@@ -235,8 +235,8 @@ def view_inspection(request):
                 form = IntIns()
                 context_dict_add = {
                     'use_checkbox': True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_headCavID',
+                    'id_check': '#id_inspectionResult',
+                    'idSelect': '#id_headCavID',
                 }
 
 
@@ -244,20 +244,19 @@ def view_inspection(request):
                 test_info = FloatRecord.objects.get(id=inspection_name_id)
                 form = FloatIns()
                 context_dict_add = {
-                    'use_checkbox' : True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_headCavID',
+                    'use_checkbox': True,
+                    'id_check': '#id_inspectionResult',
+                    'idSelect': '#id_headCavID',
                 }
 
 
             else:
                 raise Http404("Inspection Type Does Not Exist")
 
-
             headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
-                                                                        inspection_type=inspection_type,
-                                                                        inspection_id=inspection_name_id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
+                                                                            inspection_type=inspection_type,
+                                                                            inspection_id=inspection_name_id,
+                                                                            man_num=request.user.webappemployee.EmpNum)
             form.fields["headCavID"].widget.choices = headCavID_choices
 
             if defectType_choices:
@@ -265,7 +264,6 @@ def view_inspection(request):
 
             form.fields["machineOperator"].queryset = \
                 Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
-
 
             context_dict.update({'form_title': test_info.testName,
                                  'form': form})
@@ -277,487 +275,6 @@ def view_inspection(request):
 
         except Exception as e:
             raise Http404(str(e))
-
-
-
-
-@login_required
-def view_pfInspection(request, jobNumber, inspectionName):
-
-
-    try:
-        test_name = passFailTest.objects.get(testName=inspectionName)
-        pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=test_name.id,
-                                                                        passFail = 'Other / Unknown')
-    except Exception as e:
-        raise Http404(str(e))
-
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = passFailInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-
-            is_user = get_user_info(request.user.webappemployee.EmpNum)
-            if is_user:
-
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-
-
-                # save the data
-                my_form = form.save(commit=False)
-
-                set_new_mach_op(jobNumber, my_form.machineOperator)
-
-                my_form.inspectorName = is_user
-
-                my_form.Passed_Partial = False
-
-                if not my_form.headCavID:
-                    my_form.headCavID = '-'
-
-                my_form.save()
-                form.save_m2m()
-
-                if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
-                    my_form.defectType.add(pf_test_unknown_reason)
-                    my_form.save()
-
-                checkFormForLog(my_form, inspectionType = 'pf',
-                                inspectionName = test_name.testName,
-                                activeJob=active_job, rangeInfo=None)
-
-
-                # redirect to a new URL:
-                return HttpResponseRedirect(redirect_url)
-            else:
-                template = loader.get_template('inspection/bad_user.html')
-                context = RequestContext(request)
-                return HttpResponse(template.render(context))
-        else:
-            template = loader.get_template('inspection/bad_cav.html')
-            context = RequestContext(request)
-            return HttpResponse(template.render(context))
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-
-        machine_operator = get_previous_mach_op(jobNumber)
-
-        initial_dictionary = {'jobID': active_job[0].id,
-                     'passFailTestName':passFailTest.objects.get(testName=inspectionName).id}
-
-        form = passFailInspectionForm(initial=initial_dictionary)
-
-        form = presetStandardFields(form, jobID=jobNumber,test_type='pf', test_name=inspectionName)
-
-        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
-                                                                        inspection_type='Pass/Fail',
-                                                                        inspection_id=test_name.id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
-
-
-        form.fields["defectType"].choices = defectType_choices
-        form.fields["headCavID"].widget.choices = headCavID_choices
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-
-        context_dict = {
-            'form_title' : inspectionName,
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox2' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_defectType',
-            'idSelect2':'#id_headCavID',
-            'head_cav_id':'#id_headCavID',
-        }
-        if machine_operator:
-            context_dict.update({'machine_operator': machine_operator.id})
-
-        context = RequestContext(request, context_dict)
-
-        return HttpResponse(template.render(context))
-
-
-
-@login_required
-def view_rangeInspection(request, jobNumber, inspectionName):
-
-    try:
-        test_name = rangeTest.objects.get(testName=inspectionName)
-        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-        rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
-
-    except Exception as e:
-        raise Http404(str(e))
-
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = rangeInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-
-            is_user = get_user_info(request.user.webappemployee.EmpNum)
-            if is_user:
-                
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-
-                # process the data in form.cleaned_data as required
-                redirect_url = '/inspection/%s/' % (jobNumber)
-                # save the data
-                checkFormForLog(form, inspectionType = 'rangeInspection',
-                                inspectionName = rangeInfo.testName,
-                                activeJob=active_job, rangeInfo=rangeInfo)
-
-                if ((form.cleaned_data['numVal'] >=  rangeInfo.rangeMin) and (form.cleaned_data['numVal'] <= rangeInfo.rangeMax)):
-                    inspectionResult = True
-                else:
-                    inspectionResult = False
-
-               # save the data
-                my_form = form.save(commit=False)
-                set_new_mach_op(jobNumber, my_form.machineOperator)
-                my_form.inspectorName = is_user
-                my_form.inspectionResult = inspectionResult
-                my_form.Passed_Partial = False
-
-                if not my_form.headCavID:
-                    my_form.headCavID = '-'
-
-                my_form.save()
-
-                # redirect to a new URL:
-                return HttpResponseRedirect(redirect_url)
-            else:
-                template = loader.get_template('inspection/bad_user.html')
-                context = RequestContext(request)
-                return HttpResponse(template.render(context))
-        else:
-            template = loader.get_template('inspection/bad_cav.html')
-            context = RequestContext(request)
-            return HttpResponse(template.render(context))
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-
-        machine_operator = get_previous_mach_op(jobNumber)
-
-        form = rangeInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
-                     'rangeTestName':rangeInfo.id}
-        )
-        form = presetStandardFields(form, jobID=jobNumber,test_type='rangeInspection', test_name=inspectionName)
-
-
-        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
-                                                                        inspection_type='Range',
-                                                                        inspection_id=test_name.id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
-
-        form.fields["headCavID"].widget.choices = headCavID_choices
-
-
-        form.fields["rangeTestName"].queryset = rangeTestByPart.objects.filter(item_Number__item_Number = active_job[0].item.item_Number,
-                                                                            testName__testName=inspectionName)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context_dict = {
-            'form_title' : inspectionName,
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_isFullShot',
-            'idSelect':'#id_headCavID',
-            'use_minmax': True,
-            'num_id':'#id_numVal',
-            'min_val':rangeInfo.rangeMin,
-            'max_val':rangeInfo.rangeMax,
-            'id_result':'#id_inspectionResult',
-            'head_cav_id':'#id_headCavID',
-        }
-
-        if machine_operator:
-            context_dict.update({'machine_operator': machine_operator.id})
-
-        context = RequestContext(request, context_dict)
-
-        return HttpResponse(template.render(context))
-
-@login_required
-def view_textInspection(request, jobNumber, inspectionName):
-    try:
-        test_name = textRecord.objects.get(testName=inspectionName)
-        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-
-    except Exception as e:
-        raise Http404(str(e))
-
-
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = textInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-
-            is_user = get_user_info(request.user.webappemployee.EmpNum)
-            if is_user:
-                
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-                # save the data
-                # save the data
-                my_form = form.save(commit=False)
-
-                my_form.Passed_Partial = False
-
-                if not my_form.headCavID:
-                    my_form.headCavID = '-'
-
-                set_new_mach_op(jobNumber, my_form.machineOperator)
-
-                my_form.inspectorName = is_user
-
-
-                my_form.save()
-                # save the data
-                checkFormForLog(form, inspectionType = 'textInspection',
-                                inspectionName = inspectionName,
-                                activeJob=active_job)
-                # redirect to a new URL:
-
-                return HttpResponseRedirect(redirect_url)
-            else:
-                template = loader.get_template('inspection/bad_user.html')
-                context = RequestContext(request)
-                return HttpResponse(template.render(context))
-
-        else:
-            template = loader.get_template('inspection/bad_cav.html')
-            context = RequestContext(request)
-            return HttpResponse(template.render(context))
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = textInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
-                     'textTestName':textRecord.objects.get(testName=inspectionName).id}
-        )
-        form = presetStandardFields(form, jobID=jobNumber,test_type='tex', test_name=inspectionName)
-
-        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
-                                                                        inspection_type='Text',
-                                                                        inspection_id=test_name.id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
-
-        form.fields["headCavID"].widget.choices = headCavID_choices
-
-
-        machine_operator = get_previous_mach_op(jobNumber)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context_dict = {
-            'form_title' : inspectionName,
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_headCavID',
-            'head_cav_id':'#id_headCavID',
-        }
-        if machine_operator:
-            context_dict.update({'machine_operator': machine_operator.id})
-
-        context = RequestContext(request, context_dict)
-
-        return HttpResponse(template.render(context))
-
-@login_required
-def view_IntegerInspection(request, jobNumber, inspectionName):
-
-    try:
-        test_name = IntegerRecord.objects.get(testName=inspectionName)
-        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    except Exception as e:
-        raise Http404(str(e))
-
-
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = textInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-
-            is_user = get_user_info(request.user.webappemployee.EmpNum)
-            if is_user:
-                
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-
-                # save the data
-                my_form = form.save(commit=False)
-
-                my_form.Passed_Partial = False
-                set_new_mach_op(jobNumber, my_form.machineOperator)
-
-                my_form.inspectorName = is_user
-
-                if not my_form.headCavID:
-                    my_form.headCavID = '-'
-
-                my_form.save()
-
-                checkFormForLog(form, inspectionType = 'IntegerInspection',
-                                inspectionName = inspectionName,
-                                activeJob=active_job)
-                # redirect to a new URL:
-                return HttpResponseRedirect(redirect_url)
-            else:
-                template = loader.get_template('inspection/bad_user.html')
-                context = RequestContext(request)
-                return HttpResponse(template.render(context))
-        else:
-            template = loader.get_template('inspection/bad_cav.html')
-            context = RequestContext(request)
-            return HttpResponse(template.render(context))
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = textInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
-                     'textTestName':textRecord.objects.get(testName=inspectionName).id}
-        )
-        form = presetStandardFields(form, jobID=jobNumber,test_type='IntegerType', test_name=inspectionName)
-
-        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
-                                                                        inspection_type='Integer',
-                                                                        inspection_id=test_name.id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
-
-        form.fields["headCavID"].widget.choices = headCavID_choices
-
-        machine_operator = get_previous_mach_op(jobNumber)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-        context_dict = {
-            'form_title' : inspectionName,
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_headCavID',
-            'head_cav_id':'#id_headCavID',
-        }
-
-        if machine_operator:
-            context_dict.update({'machine_operator': machine_operator.id})
-
-        context = RequestContext(request, context_dict)
-        return HttpResponse(template.render(context))
-
-@login_required
-def view_FloatInspection(request, jobNumber, inspectionName):
-
-    try:
-        test_name = FloatRecord.objects.get(testName=inspectionName)
-        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
-    except Exception as e:
-        raise Http404(str(e))
-
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = textInspectionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-
-            is_user = get_user_info(request.user.webappemployee.EmpNum)
-            if is_user:
-                
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-
-                # process the data in form.cleaned_data as required
-                # part_number = form.cleaned_data['jobID']
-                redirect_url = '/inspection/%s/' % (jobNumber)
-                # save the data
-                my_form = form.save(commit=False)
-
-                my_form.Passed_Partial = False
-                set_new_mach_op(jobNumber, my_form.machineOperator)
-
-                if not my_form.headCavID:
-                    my_form.headCavID = '-'
-
-                my_form.save()
-
-                # save the data
-                checkFormForLog(form, inspectionType = 'FloatInspection',
-                                inspectionName = inspectionName,
-                                activeJob=active_job)
-                # redirect to a new URL:
-                return HttpResponseRedirect(redirect_url)
-            else:
-                template = loader.get_template('inspection/bad_user.html')
-                context = RequestContext(request)
-                return HttpResponse(template.render(context))
-        else:
-            template = loader.get_template('inspection/bad_cav.html')
-            context = RequestContext(request)
-            return HttpResponse(template.render(context))
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = textInspectionForm(
-            initial={'jobID': startUpShot.objects.get(jobNumber=jobNumber).id,
-                     'textTestName':textRecord.objects.get(testName=inspectionName).id}
-        )
-        form = presetStandardFields(form, jobID=jobNumber,test_type='FloatType', test_name=inspectionName)
-
-        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
-                                                                        inspection_type='Float',
-                                                                        inspection_id=test_name.id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
-
-        form.fields["headCavID"].widget.choices = headCavID_choices
-
-
-        machine_operator = get_previous_mach_op(jobNumber)
-
-        template = loader.get_template('inspection/forms/genInspection.html')
-
-        context_dict={
-            'form_title' : inspectionName,
-            'form': form,
-            'active_job': active_job,
-            'use_checkbox' : True,
-            'id_check':'#id_inspectionResult',
-            'idSelect':'#id_headCavID',
-            'head_cav_id':'#id_headCavID',
-        }
-
-        if machine_operator:
-            context_dict.update({'machine_operator': machine_operator.id})
-
-        context = RequestContext(request, context_dict)
-        return HttpResponse(template.render(context))
-
-
 
 
 ######################################
@@ -796,15 +313,13 @@ def view_jobReportSearch(request):
                     my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)
                     return my_report.get_report()
                 else:
-                    return render(request,'404.html')
+                    return render(request, '404.html')
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = jobReportSearch()
 
     return render(request, 'inspection/searchForms/jobReportSearch.html', {'form': form})
-
-
 
 
 @login_required
@@ -850,22 +365,25 @@ def view_jobReport(request, jobNumber):
     context = RequestContext(request, context_dic)
     return HttpResponse(template.render(context))
 
+
 @login_required
 def view_jobReport_pdf(request, jobNumber):
     if startUpShot.objects.filter(jobNumber=jobNumber).exists():
         my_report = JobReport(job_number=jobNumber)
         return my_report.get_report()
     else:
-        return render(request,'404.html')
+        return render(request, '404.html')
 
 
 ####### Section for generating data for plots ###########
 def view_jsonError(job_number, date_from, date_to):
-    date_from, date_to = createDateRange(date_from,date_to)
-    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,dateCreated__range=(date_from, date_to),inspectionResult=0)
-    ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),inspectionResult=0)
-    ti = textInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),inspectionResult=0)
-
+    date_from, date_to = createDateRange(date_from, date_to)
+    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+                                           inspectionResult=0)
+    ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+                                        inspectionResult=0)
+    ti = textInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+                                       inspectionResult=0)
 
     if (not ri.exists()) and (not pf.exists()):
         no_errors = True
@@ -881,15 +399,16 @@ def view_jsonError(job_number, date_from, date_to):
         production_errors.append(eachti.textTestName.testName)
 
     count_errors = collections.Counter(production_errors)
-    sort_jawn = [(l,k) for k,l in sorted([(j,i) for i,j in count_errors.items()], reverse=True)]
+    sort_jawn = [(l, k) for k, l in sorted([(j, i) for i, j in count_errors.items()], reverse=True)]
     counted_errors = []
-    for k,v in sort_jawn:
-        counted_errors.append({'error_name':k,'error_count':v})
+    for k, v in sort_jawn:
+        counted_errors.append({'error_name': k, 'error_count': v})
 
     if no_errors:
         return None
     else:
         return json.dumps(counted_errors, ensure_ascii=False).encode('utf8')
+
 
 ####### Helper functions ###########
 
@@ -906,56 +425,57 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=itemNumber)
     textTests = textRecordByPart.objects.filter(item_Number__item_Number=itemNumber)
 
-    partDict = {'pf':{},'rangeTest':{},'activeJob':susList}
+    partDict = {'pf': {}, 'rangeTest': {}, 'activeJob': susList}
 
-    k=0
+    k = 0
     for eachInspection1 in pf_inspectionType:
         eachInspection = eachInspection1.testName
         partDict['pf'][eachInspection] = collections.OrderedDict()
-        thisInspection = passFailInspection.objects.filter(passFailTestName__testName = eachInspection,
+        thisInspection = passFailInspection.objects.filter(passFailTestName__testName=eachInspection,
                                                            dateCreated__range=(date_from1, date_to1))
-        n=0
+        n = 0
 
-        key = 'pf'+str(k)
-        collapse_list.append('#'+key)
+        key = 'pf' + str(k)
+        collapse_list.append('#' + key)
         partDict['pf'][eachInspection]['html_id'] = key
-        k=k+1
+        k = k + 1
 
         for eachJob in jobList:
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
-            partDict['pf'][eachInspection][n]={}
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
+            partDict['pf'][eachInspection][n] = {}
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber=eachJob).order_by('-dateCreated')
             partDict['pf'][eachInspection][n]['jobID'] = eachJob
             partDict['pf'][eachInspection][n].update(createPFStats(thisInspectionbyJob))
             n += 1
 
-        partDict['pf'][eachInspection][n]={}
+        partDict['pf'][eachInspection][n] = {}
         partDict['pf'][eachInspection][n]['jobID'] = 'Total'
-        partDict['pf'][eachInspection][n].update(createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
+        partDict['pf'][eachInspection][n].update(
+            createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
 
     k = 0
     for eachInspection1 in rangeTests:
-
 
         eachInspection = eachInspection1.testName.testName
         partDict['rangeTest'][eachInspection] = collections.OrderedDict()
         partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
 
-        thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName = eachInspection,
-                                                           dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated')
-        n=0
+        thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName=eachInspection,
+                                                        dateCreated__range=(date_from1, date_to1)).order_by(
+            '-dateCreated')
+        n = 0
 
-        key = 'rt'+str(k)
-        collapse_list.append('#'+key)
+        key = 'rt' + str(k)
+        collapse_list.append('#' + key)
         partDict['rangeTest'][eachInspection]['html_id'] = key
-        k=k+1
+        k = k + 1
 
         totalRangeList = []
         for eachJob in jobList:
             partDict['rangeTest'][eachInspection][n] = {}
-            partDict['rangeTest'][eachInspection][n]['jobID']=eachJob
+            partDict['rangeTest'][eachInspection][n]['jobID'] = eachJob
 
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber = eachJob).order_by('-dateCreated')
+            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber=eachJob).order_by('-dateCreated')
             active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
 
             rangeList = []
@@ -971,48 +491,48 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             partDict['rangeTest'][eachInspection][n]['rangeStats'] = calcRangeStats(rangeList)
             n += 1
 
-        partDict['rangeTest'][eachInspection][n] = {'jobID' :'Total',
-                                                         'rangeStats':calcRangeStats(totalRangeList)}
-
-
-
+        partDict['rangeTest'][eachInspection][n] = {'jobID': 'Total',
+                                                    'rangeStats': calcRangeStats(totalRangeList)}
 
     n = 0
-    partDict['textTests']=collections.OrderedDict()
+    partDict['textTests'] = collections.OrderedDict()
     for eachTextTest in textTests:
-        key = 'tt'+str(n)
-        collapse_list.append('#'+key)
+        key = 'tt' + str(n)
+        collapse_list.append('#' + key)
         partDict['textTests'][n] = {
             'html_id': key,
             'testName': eachTextTest.testName,
-            'textDict': textInspection.objects.filter(\
-            textTestName__testName=eachTextTest.testName,
-            jobID__item__item_Number=itemNumber)
+            'textDict': textInspection.objects.filter( \
+                    textTestName__testName=eachTextTest.testName,
+                    jobID__item__item_Number=itemNumber)
         }
 
         n += 1
 
-    partDict['phl']=[]
+    partDict['phl'] = []
     for eaJob in eachJob:
-        partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated'))
+        partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob).values('dateCreated', 'jobNumber',
+                                                                                        'inspectorName__EmpLMName',
+                                                                                        'descEvent').order_by(
+            '-dateCreated'))
 
-    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist] #change?
+    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist]  # change?
     partDict['useJobNo'] = True
-
 
     collapse_list.append('#phl')
 
-    partDict.update({'collapse_list':collapse_list})
+    partDict.update({'collapse_list': collapse_list})
 
     partDict.update({
-        'headerDict':{
-            'companyName':'Custom Molders Group',
-            'reportName':'Part Report',
-            'documentName':'Part Number: %s' % itemNumber
+        'headerDict': {
+            'companyName': 'Custom Molders Group',
+            'reportName': 'Part Report',
+            'documentName': 'Part Number: %s' % itemNumber
         }
     })
 
     return partDict
+
 
 def createJobReportDict(jobNumber, date_from=None, date_to=None):
     collapse_list = []
@@ -1028,40 +548,43 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     # Job number 6 and 9 should be QA and
     context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber,
                                                           dateCreated__range=(date_from, date_to),
-                                                          inspectorName__IsQCStaff=True).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
+                                                          inspectorName__IsQCStaff=True).values('dateCreated',
+                                                                                                'jobNumber',
+                                                                                                'inspectorName__EmpLMName',
+                                                                                                'descEvent').order_by(
+        '-dateCreated')
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     textTests = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item)
 
-
     context_dic['pf'] = {}
-    context_dic['pfSummary']={}
+    context_dic['pfSummary'] = {}
     n = 0
     for each_pf_inspection in pf_inspectionType:
-        key = 'pf'+str(n)
-        collapse_list.append('#'+key)
-        context_dic['pf'][key] = passFailInspection.objects.filter(passFailTestName__testName=each_pf_inspection.testName.testName,
-                                                                      jobID__jobNumber=jobNumber,
-                                                                      dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
+        key = 'pf' + str(n)
+        collapse_list.append('#' + key)
+        context_dic['pf'][key] = passFailInspection.objects.filter(
+            passFailTestName__testName=each_pf_inspection.testName.testName,
+            jobID__jobNumber=jobNumber,
+            dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['pfSummary'][key] = {}
         context_dic['pfSummary'][key]['pfName'] = each_pf_inspection.testName.testName
         context_dic['pfSummary'][key].update(createPFStats(context_dic['pf'][key]))
-        n+=1
+        n += 1
 
     n = 0
-    context_dic['rangeTests']={}
-    context_dic['rangeTestSummary']={}
+    context_dic['rangeTests'] = {}
+    context_dic['rangeTestSummary'] = {}
     for each_range_inspection in rangeTests:
-        key = 'rt'+str(n)
-        collapse_list.append('#'+key)
-        context_dic['rangeTests'][key] = rangeInspection.objects.filter(rangeTestName__testName=each_range_inspection.testName,
-                                                                           jobID__jobNumber=jobNumber,
-                                                                           dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
+        key = 'rt' + str(n)
+        collapse_list.append('#' + key)
+        context_dic['rangeTests'][key] = rangeInspection.objects.filter(
+            rangeTestName__testName=each_range_inspection.testName,
+            jobID__jobNumber=jobNumber,
+            dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['rangeTestSummary'][key] = {}
         context_dic['rangeTestSummary'][key]['rangeName'] = each_range_inspection.testName.testName
-
-
 
         rangeList = []
         for eachShot in context_dic['rangeTests'][key]:
@@ -1070,37 +593,38 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             else:
                 rangeList.append(eachShot.numVal)
 
-        context_dic['rangeTestSummary'][key]['rangeStats']=calcRangeStats(rangeList)
+        context_dic['rangeTestSummary'][key]['rangeStats'] = calcRangeStats(rangeList)
 
         n += 1
 
-
     n = 0
-    context_dic['textTests']={}
+    context_dic['textTests'] = {}
     for eachTextTest in textTests:
-        key = 'tt'+ str(n)
-        collapse_list.append('#'+key)
+        key = 'tt' + str(n)
+        collapse_list.append('#' + key)
         context_dic['textTests'][key] = {
             'testName': eachTextTest.testName,
-            'textDict': textInspection.objects.filter(\
-            textTestName__testName=eachTextTest.testName,jobID__jobNumber=jobNumber).order_by('-dateCreated')
+            'textDict': textInspection.objects.filter( \
+                    textTestName__testName=eachTextTest.testName, jobID__jobNumber=jobNumber).order_by('-dateCreated')
         }
 
         n += 1
 
-
-    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
-    collapse_list.append('#'+'phl')
+    context_dic['phl'] = ProductionHistory.objects.filter(jobNumber=jobNumber).values('dateCreated', 'jobNumber',
+                                                                                      'inspectorName__EmpLMName',
+                                                                                      'descEvent').order_by(
+        '-dateCreated')
+    collapse_list.append('#' + 'phl')
 
     context_dic.update({
-        'headerDict':{
-            'companyName':'Custom Molders Group',
-            'reportName':'Job Report',
-            'documentName':'Job Number: %s' % (jobNumber)
+        'headerDict': {
+            'companyName': 'Custom Molders Group',
+            'reportName': 'Job Report',
+            'documentName': 'Job Number: %s' % (jobNumber)
         }
     })
 
-    context_dic.update({'collapse_list':collapse_list})
+    context_dic.update({'collapse_list': collapse_list})
     return context_dic
 
 
@@ -1126,7 +650,8 @@ def presetStandardFields(my_form, jobID, test_type, test_name):
     # this will preset machine and qa fields
     ### Filter the machine operators
     my_form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True,
-                                                                          IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
+                                                                          IsOpStaff=True).order_by('EmpShift').order_by(
+        'EmpLName')
 
     my_form.fields["jobID"].queryset = startUpShot.objects.filter(jobNumber=jobID)
 
@@ -1149,49 +674,55 @@ def getShift():
 
     return shift
 
-def checkPartInspection(item_Number):
 
+def checkPartInspection(item_Number):
     for requiredTests in passFailTest.objects.filter(requireAll=True):
-        if not passFailByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
-            newPartInspection = passFailByPart(item_Number = Part.objects.get(item_Number=item_Number),
-                                           testName = requiredTests)
+        if not passFailByPart.objects.filter(item_Number__item_Number=item_Number,
+                                             testName__testName=requiredTests.testName).exists():
+            newPartInspection = passFailByPart(item_Number=Part.objects.get(item_Number=item_Number),
+                                               testName=requiredTests)
             newPartInspection.save()
 
-
     for requiredTests in rangeTest.objects.filter(requireAll=True):
-        if not rangeTestByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
+        if not rangeTestByPart.objects.filter(item_Number__item_Number=item_Number,
+                                              testName__testName=requiredTests.testName).exists():
             try:
                 exp_part_weight = Part.objects.get(item_Number=item_Number).exp_part_weight
-                low_exp = Decimal(exp_part_weight*0.95)
-                high_exp = Decimal(exp_part_weight*1.05)
-                newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
-                                                    testName = requiredTests,
+                low_exp = Decimal(exp_part_weight * 0.95)
+                high_exp = Decimal(exp_part_weight * 1.05)
+                newPartInspection = rangeTestByPart(item_Number=Part.objects.get(item_Number=item_Number),
+                                                    testName=requiredTests,
                                                     rangeMin=low_exp,
                                                     rangeMax=high_exp)
             except Exception as e:
-                newPartInspection = rangeTestByPart(item_Number = Part.objects.get(item_Number=item_Number),
-                                                    testName = requiredTests,
+                newPartInspection = rangeTestByPart(item_Number=Part.objects.get(item_Number=item_Number),
+                                                    testName=requiredTests,
                                                     rangeMin=0,
                                                     rangeMax=999999)
             newPartInspection.save()
 
-
     for requiredTests in textRecord.objects.filter(requireAll=True):
-        if not textRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
-            newPartInspection = textRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
+        if not textRecordByPart.objects.filter(item_Number__item_Number=item_Number,
+                                               testName__testName=requiredTests.testName).exists():
+            newPartInspection = textRecordByPart(testName=requiredTests,
+                                                 item_Number=Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
 
     for requiredTests in IntegerRecord.objects.filter(requireAll=True):
-        if not IntegerRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
-            newPartInspection = IntegerRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
+        if not IntegerRecordByPart.objects.filter(item_Number__item_Number=item_Number,
+                                                  testName__testName=requiredTests.testName).exists():
+            newPartInspection = IntegerRecordByPart(testName=requiredTests,
+                                                    item_Number=Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
 
     for requiredTests in FloatRecord.objects.filter(requireAll=True):
-        if not FloatRecordByPart.objects.filter(item_Number__item_Number=item_Number,testName__testName=requiredTests.testName).exists():
-            newPartInspection = FloatRecordByPart(testName = requiredTests,item_Number = Part.objects.get(item_Number=item_Number))
+        if not FloatRecordByPart.objects.filter(item_Number__item_Number=item_Number,
+                                                testName__testName=requiredTests.testName).exists():
+            newPartInspection = FloatRecordByPart(testName=requiredTests,
+                                                  item_Number=Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
 
-    # Will probably need to create something for shot weights...
+            # Will probably need to create something for shot weights...
 
 
 def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=None):
@@ -1209,25 +740,26 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
             errorDescription = form.defectType.all()
             error_list = []
             for each_error in errorDescription:
-
                 newForm = errorLog(
-                    shiftID = shiftID,
-                    machNo = machNo,
-                    partDesc = partDesc,
-                    jobID = jobID,
-                    inspectionName=inspectionName,
-                    errorDescription = each_error.passFail,
+                        shiftID=shiftID,
+                        machNo=machNo,
+                        partDesc=partDesc,
+                        jobID=jobID,
+                        inspectionName=inspectionName,
+                        errorDescription=each_error.passFail,
                 )
                 newForm.save()
 
     if inspectionType == 'Range':
         measured_val = form.numVal
 
-        if measured_val<rangeInfo.rangeMin:
-            errorDescription = 'Measured value is %1.3f which is less than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMin)
+        if measured_val < rangeInfo.rangeMin:
+            errorDescription = 'Measured value is %1.3f which is less than tolerance (%1.3f)' % (
+            measured_val, rangeInfo.rangeMin)
             create_log = True
-        if measured_val>rangeInfo.rangeMax:
-            errorDescription = 'Measured value is %1.3f which is greater than tolerance (%1.3f)' % (measured_val,rangeInfo.rangeMax)
+        if measured_val > rangeInfo.rangeMax:
+            errorDescription = 'Measured value is %1.3f which is greater than tolerance (%1.3f)' % (
+            measured_val, rangeInfo.rangeMax)
             create_log = True
 
     if inspectionType == 'Text':
@@ -1247,13 +779,13 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
 
     if create_log:
         newForm = errorLog(
-                shiftID = shiftID,
-                machNo = machNo,
-                partDesc = partDesc,
-                jobID = jobID,
+                shiftID=shiftID,
+                machNo=machNo,
+                partDesc=partDesc,
+                jobID=jobID,
                 inspectionName=inspectionName,
-                errorDescription = errorDescription,
-            )
+                errorDescription=errorDescription,
+        )
         newForm.save()
 
 
@@ -1261,31 +793,32 @@ def createPFStats(qSet):
     resultDict = {
         'numPass': qSet.filter(inspectionResult=1).count(),
         'numFail': qSet.filter(inspectionResult=0).count()}
-    resultDict['totalInspections'] = resultDict['numPass']+resultDict['numFail']
+    resultDict['totalInspections'] = resultDict['numPass'] + resultDict['numFail']
     if resultDict['totalInspections'] > 0:
-        resultDict['passPerc']=100*resultDict['numPass']/resultDict['totalInspections']
+        resultDict['passPerc'] = 100 * resultDict['numPass'] / resultDict['totalInspections']
     else:
-        resultDict['passPerc']=0
+        resultDict['passPerc'] = 0
 
     return resultDict
+
 
 def calcRangeStats(rangeList):
     if rangeList:
         resultDict = {
-                    'rangeList__count' :  '%i' % (len(rangeList)),
-                    'rangeList__min':    '%1.3f' % (np.amin(rangeList)),
-                    'rangeList__max':    '%1.3f' % (np.amax(rangeList)),
-                    'rangeList__avg':    '%1.3f' % (np.mean(rangeList)),
-                    'rangeList__stddev': '%1.3f' % (np.std(rangeList))
-                }
+            'rangeList__count': '%i' % (len(rangeList)),
+            'rangeList__min': '%1.3f' % (np.amin(rangeList)),
+            'rangeList__max': '%1.3f' % (np.amax(rangeList)),
+            'rangeList__avg': '%1.3f' % (np.mean(rangeList)),
+            'rangeList__stddev': '%1.3f' % (np.std(rangeList))
+        }
     else:
         resultDict = {
-                    'rangeList__count' :  '%i' % (0),
-                    'rangeList__min':    '%1.3f' % (0),
-                    'rangeList__max':    '%1.3f' % (0),
-                    'rangeList__avg':    '%1.3f' % (0),
-                    'rangeList__stddev': '%1.3f' % (0)
-                }
+            'rangeList__count': '%i' % (0),
+            'rangeList__min': '%1.3f' % (0),
+            'rangeList__max': '%1.3f' % (0),
+            'rangeList__avg': '%1.3f' % (0),
+            'rangeList__stddev': '%1.3f' % (0)
+        }
     return resultDict
 
 
@@ -1307,6 +840,7 @@ def get_user_info(man_num):
         this_user = None
     return this_user
 
+
 def get_previous_mach_op(job_number):
     try:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
@@ -1319,12 +853,10 @@ def get_previous_mach_op(job_number):
 
 
 def set_new_mach_op(job_number, employee_info):
-
-
     try:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
         current_station = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
-        current_station.employee=employee_info
+        current_station.employee = employee_info
         current_station.save()
     except EmployeeAtWorkstation.DoesNotExist:
         mattec_info = MattecProd.objects.get(jobNumber=job_number)
