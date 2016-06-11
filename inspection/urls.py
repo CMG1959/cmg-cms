@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     ### link to display active jobs
     url(r'^$', views.view_index, name='index'),
-    url(r'^entry/', views.view_inspection, 'inspection_entry'),
+    url(r'^entry/', views.view_inspection, name='inspection_entry'),
     ### link to job report
     url(r'^jobReport/$', views.view_jobReportSearch, name='view_jobReportSearch'),
     ### link to item report
