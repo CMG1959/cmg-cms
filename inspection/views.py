@@ -101,9 +101,10 @@ def view_inspection(request):
     if request.method == 'POST':
         pass
     else:
+        print request.GET
         job_number_id = int(request.GET.get('job_number_id',-1))
         inspection_type = request.GET.get('inspection_type','N/A')
-        inspection_name_id = int(request.GET.get('inspection_name',-1))
+        inspection_name_id = int(request.GET.get('inspection_name_id',-1))
 
         try:
             active_job = startUpShot.objects.get(id=job_number_id)
