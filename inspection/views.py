@@ -202,9 +202,14 @@ def view_pfInspection(request, jobNumber, inspectionName):
 
 @login_required
 def view_rangeInspection(request, jobNumber, inspectionName):
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
-    rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
+    try:
+        test_name = passFailTest.objects.get(testName=inspectionName)
+        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+        rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
+
+    except Exception as e:
+        raise Http404(str(e))
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -263,6 +268,16 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                      'rangeTestName':rangeInfo.id}
         )
         form = presetStandardFields(form, jobID=jobNumber,test_type='rangeInspection', test_name=inspectionName)
+
+
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=active_job[0].id,
+                                                                        inspection_type='Range',
+                                                                        inspection_id=test_name.id,
+                                                                        man_num=request.user.webappemployee.EmpNum)
+
+        form.fields["headCavID"].widget.choices = headCavID_choices
+
+
         form.fields["rangeTestName"].queryset = rangeTestByPart.objects.filter(item_Number__item_Number = active_job[0].item.item_Number,
                                                                             testName__testName=inspectionName)
 
