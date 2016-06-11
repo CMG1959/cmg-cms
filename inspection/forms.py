@@ -25,8 +25,11 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
         defectType_fields = build_defects(built_inspection['Critera_Array'])
 
         return headCavID_fields, defectType_fields
+    if inspection_type == 'Range':
+        headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
+        return headCavID_fields, False
     else:
-        return False
+        return False, False
 
 class passFailInspectionForm(forms.ModelForm):
 
