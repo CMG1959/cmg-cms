@@ -1,7 +1,7 @@
 from django.db import connection
 
 def get_inspection_type(inspection_type_str):
-    if inspection_type_str == 'Pass/Fail':
+    if inspection_type_str in ['Pass/Fail', 'Pass-Fail']:
         return 1
     elif inspection_type_str == 'Float':
         return 2

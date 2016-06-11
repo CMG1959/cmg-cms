@@ -32,8 +32,64 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
     else:
         return False, False
 
-class passFailInspectionForm(forms.ModelForm):
 
+
+
+
+
+class PassFailIns(forms.ModelForm):
+    class Meta:
+        model = passFailInspection
+        fields = ['machineOperator','inspectionResult',
+                  'defectType','headCavID']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
+
+class RangeIns(forms.ModelForm):
+    class Meta:
+        model = rangeInspection
+        fields = ['machineOperator','isFullShot',
+                  'headCavID','numVal']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
+
+class TextIns(forms.ModelForm):
+    class Meta:
+        model = textInspection
+        fields = ['machineOperator','isFullShot','headCavID','inspectionResult']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
+
+class IntIns(forms.ModelForm):
+    class Meta:
+        model = IntegerInspection
+        fields = ['machineOperator','isFullShot','headCavID','inspectionResult']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
+
+class FloatIns(forms.ModelForm):
+    class Meta:
+        model = FloatInspection
+        fields = ['machineOperator','isFullShot','headCavID','inspectionResult']
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
+
+####
+# Old forms here
+####
+
+
+class passFailInspectionForm(forms.ModelForm):
     class Meta:
         model = passFailInspection
         fields = ['passFailTestName','jobID','machineOperator','inspectionResult',

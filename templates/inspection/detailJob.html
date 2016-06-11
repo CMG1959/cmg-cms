@@ -34,113 +34,39 @@
                         </a>
 
                         {% for eachPF in pf_inspectionType %}
-                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/pf/{{ eachPF.testName }}/">
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.jobNumber_id}}&inspection_type=Pass-Fail&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachPF.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachPF.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachRI in range_inspectionType %}
-                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/rangeInspection/{{ eachRI.testName }}/">
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.jobNumber_id}}&inspection_type=Range&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachRI.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachRI.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachTI in text_inspectionType %}
-                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/textInspection/{{ eachTI.testName }}/">
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.jobNumber_id}}&inspection_type=Text&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachTI.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachTI.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachInt in int_inspectionType %}
-                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/IntegerInspection/{{ eachInt.testName }}/">
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.jobNumber_id}}&inspection_type=Integer&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachInt.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachInt.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachFloat in float_inspectionType %}
-                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/FloatInspection/{{ eachFloat.testName }}/">
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.jobNumber_id}}&inspection_type=Float&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachFloatEn.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachFloat.testName }} </p>
                             </a>
                         {% endfor %}
-
-
-
-{#                        {% if inspectionTypes.visual_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/visual">#}
-{#                            <h4 class="list-group-item-heading">Visual Inspection</h4>#}
-{#                            <p class="list-group-item-text">Click Here to record a visual inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{#                        {% if inspectionTypes.part_weight_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/part_weight">#}
-{#                            <h4 class="list-group-item-heading">Part Weight Inspection</h4>#}
-{#                            <p class="list-group-item-text">Click Here to record a part weight inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{#                        {% if inspectionTypes.shot_weight_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/shot_weight">#}
-{#                            <h4 class="list-group-item-heading">Shot Weight Inspection</h4>#}
-{#                            <p class="list-group-item-text">Click Here to record a part weight inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{#                        {% if inspectionTypes.od_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/outside_diameter">#}
-{#                                <h4 class="list-group-item-heading">Outside Diameter Inspection</h4>#}
-{##}
-{#                                <p class="list-group-item-text">Click Here to record an outside diameter inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{#                        {% if inspectionTypes.vol_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/volume_test">#}
-{#                                <h4 class="list-group-item-heading">Volume Inspection</h4>#}
-{##}
-{#                                <p class="list-group-item-text">Click Here to record a volume inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{##}
-{#                        {% if inspectionTypes.neck_diameter_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/neck_diameter">#}
-{#                                <h4 class="list-group-item-heading">Neck Diameter Inspection</h4>#}
-{##}
-{#                                <p class="list-group-item-text">Click Here to record a neck diameter inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{#                        {% if inspectionTypes.assembly_test_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/assembly_test">#}
-{#                                <h4 class="list-group-item-heading">Assembly Inspection</h4>#}
-{##}
-{#                                <p class="list-group-item-text">Click Here to record an assembly inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{#                        {% if inspectionTypes.carton_temp_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/carton_temp">#}
-{#                                <h4 class="list-group-item-heading">Carton Temperature Inspection</h4>#}
-{##}
-{#                                <p class="list-group-item-text">Click Here to record a carton temperature#}
-{#                                    inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{##}
-{##}
-{#                        {% if inspectionTypes.vision_system_inspection %}#}
-{#                            <a class="list-group-item" href="/inspection/{{ ep.jobNumber.strip }}/vision_system">#}
-{#                                <h4 class="list-group-item-heading">Vision System Inspection</h4>#}
-{##}
-{#                                <p class="list-group-item-text">Click Here to record a vision system inspection </p>#}
-{#                            </a>#}
-{#                        {% endif %}#}
 
                     {% endfor %}
                 </div>
@@ -148,32 +74,6 @@
         </div>
     {% endif %}
 
-
-{##}
-{#    <div class="panel panel-default ">#}
-{#        <div class="panel-body">#}
-{#            {% for ep in active_job %}#}
-{#                <ul>#}
-{#                    <li><a href="/inspection/jobReport/{{ ep.jobNumber }}">Click here to view current job report</a>#}
-{#                    </li>#}
-{#                    {% if inspectionTypes.visual_inspection %}#}
-{#                        <li><a href="/inspection/{{ ep.jobNumber }}/visual">Click here to record visual inspection</a>#}
-{#                        </li>#}
-{#                    {% endif %}#}
-{#                    {% if inspectionTypes.part_weight_inspection %}#}
-{#                        <li><a href="/inspection/{{ ep.jobNumber }}/part_weight">Click here to record part weight#}
-{#                            inspection</a>#}
-{#                        </li>#}
-{#                    {% endif %}#}
-{#                    {% if inspectionTypes.shot_weight_inspection %}#}
-{#                        <li><a href="/inspection/{{ ep.jobNumber }}/shot_weight">Click here to record shot weight#}
-{#                            inspection</a>#}
-{#                        </li>#}
-{#                    {% endif %}#}
-{#                </ul>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    </div>#}
 </div>
 
 
