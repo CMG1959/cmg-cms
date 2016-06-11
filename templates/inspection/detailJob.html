@@ -13,8 +13,10 @@
 
 <div class="col-sm-offset-1 col-sm-10 bootcards-cards">
 
+    {% with active_job.0 as active_job  %}
+        {% include "inspection/subTemplates/subJobInfo.html" %}
+    {% endwith %}
 
-    {% include "inspection/subTemplates/subJobInfo.html" %}
 
 
 {% if active_job %}

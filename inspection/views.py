@@ -47,7 +47,7 @@ def view_index(request):
 def view_detailJob(request, jobNumber):
     MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
     jobNumber = str(jobNumber).strip()
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
+    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item').last()
 
     if not active_job.exists():
         if MattecProd.objects.get(jobNumber=jobNumber).machNo.strip() != 'FAS01':
@@ -73,11 +73,11 @@ def view_detailJob(request, jobNumber):
     # better go ahead and take care of the Mold now
 
 
-    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
-    range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
-    text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
-    int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
-    float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item, testName__isSystemInspection=False)
+    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+    range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+    text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+    int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+    float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
     template = loader.get_template('inspection/detailJob.html')
     context = RequestContext(request, {
         'active_job': active_job,
