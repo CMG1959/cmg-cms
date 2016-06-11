@@ -176,7 +176,7 @@ def view_inspection(request):
                                 activeJob=active_job, rangeInfo=range_info)
 
 
-                redirect_url = '/inspection/%s/' % (active_job.jobNumber.trim())
+                redirect_url = '/inspection/%s/' % (active_job.jobNumber)
                 return HttpResponseRedirect(redirect_url)
             else:
                 template = loader.get_template('inspection/bad_user.html')
