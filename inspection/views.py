@@ -204,7 +204,7 @@ def view_pfInspection(request, jobNumber, inspectionName):
 def view_rangeInspection(request, jobNumber, inspectionName):
 
     try:
-        test_name = passFailTest.objects.get(testName=inspectionName)
+        test_name = rangeTest.objects.get(testName=inspectionName)
         active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
         rangeInfo = rangeTestByPart.objects.get(testName__testName=inspectionName,item_Number__item_Number=active_job[0].item.item_Number)
 
