@@ -106,7 +106,7 @@ def view_inspection(request):
         inspection_name_id = request.GET.get('inspection_name','')
 
         try:
-            active_job = startUpShot.objects.get(job_id = job_number_id)
+            active_job = startUpShot.objects.get(job_id=job_number_id)
             context_dict = {'active_job': active_job,
                             'head_cav_id':'#id_headCavID'}
 
@@ -170,7 +170,7 @@ def view_inspection(request):
 
 
             else:
-                return Http404("Inspection Type Does Not Exist")
+                raise Http404("Inspection Type Does Not Exist")
 
 
             headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
@@ -196,7 +196,7 @@ def view_inspection(request):
             return HttpResponse(template.render(context))
 
         except Exception as e:
-            return Http404(str(e))
+            raise Http404(str(e))
 
 
 
