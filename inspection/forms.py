@@ -48,6 +48,10 @@ class rangeInspectionForm(forms.ModelForm):
         fields = ['rangeTestName','jobID','machineOperator','isFullShot',
                   'headCavID','numVal']
 
+        widgets = {
+            'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        }
+
 class textInspectionForm(forms.ModelForm):
     class Meta:
         model = textInspection
