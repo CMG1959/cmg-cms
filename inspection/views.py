@@ -112,11 +112,6 @@ def view_inspection(request):
             range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
                                                      item_Number_id=active_job.item_id)
             form = RangeIns(request.POST)
-            if ((form.cleaned_data['numVal'] >=  range_info.rangeMin) and (form.cleaned_data['numVal'] <= range_info.rangeMax)):
-                inspectionResult = True
-            else:
-                inspectionResult = False
-
 
         elif inspection_type == 'Text':
             test_info = textRecord.objects.get(id=inspection_name_id)
@@ -155,6 +150,10 @@ def view_inspection(request):
 
                 elif inspection_type == 'Range':
                     my_form.rangeTestName_id = inspection_name_id
+                    if ((form.cleaned_data['numVal'] >=  range_info.rangeMin) and (form.cleaned_data['numVal'] <= range_info.rangeMax)):
+                        inspectionResult = True
+                    else:
+                        inspectionResult = False
                     my_form.inspectionResult = inspectionResult
 
                 elif inspection_type == 'Text':
