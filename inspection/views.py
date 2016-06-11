@@ -146,27 +146,29 @@ def view_inspection(request):
 
                 if inspection_type == 'Pass-Fail':
                     my_form.passFailTestName_id = inspection_name_id
+                    my_form.save()
                     form.save_m2m()
                     if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
                         pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=inspection_name_id,
                                                                     passFail = 'Other / Unknown')
                         my_form.defectType.add(pf_test_unknown_reason)
-                        my_form.save()
+
                 elif inspection_type == 'Range':
                     my_form.rangeTestName_id = inspection_name_id
                     my_form.inspectionResult = inspectionResult
-                    my_form.save()
+
                 elif inspection_type == 'Text':
                     my_form.textTestName = inspection_name_id
-                    pass
+
                 elif inspection_type == 'Integer':
                     my_form.integerTestName = inspection_name_id
-                    pass
+
                 elif inspection_type == 'Float':
                     my_form.floatTestName = inspection_name_id
                 else:
                     pass
 
+                my_form.save()
 
                 set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
                 checkFormForLog(my_form, inspectionType = inspection_type,
