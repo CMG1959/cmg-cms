@@ -99,7 +99,7 @@ def view_detailJob(request, jobNumber):
 @login_required
 def view_inspection(request):
     if request.method == 'POST':
-
+        pass
     else:
         job_number_id = request.GET.get('job_number_id','')
         inspection_type = request.GET.get('inspection_type','')
