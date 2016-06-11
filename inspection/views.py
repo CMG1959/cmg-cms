@@ -106,98 +106,98 @@ def view_inspection(request):
         inspection_type = request.GET.get('inspection_type','N/A')
         inspection_name_id = int(request.GET.get('inspection_name_id',-1))
 
-        try:
-            active_job = startUpShot.objects.filter(id=job_number_id).last()
-            context_dict = {'active_job': active_job,
-                            'head_cav_id':'#id_headCavID'}
+        # try:
+        active_job = startUpShot.objects.filter(id=job_number_id).last()
+        context_dict = {'active_job': active_job,
+                        'head_cav_id':'#id_headCavID'}
 
 
-            if inspection_type == 'Pass-Fail':
-                test_info = passFailTest.objects.get(id=inspection_name_id)
-                form = PassFailIns()
-                context_dict_add = {
-                    'use_checkbox2' : True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_defectType',
-                    'idSelect2':'#id_headCavID',
-                }
+        if inspection_type == 'Pass-Fail':
+            test_info = passFailTest.objects.get(id=inspection_name_id)
+            form = PassFailIns()
+            context_dict_add = {
+                'use_checkbox2' : True,
+                'id_check':'#id_inspectionResult',
+                'idSelect':'#id_defectType',
+                'idSelect2':'#id_headCavID',
+            }
 
-            elif inspection_type == 'Range':
-                test_info = rangeTest.objects.get(id=inspection_name_id)
-                range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
-                                                         item_Number_id=active_job.item_id)
-                form = RangeIns()
+        elif inspection_type == 'Range':
+            test_info = rangeTest.objects.get(id=inspection_name_id)
+            range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
+                                                     item_Number_id=active_job.item_id)
+            form = RangeIns()
 
-                context_dict_add = {
-                    'use_checkbox' : True,
-                    'id_check':'#id_isFullShot',
-                    'idSelect':'#id_headCavID',
-                    'use_minmax': True,
-                    'num_id':'#id_numVal',
-                    'min_val':range_info.rangeMin,
-                    'max_val':range_info.rangeMax,
-                    'id_result':'#id_inspectionResult',
-                }
-
-
-            elif inspection_type == 'Text':
-                test_info = textRecord.objects.get(id=inspection_name_id)
-                form = TextIns()
-                context_dict_add = {
-                    'use_checkbox' : True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_headCavID',
-                }
+            context_dict_add = {
+                'use_checkbox' : True,
+                'id_check':'#id_isFullShot',
+                'idSelect':'#id_headCavID',
+                'use_minmax': True,
+                'num_id':'#id_numVal',
+                'min_val':range_info.rangeMin,
+                'max_val':range_info.rangeMax,
+                'id_result':'#id_inspectionResult',
+            }
 
 
-            elif inspection_type == 'Integer':
-                test_info = IntegerRecord.objects.get(id=inspection_name_id)
-                form = IntIns()
-                context_dict_add = {
-                    'use_checkbox': True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_headCavID',
-                }
+        elif inspection_type == 'Text':
+            test_info = textRecord.objects.get(id=inspection_name_id)
+            form = TextIns()
+            context_dict_add = {
+                'use_checkbox' : True,
+                'id_check':'#id_inspectionResult',
+                'idSelect':'#id_headCavID',
+            }
 
 
-            elif inspection_type == 'Float':
-                test_info = FloatRecord.objects.get(id=inspection_name_id)
-                form = FloatIns()
-                context_dict_add = {
-                    'use_checkbox' : True,
-                    'id_check':'#id_inspectionResult',
-                    'idSelect':'#id_headCavID',
-                }
+        elif inspection_type == 'Integer':
+            test_info = IntegerRecord.objects.get(id=inspection_name_id)
+            form = IntIns()
+            context_dict_add = {
+                'use_checkbox': True,
+                'id_check':'#id_inspectionResult',
+                'idSelect':'#id_headCavID',
+            }
 
 
-            else:
-                raise Http404("Inspection Type Does Not Exist")
+        elif inspection_type == 'Float':
+            test_info = FloatRecord.objects.get(id=inspection_name_id)
+            form = FloatIns()
+            context_dict_add = {
+                'use_checkbox' : True,
+                'id_check':'#id_inspectionResult',
+                'idSelect':'#id_headCavID',
+            }
 
 
-            headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
-                                                                        inspection_type= inspection_type,
-                                                                        inspection_id=inspection_name_id,
-                                                                        man_num=request.user.webappemployee.EmpNum)
-
-            form.fields["headCavID"].widget.choices = headCavID_choices
-
-            if defectType_choices:
-                form.fields["defectType"].choices = defectType_choices
-
-            form.fields["machineOperator"].queryset = \
-                Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
+        else:
+            raise Http404("Inspection Type Does Not Exist")
 
 
-            context_dict.update({'form_title': test_info.testName,
-                                 'form': form})
-            context_dict.update(context_dict_add)
+        headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
+                                                                    inspection_type= inspection_type,
+                                                                    inspection_id=inspection_name_id,
+                                                                    man_num=request.user.webappemployee.EmpNum)
 
-            template = loader.get_template('inspection/forms/genInspection.html')
-            context = RequestContext(request, context_dict)
-            return HttpResponse(template.render(context))
+        form.fields["headCavID"].widget.choices = headCavID_choices
 
-        except Exception as e:
-            raise Http404(str(e))
+        if defectType_choices:
+            form.fields["defectType"].choices = defectType_choices
+
+        form.fields["machineOperator"].queryset = \
+            Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
+
+
+        context_dict.update({'form_title': test_info.testName,
+                             'form': form})
+        context_dict.update(context_dict_add)
+
+        template = loader.get_template('inspection/forms/genInspection.html')
+        context = RequestContext(request, context_dict)
+        return HttpResponse(template.render(context))
+
+        # except Exception as e:
+        #     raise Http404(str(e))
 
 
 
