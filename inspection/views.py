@@ -45,49 +45,41 @@ def view_index(request):
 
 @login_required
 def view_detailJob(request, jobNumber):
-    MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
     jobNumber = str(jobNumber).strip()
-    active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item').last()
 
-    if not active_job.exists():
-        if MattecProd.objects.get(jobNumber=jobNumber).machNo.strip() != 'FAS01':
+    try:
+        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item').last()
+        # if  PartInspection object hasnt be created, make it now.
+        checkPartInspection(active_job.item)
+        # better go ahead and take care of the Mold now
+
+
+        pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+        range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+        text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+        int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+        float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
+        template = loader.get_template('inspection/detailJob.html')
+        context = RequestContext(request, {
+            'active_job': active_job,
+            'pf_inspectionType' : pf_inspectionType,
+            'range_inspectionType': range_inspectionType,
+            'text_inspectionType':text_inspectionType,
+            'int_inspectionType': int_inspectionType,
+            'float_inspectionType': float_inspectionType
+        })
+        return HttpResponse(template.render(context))
+
+    except Exception as e:
+        MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
+        if MattecInfo.machNo.strip() != 'FAS01':
             redir_url = '/startupshot/create/%s/' % jobNumber
             return HttpResponseRedirect(redir_url)
         else:
-            newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
-                jobNumber=jobNumber, \
-                moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber),
-                inspectorName=Employees.objects.get(EmpNum=10075), \
-                machineOperator=Employees.objects.get(EmpNum=10075), \
-                shotWeight=0.0, \
-                activeCavities=MattecInfo.activeCavities, \
-                cycleTime=MattecInfo.cycleTime, \
-                machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
-            newForm.save()
+            raise Http404(str(e))
 
 
 
-
-    # if  PartInspection object hasnt be created, make it now.
-    checkPartInspection(active_job[0].item)
-    # better go ahead and take care of the Mold now
-
-
-    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-    range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-    text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-    int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-    float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item, testName__isSystemInspection=False)
-    template = loader.get_template('inspection/detailJob.html')
-    context = RequestContext(request, {
-        'active_job': active_job,
-        'pf_inspectionType' : pf_inspectionType,
-        'range_inspectionType': range_inspectionType,
-        'text_inspectionType':text_inspectionType,
-        'int_inspectionType': int_inspectionType,
-        'float_inspectionType': float_inspectionType
-    })
-    return HttpResponse(template.render(context))
 
 
 ######################################
