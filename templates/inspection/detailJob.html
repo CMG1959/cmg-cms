@@ -34,35 +34,35 @@
                         </a>
 
                         {% for eachPF in pf_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.id}}&inspection_type=Pass-Fail&inspection_name_id={{eachPF.testName_id}}">
+                            <a class="list-group-item" href="/inspection/entry?job_number_id={{ep.id}}&inspection_type=Pass-Fail&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachPF.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachPF.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachRI in range_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.id}}&inspection_type=Range&inspection_name_id={{eachPF.testName_id}}">
+                            <a class="list-group-item" href="/inspection/entry?job_number_id={{ep.id}}&inspection_type=Range&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachRI.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachRI.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachTI in text_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.id}}&inspection_type=Text&inspection_name_id={{eachPF.testName_id}}">
+                            <a class="list-group-item" href="/inspection/entry?job_number_id={{ep.id}}&inspection_type=Text&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachTI.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachTI.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachInt in int_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.id}}&inspection_type=Integer&inspection_name_id={{eachPF.testName_id}}">
+                            <a class="list-group-item" href="/inspection/entry?job_number_id={{ep.id}}&inspection_type=Integer&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachInt.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachInt.testName }} </p>
                             </a>
                         {% endfor %}
 
                         {% for eachFloat in float_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{ep.id}}&inspection_type=Float&inspection_name_id={{eachPF.testName_id}}">
+                            <a class="list-group-item" href="/inspection/entry?job_number_id={{ep.id}}&inspection_type=Float&inspection_name_id={{eachPF.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachFloatEn.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachFloat.testName }} </p>
                             </a>
