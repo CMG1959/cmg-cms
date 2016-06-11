@@ -90,13 +90,13 @@ def view_detailJob(request, jobNumber):
 
 @login_required
 def view_inspection(request):
+
+    job_number_id = int(request.GET.get('job_number_id',-1))
+    inspection_type = request.GET.get('inspection_type','N/A')
+    inspection_name_id = int(request.GET.get('inspection_name_id',-1))
+
     if request.method == 'POST':
-        job_number_id = int(request.GET.get('job_number_id',-1))
-        inspection_type = request.GET.get('inspection_type','N/A')
-        inspection_name_id = int(request.GET.get('inspection_name_id',-1))
-        print job_number_id
-        print inspection_type
-        print inspection_name_id
+
         # try:
         active_job = startUpShot.objects.filter(id=job_number_id).last()
         context_dict = {'active_job': active_job,
@@ -141,6 +141,7 @@ def view_inspection(request):
                 my_form.Passed_Partial = False
                 if not my_form.headCavID:
                     my_form.headCavID = '-'
+                my_form.save()
 
                 if inspection_type == 'Pass-Fail':
                     form.save_m2m()
@@ -151,10 +152,11 @@ def view_inspection(request):
                         my_form.save()
                 elif inspection_type == 'Range':
                     my_form.inspectionResult = inspectionResult
+                    my_form.save()
                 else:
                     pass
 
-                my_form.save()
+
                 set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
                 checkFormForLog(my_form, inspectionType = inspection_type,
                                 inspectionName = test_info.testName,
@@ -172,10 +174,6 @@ def view_inspection(request):
         #     raise Http404(str(e))
 
     else:
-        job_number_id = int(request.GET.get('job_number_id',-1))
-        inspection_type = request.GET.get('inspection_type','N/A')
-        inspection_name_id = int(request.GET.get('inspection_name_id',-1))
-
         try:
             active_job = startUpShot.objects.filter(id=job_number_id).last()
             context_dict = {'active_job': active_job,
