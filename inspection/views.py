@@ -91,83 +91,85 @@ def view_detailJob(request, jobNumber):
 @login_required
 def view_inspection(request):
     if request.method == 'POST':
-        job_number_id = int(request.POST.get('job_number_id',-1))
-        inspection_type = request.POST.get('inspection_type','N/A')
-        inspection_name_id = int(request.POST.get('inspection_name_id',-1))
+        job_number_id = int(request.GET.get('job_number_id',-1))
+        inspection_type = request.GET.get('inspection_type','N/A')
+        inspection_name_id = int(request.GET.get('inspection_name_id',-1))
+        print job_number_id
+        print inspection_type
+        print inspection_name_id
+        # try:
+        active_job = startUpShot.objects.filter(id=job_number_id).last()
+        context_dict = {'active_job': active_job,
+                        'head_cav_id':'#id_headCavID'}
+        range_info = None
 
-        try:
-            active_job = startUpShot.objects.filter(id=job_number_id).last()
-            context_dict = {'active_job': active_job,
-                            'head_cav_id':'#id_headCavID'}
-            range_info = None
+        if inspection_type == 'Pass-Fail':
+            test_info = passFailTest.objects.get(id=inspection_name_id)
+            form = PassFailIns(request.POST)
 
-            if inspection_type == 'Pass-Fail':
-                test_info = passFailTest.objects.get(id=inspection_name_id)
-                form = PassFailIns(request.POST)
-
-            elif inspection_type == 'Range':
-                test_info = rangeTest.objects.get(id=inspection_name_id)
-                range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
-                                                         item_Number_id=active_job.item_id)
-                form = RangeIns(request.POST)
-                if ((form.cleaned_data['numVal'] >=  range_info.rangeMin) and (form.cleaned_data['numVal'] <= range_info.rangeMax)):
-                    inspectionResult = True
-                else:
-                    inspectionResult = False
-
-
-            elif inspection_type == 'Text':
-                test_info = textRecord.objects.get(id=inspection_name_id)
-                form = TextIns(request.POST)
-
-            elif inspection_type == 'Integer':
-                test_info = IntegerRecord.objects.get(id=inspection_name_id)
-                form = IntIns(request.POST)
-
-            elif inspection_type == 'Float':
-                test_info = FloatRecord.objects.get(id=inspection_name_id)
-                form = FloatIns(request.POST)
-
+        elif inspection_type == 'Range':
+            test_info = rangeTest.objects.get(id=inspection_name_id)
+            range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
+                                                     item_Number_id=active_job.item_id)
+            form = RangeIns(request.POST)
+            if ((form.cleaned_data['numVal'] >=  range_info.rangeMin) and (form.cleaned_data['numVal'] <= range_info.rangeMax)):
+                inspectionResult = True
             else:
-                raise Http404("Inspection Type Does Not Exist")
-
-            if form.is_valid():
-                is_user = get_user_info(request.user.webappemployee.EmpNum)
-                if is_user:
-                    my_form = form.save(commit=False)
-                    my_form.inspectorName = is_user
-                    my_form.Passed_Partial = False
-                    if not my_form.headCavID:
-                        my_form.headCavID = '-'
-
-                    if inspection_type == 'Pass-Fail':
-                        form.save_m2m()
-                        if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
-                            pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=inspection_name_id,
-                                                                        passFail = 'Other / Unknown')
-                            my_form.defectType.add(pf_test_unknown_reason)
-                            my_form.save()
-                    elif inspection_type == 'Range':
-                        my_form.inspectionResult = inspectionResult
-                    else:
-                        pass
-
-                    my_form.save()
-                    set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
-                    checkFormForLog(my_form, inspectionType = inspection_type,
-                                    inspectionName = test_info.testName,
-                                    activeJob=active_job, rangeInfo=range_info)
+                inspectionResult = False
 
 
-                    redirect_url = '/inspection/%s/' % (active_job.jobNumber.trim())
-                    return HttpResponseRedirect(redirect_url)
+        elif inspection_type == 'Text':
+            test_info = textRecord.objects.get(id=inspection_name_id)
+            form = TextIns(request.POST)
+
+        elif inspection_type == 'Integer':
+            test_info = IntegerRecord.objects.get(id=inspection_name_id)
+            form = IntIns(request.POST)
+
+        elif inspection_type == 'Float':
+            test_info = FloatRecord.objects.get(id=inspection_name_id)
+            form = FloatIns(request.POST)
+
+        else:
+            raise Http404("Inspection Type Does Not Exist")
+
+        if form.is_valid():
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
+            if is_user:
+                my_form = form.save(commit=False)
+                my_form.inspectorName = is_user
+                my_form.Passed_Partial = False
+                if not my_form.headCavID:
+                    my_form.headCavID = '-'
+
+                if inspection_type == 'Pass-Fail':
+                    form.save_m2m()
+                    if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
+                        pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=inspection_name_id,
+                                                                    passFail = 'Other / Unknown')
+                        my_form.defectType.add(pf_test_unknown_reason)
+                        my_form.save()
+                elif inspection_type == 'Range':
+                    my_form.inspectionResult = inspectionResult
                 else:
-                    template = loader.get_template('inspection/bad_user.html')
-                    context = RequestContext(request)
-                    return HttpResponse(template.render(context))
+                    pass
 
-        except Exception as e:
-            raise Http404(str(e))
+                my_form.save()
+                set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
+                checkFormForLog(my_form, inspectionType = inspection_type,
+                                inspectionName = test_info.testName,
+                                activeJob=active_job, rangeInfo=range_info)
+
+
+                redirect_url = '/inspection/%s/' % (active_job.jobNumber.trim())
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
+
+        # except Exception as e:
+        #     raise Http404(str(e))
 
     else:
         job_number_id = int(request.GET.get('job_number_id',-1))
