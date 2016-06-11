@@ -137,13 +137,15 @@ def view_inspection(request):
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
                 my_form = form.save(commit=False)
+                my_form.jobID_id = job_number_id
                 my_form.inspectorName = is_user
                 my_form.Passed_Partial = False
                 if not my_form.headCavID:
                     my_form.headCavID = '-'
-                my_form.save()
+
 
                 if inspection_type == 'Pass-Fail':
+                    my_form.passFailTestName_id = inspection_name_id
                     form.save_m2m()
                     if my_form.inspectionResult == False and  len(my_form.defectType.all()) < 1 :
                         pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(testName_id=inspection_name_id,
@@ -151,8 +153,17 @@ def view_inspection(request):
                         my_form.defectType.add(pf_test_unknown_reason)
                         my_form.save()
                 elif inspection_type == 'Range':
+                    my_form.rangeTestName_id = inspection_name_id
                     my_form.inspectionResult = inspectionResult
                     my_form.save()
+                elif inspection_type == 'Text':
+                    my_form.textTestName = inspection_name_id
+                    pass
+                elif inspection_type == 'Integer':
+                    my_form.integerTestName = inspection_name_id
+                    pass
+                elif inspection_type == 'Float':
+                    my_form.floatTestName = inspection_name_id
                 else:
                     pass
 
