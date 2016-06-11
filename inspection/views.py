@@ -243,8 +243,9 @@ def view_rangeInspection(request, jobNumber, inspectionName):
                 my_form.inspectionResult = inspectionResult
                 my_form.Passed_Partial = False
 
-                if my_form.headCavID:
-                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                if not my_form.headCavID:
+                    my_form.headCavID = '-'
+
                 my_form.save()
 
                 # redirect to a new URL:
@@ -336,12 +337,14 @@ def view_textInspection(request, jobNumber, inspectionName):
 
                 my_form.Passed_Partial = False
 
+                if not my_form.headCavID:
+                    my_form.headCavID = '-'
+
                 set_new_mach_op(jobNumber, my_form.machineOperator)
 
                 my_form.inspectorName = is_user
 
-                if my_form.headCavID:
-                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+
                 my_form.save()
                 # save the data
                 checkFormForLog(form, inspectionType = 'textInspection',
@@ -430,8 +433,9 @@ def view_IntegerInspection(request, jobNumber, inspectionName):
 
                 my_form.inspectorName = is_user
 
-                if my_form.headCavID:
-                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                if not my_form.headCavID:
+                    my_form.headCavID = '-'
+
                 my_form.save()
 
                 checkFormForLog(form, inspectionType = 'IntegerInspection',
@@ -513,8 +517,9 @@ def view_FloatInspection(request, jobNumber, inspectionName):
                 my_form.Passed_Partial = False
                 set_new_mach_op(jobNumber, my_form.machineOperator)
 
-                if my_form.headCavID:
-                    my_form.headCavID = check_HeadCavID(my_form.headCavID)
+                if not my_form.headCavID:
+                    my_form.headCavID = '-'
+
                 my_form.save()
 
                 # save the data
