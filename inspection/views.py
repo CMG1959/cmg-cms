@@ -106,7 +106,7 @@ def view_inspection(request):
         inspection_name_id = request.GET.get('inspection_name','')
 
         try:
-            active_job = startUpShot.objects.get(job_id=job_number_id)
+            active_job = startUpShot.objects.get(id=job_number_id)
             context_dict = {'active_job': active_job,
                             'head_cav_id':'#id_headCavID'}
 
