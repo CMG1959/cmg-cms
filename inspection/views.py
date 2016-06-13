@@ -151,7 +151,7 @@ def view_inspection(request):
                         my_form.defectType.add(pf_test_unknown_reason)
 
                 elif inspection_type == 'Range':
-                    my_form.rangeTestName_id = inspection_name_id
+                    my_form.rangeTestName_id = range_info.id
                     if ((my_form.numVal >= range_info.rangeMin) and (my_form.numVal <= range_info.rangeMax)):
                         inspectionResult = True
                     else:
