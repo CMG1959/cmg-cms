@@ -66,6 +66,7 @@ def viewCreatedStartUpShot(request, part_number):
     context = RequestContext(request, {
         'item': item_id,
         'different_shot_list': different_shots,
+        'list_many': True
     })
     return HttpResponse(template.render(context))
 

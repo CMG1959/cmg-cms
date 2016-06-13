@@ -50,7 +50,7 @@ def view_tooling_requests(request):
 
     template = loader.get_template('phl/reports/mhl_request.html')
     context = RequestContext(request, {
-            'reportList': report_list,
+            'reportList': report_list
         })
 
     return HttpResponse(template.render(context))
@@ -138,6 +138,7 @@ def view_specific_phl_form(request, jobNo):
         context = RequestContext(request, {
             'form': form,
             'active_job': active_job,
+            'list_many': True
         })
         return render(request, 'phl/forms/phlForm.html', context)
 
@@ -210,7 +211,8 @@ def view_phl_report_search(request):
                 my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=item_id)
                 my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=item_id, \
                                                                           dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
-                context_dict = {'my_dict': my_dict}
+                context_dict = {'my_dict': my_dict,
+                                'list_many': True}
                 template = loader.get_template('phl/reports/phl.html')
                 context = RequestContext(request, context_dict)
 
@@ -227,7 +229,8 @@ def view_phl_report_search(request):
                     #                                                           dateCreated__range=(date_from, date_to)).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
                     # n += 1
 
-                context_dict = {'my_dict': my_dict}
+                context_dict = {'my_dict': my_dict,
+                                'list_many': True}
                 template = loader.get_template('phl/reports/phl_by_mold.html')
                 context = RequestContext(request, context_dict)
             # Return new page
@@ -283,7 +286,8 @@ def view_phl_report(request, jobNo):
     my_dict[str(n)] = {}
     my_dict[str(n)]['sus'] = startUpShot.objects.filter(jobNumber=jobNo).order_by('-dateCreated')
     my_dict[str(n)]['phl'] = ProductionHistory.objects.filter(jobNumber=jobNo).values('dateCreated','jobNumber','inspectorName__EmpLMName','descEvent').order_by('-dateCreated')
-    context_dict = {'my_dict': my_dict}
+    context_dict = {'my_dict': my_dict,
+                    'list_many': True}
     template = loader.get_template('phl/reports/phl.html')
     context = RequestContext(request, context_dict)
     return HttpResponse(template.render(context))

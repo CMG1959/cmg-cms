@@ -253,6 +253,10 @@ def view_inspection(request):
             else:
                 raise Http404("Inspection Type Does Not Exist")
 
+            machine_operator = get_previous_mach_op(job_number=active_job.jobNumber)
+            if machine_operator:
+                context_dict.update({'machine_operator': machine_operator.id})
+
             headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
                                                                             inspection_type=inspection_type,
                                                                             inspection_id=inspection_name_id,
@@ -528,7 +532,8 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             'companyName': 'Custom Molders Group',
             'reportName': 'Part Report',
             'documentName': 'Part Number: %s' % itemNumber
-        }
+        },
+        'list_many': True
     })
 
     return partDict
@@ -621,7 +626,8 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             'companyName': 'Custom Molders Group',
             'reportName': 'Job Report',
             'documentName': 'Job Number: %s' % (jobNumber)
-        }
+        },
+        'list_many': True
     })
 
     context_dic.update({'collapse_list': collapse_list})
