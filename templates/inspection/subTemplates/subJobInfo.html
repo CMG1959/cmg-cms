@@ -113,10 +113,12 @@
                 {% if active_job %}
                     {% if list_many %}
                         {% for foo in active_job %}
-                            <td> {{ foo.jobNumber }}</td>
-                            <td>{{ foo.moldNumber }}</td>
-                            <td>{{ foo.moldNumber.mold_description }}</td>
-                            <td>{{ foo.moldNumber.num_cavities }}</td>
+                            <tr>
+                                <td> {{ foo.jobNumber }}</td>
+                                <td>{{ foo.moldNumber }}</td>
+                                <td>{{ foo.moldNumber.mold_description }}</td>
+                                <td>{{ foo.moldNumber.num_cavities }}</td>
+                            </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
