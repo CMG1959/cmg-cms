@@ -339,6 +339,8 @@ def view_itemReportSearch(request):
             date_to = form.cleaned_data['date_to']
             context_dic = {}
             context_dic['partDict'] = createItemReportDict(item_number, date_from=date_from, date_to=date_to)
+            context_dic.update({'list_many': True})
+
             template = loader.get_template('inspection/reports/partReport.html')
             context = RequestContext(request, context_dic)
             return HttpResponse(template.render(context))
@@ -355,7 +357,7 @@ def view_itemReportSearch(request):
 def view_itemReport(request, itemNumber):
     context_dict = {}
     context_dict = createItemReportDict(itemNumber)
-    print context_dict
+    context_dict.update({'list_many': True})
 
     template = loader.get_template('inspection/reports/partReport.html')
     context = RequestContext(request, context_dict)
