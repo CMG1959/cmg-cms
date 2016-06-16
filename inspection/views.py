@@ -77,13 +77,15 @@ def view_detailJob(request, jobNumber):
         return HttpResponse(template.render(context))
 
     except Exception as e:
-        MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
-        if MattecInfo.machNo.strip() not in ['FAS01', 'OFP01']:
-            redir_url = '/startupshot/create/%s/' % jobNumber
-            return HttpResponseRedirect(redir_url)
-        else:
-            raise Http404(str(e))
-
+        try:
+            MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
+            if MattecInfo.machNo.strip() not in ['FAS01', 'OFP01']:
+                redir_url = '/startupshot/create/%s/' % jobNumber
+                return HttpResponseRedirect(redir_url)
+            else:
+                raise Http404(str(e))
+        except Exception as e1:
+            raise Http404(str(e1))
 
 ######################################
 #
