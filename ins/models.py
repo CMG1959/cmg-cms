@@ -141,7 +141,10 @@ class PropText(models.Model):
         return '%s: %s' % (self.prop_tag, self.prop_value)
 
 class StaticInspectionGroup(models.Model):
-    product_types = (('IMM', 'Injection Mold'),
+    product_types = (
+                ('A', 'All'),
+                ('M', 'Mold'),
+               ('IMM', 'Injection Mold'),
                ('ISBM', 'Injection Stretch Blow Mold'),
                ('FAS', 'Assembly'),
                ('OFP', 'Print'))
