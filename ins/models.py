@@ -170,11 +170,11 @@ class StaticInspectionGroup(models.Model):
 
 class StaticInspection(models.Model):
 
-    inspection_types = ((4,'Numeric Limit'),
-                        (2, 'Float'),
-                        (3, 'Integer'),
-                        (1, 'Boolean'),
-                        (5, 'Text'))
+    inspection_types = (('Numeric Limit', 'Numeric Limit'),
+                        ('Float', 'Float'),
+                        ('Integer', 'Integer'),
+                        ('Boolean', 'Boolean'),
+                        ('Text', 'Text'))
 
     class Meta:
         verbose_name = 'Static Inspection Steps '
