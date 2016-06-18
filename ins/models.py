@@ -17,8 +17,8 @@ class Inspection(models.Model):
     plant_locations = (('Somerville', 'Somerville'), ('Brantford', 'Brantford'))
 
     class Meta:
-        verbose_name = 'Top Level Inspection'
-        verbose_name_plural = 'Top Level Inspections'
+        verbose_name = 'Inspection: Top Level'
+        verbose_name_plural = 'Inspections: Top Level'
 
     uut_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     inspection_type =  models.CharField(max_length=35, choices=inspection_choices) #  ['Round Sheet', 'Startup Shot']
@@ -39,8 +39,8 @@ class Inspection(models.Model):
 
 class Step(models.Model):
     class Meta:
-        verbose_name = 'Inspection Step'
-        verbose_name_plural = 'Inspections Step'
+        verbose_name = 'Inspection: Step'
+        verbose_name_plural = 'Inspections: Step'
 
     step_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #'uuid-field'
     uut = models.ForeignKey(to='Inspection') # 'uuid-field foreign key'
@@ -53,8 +53,8 @@ class Step(models.Model):
 
 class PropNumericLimit(models.Model):
     class Meta:
-        verbose_name = 'Inspection Property Numeric Limit'
-        verbose_name_plural = 'Inspections Property Numeric Limit'
+        verbose_name = 'Inspection: Step Property Numeric Limit'
+        verbose_name_plural = 'Inspections: Step Property Numeric Limit'
 
     prop_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     step = models.ForeignKey(to='Step')
@@ -73,8 +73,8 @@ class PropNumericLimit(models.Model):
 
 class PropFloat(models.Model):
     class Meta:
-        verbose_name = 'Inspection Property Float'
-        verbose_name_plural = 'Inspections Property Float'
+        verbose_name = 'Inspection: Step Property Float'
+        verbose_name_plural = 'Inspections: Step Property Float'
 
     prop_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     step = models.ForeignKey(to='Step')
@@ -90,8 +90,8 @@ class PropFloat(models.Model):
 
 class PropInt(models.Model):
     class Meta:
-        verbose_name = 'Inspection Property Int'
-        verbose_name_plural = 'Inspections Property Int'
+        verbose_name = 'Inspection: Step Property Int'
+        verbose_name_plural = 'Inspections: Step Property Int'
 
     prop_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     step = models.ForeignKey(to='Step')
@@ -108,8 +108,8 @@ class PropInt(models.Model):
 
 class PropBool(models.Model):
     class Meta:
-        verbose_name = 'Inspection Property Boolean'
-        verbose_name_plural = 'Inspections Property Boolean'
+        verbose_name = 'Inspection: Step Property Boolean'
+        verbose_name_plural = 'Inspections: Step Property Boolean'
 
     prop_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     step = models.ForeignKey(to='Step')
@@ -125,8 +125,8 @@ class PropBool(models.Model):
 
 class PropText(models.Model):
     class Meta:
-        verbose_name = 'Inspection Property Text'
-        verbose_name_plural = 'Inspections Property Text'
+        verbose_name = 'Inspection: Step Property Text'
+        verbose_name_plural = 'Inspections: Step Property Text'
 
     prop_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     step = models.ForeignKey(to='Step')
@@ -153,8 +153,8 @@ class StaticInspectionGroup(models.Model):
                  ('Part','Part Specific'))
 
     class Meta:
-        verbose_name = 'Inspection Name'
-        verbose_name_plural = 'Inspections Names'
+        verbose_name = 'Static Inspection Regime'
+        verbose_name_plural = 'Static Inspection Regimes'
 
     inspection_name_short = models.CharField(max_length=25, verbose_name='Inspection Group')
     inspection_name_desc = models.CharField(max_length=25, verbose_name='Inspection Group Description')
@@ -174,8 +174,8 @@ class StaticInspection(models.Model):
                         (5, 'Text'))
 
     class Meta:
-        verbose_name = 'Static Tag (Inspection) Names'
-        verbose_name_plural = 'Static Tag (Inspections) Part'
+        verbose_name = 'Static Inspection Steps '
+        verbose_name_plural = 'Static Inspection Regime Steps'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     static_inspection_group = models.ForeignKey(to='StaticInspectionGroup')
@@ -188,8 +188,8 @@ class StaticInspection(models.Model):
 
 class StaticInspectionLimit(models.Model):
     class Meta:
-        verbose_name = 'Static Tag (Inspections) Limit'
-        verbose_name_plural = 'Static Tag (Inspections) Limits'
+        verbose_name = 'Static Inspections Step Limit'
+        verbose_name_plural = 'Static Inspection Step Limits'
 
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     static_inspection = models.ForeignKey(to='StaticInspection')
@@ -202,8 +202,8 @@ class StaticInspectionLimit(models.Model):
 
 class StaticInspectionBool(models.Model):
     class Meta:
-        verbose_name = 'Static Pass/Fail (Inspections) Limit'
-        verbose_name_plural = 'Static Tag (Inspections) Limits'
+        verbose_name = 'Static Inspection Step Boolean'
+        verbose_name_plural = 'Static Inspections Boolean'
 
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     part_number = models.ForeignKey(to='part.Part', to_field='item_Number')
