@@ -44,7 +44,7 @@ class Step(models.Model):
 
     step_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #'uuid-field'
     uut = models.ForeignKey(to='Inspection') # 'uuid-field foreign key'
-    step_name = models.ForeignKey(to=StaticInspection, verbose_name='Step Name') # may need to work on this
+    step_name = models.ForeignKey(to='StaticInspection', verbose_name='Step Name') # may need to work on this
     step_result = models.IntegerField(verbose_name='Step Result') # [0,1]
     start_date_time = models.DateTimeField(verbose_name='Inspection Step Start Date-Time') # '2016-01-02 10:00:00'
 
@@ -178,7 +178,7 @@ class StaticInspection(models.Model):
         verbose_name_plural = 'Static Tag (Inspections) Part'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
-    static_inspection_group = models.ForeignKey(to=StaticInspectionGroup)
+    static_inspection_group = models.ForeignKey(to='StaticInspectionGroup')
     tag_description_short = models.CharField(max_length=25, verbose_name='Short Description')
     tag_description_desc = models.CharField(max_length=200, verbose_name='Long Description')
     inspection_type = models.CharField(max_length=25, choices=inspection_types)
@@ -192,7 +192,7 @@ class StaticInspectionLimit(models.Model):
         verbose_name_plural = 'Static Tag (Inspections) Limits'
 
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
-    static_inspection = models.ForeignKey(to=StaticInspection)
+    static_inspection = models.ForeignKey(to='StaticInspection')
     part_number = models.ForeignKey(to='Part', to_field='item_Number')
     low_limit = models.DecimalField(verbose_name='Low Limit')
     high_limit = models.DecimalField(verbose_name='High Limit')
