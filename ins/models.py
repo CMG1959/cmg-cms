@@ -59,9 +59,9 @@ class PropNumericLimit(models.Model):
     prop_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     step = models.ForeignKey(to='Step')
     prop_tag = models.ForeignKey(to='StaticInspection')
-    prop_value = models.DecimalField(verbose_name='Value')
-    low_limit = models.DecimalField(verbose_name='Low Limit')
-    high_limit = models.DecimalField(verbose_name='High Limit')
+    prop_value = models.DecimalField(max_digits=12, decimal_places=4, verbose_name='Value')
+    low_limit = models.DecimalField(max_digits=12, decimal_places=4, verbose_name='Low Limit')
+    high_limit = models.DecimalField(max_digits=12, decimal_places=4, verbose_name='High Limit')
     prop_result = models.IntegerField(verbose_name='Prop Result') # [-1, 0, 1]
     date_time = models.DateTimeField(verbose_name='Prop Date-Time') # '2016-01-02 10:00:00'
     cav_id = models.CharField(max_length=5, verbose_name='Cavity ID')
@@ -193,9 +193,9 @@ class StaticInspectionLimit(models.Model):
 
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     static_inspection = models.ForeignKey(to='StaticInspection')
-    part_number = models.ForeignKey(to='Part', to_field='item_Number')
-    low_limit = models.DecimalField(verbose_name='Low Limit')
-    high_limit = models.DecimalField(verbose_name='High Limit')
+    part_number = models.ForeignKey(to='part.Part', to_field='item_Number')
+    low_limit = models.DecimalField(max_digits=12, decimal_places=4, verbose_name='Low Limit')
+    high_limit = models.DecimalField(max_digits=12, decimal_places=4, verbose_name='High Limit')
 
     def __unicode__(self):
         return '%s: %s LOW=%s, High=%s' % (self.part_number, self.static_inspection, self.low_limit, self.high_limit)
@@ -206,7 +206,7 @@ class StaticInspectionBool(models.Model):
         verbose_name_plural = 'Static Tag (Inspections) Limits'
 
     id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
-    part_number = models.ForeignKey(to='Part', to_field='item_Number')
+    part_number = models.ForeignKey(to='part.Part', to_field='item_Number')
     reason_short = models.CharField(max_length=25)
     reason_long = models.CharField(max_length=200)
 
