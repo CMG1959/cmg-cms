@@ -160,7 +160,7 @@ class StaticInspectionGroup(models.Model):
         verbose_name_plural = 'Static Inspection Regimes'
 
     inspection_name_short = models.CharField(max_length=25, verbose_name='Inspection Group')
-    inspection_name_desc = models.CharField(max_length=25, verbose_name='Inspection Group Description')
+    inspection_name_desc = models.CharField(max_length=200, verbose_name='Inspection Group Description')
     product_type = models.CharField(max_length=25, choices=product_types, verbose_name='Product Type')
     apply_type = models.CharField(max_length=10, choices=apply_log, verbose_name='Apply to all parts in product type?')
     location =  models.CharField(max_length=20, choices=plant_locations)
