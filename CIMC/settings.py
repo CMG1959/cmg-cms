@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'locations',
     'home',
     'inspection',
+    'ins',
     'mobile_views',
     'molds',
     'part',
