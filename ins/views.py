@@ -75,13 +75,14 @@ def view_record_inspection(request)
     else:
         inspection_regime = StaticInspectionGroup.objects.get(id=inspection_id)
 
-    template = loader.get_template('ins/record_inspection.html')
-    context = RequestContext(request, {
-        'job_number': job_number,
-        'part_info': part_info,
-        'mold_info': mold_info,
-        'inspection_regime': inspection_regime
-    })
+        template = loader.get_template('ins/record_inspection.html')
+        context = RequestContext(request, {
+            'job_number': job_number,
+            'part_info': part_info,
+            'mold_info': mold_info,
+            'inspection_regime': inspection_regime
+        })
+        return HttpResponse(template.render(context))
 
 
 def get_machine_type(machine_alias):
