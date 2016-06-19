@@ -102,7 +102,8 @@ def view_record_inspection(request):
                 new_step.save()
 
             uut_id = new_uut.uut_id
-            jstree = generate_tree(uut_id)
+
+        jstree = generate_tree(uut_id)
 
 
         inspection_regime = StaticInspectionGroup.objects.get(id=inspection_group_id)
