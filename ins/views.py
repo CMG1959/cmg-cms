@@ -191,7 +191,7 @@ def generate_tree(uut_id):
 
     for each_child in uut.step.all():
         child_dict = {
-        'id': each_child.step_id,
+        'id': each_child.step_name.id,
         'text': each_child.step_name,
         'state': {
             'opened': True,
