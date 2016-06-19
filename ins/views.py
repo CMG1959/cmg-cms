@@ -61,6 +61,28 @@ def view_job(request):
     })
     return HttpResponse(template.render(context))
 
+def view_record_inspection(request)
+    job_number = request.GET.get('job_number', '-1')
+    inspection_id = request.GET.get('inspection_id', '-1')
+
+    job_in_mattec = MattecProd.objects.get(jobNumber=job_number)
+    part_info = Part.objects.get(item_Number=job_in_mattec.itemNo)
+    mold_info = Mold.objects.get(mold_number=job_in_mattec.moldNumber)
+
+
+    if request.method == 'POST':
+        pass
+    else:
+        inspection_regime = StaticInspectionGroup.objects.get(id=inspection_id)
+
+    template = loader.get_template('ins/record_inspection.html')
+    context = RequestContext(request, {
+        'job_number': job_number,
+        'part_info': part_info,
+        'mold_info': mold_info,
+        'inspection_regime': inspection_regime
+    })
+
 
 def get_machine_type(machine_alias):
     match = re.search('(?P<machine_type>\D+)(?P<machine_num>\d+)', machine_alias)
