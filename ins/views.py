@@ -61,7 +61,7 @@ def view_job(request):
     })
     return HttpResponse(template.render(context))
 
-def view_record_inspection(request)
+def view_record_inspection(request):
     job_number = request.GET.get('job_number', '-1')
     inspection_id = request.GET.get('inspection_id', '-1')
 
