@@ -64,6 +64,7 @@ def view_job(request):
 def view_record_inspection(request):
     job_number = request.GET.get('job_number', '-1')
     inspection_id = request.GET.get('inspection_id', '-1')
+    new = request.GET.get('new','0')
 
     job_in_mattec = MattecProd.objects.get(jobNumber=job_number)
     part_info = Part.objects.get(item_Number=job_in_mattec.itemNo)

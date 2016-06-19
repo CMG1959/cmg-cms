@@ -21,8 +21,7 @@ class Inspection(models.Model):
         verbose_name_plural = 'Inspections: Top Level'
 
     uut_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
-    inspection_type =  models.CharField(max_length=35, choices=inspection_choices) #  ['Round Sheet', 'Startup Shot']
-    product_type = models.CharField(max_length=35, choices=product_choices) # ['Injection Mold', 'Injection Stretch Blow Mold', 'Assembly', 'Print']
+    inspection_group = models.ForeignKey(to='StaticInspectionGroup', related_name='uut_inspection_log')
     job_number = models.CharField(max_length=20, verbose_name='Job Number') # '19200.001'
     production_date = models.DateField(verbose_name='Production Date')
     start_date_time = models.DateTimeField(verbose_name='Inspection Start Date-Time') # '2016-01-02 10:00:00'
