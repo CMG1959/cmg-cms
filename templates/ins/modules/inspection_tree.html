@@ -2,11 +2,24 @@
 
 {% if inspection_regime %}
 
-    <p> {{ inspection_regime.inspection_name_short }}</p>
-
-    {% for foo in inspection_regime.inspection_step.all %}
-        <p> {{ foo.tag_description_short }}</p>
-    {% endfor %}
-
+    <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">{{ inspection_regime.inspection_name_short }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="bootcards-list">
+                <div class="panel panel-default">
+                    <div class="list-group">
+                        {% for foo in inspection_regime.inspection_step.all %}
+                                <a class="list-group-item" href="/inspection_v2/record_step?job_number={{job_number}}&inspection_id={{ foo.id }}">
+                                <h4 class="list-group-item-heading">{{ foo.tag_description_short  }}</h4>
+                                <p class="list-group-item-text">{{ foo.tag_description_desc }}</p>
+                                </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
 
 {% endif %}
