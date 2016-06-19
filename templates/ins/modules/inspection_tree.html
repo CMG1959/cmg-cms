@@ -10,8 +10,8 @@
 
                 <div id="jstree">
                   <ul>
-                      {% for foo in inspection_regime.inspection_step.all %}
-                    <li>{{ foo.tag_description_short  }}</li>
+                      {% for foo in inspection_tree.children %}
+                    <li>{{ foo.text  }}</li>
                       {% endfor %}
                   </ul>
                 </div>
