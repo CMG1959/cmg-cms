@@ -223,7 +223,7 @@ class StaticInspectionPart(models.Model):
         verbose_name_plural = 'Station Inspection Steps - Part Assignments'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    inspection_group = models.ForeignKey(to='StaticInspection')
+    inspection_group = models.ForeignKey(to='StaticInspectionGroup')
     part_number = models.ForeignKey(to='part.Part', to_field='item_Number')
 
     def __unicode__(self):
