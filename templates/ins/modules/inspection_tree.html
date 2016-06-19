@@ -11,13 +11,15 @@
                 <div id="jstree">
                   <ul>
                       {% for foo in inspection_tree.children %}
-                        <li>{{ foo.text  }}</li>
-                      {% endfor %}
-                    <ul>
                         <li>
-                            Add New!
+                            {{ foo.text  }}
+                            <ul>
+                                <li>
+                                    Add New!
+                                </li>
+                            </ul>
                         </li>
-                    </ul>
+                      {% endfor %}
                   </ul>
                 </div>
 
