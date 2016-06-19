@@ -11,6 +11,7 @@ from part.models import Part
 from molds.models import Mold
 from .models import *
 
+import datetime
 
 @login_required
 def view_index(request):
@@ -45,6 +46,7 @@ def view_job(request):
     else:
         pass
 
+    existing_inspections = Inspection.objects.filter(job_number=job_number, inspection_result=-1)
     inspections = StaticInspectionGroup.objects.filter(product_type__in=inspection_set)
 
     template = loader.get_template('ins/view.html')
@@ -52,7 +54,8 @@ def view_job(request):
         'job_number': job_number,
         'part_info': part_info,
         'mold_info': mold_info,
-        'inspections': inspections
+        'inspections': inspections,
+        'existing_inspections': existing_inspections
         # 'pf_inspectionType': pf_inspectionType,
         # 'range_inspectionType': range_inspectionType,
         # 'text_inspectionType': text_inspectionType,
@@ -65,6 +68,7 @@ def view_record_inspection(request):
     job_number = request.GET.get('job_number', '-1')
     inspection_id = request.GET.get('inspection_id', '-1')
     new = request.GET.get('new','0')
+    uut_id = request.GET.get('uut_id','-1')
 
     job_in_mattec = MattecProd.objects.get(jobNumber=job_number)
     part_info = Part.objects.get(item_Number=job_in_mattec.itemNo)
@@ -74,6 +78,22 @@ def view_record_inspection(request):
     if request.method == 'POST':
         pass
     else:
+
+        if new == '1':
+            new_uut = Inspection(inspection_group_id=inspection_id,
+                                 job_number=job_number,
+                                 production_date=datetime.date.today(),
+                                 start_date_time=datetime.datetime.now(),
+                                 part_number=part_info.item_Number,
+                                 mold_number=mold_info.mold_number,
+                                 sta_reported=job_in_mattec.machNo,
+                                 shift = '1',
+                                 inspection_result=-1,
+                                 location='Somerville')
+            new_uut.save()
+            uut_id = new_uut.uut_id
+
+
         inspection_regime = StaticInspectionGroup.objects.get(id=inspection_id)
 
         template = loader.get_template('ins/record_inspection.html')
@@ -81,6 +101,7 @@ def view_record_inspection(request):
             'job_number': job_number,
             'part_info': part_info,
             'mold_info': mold_info,
+            'uut_id': uut_id,
             'inspection_regime': inspection_regime
         })
         return HttpResponse(template.render(context))
