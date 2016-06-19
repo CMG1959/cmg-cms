@@ -14,6 +14,25 @@
 <div class="col-sm-offset-1 col-sm-10 bootcards-cards">
 
     {% include "ins/modules/job_high_level.html" %}
+
+
+    {% if inspections %}
+<div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    {% for each_inspection in inspections %}
+                            <a class="list-group-item" href="/inspection/record/?job_number={{job_number}}&inspection_id={{ each_inspection.id }}">
+                            <h4 class="list-group-item-heading">{{ each_inspection.inspection_name_short }}</h4>
+                            <p class="list-group-item-text">{{ each_inspection.inspection_name_desc }}</p>
+                            </a>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
 {##}
 {#{% if active_job %}#}
 {#        <div class="bootcards-list">#}

@@ -208,10 +208,23 @@ class StaticInspectionBool(models.Model):
         verbose_name = 'Static Inspection Step Boolean'
         verbose_name_plural = 'Static Inspections Boolean'
 
-    id =  models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     part_number = models.ForeignKey(to='part.Part', to_field='item_Number')
     reason_short = models.CharField(max_length=25)
     reason_long = models.CharField(max_length=200)
 
     def __unicode__(self):
         return '%s: %s' % (self.part_number, self.reason_long)
+
+
+class StaticInspectionPart(models.Model):
+    class Meta:
+        verbose_name = 'Station Inspection Steps - Part Assignment'
+        verbose_name_plural = 'Station Inspection Steps - Part Assignments'
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    inspection_group = models.ForeignKey(to='StaticInspection')
+    part_number = models.ForeignKey(to='part.Part', to_field='item_Number')
+
+    def __unicode__(self):
+        return '%s: %s' % (self.inspection_group, self.part_number)
