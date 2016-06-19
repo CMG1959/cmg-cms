@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 # Create your views here.
 from startupshot.models import MattecProd
 from part.models import Part
-from molds import Mold
+from molds.models import Mold
 
 @login_required
 def view_index(request):
