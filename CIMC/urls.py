@@ -35,6 +35,7 @@ urlpatterns = [
                   url(r'^startupshot/', include('startupshot.urls')),
                   url(r'^admin/', include(admin.site.urls)),
                   url(r'^inspection/', include('inspection.urls')),
+                  url(r'^inspection_v2/', include('ins.urls')),
                   url(r'^equipment/', include('equipment.urls')),
                   url(r'^dashboard/',include('dashboard.urls')),
                   url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
