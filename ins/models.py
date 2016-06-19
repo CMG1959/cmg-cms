@@ -159,6 +159,7 @@ class StaticInspectionGroup(models.Model):
         verbose_name = 'Static Inspection Regime'
         verbose_name_plural = 'Static Inspection Regimes'
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # 'uuid-field'
     inspection_name_short = models.CharField(max_length=25, verbose_name='Inspection Group')
     inspection_name_desc = models.CharField(max_length=200, verbose_name='Inspection Group Description')
     product_type = models.CharField(max_length=25, choices=product_types, verbose_name='Product Type')
