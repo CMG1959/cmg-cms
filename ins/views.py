@@ -92,7 +92,7 @@ def view_record_inspection(request):
                                  location='Somerville')
             new_uut.save()
 
-            for step in new_uut.inspection_group.inspection_step:
+            for step in new_uut.inspection_group.inspection_step.all():
                 new_step = Step(
                     uut_id=new_uut.uut_id,
                     step_name_id=step.id,
