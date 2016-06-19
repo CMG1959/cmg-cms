@@ -21,7 +21,7 @@
             <div class="panel panel-default">
                 <div class="list-group">
                     {% for each_inspection in inspections %}
-                            <a class="list-group-item" href="/inspection/record?job_number={{job_number}}&inspection_id={{ each_inspection.id }}">
+                            <a class="list-group-item" href="/inspection_v2/record?job_number={{job_number}}&inspection_id={{ each_inspection.id }}">
                             <h4 class="list-group-item-heading">{{ each_inspection.inspection_name_short }}</h4>
                             <p class="list-group-item-text">{{ each_inspection.inspection_name_desc }}</p>
                             </a>
