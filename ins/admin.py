@@ -44,6 +44,9 @@ class StaticInspectionBoolAdmin(admin.ModelAdmin):
     list_display = ('part_number',  'reason_long')
 
 
+class StaticInspectionPartAdmin(admin.ModelAdmin):
+    list_display = ('inspection_group', 'part_number')
+
 admin.site.register(Inspection, InspectionAdmin)
 admin.site.register(Step, StepAdmin)
 admin.site.register(PropNumericLimit, PropNumericLimitAdmin)
@@ -55,4 +58,4 @@ admin.site.register(StaticInspectionGroup, StaticInspectionGroupAdmin)
 admin.site.register(StaticInspection, StaticInspectionAdmin)
 admin.site.register(StaticInspectionLimit, StaticInspectionLimitAdmin)
 admin.site.register(StaticInspectionBool, StaticInspectionBoolAdmin)
-
+admin.site.register(StaticInspectionPart, StaticInspectionPartAdmin)
