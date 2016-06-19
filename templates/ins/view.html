@@ -21,13 +21,13 @@
             <div class="panel panel-default">
                 <div class="list-group">
                     {% for each_inspection in existing_inspections %}
-                            <a class="list-group-item" href="/inspection_v2/record?job_number={{job_number}}&inspection_id={{ each_inspection.inspection_group_id }}&uut_id={{ each_inspection.uut_id }}">
+                            <a class="list-group-item" href="/inspection_v2/record?job_number={{job_number}}&inspection_group_id={{ each_inspection.inspection_group_id }}&uut_id={{ each_inspection.uut_id }}">
                             <h4 class="list-group-item-heading">Existing {{ each_inspection.inspection_group.inspection_name_short }}: Started {{ each_inspection.start_date_time }}</h4>
                             <p class="list-group-item-text">{{ each_inspection.inspection_group.inspection_name_desc }}</p>
                             </a>
                     {% endfor %}
                     {% for each_inspection in inspections %}
-                            <a class="list-group-item" href="/inspection_v2/record?job_number={{job_number}}&inspection_id={{ each_inspection.id }}&new=1">
+                            <a class="list-group-item" href="/inspection_v2/record?job_number={{job_number}}&inspection_group_id={{ each_inspection.id }}&new=1">
                             <h4 class="list-group-item-heading">Start New {{ each_inspection.inspection_name_short }}</h4>
                             <p class="list-group-item-text">{{ each_inspection.inspection_name_desc }}</p>
                             </a>

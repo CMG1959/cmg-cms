@@ -10,7 +10,7 @@ from startupshot.models import MattecProd
 from part.models import Part
 from molds.models import Mold
 from .models import *
-
+from .forms import *
 import datetime
 
 @login_required
@@ -66,7 +66,7 @@ def view_job(request):
 
 def view_record_inspection(request):
     job_number = request.GET.get('job_number', '-1')
-    inspection_id = request.GET.get('inspection_id', '-1')
+    inspection_group_id = request.GET.get('inspection_group_id', '-1')
     new = request.GET.get('new','0')
     uut_id = request.GET.get('uut_id','-1')
 
@@ -80,7 +80,7 @@ def view_record_inspection(request):
     else:
 
         if new == '1':
-            new_uut = Inspection(inspection_group_id=inspection_id,
+            new_uut = Inspection(inspection_group_id=inspection_group_id,
                                  job_number=job_number,
                                  production_date=datetime.date.today(),
                                  start_date_time=datetime.datetime.now(),
@@ -94,7 +94,7 @@ def view_record_inspection(request):
             uut_id = new_uut.uut_id
 
 
-        inspection_regime = StaticInspectionGroup.objects.get(id=inspection_id)
+        inspection_regime = StaticInspectionGroup.objects.get(id=inspection_group_id)
 
         template = loader.get_template('ins/record_inspection.html')
         context = RequestContext(request, {
@@ -103,6 +103,40 @@ def view_record_inspection(request):
             'mold_info': mold_info,
             'uut_id': uut_id,
             'inspection_regime': inspection_regime
+        })
+        return HttpResponse(template.render(context))
+
+def view_record_step(request):
+    job_number = request.GET.get('job_number', '-1')
+    inspection_id = request.GET.get('inspection_id', '-1')
+    uut_id = request.GET.get('uut_id','-1')
+
+    uut = Inspection.objects.get(uut_id=uut_id)
+    job_in_mattec = MattecProd.objects.get(jobNumber=uut.job_number)
+    part_info = Part.objects.get(item_Number=job_in_mattec.itemNo)
+    mold_info = Mold.objects.get(mold_number=job_in_mattec.moldNumber)
+
+
+    if request.method == 'POST':
+        pass
+    else:
+
+        inspection_step = StaticInspection.objects.get(id=inspection_id)
+
+        if inspection_step.inspection_type == 'Numeric Limit':
+            form = FormPropNumericlimit()
+        else:
+            form = None
+
+
+        template = loader.get_template('ins/record_step.html')
+        context = RequestContext(request, {
+            'job_number': job_number,
+            'part_info': part_info,
+            'mold_info': mold_info,
+            'uut_id': uut_id,
+            'form': form
+            # 'inspection_regime': inspection_regime
         })
         return HttpResponse(template.render(context))
 
