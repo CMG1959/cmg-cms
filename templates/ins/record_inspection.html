@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -23,3 +25,11 @@
 
 </body>
 </html>
+
+<link href="{% static "js-tree/themes/default/style.min.css" %}" rel="stylesheet">
+
+<script src="{% static "js-tree/jstree.min.js" %}"></script>
+
+<script>
+    $('#jstree').jstree();
+</script>

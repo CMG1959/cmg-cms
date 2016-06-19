@@ -7,18 +7,28 @@
                 <h3 class="panel-title pull-left">{{ inspection_regime.inspection_name_short }}</h3>
             </div>
             <div class="panel-body">
-                <div class="bootcards-list">
-                <div class="panel panel-default">
-                    <div class="list-group">
-                        {% for foo in inspection_regime.inspection_step.all %}
-                                <a class="list-group-item" href="/inspection_v2/record_step?uut_id={{uut_id}}&inspection_id={{ foo.id }}">
-                                <h4 class="list-group-item-heading">{{ foo.tag_description_short  }}</h4>
-                                <p class="list-group-item-text">{{ foo.tag_description_desc }}</p>
-                                </a>
-                        {% endfor %}
-                    </div>
+
+                <div id="jstree">
+                  <ul>
+                      {% for foo in inspection_regime.inspection_step.all %}
+                    <li>{{ foo.tag_description_short  }}</li>
+                      {% endfor %}
+                  </ul>
                 </div>
-            </div>
+
+
+{#                <div class="bootcards-list">#}
+{#                <div class="panel panel-default">#}
+{#                    <div class="list-group">#}
+{#                        {% for foo in inspection_regime.inspection_step.all %}#}
+{#                                <a class="list-group-item" href="/inspection_v2/record_step?uut_id={{uut_id}}&inspection_id={{ foo.id }}">#}
+{#                                <h4 class="list-group-item-heading">{{ foo.tag_description_short  }}</h4>#}
+{#                                <p class="list-group-item-text">{{ foo.tag_description_desc }}</p>#}
+{#                                </a>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
             </div>
         </div>
 
