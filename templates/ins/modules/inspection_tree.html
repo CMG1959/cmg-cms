@@ -4,7 +4,7 @@
 
     <p> {{ inspection_regime.inspection_name_short }}</p>
 
-    {% for foo in inspection_regime.inspection_step %}
+    {% for foo in inspection_regime.inspection_step.all %}
         <p> {{ foo.tag_description_short }}</p>
     {% endfor %}
 
