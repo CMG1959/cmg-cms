@@ -1,0 +1,63 @@
+{% load mathfilters %}
+
+{% if active_job %}
+
+
+
+    {%  if part_info %}
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">Part Information</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Item #</th>
+                        <th>Description</th>
+                        <th>TMM Part Weight (g)</th>
+                        <th>TMM Cycle (s)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                            <td>{{ part_info.item_Number }}</td>
+                            <td>{{ part_info.item_Description }}</td>
+                            <td>{{ part_info.exp_part_weight }}</td>
+                            <td>{{ part_info.exp_cycle_time }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if mold_info %}
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> Mold Information</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Mold ID</th>
+                        <th>Mold Description</th>
+                        <th>Total Cavities</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ mold_info.mold_number }}</td>
+                            <td>{{ mold_info.mold_description }}</td>
+                            <td>{{ mold_info.num_cavities }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+
+{% endif %}
+
