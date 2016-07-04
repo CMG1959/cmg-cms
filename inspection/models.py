@@ -244,7 +244,7 @@ class IntegerInspection(models.Model):
                                       related_name='Integer_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    inspectionResult = models.BigIntegerField(verbose_name="Enter Inspection Information:")
+    inspectionResult = models.CharField(max_length=38, verbose_name="Enter Inspection Information:")
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
