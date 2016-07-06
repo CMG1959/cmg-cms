@@ -18,7 +18,7 @@ from employee.models import Employees, EmployeeAtWorkstation
 from molds.models import Mold, PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import jobReportSearch, itemReportSearch, \
-    build_inspection_fields, PassFailIns, RangeIns, TextIns, FloatIns, IntIns
+    build_inspection_fields, PassFailIns, RangeIns, TextIns, FloatIns#, IntIns
 
 from reports import JobReport
 import collections
