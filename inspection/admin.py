@@ -52,18 +52,18 @@ class textInspectionAdmin(admin.ModelAdmin):
 
 
 
-
-class IntegerRecordAdmin(admin.ModelAdmin):
-    search_fields = ['testName','requireAll', 'isSystemInspection']
-    list_display = ('testName','requireAll', 'isSystemInspection')
-
-class IntegerRecordByPartAdmin(admin.ModelAdmin):
-    search_fields = ['testName__testName','item_Number__item_Number']
-    list_display = ('testName','item_Number', 'inspections_per_shift')
-
-class IntegerInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['integerTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
-    list_display = ('integerTestName','jobID','dateCreated','inspectionResult')
+#
+# class IntegerRecordAdmin(admin.ModelAdmin):
+#     search_fields = ['testName','requireAll', 'isSystemInspection']
+#     list_display = ('testName','requireAll', 'isSystemInspection')
+#
+# class IntegerRecordByPartAdmin(admin.ModelAdmin):
+#     search_fields = ['testName__testName','item_Number__item_Number']
+#     list_display = ('testName','item_Number', 'inspections_per_shift')
+#
+# class IntegerInspectionAdmin(admin.ModelAdmin):
+#     search_fields = ['integerTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
+#     list_display = ('integerTestName','jobID','dateCreated','inspectionResult')
 
 
 
@@ -96,9 +96,9 @@ admin.site.register(textRecordByPart,textRecordByPartAdmin)
 admin.site.register(textInspection,textInspectionAdmin)
 
 
-admin.site.register(IntegerRecord,IntegerRecordAdmin)
-admin.site.register(IntegerRecordByPart,IntegerRecordByPartAdmin)
-admin.site.register(IntegerInspection,IntegerInspectionAdmin)
+# admin.site.register(IntegerRecord,IntegerRecordAdmin)
+# admin.site.register(IntegerRecordByPart,IntegerRecordByPartAdmin)
+# admin.site.register(IntegerInspection,IntegerInspectionAdmin)
 
 admin.site.register(FloatRecord,FloatRecordAdmin)
 admin.site.register(FloatRecordByPart,FloatRecordByPartAdmin)

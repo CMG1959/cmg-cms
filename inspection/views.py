@@ -61,8 +61,8 @@ def view_detailJob(request, jobNumber):
                                                               testName__isSystemInspection=False)
         text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
                                                               testName__isSystemInspection=False)
-        int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
-                                                                testName__isSystemInspection=False)
+        # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
+        #                                                         testName__isSystemInspection=False)
         float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
                                                                 testName__isSystemInspection=False)
         template = loader.get_template('inspection/detailJob.html')
@@ -71,7 +71,7 @@ def view_detailJob(request, jobNumber):
             'pf_inspectionType': pf_inspectionType,
             'range_inspectionType': range_inspectionType,
             'text_inspectionType': text_inspectionType,
-            'int_inspectionType': int_inspectionType,
+            # 'int_inspectionType': int_inspectionType,
             'float_inspectionType': float_inspectionType
         })
         return HttpResponse(template.render(context))
@@ -121,9 +121,9 @@ def view_inspection(request):
             test_info = textRecord.objects.get(id=inspection_name_id)
             form = TextIns(request.POST)
 
-        elif inspection_type == 'Integer':
-            test_info = IntegerRecord.objects.get(id=inspection_name_id)
-            form = IntIns(request.POST)
+        # elif inspection_type == 'Integer':
+        #     test_info = IntegerRecord.objects.get(id=inspection_name_id)
+        #     form = IntIns(request.POST)
 
         elif inspection_type == 'Float':
             test_info = FloatRecord.objects.get(id=inspection_name_id)
@@ -232,14 +232,14 @@ def view_inspection(request):
                 }
 
 
-            elif inspection_type == 'Integer':
-                test_info = IntegerRecord.objects.get(id=inspection_name_id)
-                form = IntIns()
-                context_dict_add = {
-                    'use_checkbox': True,
-                    'id_check': '#id_inspectionResult',
-                    'idSelect': '#id_headCavID',
-                }
+            # elif inspection_type == 'Integer':
+            #     test_info = IntegerRecord.objects.get(id=inspection_name_id)
+            #     form = IntIns()
+            #     context_dict_add = {
+            #         'use_checkbox': True,
+            #         'id_check': '#id_inspectionResult',
+            #         'idSelect': '#id_headCavID',
+            #     }
 
 
             elif inspection_type == 'Float':
@@ -718,12 +718,12 @@ def checkPartInspection(item_Number):
                                                  item_Number=Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
 
-    for requiredTests in IntegerRecord.objects.filter(requireAll=True):
-        if not IntegerRecordByPart.objects.filter(item_Number__item_Number=item_Number,
-                                                  testName__testName=requiredTests.testName).exists():
-            newPartInspection = IntegerRecordByPart(testName=requiredTests,
-                                                    item_Number=Part.objects.get(item_Number=item_Number))
-            newPartInspection.save()
+    # for requiredTests in IntegerRecord.objects.filter(requireAll=True):
+    #     if not IntegerRecordByPart.objects.filter(item_Number__item_Number=item_Number,
+    #                                               testName__testName=requiredTests.testName).exists():
+    #         newPartInspection = IntegerRecordByPart(testName=requiredTests,
+    #                                                 item_Number=Part.objects.get(item_Number=item_Number))
+    #         newPartInspection.save()
 
     for requiredTests in FloatRecord.objects.filter(requireAll=True):
         if not FloatRecordByPart.objects.filter(item_Number__item_Number=item_Number,
