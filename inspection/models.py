@@ -128,7 +128,7 @@ class numericInspection(models.Model):
         verbose_name_plural = 'Record - Numeric Inspections'
         db_table = 'inspection_numericinspection'
 
-    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='inspection_numericinspection')
+    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='numericTestName_id')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ri_machineOperator')
@@ -289,7 +289,7 @@ class RangeRecordByPart(models.Model):
         unique_together = ("testName", "item_Number")
         db_table = 'inspection_rangerecordbypart'
 
-    testName = models.ForeignKey('RangeRecord', verbose_name ="Float Test Name")
+    testName = models.ForeignKey('RangeRecord', verbose_name ="Range Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
