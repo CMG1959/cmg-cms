@@ -111,7 +111,7 @@ class numericTestByPart(models.Model):
         unique_together = ("testName", "item_Number")
         db_table = 'inspection_numerictestbypart'
 
-    testName = models.ForeignKey('numericTest', verbose_name ="Range Test Name", db_column='rangeTestName_id')
+    testName = models.ForeignKey('numericTest', verbose_name ="Range Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
     rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
@@ -128,7 +128,7 @@ class numericInspection(models.Model):
         verbose_name_plural = 'Record - Numeric Inspections'
         db_table = 'inspection_numericinspection'
 
-    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='rangeTestName_id')
+    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='inspection_numericinspection')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ri_machineOperator')
@@ -289,7 +289,7 @@ class RangeRecordByPart(models.Model):
         unique_together = ("testName", "item_Number")
         db_table = 'inspection_rangerecordbypart'
 
-    testName = models.ForeignKey('RangeRecord', verbose_name ="Float Test Name", db_column='floatTestName_id')
+    testName = models.ForeignKey('RangeRecord', verbose_name ="Float Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
@@ -304,7 +304,7 @@ class RangeInspection(models.Model):
         verbose_name_plural = 'Record - Range Inspections'
         db_table = 'inspection_rangeinspection'
 
-    floatTestName = models.ForeignKey('RangeRecord', verbose_name='Inspection Name', db_column='floatTestName_id')
+    floatTestName = models.ForeignKey('RangeRecord', verbose_name='Inspection Name', db_column='rangeTestName_id')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='Float_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='float_machineOperator')

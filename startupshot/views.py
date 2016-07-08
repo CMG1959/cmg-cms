@@ -115,7 +115,7 @@ def createNewStartUpShot(request, jobNo):
             form = startupShotForm()
             form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
 
-            shotWeightName = startUpShotWeightLinkage.objects.all()[0]
+            shotWeightName = startUpShotWeightLinkage.objects.all()[0] #
 
             rangeInfo = numericTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName, item_Number__item_Number=MattecInfo.itemNo)
 
