@@ -13,8 +13,8 @@ import textwrap
 from collections import OrderedDict
 import datetime
 from django.utils import timezone
-from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, rangeTestByPart, \
-    rangeInspection, textRecord, textRecordByPart, textInspection, rangeTest
+from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, numericTestByPart, \
+    numericInspection, textRecord, textRecordByPart, textInspection, numericTest
 from startupshot.models import startUpShot
 from production_and_mold_history.models import ProductionHistory
 import numpy as np
@@ -47,7 +47,7 @@ class JobReport:
     def __get_required_inspections(self):
         self.required_inspections = OrderedDict({
             'pf_inspections': passFailByPart.objects.filter(item_Number__item_Number=self.item_number),
-            'range_inspections': rangeTestByPart.objects.filter(item_Number__item_Number=self.item_number),
+            'range_inspections': numericTestByPart.objects.filter(item_Number__item_Number=self.item_number),
             'text_inspections': textRecordByPart.objects.filter(item_Number__item_Number=self.item_number)
         })
 
@@ -95,7 +95,7 @@ class JobReport:
         for each_inspection in self.required_inspections['range_inspections']:
 
             self.range_inspections.update({each_inspection.testName.testName:
-                rangeInspection.objects.filter(
+                numericInspection.objects.filter(
                     rangeTestName__testName=each_inspection.testName,
                     jobID__jobNumber=self.job_number,
                     dateCreated__range=self.date_range).order_by('-dateCreated')})
@@ -199,7 +199,7 @@ class JobReport:
 
         my_inspection = list(textInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True))
         my_inspection.extend(list(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
-        my_inspection.extend(list(rangeInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
+        my_inspection.extend(list(numericInspection.objects.filter(jobID__jobNumber=self.job_number, dateCreated__range=self.date_range).values_list('dateCreated', flat=True)))
 
         if my_inspection:
             self.report_date_end = max(my_inspection)

@@ -121,10 +121,10 @@ def view_Inspections(request):
     resultDict = collections.OrderedDict()
     for eachJob in jobList:
             pfTests = passFailByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
-            rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
+            rangeTests = numericTestByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
             textTests = textRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
             # intTests = IntegerRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
-            floatTests = FloatRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
+            floatTests = RangeRecordByPart.objects.filter(item_Number__item_Number = eachJob.itemNo)
             testDict = collections.OrderedDict()
             m=0
             for each_test in pfTests:
@@ -135,9 +135,9 @@ def view_Inspections(request):
                 m += 1
 
             for each_test in rangeTests:
-                n_tests = rangeInspection.objects.filter(rangeTestName=each_test,
-                                                         jobID__jobNumber = eachJob.jobNumber,
-                                                         dateCreated__gte=get_shift_range(getShift())[0]).count()
+                n_tests = numericInspection.objects.filter(rangeTestName=each_test,
+                                                           jobID__jobNumber = eachJob.jobNumber,
+                                                           dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
                 m += 1
 
@@ -157,7 +157,7 @@ def view_Inspections(request):
             #     m += 1
 
             for each_test in floatTests:
-                n_tests = FloatInspection.objects.filter(floatTestName=each_test.testName,
+                n_tests = RangeInspection.objects.filter(floatTestName=each_test.testName,
                                                          jobID__jobNumber = eachJob.jobNumber,
                                                          dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}

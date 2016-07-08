@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='rangeInspection',
+            name='numericInspection',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('dateCreated', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='rangeTest',
+            name='numericTest',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('testName', models.CharField(unique=True, max_length=25, verbose_name=b'Range Test Name')),
@@ -44,13 +44,13 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='rangeTestByPart',
+            name='numericTestByPart',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('rangeMin', models.DecimalField(default=0, verbose_name=b'Minimum Value', max_digits=12, decimal_places=3)),
                 ('rangeMax', models.DecimalField(default=0, verbose_name=b'Maximum Value', max_digits=12, decimal_places=3)),
                 ('item_Number', models.ForeignKey(verbose_name=b'Part Number', to='part.Part')),
-                ('testName', models.ForeignKey(verbose_name=b'Range Test Name', to='inspection.rangeTest')),
+                ('testName', models.ForeignKey(verbose_name=b'Range Test Name', to='inspection.models.numericTest')),
             ],
             options={
                 'verbose_name': 'Range Test Parameters By Part',
@@ -73,7 +73,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='rangeinspection',
             name='rangeTestName',
-            field=models.ForeignKey(verbose_name=b'Inspection Name', to='inspection.rangeTestByPart'),
+            field=models.ForeignKey(verbose_name=b'Inspection Name', to='inspection.models.numericTestByPart'),
         ),
         migrations.AlterUniqueTogether(
             name='rangetestbypart',

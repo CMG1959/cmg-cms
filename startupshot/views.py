@@ -9,7 +9,7 @@ from part.models import Part
 from molds.models import Mold
 from equipment.models import EquipmentInfo
 from employee.models import Employees
-from inspection.models import rangeTestByPart
+from inspection.models import numericTestByPart
 from .models import startUpShot, MattecProd, startUpShotWeightLinkage
 from .forms import startupShotLookup, startupShotForm
 from django.contrib.auth.decorators import login_required
@@ -117,7 +117,7 @@ def createNewStartUpShot(request, jobNo):
 
             shotWeightName = startUpShotWeightLinkage.objects.all()[0]
 
-            rangeInfo = rangeTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName,item_Number__item_Number=MattecInfo.itemNo)
+            rangeInfo = numericTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName, item_Number__item_Number=MattecInfo.itemNo)
 
             if rangeInfo.exists():
                     min_val=rangeInfo[0].rangeMin

@@ -57,13 +57,13 @@ def view_detailJob(request, jobNumber):
 
         pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item,
                                                           testName__isSystemInspection=False)
-        range_inspectionType = rangeTestByPart.objects.filter(item_Number__item_Number=active_job.item,
-                                                              testName__isSystemInspection=False)
+        range_inspectionType = numericTestByPart.objects.filter(item_Number__item_Number=active_job.item,
+                                                                testName__isSystemInspection=False)
         text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
                                                               testName__isSystemInspection=False)
         # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
         #                                                         testName__isSystemInspection=False)
-        float_inspectionType = FloatRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
+        float_inspectionType = RangeRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
                                                                 testName__isSystemInspection=False)
         template = loader.get_template('inspection/detailJob.html')
         context = RequestContext(request, {
@@ -112,9 +112,9 @@ def view_inspection(request):
             form = PassFailIns(request.POST)
 
         elif inspection_type == 'Range':
-            test_info = rangeTest.objects.get(id=inspection_name_id)
-            range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
-                                                     item_Number_id=active_job.item_id)
+            test_info = numericTest.objects.get(id=inspection_name_id)
+            range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
+                                                       item_Number_id=active_job.item_id)
             form = RangeIns(request.POST)
 
         elif inspection_type == 'Text':
@@ -126,7 +126,7 @@ def view_inspection(request):
         #     form = IntIns(request.POST)
 
         elif inspection_type == 'Float':
-            test_info = FloatRecord.objects.get(id=inspection_name_id)
+            test_info = RangeRecord.objects.get(id=inspection_name_id)
             form = FloatIns(request.POST)
 
         else:
@@ -205,9 +205,9 @@ def view_inspection(request):
                 }
 
             elif inspection_type == 'Range':
-                test_info = rangeTest.objects.get(id=inspection_name_id)
-                range_info = rangeTestByPart.objects.get(testName_id=inspection_name_id,
-                                                         item_Number_id=active_job.item_id)
+                test_info = numericTest.objects.get(id=inspection_name_id)
+                range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
+                                                           item_Number_id=active_job.item_id)
                 form = RangeIns()
 
                 context_dict_add = {
@@ -243,7 +243,7 @@ def view_inspection(request):
 
 
             elif inspection_type == 'Float':
-                test_info = FloatRecord.objects.get(id=inspection_name_id)
+                test_info = RangeRecord.objects.get(id=inspection_name_id)
                 form = FloatIns()
                 context_dict_add = {
                     'use_checkbox': True,
@@ -388,8 +388,8 @@ def view_jsonError(job_number, date_from, date_to):
     date_from, date_to = createDateRange(date_from, date_to)
     pf = passFailInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
                                            inspectionResult=0)
-    ri = rangeInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
-                                        inspectionResult=0)
+    ri = numericInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+                                          inspectionResult=0)
     ti = textInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
                                        inspectionResult=0)
 
@@ -430,10 +430,10 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     jobList = jobList.values_list('jobNumber', flat=True)
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=itemNumber)
-    rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=itemNumber)
+    rangeTests = numericTestByPart.objects.filter(item_Number__item_Number=itemNumber)
     textTests = textRecordByPart.objects.filter(item_Number__item_Number=itemNumber)
 
-    partDict = {'pf': {}, 'rangeTest': {}, 'activeJob': susList}
+    partDict = {'pf': {}, 'numericTest': {}, 'activeJob': susList}
 
     k = 0
     for eachInspection1 in pf_inspectionType:
@@ -465,23 +465,23 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     for eachInspection1 in rangeTests:
 
         eachInspection = eachInspection1.testName.testName
-        partDict['rangeTest'][eachInspection] = collections.OrderedDict()
-        partDict['rangeTest'][eachInspection]['inspectionName'] = eachInspection
+        partDict['numericTest'][eachInspection] = collections.OrderedDict()
+        partDict['numericTest'][eachInspection]['inspectionName'] = eachInspection
 
-        thisInspection = rangeInspection.objects.filter(rangeTestName__testName__testName=eachInspection,
-                                                        dateCreated__range=(date_from1, date_to1)).order_by(
+        thisInspection = numericInspection.objects.filter(rangeTestName__testName__testName=eachInspection,
+                                                          dateCreated__range=(date_from1, date_to1)).order_by(
             '-dateCreated')
         n = 0
 
         key = 'rt' + str(k)
         collapse_list.append('#' + key)
-        partDict['rangeTest'][eachInspection]['html_id'] = key
+        partDict['numericTest'][eachInspection]['html_id'] = key
         k = k + 1
 
         totalRangeList = []
         for eachJob in jobList:
-            partDict['rangeTest'][eachInspection][n] = {}
-            partDict['rangeTest'][eachInspection][n]['jobID'] = eachJob
+            partDict['numericTest'][eachInspection][n] = {}
+            partDict['numericTest'][eachInspection][n]['jobID'] = eachJob
 
             thisInspectionbyJob = thisInspection.filter(jobID__jobNumber=eachJob).order_by('-dateCreated')
             active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
@@ -496,10 +496,10 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                     rangeList.append(eachShot.numVal)
                     totalRangeList.append(rangeList[-1])
 
-            partDict['rangeTest'][eachInspection][n]['rangeStats'] = calcRangeStats(rangeList)
+            partDict['numericTest'][eachInspection][n]['rangeStats'] = calcRangeStats(rangeList)
             n += 1
 
-        partDict['rangeTest'][eachInspection][n] = {'jobID': 'Total',
+        partDict['numericTest'][eachInspection][n] = {'jobID': 'Total',
                                                     'rangeStats': calcRangeStats(totalRangeList)}
 
     n = 0
@@ -564,7 +564,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         '-dateCreated')
 
     pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-    rangeTests = rangeTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+    rangeTests = numericTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
     textTests = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item)
 
     context_dic['pf'] = {}
@@ -588,7 +588,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     for each_range_inspection in rangeTests:
         key = 'rt' + str(n)
         collapse_list.append('#' + key)
-        context_dic['rangeTests'][key] = rangeInspection.objects.filter(
+        context_dic['rangeTests'][key] = numericInspection.objects.filter(
             rangeTestName__testName=each_range_inspection.testName,
             jobID__jobNumber=jobNumber,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
@@ -693,22 +693,22 @@ def checkPartInspection(item_Number):
                                                testName=requiredTests)
             newPartInspection.save()
 
-    for requiredTests in rangeTest.objects.filter(requireAll=True):
-        if not rangeTestByPart.objects.filter(item_Number__item_Number=item_Number,
-                                              testName__testName=requiredTests.testName).exists():
+    for requiredTests in numericTest.objects.filter(requireAll=True):
+        if not numericTestByPart.objects.filter(item_Number__item_Number=item_Number,
+                                                testName__testName=requiredTests.testName).exists():
             try:
                 exp_part_weight = Part.objects.get(item_Number=item_Number).exp_part_weight
                 low_exp = Decimal(exp_part_weight * 0.95)
                 high_exp = Decimal(exp_part_weight * 1.05)
-                newPartInspection = rangeTestByPart(item_Number=Part.objects.get(item_Number=item_Number),
-                                                    testName=requiredTests,
-                                                    rangeMin=low_exp,
-                                                    rangeMax=high_exp)
+                newPartInspection = numericTestByPart(item_Number=Part.objects.get(item_Number=item_Number),
+                                                      testName=requiredTests,
+                                                      rangeMin=low_exp,
+                                                      rangeMax=high_exp)
             except Exception as e:
-                newPartInspection = rangeTestByPart(item_Number=Part.objects.get(item_Number=item_Number),
-                                                    testName=requiredTests,
-                                                    rangeMin=0,
-                                                    rangeMax=999999)
+                newPartInspection = numericTestByPart(item_Number=Part.objects.get(item_Number=item_Number),
+                                                      testName=requiredTests,
+                                                      rangeMin=0,
+                                                      rangeMax=999999)
             newPartInspection.save()
 
     for requiredTests in textRecord.objects.filter(requireAll=True):
@@ -725,10 +725,10 @@ def checkPartInspection(item_Number):
     #                                                 item_Number=Part.objects.get(item_Number=item_Number))
     #         newPartInspection.save()
 
-    for requiredTests in FloatRecord.objects.filter(requireAll=True):
-        if not FloatRecordByPart.objects.filter(item_Number__item_Number=item_Number,
+    for requiredTests in RangeRecord.objects.filter(requireAll=True):
+        if not RangeRecordByPart.objects.filter(item_Number__item_Number=item_Number,
                                                 testName__testName=requiredTests.testName).exists():
-            newPartInspection = FloatRecordByPart(testName=requiredTests,
+            newPartInspection = RangeRecordByPart(testName=requiredTests,
                                                   item_Number=Part.objects.get(item_Number=item_Number))
             newPartInspection.save()
 

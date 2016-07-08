@@ -49,7 +49,7 @@ class startUpShotWeightLinkage(models.Model):
         verbose_name = 'Startup Shot Test Link Name'
         verbose_name_plural = 'Startup Shot Test Link Name'
 
-    susName = models.ForeignKey('inspection.rangeTest', verbose_name='Link to inspection name')
+    susName = models.ForeignKey('inspection.models.numericTest', verbose_name='Link to inspection name')
 
     def __unicode__(self):
         return '%s' % (self.susName)

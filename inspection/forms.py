@@ -1,5 +1,5 @@
 from django import forms
-from inspection.models import passFailInspection, rangeInspection, textInspection,  FloatInspection #IntegerInspection,
+from inspection.models import passFailInspection, numericInspection, textInspection,  RangeInspection #IntegerInspection,
 from django.core.validators import RegexValidator
 import re
 from cav_builder import get_inspection_type, get_qms_insp_def
@@ -49,7 +49,7 @@ class PassFailIns(forms.ModelForm):
 
 class RangeIns(forms.ModelForm):
     class Meta:
-        model = rangeInspection
+        model = numericInspection
         fields = ['machineOperator','isFullShot',
                   'headCavID','numVal']
         widgets = {
@@ -77,7 +77,7 @@ class TextIns(forms.ModelForm):
 
 class FloatIns(forms.ModelForm):
     class Meta:
-        model = FloatInspection
+        model = RangeInspection
         fields = ['machineOperator','isFullShot','headCavID','inspectionResult']
         widgets = {
             'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
@@ -101,7 +101,7 @@ class passFailInspectionForm(forms.ModelForm):
 
 class rangeInspectionForm(forms.ModelForm):
     class Meta:
-        model = rangeInspection
+        model = numericInspection
         fields = ['rangeTestName','jobID','machineOperator','isFullShot',
                   'headCavID','numVal']
 
@@ -130,7 +130,7 @@ class textInspectionForm(forms.ModelForm):
 
 class FloatInspectionForm(forms.ModelForm):
     class Meta:
-        model = FloatInspection
+        model = RangeInspection
         fields = ['floatTestName','jobID','machineOperator','isFullShot','headCavID','inspectionResult']
         widgets = {
             'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])

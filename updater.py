@@ -1,6 +1,6 @@
 # from inspection.models import rangeInspection, passFailInspection, textInspection
 #
-# for my_inspection in rangeInspection.objects.filter(headCavID__isnull=False):
+# for my_inspection in numericInspection.objects.filter(headCavID__isnull=False):
 #     if my_inspection.headCavID:
 #         my_inspection.headCav = '%s - %s'% (my_inspection.headCavID.head_code.upper()
 #                                             ,my_inspection.headCavID.cavity_id.capitalize())

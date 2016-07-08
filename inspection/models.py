@@ -88,10 +88,11 @@ class passFailInspection(models.Model):
 #
 #######################################################################################################################
 
-class rangeTest(models.Model):
+class numericTest(models.Model):
     class Meta:
-        verbose_name = 'Name - Range Test'
-        verbose_name_plural = 'Name - Range Test'
+        verbose_name = 'Name - Numeric Test'
+        verbose_name_plural = 'Name - Numeric Test'
+        db_table = 'inspection_numerictest'
 
     testName = models.CharField(max_length=75, verbose_name="Range Test Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
@@ -103,29 +104,31 @@ class rangeTest(models.Model):
     def __unicode__(self):
         return '%s' % (self.testName)
 
-class rangeTestByPart(models.Model):
+class numericTestByPart(models.Model):
     class Meta:
-        verbose_name = 'Part Assignment - Range Test Parameters'
-        verbose_name_plural = 'Part Assignment - Range Test Parameters'
+        verbose_name = 'Part Assignment - Numeric Test Parameters'
+        verbose_name_plural = 'Part Assignment - Numeric Test Parameters'
         unique_together = ("testName", "item_Number")
+        db_table = 'inspection_numerictestbypart'
 
-    testName = models.ForeignKey('rangeTest', verbose_name = "Range Test Name")
+    testName = models.ForeignKey('inspection.models.numericTest', verbose_name ="Range Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
     rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
     inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
-    systest_link_id = models.UUIDField(max_length=36, blank=True, null=True, default=uuid.uuid4,
-                                       db_column='SysTest_Link_ID')
+    # systest_link_id = models.UUIDField(max_length=36, blank=True, null=True, default=uuid.uuid4,
+    #                                    db_column='SysTest_Link_ID')
 
     def __unicode__(self):
         return '%s' % (self.testName)
 
-class rangeInspection(models.Model):
+class numericInspection(models.Model):
     class Meta:
-        verbose_name = 'Record - Range Inspection'
-        verbose_name_plural = 'Record - Range Inspections'
+        verbose_name = 'Record - Numeric Inspection'
+        verbose_name_plural = 'Record - Numeric Inspections'
+        db_table = 'inspection_numericinspection'
 
-    rangeTestName = models.ForeignKey('rangeTestByPart',verbose_name='Inspection Name')
+    rangeTestName = models.ForeignKey('inspection.models.numericTestByPart', verbose_name='Inspection Name')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ri_machineOperator')
@@ -133,7 +136,7 @@ class rangeInspection(models.Model):
                                       related_name='ri_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement")
+    numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement", db_column='numVal_1')
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
     timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time", blank=True,
                                           null=True)
@@ -265,10 +268,11 @@ class textInspection(models.Model):
 #
 #######################################################################################################################
 
-class FloatRecord(models.Model):
+class RangeRecord(models.Model):
     class Meta:
-        verbose_name = 'Name - Float Type Inspection'
-        verbose_name_plural = 'Name - Float Type Inspection'
+        verbose_name = 'Name - Range Type Inspection'
+        verbose_name_plural = 'Name - Range Type Inspection'
+        db_table = 'inspection_rangerecord'
 
     testName = models.CharField(max_length=75, verbose_name="Float Inspection Name",unique=True)
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
@@ -278,26 +282,29 @@ class FloatRecord(models.Model):
     def __unicode__(self):
         return '%s' % (self.testName)
 
-class FloatRecordByPart(models.Model):
+class RangeRecordByPart(models.Model):
     class Meta:
-        verbose_name = 'Part Assignment - Float Type Test'
-        verbose_name_plural = 'Part Assignment - Float Type Test'
+        verbose_name = 'Part Assignment - Range Type Test'
+        verbose_name_plural = 'Part Assignment - Range Type Test'
         unique_together = ("testName", "item_Number")
+        db_table = 'inspection_rangerecordbypart'
 
-    testName = models.ForeignKey('FloatRecord', verbose_name = "Float Test Name")
+    testName = models.ForeignKey('inspection.models.RangeRecord', verbose_name ="Float Test Name")
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
-
+    rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
+    rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
 
     def __unicode__(self):
         return '%s' % (self.testName)
 
-class FloatInspection(models.Model):
+class RangeInspection(models.Model):
     class Meta:
-        verbose_name = 'Record - Float Inspection'
-        verbose_name_plural = 'Record - Float Inspections'
+        verbose_name = 'Record - Range Inspection'
+        verbose_name_plural = 'Record - Range Inspections'
+        db_table = 'inspection_rangeinspection'
 
-    floatTestName = models.ForeignKey('FloatRecord',verbose_name='Inspection Name')
+    floatTestName = models.ForeignKey('inspection.models.RangeRecord', verbose_name='Inspection Name')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='Float_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='float_machineOperator')
@@ -305,7 +312,9 @@ class FloatInspection(models.Model):
                                       related_name='float_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    inspectionResult = models.FloatField(verbose_name="Enter Inspection Information:")
+    inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
+    numVal_1 = models.DecimalField(verbose_name="Low", max_digits=12, decimal_places=3, db_column='numVal_1')
+    numVal_2 = models.DecimalField(verbose_name="High", max_digits=12, decimal_places=3, db_column='numVal_2')
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
     Passed_Partial = models.BooleanField(verbose_name="Partial Passed?", default=False)
 
