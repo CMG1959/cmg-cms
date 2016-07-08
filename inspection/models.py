@@ -114,7 +114,7 @@ class rangeTestByPart(models.Model):
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
     rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
     inspections_per_shift = models.IntegerField(verbose_name = 'Inspections Per Shift',default=2)
-    systest_link_id = models.CharField(max_length=36, blank=True, null=True, default='0000000-0000-0000-0000-000000000000',
+    systest_link_id = models.UUIDField(max_length=36, blank=True, null=True, default=uuid.uuid4,
                                        db_column='SysTest_Link_ID')
 
     def __unicode__(self):
