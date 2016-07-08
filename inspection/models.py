@@ -111,7 +111,7 @@ class numericTestByPart(models.Model):
         unique_together = ("testName", "item_Number")
         db_table = 'inspection_numerictestbypart'
 
-    testName = models.ForeignKey('numericTest', verbose_name ="Range Test Name")
+    testName = models.ForeignKey('numericTest', verbose_name ="Range Test Name", db_column='floatTestName_id')
     item_Number = models.ForeignKey('part.Part', verbose_name = "Part Number")
     rangeMin = models.DecimalField(verbose_name="Minimum Value", default=0, max_digits=12,decimal_places=3)
     rangeMax = models.DecimalField(verbose_name="Maximum Value", default=9999999, max_digits=12,decimal_places=3)
@@ -128,7 +128,7 @@ class numericInspection(models.Model):
         verbose_name_plural = 'Record - Numeric Inspections'
         db_table = 'inspection_numericinspection'
 
-    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name')
+    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='floatTestName_id')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ri_machineOperator')
