@@ -18,7 +18,7 @@ from employee.models import Employees, EmployeeAtWorkstation
 from molds.models import Mold, PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import jobReportSearch, itemReportSearch, \
-    build_inspection_fields, PassFailIns, RangeIns, TextIns, FloatIns#, IntIns
+    build_inspection_fields, PassFailIns, NumericInspectionForm, TextIns, RangeInspectionForm#, IntIns
 
 from reports import JobReport
 import collections
@@ -120,11 +120,11 @@ def view_inspection(request):
             test_info = passFailTest.objects.get(id=inspection_name_id)
             form = PassFailIns(request.POST)
 
-        elif inspection_type == 'Range':
+        elif inspection_type == 'Numeric':
             test_info = numericTest.objects.get(id=inspection_name_id)
             range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                        item_Number_id=active_job.item_id)
-            form = RangeIns(request.POST)
+            form = NumericInspectionForm(request.POST)
 
         elif inspection_type == 'Text':
             test_info = textRecord.objects.get(id=inspection_name_id)
@@ -134,9 +134,9 @@ def view_inspection(request):
         #     test_info = IntegerRecord.objects.get(id=inspection_name_id)
         #     form = IntIns(request.POST)
 
-        elif inspection_type == 'Float':
+        elif inspection_type == 'Range':
             test_info = RangeRecord.objects.get(id=inspection_name_id)
-            form = FloatIns(request.POST)
+            form = RangeInspectionForm(request.POST)
 
         else:
             raise Http404("Inspection Type Does Not Exist")
@@ -161,8 +161,8 @@ def view_inspection(request):
                             passFail='Other / Unknown')
                         my_form.defectType.add(pf_test_unknown_reason)
 
-                elif inspection_type == 'Range':
-                    my_form.rangeTestName_id = range_info.id
+                elif inspection_type == 'Numeric':
+                    my_form.numericTestName_id = range_info.id
                     if ((my_form.numVal >= range_info.rangeMin) and (my_form.numVal <= range_info.rangeMax)):
                         inspectionResult = True
                     else:
@@ -175,8 +175,8 @@ def view_inspection(request):
                 elif inspection_type == 'Integer':
                     my_form.integerTestName_id = inspection_name_id
 
-                elif inspection_type == 'Float':
-                    my_form.floatTestName_id = inspection_name_id
+                elif inspection_type == 'Range':
+                    my_form.rangeTestName_id = inspection_name_id
                 else:
                     pass
 
@@ -217,7 +217,7 @@ def view_inspection(request):
                 test_info = numericTest.objects.get(id=inspection_name_id)
                 range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                            item_Number_id=active_job.item_id)
-                form = RangeIns()
+                form = NumericInspectionForm()
 
                 context_dict_add = {
                     'use_checkbox': True,
@@ -253,7 +253,7 @@ def view_inspection(request):
 
             elif inspection_type == 'Float':
                 test_info = RangeRecord.objects.get(id=inspection_name_id)
-                form = FloatIns()
+                form = RangeInspectionForm()
                 context_dict_add = {
                     'use_checkbox': True,
                     'id_check': '#id_inspectionResult',
