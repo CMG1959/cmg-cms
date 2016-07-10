@@ -56,6 +56,18 @@ def view_detailJob(request, jobNumber):
         if (str(MattecInfo.machNo)).strip() in ['FAS01', 'OFP01'] or active_job:
             if (str(MattecInfo.machNo)).strip() not in ['FAS01', 'OFP01']:
                 checkPartInspection(active_job.item)
+            if not active_job and (str(MattecInfo.machNo)).strip() in ['FAS01', 'OFP01']:
+                active_job = startUpShot(item_id=item_number_id,
+                                         jobNumber=jobNumber,
+                                         moldNumber_id=Mold.objects.get(mold_number=MattecInfo.moldNumber).id,
+                                         activeCavities=MattecInfo.activeCavities,
+                                         machNo_id=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo).id,
+                                         machineOperator_id=0,
+                                         inspectorName_id=0,
+                                         shotWeight=-1,
+                                         cycleTime=-1).save()
+
+
 
             pf_inspectionType = passFailByPart.objects.filter(item_Number_id=item_number_id,
                                                               testName__isSystemInspection=False)
