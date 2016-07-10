@@ -99,10 +99,10 @@ class passFailInspectionForm(forms.ModelForm):
         }
 
 
-class rangeInspectionForm(forms.ModelForm):
+class numericInspectionForm(forms.ModelForm):
     class Meta:
         model = numericInspection
-        fields = ['rangeTestName','jobID','machineOperator','isFullShot',
+        fields = ['numericTestName','jobID','machineOperator','isFullShot',
                   'headCavID','numVal']
 
         widgets = {
@@ -128,10 +128,10 @@ class textInspectionForm(forms.ModelForm):
 #         }
 
 
-class FloatInspectionForm(forms.ModelForm):
+class rangeInspectionForm(forms.ModelForm):
     class Meta:
         model = RangeInspection
-        fields = ['floatTestName','jobID','machineOperator','isFullShot','headCavID','inspectionResult']
+        fields = ['rangeTestName','jobID','machineOperator','isFullShot','headCavID','inspectionResult','numVal_1', 'numVal_2']
         widgets = {
             'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
         }

@@ -128,7 +128,7 @@ class numericInspection(models.Model):
         verbose_name_plural = 'Record - Numeric Inspections'
         db_table = 'inspection_numericinspection'
 
-    rangeTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='numericTestName_id')
+    numericTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='numericTestName_id')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='ri_machineOperator')
@@ -304,7 +304,7 @@ class RangeInspection(models.Model):
         verbose_name_plural = 'Record - Range Inspections'
         db_table = 'inspection_rangeinspection'
 
-    floatTestName = models.ForeignKey('RangeRecord', verbose_name='Inspection Name', db_column='rangeTestName_id')
+    rangeTestName = models.ForeignKey('RangeRecord', verbose_name='Inspection Name', db_column='rangeTestName_id')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='Float_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",
                                         related_name='float_machineOperator')

@@ -72,7 +72,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='rangeinspection',
-            name='rangeTestName',
+            name='numericTestName',
             field=models.ForeignKey(verbose_name=b'Inspection Name', to='inspection.models.numericTestByPart'),
         ),
         migrations.AlterUniqueTogether(

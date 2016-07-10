@@ -33,7 +33,7 @@ class rangeTestByPartAdmin(admin.ModelAdmin):
 
 class rangeInspectionAdmin(admin.ModelAdmin):
     search_fields = ['rangeTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
-    list_display = ('rangeTestName','jobID','dateCreated','inspectionResult')
+    list_display = ('numericTestName','jobID','dateCreated','inspectionResult')
 
 
 
@@ -77,7 +77,7 @@ class FloatRecordByPartAdmin(admin.ModelAdmin):
 
 class FloatInspectionAdmin(admin.ModelAdmin):
     search_fields = ['floatTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
-    list_display = ('floatTestName','jobID','dateCreated','inspectionResult')
+    list_display = ('rangeTestName','jobID','dateCreated','inspectionResult')
 
 
 
