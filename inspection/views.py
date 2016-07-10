@@ -49,43 +49,40 @@ def view_detailJob(request, jobNumber):
     jobNumber = str(jobNumber).strip()
 
     try:
+        MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
         active_job = startUpShot.objects.filter(jobNumber=jobNumber).last()
-        # if  PartInspection object hasnt be created, make it now.
-        checkPartInspection(active_job.item)
-        # better go ahead and take care of the Mold now
+        item_number_id = Part.objects.get(item_Number=MattecInfo.itemNo).id
 
+        if (str(MattecInfo.machNo)).strip() in ['FAS01', 'OFP01'] or active_job:
+            if (str(MattecInfo.machNo)).strip() not in ['FAS01', 'OFP01']:
+                checkPartInspection(active_job.item)
 
-        pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job.item,
-                                                          testName__isSystemInspection=False)
-        range_inspectionType = numericTestByPart.objects.filter(item_Number__item_Number=active_job.item,
-                                                                testName__isSystemInspection=False)
-        text_inspectionType = textRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
+            pf_inspectionType = passFailByPart.objects.filter(item_Number_id=item_number_id,
                                                               testName__isSystemInspection=False)
-        # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
-        #                                                         testName__isSystemInspection=False)
-        float_inspectionType = RangeRecordByPart.objects.filter(item_Number__item_Number=active_job.item,
-                                                                testName__isSystemInspection=False)
-        template = loader.get_template('inspection/detailJob.html')
-        context = RequestContext(request, {
-            'active_job': active_job,
-            'pf_inspectionType': pf_inspectionType,
-            'range_inspectionType': range_inspectionType,
-            'text_inspectionType': text_inspectionType,
-            # 'int_inspectionType': int_inspectionType,
-            'float_inspectionType': float_inspectionType
-        })
-        return HttpResponse(template.render(context))
+            range_inspectionType = numericTestByPart.objects.filter(item_Number_id=item_number_id,
+                                                                    testName__isSystemInspection=False)
+            text_inspectionType = textRecordByPart.objects.filter(item_Number_id=item_number_id,
+                                                                  testName__isSystemInspection=False)
+            # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number_id=item_number_id,
+            #                                                         testName__isSystemInspection=False)
+            float_inspectionType = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
+                                                                    testName__isSystemInspection=False)
+            template = loader.get_template('inspection/detailJob.html')
+            context = RequestContext(request, {
+                'active_job': active_job,
+                'pf_inspectionType': pf_inspectionType,
+                'range_inspectionType': range_inspectionType,
+                'text_inspectionType': text_inspectionType,
+                # 'int_inspectionType': int_inspectionType,
+                'float_inspectionType': float_inspectionType
+            })
+            return HttpResponse(template.render(context))
+        else:
+            redir_url = '/startupshot/create/%s/' % jobNumber
+            return HttpResponseRedirect(redir_url)
 
     except Exception as e:
-        try:
-            MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
-            if str(MattecInfo.machNo).strip() not in ['FAS01', 'OFP01']:
-                redir_url = '/startupshot/create/%s/' % jobNumber
-                return HttpResponseRedirect(redir_url)
-            else:
-                raise Http404(str(e))
-        except Exception as e1:
-            raise Http404('Do not see %s in MATTEC. %s' % (jobNumber, str(e1)))
+        raise Http404(str(e))
 
 ######################################
 #
