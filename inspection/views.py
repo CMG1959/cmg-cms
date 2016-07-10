@@ -502,7 +502,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
                     rangeList.append(eachShot.numVal_1/ active_job[0].activeCavities)
                     totalRangeList.append(rangeList[-1])
                 else:
-                    rangeList.append(eachShot.numVal)
+                    rangeList.append(eachShot.numVal_1)
                     totalRangeList.append(rangeList[-1])
 
             partDict['numericTest'][eachInspection][n]['rangeStats'] = calcRangeStats(rangeList)
@@ -609,7 +609,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             if ((eachShot.isFullShot) and (not each_range_inspection.testName.calcAvg)):
                 rangeList.append(eachShot.numVal_1/ active_job[0].activeCavities)
             else:
-                rangeList.append(eachShot.numVal)
+                rangeList.append(eachShot.numVal_1)
 
         context_dic['rangeTestSummary'][key]['rangeStats'] = calcRangeStats(rangeList)
 
@@ -769,8 +769,8 @@ def checkFormForLog(form, inspectionType, inspectionName, activeJob, rangeInfo=N
                 )
                 newForm.save()
 
-    if inspectionType == 'Range':
-        measured_val = form.numVal
+    if inspectionType == 'Numeric':
+        measured_val = form.numVal_1
 
         if measured_val < rangeInfo.rangeMin:
             errorDescription = 'Measured value is %1.3f which is less than tolerance (%1.3f)' % (
