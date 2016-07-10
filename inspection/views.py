@@ -71,22 +71,22 @@ def view_detailJob(request, jobNumber):
 
             pf_inspectionType = passFailByPart.objects.filter(item_Number_id=item_number_id,
                                                               testName__isSystemInspection=False)
-            range_inspectionType = numericTestByPart.objects.filter(item_Number_id=item_number_id,
+            numeric_inspectionType = numericTestByPart.objects.filter(item_Number_id=item_number_id,
                                                                     testName__isSystemInspection=False)
             text_inspectionType = textRecordByPart.objects.filter(item_Number_id=item_number_id,
                                                                   testName__isSystemInspection=False)
             # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number_id=item_number_id,
             #                                                         testName__isSystemInspection=False)
-            float_inspectionType = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
+            range_inspectionType = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
                                                                     testName__isSystemInspection=False)
             template = loader.get_template('inspection/detailJob.html')
             context = RequestContext(request, {
                 'active_job': active_job,
                 'pf_inspectionType': pf_inspectionType,
-                'range_inspectionType': range_inspectionType,
+                'numeric_inspectionType': numeric_inspectionType,
                 'text_inspectionType': text_inspectionType,
                 # 'int_inspectionType': int_inspectionType,
-                'float_inspectionType': float_inspectionType
+                'range_inspectionType': range_inspectionType
             })
             return HttpResponse(template.render(context))
         else:

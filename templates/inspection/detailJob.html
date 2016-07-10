@@ -38,10 +38,10 @@
                             </a>
                         {% endfor %}
 
-                        {% for eachRI in range_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{active_job.id}}&inspection_type=Range&inspection_name_id={{eachRI.testName_id}}">
-                            <h4 class="list-group-item-heading">{{ eachRI.testName }}</h4>
-                            <p class="list-group-item-text">Click Here to record a record for {{ eachRI.testName }} </p>
+                        {% for eachNI in numeric_inspectionType %}
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{active_job.id}}&inspection_type=Numeric&inspection_name_id={{eachNI.testName_id}}">
+                            <h4 class="list-group-item-heading">{{ eachNI.testName }}</h4>
+                            <p class="list-group-item-text">Click Here to record a record for {{ eachNI.testName }} </p>
                             </a>
                         {% endfor %}
 
@@ -59,10 +59,10 @@
                             </a>
                         {% endfor %}
 
-                        {% for eachFloat in float_inspectionType %}
-                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{active_job.id}}&inspection_type=Float&inspection_name_id={{eachFloat.testName_id}}">
+                        {% for eachRange in range_inspectionType %}
+                            <a class="list-group-item" href="/inspection/entry/?job_number_id={{active_job.id}}&inspection_type=Range&inspection_name_id={{eachRange.testName_id}}">
                             <h4 class="list-group-item-heading">{{ eachFloatEn.testName }}</h4>
-                            <p class="list-group-item-text">Click Here to record a record for {{ eachFloat.testName }} </p>
+                            <p class="list-group-item-text">Click Here to record a record for {{ eachRange.testName }} </p>
                             </a>
                         {% endfor %}
 

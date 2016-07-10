@@ -3,11 +3,11 @@ from django.db import connection
 def get_inspection_type(inspection_type_str):
     if inspection_type_str in ['Pass/Fail', 'Pass-Fail']:
         return 1
-    elif inspection_type_str == 'Float':
+    elif inspection_type_str == 'Range':
         return 2
     elif inspection_type_str == 'Integer':
         return 3
-    elif inspection_type_str == 'Range':
+    elif inspection_type_str == 'Numeric':
         return 4
     elif inspection_type_str == 'Text':
         return 5
