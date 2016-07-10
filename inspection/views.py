@@ -52,7 +52,7 @@ def view_detailJob(request, jobNumber):
         active_job = startUpShot.objects.filter(jobNumber=jobNumber).last()
 
         if not active_job:
-            return Http404(str(active_job))
+            raise Http404(str(active_job))
         # if  PartInspection object hasnt be created, make it now.
         checkPartInspection(active_job.item)
         # better go ahead and take care of the Mold now
