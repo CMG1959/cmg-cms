@@ -79,7 +79,7 @@ def view_detailJob(request, jobNumber):
     except Exception as e:
         try:
             MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
-            if MattecInfo.machNo.strip() not in ['FAS01', 'OFP01']:
+            if str(MattecInfo.machNo).strip() not in ['FAS01', 'OFP01']:
                 redir_url = '/startupshot/create/%s/' % jobNumber
                 return HttpResponseRedirect(redir_url)
             else:
