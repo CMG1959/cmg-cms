@@ -136,7 +136,7 @@ class numericInspection(models.Model):
                                       related_name='ri_inspectorName', blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
-    numVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement", db_column='numVal_1')
+    numVal_1 = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement", db_column='numVal_1')
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
     timeDelayNumVal = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement after time", blank=True,
                                           null=True)

@@ -213,7 +213,7 @@ def view_inspection(request):
                     'idSelect2': '#id_headCavID',
                 }
 
-            elif inspection_type == 'Range':
+            elif inspection_type == 'Numeric':
                 test_info = numericTest.objects.get(id=inspection_name_id)
                 range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                            item_Number_id=active_job.item_id)
@@ -224,7 +224,7 @@ def view_inspection(request):
                     'id_check': '#id_isFullShot',
                     'idSelect': '#id_headCavID',
                     'use_minmax': True,
-                    'num_id': '#id_numVal',
+                    'num_id': '#id_numVal_1',
                     'min_val': range_info.rangeMin,
                     'max_val': range_info.rangeMax,
                     'id_result': '#id_inspectionResult',
@@ -251,7 +251,7 @@ def view_inspection(request):
             #     }
 
 
-            elif inspection_type == 'Float':
+            elif inspection_type == 'Range':
                 test_info = RangeRecord.objects.get(id=inspection_name_id)
                 form = RangeInspectionForm()
                 context_dict_add = {

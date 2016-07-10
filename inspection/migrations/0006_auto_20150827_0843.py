@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('dateCreated', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
                 ('isFullShot', models.BooleanField(default=True, verbose_name=b'Is Full Shot? (check if true)')),
-                ('numVal', models.DecimalField(verbose_name=b'Test Value', max_digits=12, decimal_places=3)),
+                ('numVal_1', models.DecimalField(verbose_name=b'Test Value', max_digits=12, decimal_places=3)),
                 ('headCavID', models.ForeignKey(verbose_name=b'Head and Cavity ID', blank=True, to='molds.PartIdentifier', null=True)),
                 ('inspectorName', models.ForeignKey(related_name='ri_inspectorName', verbose_name=b'Inspector Name', to='employee.Employees')),
                 ('jobID', models.ForeignKey(related_name='ri_jobID', verbose_name=b'Job ID', to='startupshot.startUpShot')),

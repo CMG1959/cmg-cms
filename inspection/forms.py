@@ -51,7 +51,7 @@ class NumericInspectionForm(forms.ModelForm):
     class Meta:
         model = numericInspection
         fields = ['machineOperator','isFullShot',
-                  'headCavID','numVal']
+                  'headCavID','numVal_1']
         widgets = {
             'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
         }
@@ -103,7 +103,7 @@ class numericInspectionForm(forms.ModelForm):
     class Meta:
         model = numericInspection
         fields = ['numericTestName','jobID','machineOperator','isFullShot',
-                  'headCavID','numVal']
+                  'headCavID','numVal_1']
 
         widgets = {
             'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])

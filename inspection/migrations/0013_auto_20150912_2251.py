@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='rangeinspection',
-            name='numVal',
+            name='numVal_1',
             field=models.DecimalField(verbose_name=b'Measurement', max_digits=12, decimal_places=3),
         ),
     ]
