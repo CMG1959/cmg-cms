@@ -88,7 +88,7 @@ def view_detailJob(request, jobNumber):
             else:
                 raise Http404(str(e))
         except Exception as e1:
-            raise Http404('Do not see the job number if MATTEC. %s' % str(e1))
+            raise Http404('Do not see %s in MATTEC. %s' % (jobNumber, str(e1)))
 
 ######################################
 #
