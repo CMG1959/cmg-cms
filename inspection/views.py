@@ -49,7 +49,7 @@ def view_detailJob(request, jobNumber):
     jobNumber = str(jobNumber).strip()
 
     try:
-        active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item').last()
+        active_job = startUpShot.objects.filter(jobNumber=jobNumber).last()
         # if  PartInspection object hasnt be created, make it now.
         checkPartInspection(active_job.item)
         # better go ahead and take care of the Mold now
@@ -85,7 +85,7 @@ def view_detailJob(request, jobNumber):
             else:
                 raise Http404(str(e))
         except Exception as e1:
-            raise Http404(str(e1))
+            raise Http404('Do not see the job number if MATTEC. %s' % str(e1))
 
 ######################################
 #
