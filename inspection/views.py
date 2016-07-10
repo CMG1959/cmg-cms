@@ -163,7 +163,7 @@ def view_inspection(request):
 
                 elif inspection_type == 'Numeric':
                     my_form.numericTestName_id = range_info.id
-                    if ((my_form.numVal >= range_info.rangeMin) and (my_form.numVal <= range_info.rangeMax)):
+                    if ((my_form.numVal_1>= range_info.rangeMin) and (my_form.numVal_1<= range_info.rangeMax)):
                         inspectionResult = True
                     else:
                         inspectionResult = False
@@ -499,7 +499,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             for eachShot in thisInspectionbyJob:
                 # if its a full shot and we do not want to report the raw data (take average)
                 if ((eachShot.isFullShot) and (not eachInspection1.testName.calcAvg)):
-                    rangeList.append(eachShot.numVal / active_job[0].activeCavities)
+                    rangeList.append(eachShot.numVal_1/ active_job[0].activeCavities)
                     totalRangeList.append(rangeList[-1])
                 else:
                     rangeList.append(eachShot.numVal)
@@ -607,7 +607,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         rangeList = []
         for eachShot in context_dic['rangeTests'][key]:
             if ((eachShot.isFullShot) and (not each_range_inspection.testName.calcAvg)):
-                rangeList.append(eachShot.numVal / active_job[0].activeCavities)
+                rangeList.append(eachShot.numVal_1/ active_job[0].activeCavities)
             else:
                 rangeList.append(eachShot.numVal)
 
