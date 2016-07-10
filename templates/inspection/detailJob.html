@@ -61,7 +61,7 @@
 
                         {% for eachRange in range_inspectionType %}
                             <a class="list-group-item" href="/inspection/entry/?job_number_id={{active_job.id}}&inspection_type=Range&inspection_name_id={{eachRange.testName_id}}">
-                            <h4 class="list-group-item-heading">{{ eachFloatEn.testName }}</h4>
+                            <h4 class="list-group-item-heading">{{ eachRange.testName }}</h4>
                             <p class="list-group-item-text">Click Here to record a record for {{ eachRange.testName }} </p>
                             </a>
                         {% endfor %}
