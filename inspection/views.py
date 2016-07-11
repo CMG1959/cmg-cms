@@ -397,12 +397,12 @@ def view_jsonError(job_number, date_from, date_to):
     date_from, date_to = createDateRange(date_from, date_to)
     pf = passFailInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
                                            inspectionResult=0)
-    ri = numericInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+    ni = numericInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
                                           inspectionResult=0)
     ti = textInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
                                        inspectionResult=0)
 
-    if (not ri.exists()) and (not pf.exists()):
+    if (not ni.exists()) and (not pf.exists()):
         no_errors = True
     else:
         no_errors = False
@@ -410,8 +410,8 @@ def view_jsonError(job_number, date_from, date_to):
     production_errors = []
     for eachpf in pf:
         production_errors.append(eachpf.passFailTestName.testName)
-    for eachri in ri:
-        production_errors.append(eachri.rangeTestName.testName.testName)
+    for eachni in ni:
+        production_errors.append(eachni.numericTestName.testName.testName)
     for eachti in ti:
         production_errors.append(eachti.textTestName.testName)
 
@@ -477,7 +477,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['numericTest'][eachInspection] = collections.OrderedDict()
         partDict['numericTest'][eachInspection]['inspectionName'] = eachInspection
 
-        thisInspection = numericInspection.objects.filter(rangeTestName__testName__testName=eachInspection,
+        thisInspection = numericInspection.objects.filter(numericTestName__testName__testName=eachInspection,
                                                           dateCreated__range=(date_from1, date_to1)).order_by(
             '-dateCreated')
         n = 0
@@ -598,7 +598,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         key = 'rt' + str(n)
         collapse_list.append('#' + key)
         context_dic['rangeTests'][key] = numericInspection.objects.filter(
-            rangeTestName__testName=each_range_inspection.testName,
+            numericTestName__testName=each_range_inspection.testName,
             jobID__jobNumber=jobNumber,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['rangeTestSummary'][key] = {}

@@ -135,7 +135,7 @@ def view_Inspections(request):
                 m += 1
 
             for each_test in rangeTests:
-                n_tests = numericInspection.objects.filter(rangeTestName=each_test,
+                n_tests = numericInspection.objects.filter(numericTestName=each_test,
                                                            jobID__jobNumber = eachJob.jobNumber,
                                                            dateCreated__gte=get_shift_range(getShift())[0]).count()
                 testDict[str(m)] = {'testName':each_test.testName,'n_tests':n_tests, 'req_tests': each_test.inspections_per_shift}
