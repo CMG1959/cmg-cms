@@ -42,13 +42,15 @@ class JobReport:
 
 
     def __get_item_number(self):
-        return startUpShot.objects.get(jobNumber=self.job_number).item.item_Number
+        item = startUpShot.objects.get(jobNumber=self.job_number).item
+        self.item_number_id = item.id
+        return item.item_Number
 
     def __get_required_inspections(self):
         self.required_inspections = OrderedDict({
-            'pf_inspections': passFailByPart.objects.filter(item_Number__item_Number=self.item_number),
-            'numeric_inspections': numericTestByPart.objects.filter(item_Number__item_Number=self.item_number),
-            'text_inspections': textRecordByPart.objects.filter(item_Number__item_Number=self.item_number)
+            'pf_inspections': passFailByPart.objects.filter(item_Number_id=self.item_number_id),
+            'numeric_inspections': numericTestByPart.objects.filter(item_Number_id=self.item_number_id),
+            'text_inspections': textRecordByPart.objects.filter(item_Number_id=self.item_number_id)
         })
 
     def __get_startup_shot(self):
@@ -65,18 +67,6 @@ class JobReport:
                           self.startup_shot.moldNumber,self.startup_shot.moldNumber.mold_description,
                           self.report_date_start.date(), self.report_date_end.date()]]
         self.job_info =  map(list, zip(*self.job_info))
-
-
-        # <th>Item #</th>
-        # <th>Description</th>
-        # <th>TMM Part Weight (g)</th>
-        # <th>TMM Cycle (s)</th>
-        #
-        #     <td>{{ active_job.0.item.item_Number }}</td>
-        #     <td>{{ active_job.0.item.item_Description }}</td>
-        #     <td>{{ active_job.0.item.exp_part_weight }}</td>
-        #     <td>{{ active_job.0.item.exp_cycle_time }}</td>
-
 
 
     def __get_phl(self):
