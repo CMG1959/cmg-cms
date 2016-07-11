@@ -35,7 +35,7 @@ class JobReport:
         self.extended_tables = OrderedDict()
         self.pf_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
         self.text_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
-        self.range_summarized = [['Inspection Name', 'Count', 'Min', 'Max', 'Average', 'Std Dev']]
+        self.numeric_summarized = [['Inspection Name', 'Count', 'Min', 'Max', 'Average', 'Std Dev']]
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
         self.__build_report()
@@ -47,7 +47,7 @@ class JobReport:
     def __get_required_inspections(self):
         self.required_inspections = OrderedDict({
             'pf_inspections': passFailByPart.objects.filter(item_Number__item_Number=self.item_number),
-            'range_inspections': numericTestByPart.objects.filter(item_Number__item_Number=self.item_number),
+            'numeric_inspections': numericTestByPart.objects.filter(item_Number__item_Number=self.item_number),
             'text_inspections': textRecordByPart.objects.filter(item_Number__item_Number=self.item_number)
         })
 
@@ -89,39 +89,39 @@ class JobReport:
             self.phl.append([phl_dt, row[1], row[2]])
 
 
-    def __get_range_inspections(self):
-        self.range_inspections = OrderedDict()
-        self.range_inspection_summary = OrderedDict()
-        for each_inspection in self.required_inspections['range_inspections']:
+    def __get_numeric_inspections(self):
+        self.numeric_inspections = OrderedDict()
+        self.numeric_inspection_summary = OrderedDict()
+        for each_inspection in self.required_inspections['numeric_inspections']:
 
-            self.range_inspections.update({each_inspection.testName.testName:
+            self.numeric_inspections.update({each_inspection.testName.testName:
                 numericInspection.objects.filter(
-                    rangeTestName__testName=each_inspection.testName,
+                    numericTestName__testName=each_inspection.testName,
                     jobID__jobNumber=self.job_number,
                     dateCreated__range=self.date_range).order_by('-dateCreated')})
 
-            range_report = [['Date', 'Machine Operator', 'Inspector', 'Is Full Shot', 'Cavity', 'Numeric Value',
+            numeric_report = [['Date', 'Machine Operator', 'Inspector', 'Is Full Shot', 'Cavity', 'Numeric Value',
                              'Inspection Result']]
-            for row in self.range_inspections[each_inspection.testName.testName]:
-                range_report.append(
-                    [self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.numVal,
+            for row in self.numeric_inspections[each_inspection.testName.testName]:
+                numeric_report.append(
+                    [self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.isFullShot, row.headCavID, row.numVal_1,
                      row.inspectionResult])
-            self.extended_tables.update({each_inspection.testName.testName: range_report})
+            self.extended_tables.update({each_inspection.testName.testName: numeric_report})
 
 
-            rangeList = []
-            for eachShot in self.range_inspections[each_inspection.testName.testName]:
+            numericList = []
+            for eachShot in self.numeric_inspections[each_inspection.testName.testName]:
                 if ((eachShot.isFullShot) and (not each_inspection.testName.calcAvg)):
-                    rangeList.append(eachShot.numVal / self.startup_shot.activeCavities)
+                    numericList.append(eachShot.numVal_1 / self.startup_shot.activeCavities)
                 else:
-                    rangeList.append(float(eachShot.numVal))
+                    numericList.append(float(eachShot.numVal_1))
 
-            result_dict, result_list = self.__calc_range_stats(rangeList)
+            result_dict, result_list = self.__calc_range_stats(numericList)
 
-            range_id = [each_inspection.testName.testName]
-            range_id.extend(result_list)
-            self.range_summarized.append(range_id)
-            self.range_inspection_summary.update({each_inspection.testName.testName: result_dict})
+            numeric_id = [each_inspection.testName.testName]
+            numeric_id.extend(result_list)
+            self.numeric_summarized.append(numeric_id)
+            self.numeric_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
     def __get_pass_fail_inspections(self):
         self.pass_fail_inspections = OrderedDict()
@@ -356,10 +356,10 @@ class JobReport:
         Story.append(t)
         Story.append(my_spacer)
 
-        ptext = 'Summary of Range Tests'
+        ptext = 'Summary of Numeric Tests'
         Story.append(Paragraph(ptext, self.styles['Center']))
         Story.append(caption_spacer)
-        t = Table(self.range_summarized)
+        t = Table(self.numeric_summarized)
         t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
                 ]))
         Story.append(t)
