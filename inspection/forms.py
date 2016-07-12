@@ -25,7 +25,7 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
         defectType_fields = build_defects(built_inspection['Critera_Array'])
         return headCavID_fields, defectType_fields
 
-    if inspection_type in ['Range', 'Text', 'Float', 'Integer']:
+    if inspection_type in ['Range', 'Text', 'Float', 'Integer', 'Numeric']:
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
         return headCavID_fields, False
 
