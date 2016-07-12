@@ -22,16 +22,16 @@ class passFailInspectionAdmin(admin.ModelAdmin):
 
 
 
-class rangeTestAdmin(admin.ModelAdmin):
+class numericTestAdmin(admin.ModelAdmin):
     search_fields = ['testName', 'isSystemInspection']
     list_display = ('testName', 'isSystemInspection')
 
-class rangeTestByPartAdmin(admin.ModelAdmin):
+class numericTestByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift', 'rangeMin','rangeMax')
 
 
-class rangeInspectionAdmin(admin.ModelAdmin):
+class numericInspectionAdmin(admin.ModelAdmin):
     search_fields = ['rangeTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('numericTestName','jobID','dateCreated','inspectionResult')
 
@@ -67,16 +67,16 @@ class textInspectionAdmin(admin.ModelAdmin):
 
 
 
-class FloatRecordAdmin(admin.ModelAdmin):
+class rangeRecordAdmin(admin.ModelAdmin):
     search_fields = ['testName', 'requireAll', 'isSystemInspection']
     list_display = ('testName', 'requireAll', 'isSystemInspection')
 
-class FloatRecordByPartAdmin(admin.ModelAdmin):
+class rangeRecordByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
-class FloatInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['floatTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
+class rangeInspectionAdmin(admin.ModelAdmin):
+    search_fields = ['rangeTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('rangeTestName','jobID','dateCreated','inspectionResult')
 
 
@@ -87,9 +87,9 @@ admin.site.register(passFailTestCriteria,passFailTestCriteriaAdmin)
 admin.site.register(passFailByPart,passFailByPartAdmin)
 admin.site.register(passFailInspection,passFailInspectionAdmin)
 
-admin.site.register(numericTest, rangeTestAdmin)
-admin.site.register(numericTestByPart, rangeTestByPartAdmin)
-admin.site.register(numericInspection, rangeInspectionAdmin)
+admin.site.register(numericTest, numericTestAdmin)
+admin.site.register(numericTestByPart, numericTestByPartAdmin)
+admin.site.register(numericInspection, numericInspectionAdmin)
 
 admin.site.register(textRecord,textRecordAdmin)
 admin.site.register(textRecordByPart,textRecordByPartAdmin)
@@ -100,6 +100,6 @@ admin.site.register(textInspection,textInspectionAdmin)
 # admin.site.register(IntegerRecordByPart,IntegerRecordByPartAdmin)
 # admin.site.register(IntegerInspection,IntegerInspectionAdmin)
 
-admin.site.register(RangeRecord, FloatRecordAdmin)
-admin.site.register(RangeRecordByPart, FloatRecordByPartAdmin)
-admin.site.register(RangeInspection, FloatInspectionAdmin)
+admin.site.register(RangeRecord, rangeRecordAdmin)
+admin.site.register(RangeRecordByPart, rangeRecordByPartAdmin)
+admin.site.register(RangeInspection, rangeInspectionAdmin)
