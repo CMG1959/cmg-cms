@@ -659,7 +659,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 #
 ######################
 
-def createDatenumeric(date_from=None, date_to=None):
+def createDateRange(date_from=None, date_to=None):
     if date_from is None:
         date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
         date_from = timezone.make_aware(date_from, timezone.get_current_timezone())
