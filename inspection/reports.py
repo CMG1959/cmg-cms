@@ -49,7 +49,7 @@ class JobReport:
 
 
     def __get_job_ids(self):
-        self.start_up_shot_ids = [each_id for each_id in startUpShot.objects.filter(jobNumber=self.job_number).id]
+        self.start_up_shot_ids = [each_id.id for each_id in startUpShot.objects.filter(jobNumber=self.job_number)]
 
     def __get_required_inspections(self):
         self.required_inspections = OrderedDict({
