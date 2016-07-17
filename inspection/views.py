@@ -659,7 +659,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 #
 ######################
 
-def createDateRange(date_from=None, date_to=None):
+def createDatenumeric(date_from=None, date_to=None):
     if date_from is None:
         date_from = datetime.datetime.strptime('1900-01-01', '%Y-%m-%d')
         date_from = timezone.make_aware(date_from, timezone.get_current_timezone())
@@ -827,22 +827,22 @@ def createPFStats(qSet):
     return resultDict
 
 
-def calc_numeric_stats(rangeList):
-    if rangeList:
+def calc_numeric_stats(numericList):
+    if numericList:
         resultDict = {
-            'rangeList__count': '%i' % (len(rangeList)),
-            'rangeList__min': '%1.3f' % (np.amin(rangeList)),
-            'rangeList__max': '%1.3f' % (np.amax(rangeList)),
-            'rangeList__avg': '%1.3f' % (np.mean(rangeList)),
-            'rangeList__stddev': '%1.3f' % (np.std(rangeList))
+            'numericList__count': '%i' % (len(numericList)),
+            'numericList__min': '%1.3f' % (np.amin(numericList)),
+            'numericList__max': '%1.3f' % (np.amax(numericList)),
+            'numericList__avg': '%1.3f' % (np.mean(numericList)),
+            'numericList__stddev': '%1.3f' % (np.std(numericList))
         }
     else:
         resultDict = {
-            'rangeList__count': '%i' % (0),
-            'rangeList__min': '%1.3f' % (0),
-            'rangeList__max': '%1.3f' % (0),
-            'rangeList__avg': '%1.3f' % (0),
-            'rangeList__stddev': '%1.3f' % (0)
+            'numericList__count': '%i' % (0),
+            'numericList__min': '%1.3f' % (0),
+            'numericList__max': '%1.3f' % (0),
+            'numericList__avg': '%1.3f' % (0),
+            'numericList__stddev': '%1.3f' % (0)
         }
     return resultDict
 
