@@ -36,6 +36,7 @@ class JobReport:
         self.pf_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
         self.text_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
         self.numeric_summarized = [['Inspection Name', 'Count', 'Min', 'Max', 'Average', 'Std Dev']]
+        self.__get_job_ids()
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
         self.__build_report()
@@ -45,6 +46,10 @@ class JobReport:
         item = startUpShot.objects.get(jobNumber=self.job_number).item
         self.item_number_id = item.id
         return item.item_Number
+
+
+    def __get_job_ids(self):
+        self.start_up_shot_ids = [each_id for each_id in startUpShot.objects.filter(jobNumber=self.job_number).id]
 
     def __get_required_inspections(self):
         self.required_inspections = OrderedDict({
@@ -86,8 +91,8 @@ class JobReport:
 
             self.numeric_inspections.update({each_inspection.testName.testName:
                 numericInspection.objects.filter(
-                    numericTestName__testName=each_inspection.testName,
-                    jobID__jobNumber=self.job_number,
+                    numericTestName_id=each_inspection.id,
+                    jobID__in=self.start_up_shot_ids,
                     dateCreated__range=self.date_range).order_by('-dateCreated')})
 
             numeric_report = [['Date', 'Machine Operator', 'Inspector', 'Is Full Shot', 'Cavity', 'Numeric Value',
@@ -121,8 +126,8 @@ class JobReport:
 
             self.pass_fail_inspections.update({each_inspection.testName.testName:
                 passFailInspection.objects.filter(
-                    passFailTestName__testName=each_inspection.testName.testName,
-                    jobID__jobNumber=self.job_number,
+                    passFailTestName_id=each_inspection.testName_id,
+                    jobID__in=self.start_up_shot_ids,
                     dateCreated__range=self.date_range).order_by('-dateCreated')})
 
             pass_fail_report = [['Date', 'Machine Operator', 'Inspector', 'Cavity', 'Inspection Result', 'Defect']]
@@ -159,8 +164,8 @@ class JobReport:
             self.text_inspections.update({each_inspection.testName: {
                 'test_name': each_inspection.testName,
                 'text_dict': textInspection.objects.filter( \
-                    textTestName__testName=each_inspection.testName,
-                    jobID__jobNumber=self.job_number,
+                    textTestName_id=each_inspection.id,
+                    jobID__in=self.start_up_shot_ids,
                     dateCreated__range=self.date_range).order_by('-dateCreated')}})
 
             text_inspection = [['Date', 'Machine Operator', 'Inspector', 'Full Shot?', 'Cav ID', 'Inspection Result']]
@@ -187,9 +192,9 @@ class JobReport:
 
     def __get_date_range(self):
 
-        my_inspection = list(textInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True))
-        my_inspection.extend(list(passFailInspection.objects.filter(jobID__jobNumber=self.job_number,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
-        my_inspection.extend(list(numericInspection.objects.filter(jobID__jobNumber=self.job_number, dateCreated__range=self.date_range).values_list('dateCreated', flat=True)))
+        my_inspection = list(textInspection.objects.filter(jobID__in=self.start_up_shot_ids,dateCreated__range=self.date_range).values_list('dateCreated',flat=True))
+        my_inspection.extend(list(passFailInspection.objects.filter(jobID__in=self.start_up_shot_ids,dateCreated__range=self.date_range).values_list('dateCreated',flat=True)))
+        my_inspection.extend(list(numericInspection.objects.filter(jobID__in=self.start_up_shot_ids, dateCreated__range=self.date_range).values_list('dateCreated', flat=True)))
 
         if my_inspection:
             self.report_date_end = max(my_inspection)
