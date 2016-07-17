@@ -44,7 +44,7 @@
 {% endfor %}
 
 {% for key,value in numericTests.items %}
-    {% with value as rangeDict %}
+    {% with value as numericDict %}
         {% include "inspection/subTemplates/subNumericInspection.html" %}
     {% endwith %}
 {% endfor %}
