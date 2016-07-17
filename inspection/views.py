@@ -435,12 +435,19 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     date_from1, date_to1 = createDateRange(date_from=date_from, date_to=date_to)
 
     jobList = startUpShot.objects.filter(item__item_Number=itemNumber, dateCreated__range=(date_from1, date_to1))
+    job_id_keys = [each_job.id for each_job in jobList]
+    item_number_id = jobList[0].item_id
+
+
+
     susList = jobList
     jobList = jobList.values_list('jobNumber', flat=True)
 
-    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=itemNumber)
-    rangeTests = numericTestByPart.objects.filter(item_Number__item_Number=itemNumber)
-    textTests = textRecordByPart.objects.filter(item_Number__item_Number=itemNumber)
+    job_id_num = zip(job_id_keys, jobList)
+
+    pf_inspectionType = passFailByPart.objects.filter(item_Number_id=item_number_id)
+    numericTests = numericTestByPart.objects.filter(item_Number_id=item_number_id)
+    textTests = textRecordByPart.objects.filter(item_Number_id=item_number_id)
 
     partDict = {'pf': {}, 'numericTest': {}, 'activeJob': susList}
 
@@ -448,7 +455,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     for eachInspection1 in pf_inspectionType:
         eachInspection = eachInspection1.testName
         partDict['pf'][eachInspection] = collections.OrderedDict()
-        thisInspection = passFailInspection.objects.filter(passFailTestName__testName=eachInspection,
+        thisInspection = passFailInspection.objects.filter(passFailTestName_id=eachInspection1.testName_id,
                                                            dateCreated__range=(date_from1, date_to1))
         n = 0
 
@@ -457,27 +464,27 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['pf'][eachInspection]['html_id'] = key
         k = k + 1
 
-        for eachJob in jobList:
+        for job_id, job_num in job_id_num:
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
             partDict['pf'][eachInspection][n] = {}
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber=eachJob).order_by('-dateCreated')
-            partDict['pf'][eachInspection][n]['jobID'] = eachJob
+            thisInspectionbyJob = thisInspection.filter(jobID_id=job_id).order_by('-dateCreated')
+            partDict['pf'][eachInspection][n]['jobID'] = job_num
             partDict['pf'][eachInspection][n].update(createPFStats(thisInspectionbyJob))
             n += 1
 
         partDict['pf'][eachInspection][n] = {}
         partDict['pf'][eachInspection][n]['jobID'] = 'Total'
         partDict['pf'][eachInspection][n].update(
-            createPFStats(thisInspection.filter(jobID__item__item_Number=itemNumber)))
+            createPFStats(thisInspection.filter(jobID__in=job_id_keys)))
 
     k = 0
-    for eachInspection1 in rangeTests:
+    for eachInspection1 in numericTests:
 
         eachInspection = eachInspection1.testName.testName
         partDict['numericTest'][eachInspection] = collections.OrderedDict()
         partDict['numericTest'][eachInspection]['inspectionName'] = eachInspection
 
-        thisInspection = numericInspection.objects.filter(numericTestName__testName__testName=eachInspection,
+        thisInspection = numericInspection.objects.filter(numericTestName_id=eachInspection1.id,
                                                           dateCreated__range=(date_from1, date_to1)).order_by(
             '-dateCreated')
         n = 0
@@ -487,29 +494,29 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['numericTest'][eachInspection]['html_id'] = key
         k = k + 1
 
-        totalRangeList = []
-        for eachJob in jobList:
+        totalNumericList = []
+        for job_id, job_num in job_id_num:
             partDict['numericTest'][eachInspection][n] = {}
-            partDict['numericTest'][eachInspection][n]['jobID'] = eachJob
+            partDict['numericTest'][eachInspection][n]['jobID'] = job_num
 
-            thisInspectionbyJob = thisInspection.filter(jobID__jobNumber=eachJob).order_by('-dateCreated')
-            active_job = startUpShot.objects.filter(jobNumber=eachJob).select_related('item')
+            thisInspectionbyJob = thisInspection.filter(jobID_id=job_id).order_by('-dateCreated')
+            active_job = startUpShot.objects.filter(id=job_id).select_related('item')
 
-            rangeList = []
+            numericList = []
             for eachShot in thisInspectionbyJob:
                 # if its a full shot and we do not want to report the raw data (take average)
                 if ((eachShot.isFullShot) and (not eachInspection1.testName.calcAvg)):
-                    rangeList.append(eachShot.numVal_1/ active_job[0].activeCavities)
-                    totalRangeList.append(rangeList[-1])
+                    numericList.append(eachShot.numVal_1/ active_job[0].activeCavities)
+                    totalNumericList.append(numericList[-1])
                 else:
-                    rangeList.append(eachShot.numVal_1)
-                    totalRangeList.append(rangeList[-1])
+                    numericList.append(eachShot.numVal_1)
+                    totalNumericList.append(numericList[-1])
 
-            partDict['numericTest'][eachInspection][n]['rangeStats'] = calcRangeStats(rangeList)
+            partDict['numericTest'][eachInspection][n]['numericStats'] = calc_numeric_stats(numericList)
             n += 1
 
         partDict['numericTest'][eachInspection][n] = {'jobID': 'Total',
-                                                    'rangeStats': calcRangeStats(totalRangeList)}
+                                                    'numericStats': calc_numeric_stats(totalNumericList)}
 
     n = 0
     partDict['textTests'] = collections.OrderedDict()
@@ -520,20 +527,17 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             'html_id': key,
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter( \
-                    textTestName__testName=eachTextTest.testName,
-                    jobID__item__item_Number=itemNumber)
+                    textTestName_id=eachTextTest.id,
+                    jobID__in=job_id_keys)
         }
 
         n += 1
 
-    partDict['phl'] = []
-    for eaJob in eachJob:
-        partDict['phl'].extend(ProductionHistory.objects.filter(jobNumber=eaJob).values('dateCreated', 'jobNumber',
+    partDict['phl'] = ProductionHistory.objects.filter(id__in=job_id_keys).values('dateCreated', 'jobNumber',
                                                                                         'inspectorName__EmpLMName',
-                                                                                        'descEvent').order_by(
-            '-dateCreated'))
+                                                                                        'descEvent').order_by('-dateCreated')
 
-    partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist]  # change?
+    # partDict['phl'] = [item for sublist in partDict['phl'] for item in sublist]  # change?
     partDict['useJobNo'] = True
 
     collapse_list.append('#phl')
@@ -561,6 +565,8 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
     active_job = startUpShot.objects.filter(jobNumber=jobNumber).select_related('item')
 
+    job_id_keys = [each_job.id for each_job in active_job]
+
     context_dic['active_job'] = active_job
 
     # Job number 6 and 9 should be QA and
@@ -572,9 +578,9 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
                                                                                                 'descEvent').order_by(
         '-dateCreated')
 
-    pf_inspectionType = passFailByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-    rangeTests = numericTestByPart.objects.filter(item_Number__item_Number=active_job[0].item)
-    textTests = textRecordByPart.objects.filter(item_Number__item_Number=active_job[0].item)
+    pf_inspectionType = passFailByPart.objects.filter(item_Number_id=active_job[0].item_id)
+    numericTests = numericTestByPart.objects.filter(item_Number_id=active_job[0].item_id)
+    textTests = textRecordByPart.objects.filter(item_Number_id=active_job[0].item_id)
 
     context_dic['pf'] = {}
     context_dic['pfSummary'] = {}
@@ -583,8 +589,8 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         key = 'pf' + str(n)
         collapse_list.append('#' + key)
         context_dic['pf'][key] = passFailInspection.objects.filter(
-            passFailTestName__testName=each_pf_inspection.testName.testName,
-            jobID__jobNumber=jobNumber,
+            passFailTestName_id=each_pf_inspection.id,
+            jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['pfSummary'][key] = {}
         context_dic['pfSummary'][key]['pfName'] = each_pf_inspection.testName.testName
@@ -592,26 +598,26 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         n += 1
 
     n = 0
-    context_dic['rangeTests'] = {}
-    context_dic['rangeTestSummary'] = {}
-    for each_range_inspection in rangeTests:
+    context_dic['numericTests'] = {}
+    context_dic['numericTestSummary'] = {}
+    for each_numeric_inspection in numericTests:
         key = 'rt' + str(n)
         collapse_list.append('#' + key)
-        context_dic['rangeTests'][key] = numericInspection.objects.filter(
-            numericTestName__testName=each_range_inspection.testName,
-            jobID__jobNumber=jobNumber,
+        context_dic['numericTests'][key] = numericInspection.objects.filter(
+            numericTestName_id=each_numeric_inspection.id,
+            jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
-        context_dic['rangeTestSummary'][key] = {}
-        context_dic['rangeTestSummary'][key]['rangeName'] = each_range_inspection.testName.testName
+        context_dic['numericTestSummary'][key] = {}
+        context_dic['numericTestSummary'][key]['numericName'] = each_numeric_inspection.testName.testName
 
-        rangeList = []
-        for eachShot in context_dic['rangeTests'][key]:
-            if ((eachShot.isFullShot) and (not each_range_inspection.testName.calcAvg)):
-                rangeList.append(eachShot.numVal_1/ active_job[0].activeCavities)
+        numericList = []
+        for eachShot in context_dic['numericTests'][key]:
+            if ((eachShot.isFullShot) and (not each_numeric_inspection.testName.calcAvg)):
+                numericList.append(eachShot.numVal_1/ active_job[0].activeCavities)
             else:
-                rangeList.append(eachShot.numVal_1)
+                numericList.append(eachShot.numVal_1)
 
-        context_dic['rangeTestSummary'][key]['rangeStats'] = calcRangeStats(rangeList)
+        context_dic['numericTestSummary'][key]['numericStats'] = calc_numeric_stats(numericList)
 
         n += 1
 
@@ -623,7 +629,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['textTests'][key] = {
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter( \
-                    textTestName__testName=eachTextTest.testName, jobID__jobNumber=jobNumber).order_by('-dateCreated')
+                    textTestName_id=eachTextTest.id, jobID__in=job_id_keys).order_by('-dateCreated')
         }
 
         n += 1
@@ -821,7 +827,7 @@ def createPFStats(qSet):
     return resultDict
 
 
-def calcRangeStats(rangeList):
+def calc_numeric_stats(rangeList):
     if rangeList:
         resultDict = {
             'rangeList__count': '%i' % (len(rangeList)),

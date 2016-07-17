@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import *
+from inspection.models import *
 
 
 class passFailTestAdmin(admin.ModelAdmin):

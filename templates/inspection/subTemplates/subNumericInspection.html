@@ -1,7 +1,7 @@
-{% if rangeDict %}
+{% if numericDict %}
         <div class="panel panel-default">
                 <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left"> {{ rangeDict.0.rangeTestName }} </h3>
+                <h3 class="panel-title pull-left"> {{ numericDict.0.numericTestName }} </h3>
                 </div>
             <div class="panel-body">
                 <table class="table table-hover">
@@ -16,13 +16,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for ep in rangeDict %}
+                    {% for ep in numericDict %}
                         <tr>
                             <td>{{ ep.machineOperator }}</td>
                             <td>{{ ep.inspectorName }}</td>
                             <td>{{ ep.dateCreated }}</td>
                             <td>{{ ep.headCavID|default_if_none:"Full Shot" }}</td>
-                            <td>{{ ep.numVal }}  </td>
+                            <td>{{ ep.numVal_1 }}  </td>
                             <td>{{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}</td>
                         </tr>
                     {% endfor %}

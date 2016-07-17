@@ -33,8 +33,8 @@
                 {% endwith %}
 
 
-                {% with rangeTestSummary as rangeSummaryDict %}
-                    {% include "inspection/subTemplates/subRangeSummary.html" %}
+                {% with numericTestSummary as numericSummaryDict %}
+                    {% include "inspection/subTemplates/subNumericSummary.html" %}
                 {% endwith %}
 
 {% for key,value in pf.items %}
@@ -43,9 +43,9 @@
     {% endwith %}
 {% endfor %}
 
-{% for key,value in rangeTests.items %}
+{% for key,value in numericTests.items %}
     {% with value as rangeDict %}
-        {% include "inspection/subTemplates/subRangeInspection.html" %}
+        {% include "inspection/subTemplates/subNumericInspection.html" %}
     {% endwith %}
 {% endfor %}
 
