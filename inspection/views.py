@@ -589,7 +589,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         key = 'pf' + str(n)
         collapse_list.append('#' + key)
         context_dic['pf'][key] = passFailInspection.objects.filter(
-            passFailTestName_id=each_pf_inspection.id,
+            passFailTestName_id=each_pf_inspection.testName_id,
             jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['pfSummary'][key] = {}
