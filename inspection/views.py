@@ -489,7 +489,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             '-dateCreated')
         n = 0
 
-        key = 'rt' + str(k)
+        key = 'nt' + str(k)
         collapse_list.append('#' + key)
         partDict['numericTest'][eachInspection]['html_id'] = key
         k = k + 1
@@ -517,6 +517,32 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
         partDict['numericTest'][eachInspection][n] = {'jobID': 'Total',
                                                     'numericStats': calc_numeric_stats(totalNumericList)}
+
+
+
+    for k, each_range_test in enumerate(RangeRecordByPart.objects.filter(item_Number_id=item_number_id)):
+        test_name = each_range_test.testName.testName
+        partDict['range_test'][test_name] = collections.OrderedDict()
+        partDict['range_test'][test_name]['inspectionName']=test_name
+
+        this_inspection = RangeInspection.objects.filter(rangeTestName_id=each_range_test.id,
+                                                         dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated')
+
+        key = 'rt' + str(k)
+        collapse_list.append('#' + key)
+        partDict['range_test'][test_name]['html_id'] = key
+
+        total_range_list = []
+        for n, (job_id, job_num) in enumerate(job_id_num):
+            partDict['range_test'][test_name][n] = {
+                'jobID' : job_num
+            }
+            partDict['range_test'][test_name][n].update(createPFStats(this_inspection.filter(jobID_id=job_id).order_by('-dateCreated')))
+
+        partDict['range_test'][test_name][n] = {}
+        partDict['range_test'][test_name][n]['jobID'] = 'Total'
+        partDict['range_test'][test_name][n].update(
+        createPFStats(this_inspection.filter(jobID__in=job_id_keys)))
 
     n = 0
     partDict['textTests'] = collections.OrderedDict()
@@ -596,6 +622,19 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['pfSummary'][key]['pfName'] = each_pf_inspection.testName.testName
         context_dic['pfSummary'][key].update(createPFStats(context_dic['pf'][key]))
         n += 1
+
+
+    for n, each_range_test in enumerate(RangeRecordByPart.objects.filter(item_Number_id=active_job[0].item_id)):
+        key = 'range' + str(n)
+        collapse_list.append('#'+key)
+        context_dic['range_tests'][key] = RangeInspection.objects.filter(
+            rangeTestName_id= each_range_test.testName_id,
+            jobID__in=job_id_keys,
+            dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
+        context_dic['range_summary'][key] = {
+            'range_test_name':each_range_test.testName.testName
+        }
+        context_dic['range_summary'][key].update(createPFStats(context_dic['range'][key]))
 
     n = 0
     context_dic['numericTests'] = {}

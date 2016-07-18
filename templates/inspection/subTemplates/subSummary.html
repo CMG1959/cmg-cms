@@ -37,6 +37,11 @@
                     {% include "inspection/subTemplates/subNumericSummary.html" %}
                 {% endwith %}
 
+
+                {% with range_summary as range_summary_dict %}
+                    {% include "inspection/subTemplates/subRangeSummary.html" %}
+                {% endwith %}
+
 {% for key,value in pf.items %}
     {% with value as pfDict %}
         {% include "inspection/subTemplates/subPFInspection.html" %}
@@ -45,6 +50,13 @@
 
 {% for key,value in numericTests.items %}
     {% with value as numericDict %}
+        {% include "inspection/subTemplates/subNumericInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+
+{% for key,value in range_tests.items %}
+    {% with value as range_dict %}
         {% include "inspection/subTemplates/subNumericInspection.html" %}
     {% endwith %}
 {% endfor %}
