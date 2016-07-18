@@ -635,7 +635,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['range_summary'][key] = {
             'range_test_name':each_range_test.testName.testName
         }
-        context_dic['range_summary'][key].update(createPFStats(context_dic['range'][key]))
+        context_dic['range_summary'][key].update(createPFStats(context_dic['range_tests'][key]))
 
     n = 0
     context_dic['numericTests'] = {}
