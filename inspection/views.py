@@ -624,6 +624,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         n += 1
 
 
+    context_dic.update({'range_tests':{}, 'range_summary':{}})
     for n, each_range_test in enumerate(RangeRecordByPart.objects.filter(item_Number_id=active_job[0].item_id)):
         key = 'range' + str(n)
         collapse_list.append('#'+key)
