@@ -127,7 +127,7 @@ class numericInspection(models.Model):
         verbose_name = 'Record - Numeric Inspection'
         verbose_name_plural = 'Record - Numeric Inspections'
         db_table = 'inspection_numericinspection'
-
+    # not sure why this one references by part and the other primitives do not
     numericTestName = models.ForeignKey('numericTestByPart', verbose_name='Inspection Name', db_column='numericTestName_id')
     jobID = models.ForeignKey('startupshot.startUpShot', verbose_name="Job ID", related_name='ri_jobID')
     machineOperator = models.ForeignKey('employee.Employees', verbose_name="Machine Operator",

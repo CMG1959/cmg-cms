@@ -164,7 +164,7 @@ class JobReport:
             self.text_inspections.update({each_inspection.testName: {
                 'test_name': each_inspection.testName,
                 'text_dict': textInspection.objects.filter( \
-                    textTestName_id=each_inspection.id,
+                    textTestName_id=each_inspection.testName_id,
                     jobID__in=self.start_up_shot_ids,
                     dateCreated__range=self.date_range).order_by('-dateCreated')}})
 

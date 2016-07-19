@@ -553,7 +553,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             'html_id': key,
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter( \
-                    textTestName_id=eachTextTest.id,
+                    textTestName_id=eachTextTest.testName_id,
                     jobID__in=job_id_keys)
         }
 
@@ -669,7 +669,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         context_dic['textTests'][key] = {
             'testName': eachTextTest.testName,
             'textDict': textInspection.objects.filter( \
-                    textTestName_id=eachTextTest.id, jobID__in=job_id_keys).order_by('-dateCreated')
+                    textTestName_id=eachTextTest.testName_id, jobID__in=job_id_keys).order_by('-dateCreated')
         }
 
         n += 1
