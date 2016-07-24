@@ -336,6 +336,7 @@ class JobReport:
         self.__get_startup_shot()
         self.__get_required_inspections()
         self.__get_pass_fail_inspections()
+        self.__get_range_inspections()
         self.__get_numeric_inspections()
         self.__get_text_inspections()
         self.__get_date_range()
