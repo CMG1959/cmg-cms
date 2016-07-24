@@ -32,7 +32,7 @@ class numericTestByPartAdmin(admin.ModelAdmin):
 
 
 class numericInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['rangeTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
+    search_fields = ['numericTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('numericTestName','jobID','dateCreated','inspectionResult')
 
 

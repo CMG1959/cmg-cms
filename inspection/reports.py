@@ -14,7 +14,7 @@ from collections import OrderedDict
 import datetime
 from django.utils import timezone
 from models import passFailByPart, passFailTest, passFailInspection, passFailTestCriteria, numericTestByPart, \
-    numericInspection, textRecord, textRecordByPart, textInspection, numericTest
+    numericInspection, textRecord, textRecordByPart, textInspection, numericTest, RangeRecordByPart, RangeInspection
 from startupshot.models import startUpShot
 from production_and_mold_history.models import ProductionHistory
 import numpy as np
@@ -35,6 +35,7 @@ class JobReport:
         self.extended_tables = OrderedDict()
         self.pf_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
         self.text_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
+        self.range_summarized = [['Inspection Name', 'Pass', 'Fail', 'Total', 'Pass Percent']]
         self.numeric_summarized = [['Inspection Name', 'Count', 'Min', 'Max', 'Average', 'Std Dev']]
         self.__get_job_ids()
         self.date_range = self.__create_date_range()
@@ -55,7 +56,8 @@ class JobReport:
         self.required_inspections = OrderedDict({
             'pf_inspections': passFailByPart.objects.filter(item_Number_id=self.item_number_id),
             'numeric_inspections': numericTestByPart.objects.filter(item_Number_id=self.item_number_id),
-            'text_inspections': textRecordByPart.objects.filter(item_Number_id=self.item_number_id)
+            'text_inspections': textRecordByPart.objects.filter(item_Number_id=self.item_number_id),
+            'range_inspections': RangeRecordByPart.objects.filter(item_Number_id=self.item_number_id)
         })
 
     def __get_startup_shot(self):
@@ -117,6 +119,44 @@ class JobReport:
             numeric_id.extend(result_list)
             self.numeric_summarized.append(numeric_id)
             self.numeric_inspection_summary.update({each_inspection.testName.testName: result_dict})
+
+
+    def _get_range_inspections(self):
+        self.range_inspections = OrderedDict()
+        self.range_inspections_report = OrderedDict()
+
+        for each_inspection in self.required_inspections['range_inspections']:
+            self.range_inspections.update({
+                each_inspection.testName: RangeInspection.objects.filter(
+                    rangeTestName_id= each_inspection.testName_id,
+                    jobID__in=self.start_up_shot_ids,
+                    dateCreated__range=self.date_range).order_by('-dateCreated')
+                })
+
+            range_report = [['Date', 'Machine Operator', 'Inspector', 'Cavity', 'Inspection Result', 'Low', 'High']]
+
+            if self.range_inspections[each_inspection.testName]
+                for row in self.range_inspections[each_inspection.testName]:
+                    range_report.append([
+                        self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.headCavID,
+                        row.inspectionResult, row.numVal_1, row.numVal_2
+                    ])
+                self.extended_tables.update({each_inspection.testName: range_report})
+
+                result_dict, result_list = self.__create_pf_stats(self.range_inspections[each_inspection.testName])
+                self.range_inspection_summary.update({each_inspection.testName: result_dict})
+            else:
+                range_report.append(['None']*len(range_report[0]))
+                result_list = ['None']*(len(self.range_summarized[0])-1)
+
+            ### summarize the tests
+            # total, pass, fail, pass percent
+            range_id = [each_inspection.testName]
+            range_id.extend(result_list)
+            self.range_summarized.append(range_id)
+
+
+
 
     def __get_pass_fail_inspections(self):
         self.pass_fail_inspections = OrderedDict()
@@ -188,6 +228,9 @@ class JobReport:
             text_id = [each_inspection.testName]
             text_id.extend(result_list)
             self.text_summarized.append(text_id)
+
+
+
 
 
     def __get_date_range(self):
@@ -360,6 +403,14 @@ class JobReport:
         Story.append(t)
         Story.append(my_spacer)
 
+        ptext = 'Summary of Range Tests'
+        Story.append(Paragraph(ptext, self.styles['Center']))
+        Story.append(caption_spacer)
+        t = Table(self.range_summarized)
+        t.setStyle(TableStyle([('LINEABOVE',(0,1),(-1,1),1,colors.black),
+                ]))
+        Story.append(t)
+        Story.append(my_spacer)
 
         ptext = 'Summary of Pass Fail Tests'
         Story.append(Paragraph(ptext, self.styles['Center']))
