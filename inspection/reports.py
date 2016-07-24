@@ -121,7 +121,7 @@ class JobReport:
             self.numeric_inspection_summary.update({each_inspection.testName.testName: result_dict})
 
 
-    def _get_range_inspections(self):
+    def __get_range_inspections(self):
         self.range_inspections = OrderedDict()
         self.range_inspections_report = OrderedDict()
 
