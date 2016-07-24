@@ -135,7 +135,7 @@ class JobReport:
 
             range_report = [['Date', 'Machine Operator', 'Inspector', 'Cavity', 'Inspection Result', 'Low', 'High']]
 
-            if self.range_inspections[each_inspection.testName]
+            if self.range_inspections[each_inspection.testName]:
                 for row in self.range_inspections[each_inspection.testName]:
                     range_report.append([
                         self.__make_local_str(row.dateCreated), row.machineOperator, row.inspectorName, row.headCavID,
