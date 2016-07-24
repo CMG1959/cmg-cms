@@ -123,7 +123,7 @@ class JobReport:
 
     def __get_range_inspections(self):
         self.range_inspections = OrderedDict()
-        self.range_inspections_report = OrderedDict()
+        self.range_inspection_summary = OrderedDict()
 
         for each_inspection in self.required_inspections['range_inspections']:
             self.range_inspections.update({
