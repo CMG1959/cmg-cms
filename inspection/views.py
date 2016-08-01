@@ -449,7 +449,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
     numericTests = numericTestByPart.objects.filter(item_Number_id=item_number_id)
     textTests = textRecordByPart.objects.filter(item_Number_id=item_number_id)
 
-    partDict = {'pf': {}, 'numericTest': {}, 'activeJob': susList, 'range_test':{}}
+    partDict = {'pf': {}, 'numericTest': {}, 'activeJob': susList, 'range_test': collections.OrderedDict()}
 
     k = 0
     for eachInspection1 in pf_inspectionType:
