@@ -210,7 +210,7 @@ CACHES = {
         'LOCATION': 'C:/webapp_cache',
         'TIMEOUT': 3600,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000
+            'MAX_ENTRIES': 10000
         }
     }
 }
