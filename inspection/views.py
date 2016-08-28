@@ -33,6 +33,7 @@ from decimal import Decimal
 #
 ######################################
 
+
 @login_required
 def view_index(request):
     activeInMattec = MattecProd.objects.order_by('machNo').all()
@@ -619,7 +620,13 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['pfSummary'][key] = {}
-        context_dic['pfSummary'][key]['pfName'] = each_pf_inspection.testName.testName
+
+        if each_pf_inspection.testName.report_name:
+            r_name = each_pf_inspection.testName.report_name
+        else:
+            r_name = each_pf_inspection.testName.testName
+
+        context_dic['pfSummary'][key]['pfName'] = r_name
         context_dic['pfSummary'][key].update(createPFStats(context_dic['pf'][key]))
         n += 1
 
@@ -632,8 +639,14 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             rangeTestName_id= each_range_test.testName_id,
             jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
+
+        if each_range_test.testName.report_name:
+            r_name = each_range_test.testName.report_name
+        else:
+            r_name = each_range_test.testName.testName
+
         context_dic['range_summary'][key] = {
-            'range_test_name':each_range_test.testName.testName
+            'range_test_name': r_name
         }
         context_dic['range_summary'][key].update(createPFStats(context_dic['range_tests'][key]))
 
@@ -648,7 +661,13 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
             jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['numericTestSummary'][key] = {}
-        context_dic['numericTestSummary'][key]['numericName'] = each_numeric_inspection.testName.testName
+
+        if each_numeric_inspection.testName.report_name:
+            r_name = each_numeric_inspection.testName.report_name
+        else:
+            r_name = each_numeric_inspection.testName.testName
+
+        context_dic['numericTestSummary'][key]['numericName'] = r_name
 
         numericList = []
         for eachShot in context_dic['numericTests'][key]:
@@ -666,8 +685,14 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
     for eachTextTest in textTests:
         key = 'tt' + str(n)
         collapse_list.append('#' + key)
+
+        if eachTextTest.testName.report_name:
+            r_name = eachTextTest.testName.report_name
+        else:
+            r_name = eachTextTest.testName.testName
+
         context_dic['textTests'][key] = {
-            'testName': eachTextTest.testName,
+            'testName': r_name,
             'textDict': textInspection.objects.filter( \
                     textTestName_id=eachTextTest.testName_id, jobID__in=job_id_keys).order_by('-dateCreated')
         }

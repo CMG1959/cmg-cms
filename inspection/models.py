@@ -25,6 +25,9 @@ class passFailTest(models.Model):
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
     IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
+    desc = models.CharField(max_length=200, verbose_name="Description", db_column="Desc")
+    report_name = models.CharField(max_length=75, verbose_name="Report Name", db_column="ReportName")
+
 
 
     def __unicode__(self):
@@ -100,6 +103,8 @@ class numericTest(models.Model):
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
     hasTimeDelayInspection = models.BooleanField(verbose_name="Inspect Again After Time Period?", default=False)
     IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
+    desc = models.CharField(max_length=200, verbose_name="Description", db_column="Desc")
+    report_name = models.CharField(max_length=75, verbose_name="Report Name", db_column="ReportName")
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -164,6 +169,8 @@ class textRecord(models.Model):
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
     IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
+    desc = models.CharField(max_length=200, verbose_name="Description", db_column="Desc")
+    report_name = models.CharField(max_length=75, verbose_name="Report Name", db_column="ReportName")
 
     def __unicode__(self):
         return '%s' % (self.testName)
@@ -221,7 +228,8 @@ class textInspection(models.Model):
 #     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
 #     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
 #     IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
-#
+#     desc = models.CharField(max_length=200, verbose_name="Description", db_column="Desc")
+#     report_name = models.CharField(max_length=75, verbose_name="Report Name", db_column="ReportName")
 #     def __unicode__(self):
 #         return '%s' % (self.testName)
 #
@@ -278,6 +286,8 @@ class RangeRecord(models.Model):
     requireAll = models.BooleanField(verbose_name="Require all parts get inspection?",default=False)
     isSystemInspection = models.BooleanField(verbose_name="System Inspection?", default=False)
     IsCavity_Instanced = models.BooleanField(verbose_name="Is Cavity Instanced?", default=False)
+    desc = models.CharField(max_length=200, verbose_name="Description", db_column="Desc")
+    report_name = models.CharField(max_length=75, verbose_name="Report Name", db_column="ReportName")
 
     def __unicode__(self):
         return '%s' % (self.testName)
