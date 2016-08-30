@@ -62,7 +62,6 @@ INSTALLED_APPS = (
     'rest_framework',)
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,7 +70,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'CIMC.urls'
@@ -208,11 +206,8 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': 'C:/webapp_cache',
-        'TIMEOUT': 3600,
         'OPTIONS': {
             'MAX_ENTRIES': 10000
         }
     }
 }
-
-CACHE_MIDDLEWARE_SECONDS = 3600
