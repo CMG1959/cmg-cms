@@ -5,7 +5,7 @@ from django.template import RequestContext, loader
 from django.utils import timezone
 import collections
 from django.db.models import Count
-from models import errorLogTime
+from models import errorLogTime, ProductionSummary
 from startupshot.models import MattecProd,startUpShot
 from inspection.models import *
 from production_and_mold_history.models import ProductionHistory
@@ -178,6 +178,25 @@ def view_Inspections(request):
     template = loader.get_template('dashboard/completedInspections.html')
     context = RequestContext(request, {'resultDict':my_order})
     return HttpResponse(template.render(context))
+
+class OrderListJson(BaseDatatableView):
+    model = ProductionSummary
+    columns = ['date_created', 'inspection_type',  'job_number', 'item_number',
+               'test_name', 'inspection_result', 'report_text']
+    order_columns = ['date_created']
+    max_display_length = 500
+
+    def render_column(self, row, columns):
+        if column == 'date_created':
+            return '{0}'.format(row.date_created.strftime('%Y-%m-%d %H:%M:%S'))
+        else:
+            return super(OrderListJson, self).render_column(row, column)
+
+    def filter_queryset(self, qs):
+        search = self.request.GET.get(u'search[value]', None)
+        if search:
+            qs = qs.filter(Q(inspection_type__icontains=search))
+
 
 def getShift():
     currentHour = datetime.datetime.time(datetime.datetime.now()).hour

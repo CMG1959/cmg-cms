@@ -1,0 +1,22 @@
+
+<html>
+    <table class="'datatable table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <th>Date</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</html>
+
+<script>
+    $(document).ready(function() {
+        var oTable = $('.datatable'.dataTable({
+            "pageLength": 25,
+            "processing": true,
+            "serverSide": true,
+            "ajax": "{% url 'order_list_json' %}"
+        });
+    });
+</script>

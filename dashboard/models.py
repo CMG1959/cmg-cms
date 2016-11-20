@@ -18,3 +18,21 @@ class errorLogTime(models.Model):
                                          validators=[MinValueValidator(1)])
     def __unicode__(self):
         return '%s' % self.number_of_days
+
+class ProductionSummary(models.Model):
+    class Meta:
+        verbose_name = 'Production Summary'
+        verbose_name_plural = 'Production Summary'
+        db_table = 'vInspectionSummary'
+
+    inspection_type = models.CharField(verbose_name='Inspection Type', max_length=9)
+    date_created = models.DateTimeField(verbose_name='Date Created')
+    job_number = models.CharField(verbose_name='Job Number', max_length=15)
+    item_number = models.CharField(verbose_name='Item Number', max_length=15)
+    item_description = models.CharField(verbose_name= 'Description', max_length=15)
+    test_name = models.CharField(verbose_name= 'Test', max_length=15)
+    emp_l_name = models.CharField(verbose_name= 'Last Name', max_length=15)
+    emp_f_name = models.CharField(verbose_name= 'First Name', max_length=15)
+    inspection_result = models.CharField(verbose_name= 'Inspection Result', max_length=15)
+    shift = models.IntegerField()
+    report_text = models.CharField(max_length=75, verbose_name='Report Text')
