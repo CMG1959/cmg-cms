@@ -2,6 +2,7 @@ from django.shortcuts import render
 from models import errorLog
 from django.http import HttpResponse, HttpResponseRedirect,Http404, JsonResponse
 from django.template import RequestContext, loader
+from django.views.generic import TemplateView
 from django.utils import timezone
 import collections
 from django.db.models import Count
@@ -17,6 +18,8 @@ import json
 from natsort import natsorted
 import datetime
 from equipment.models import EquipmentInfo
+from django_datatables_view.base_datatable_view import BaseDatatableView
+from django.db.models import Q
 
 
 def view_errorLog(request):
@@ -179,6 +182,9 @@ def view_Inspections(request):
     context = RequestContext(request, {'resultDict':my_order})
     return HttpResponse(template.render(context))
 
+class IndexView(TemplateView):
+    template_name = 'dashboard/inspection_summary.html'
+
 class OrderListJson(BaseDatatableView):
     model = ProductionSummary
     columns = ['date_created', 'inspection_type',  'job_number', 'item_number',
@@ -196,6 +202,7 @@ class OrderListJson(BaseDatatableView):
         search = self.request.GET.get(u'search[value]', None)
         if search:
             qs = qs.filter(Q(inspection_type__icontains=search))
+        return qs
 
 
 def getShift():

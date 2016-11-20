@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^jsonError/$', cache_page(60*10)(views.view_jsonError), name='view_jsonError'),
     # View error log
     url(r'^inspectionLog/$',cache_page(60*10)(views.view_Inspections), name='view_inspectionLog'),
-    url(r'^Production_Summary/$', views.ProductionSummary.as_view(), name ='order_list_json')
+    url(r'^Production_Summary/$', views.IndexView.as_view(), name ='order_list_json'),
+    url(r'^data/$', views.OrderListJson.as_view(), name ='order_list_json')
     ]
