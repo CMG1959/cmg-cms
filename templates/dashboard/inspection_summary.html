@@ -28,11 +28,11 @@
 
 <script>
     $(document).ready(function() {
-        var oTable = $('.datatable'.dataTable({
+        var oTable = $('.datatable').dataTable({
             "pageLength": 25,
             "processing": true,
             "serverSide": true,
             "ajax": "{% url 'order_list_json' %}"
-        }));
+        });
         });
 </script>
