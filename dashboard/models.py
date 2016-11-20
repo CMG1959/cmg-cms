@@ -33,6 +33,6 @@ class ProductionSummary(models.Model):
     test_name = models.CharField(verbose_name= 'Test', max_length=15, db_column = 'Test_Name')
     emp_l_name = models.CharField(verbose_name= 'Last Name', max_length=15, db_column = 'EmpLName')
     emp_f_name = models.CharField(verbose_name= 'First Name', max_length=15, db_column = 'EmpFName')
-    inspection_result = models.CharField(verbose_name= 'Inspection Result', max_length=15, db_column = 'Inspection Result')
+    inspection_result = models.CharField(verbose_name= 'Inspection Result', max_length=15, db_column = 'Inspection_Result')
     shift = models.IntegerField( db_column = 'Shift')
     report_text = models.CharField(max_length=75, verbose_name='Report Text', db_column = 'Report_Text')

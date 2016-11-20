@@ -192,7 +192,7 @@ class OrderListJson(BaseDatatableView):
     order_columns = ['date_created']
     max_display_length = 500
 
-    def render_column(self, row, columns):
+    def render_column(self, row, column):
         if column == 'date_created':
             return '{0}'.format(row.date_created.strftime('%Y-%m-%d %H:%M:%S'))
         else:
