@@ -26,7 +26,7 @@ class ProductionSummary(models.Model):
         db_table = 'vInspectionSummary'
 
     inspection_type = models.CharField(verbose_name='Inspection Type', max_length=9, db_column = 'Inspection_Type')
-    date_created = models.DateTimeField(verbose_name='Date Created', db_column = 'Date_Created', primary_key=True)
+    date_created = models.DateTimeField(verbose_name='Date Created', db_column = 'Date_Created')
     job_number = models.CharField(verbose_name='Job Number', max_length=15, db_column = 'Job_Number')
     item_number = models.CharField(verbose_name='Item Number', max_length=15, db_column = 'Item_Number')
     item_description = models.CharField(verbose_name= 'Description', max_length=15, db_column = 'Item_Description')
@@ -36,3 +36,4 @@ class ProductionSummary(models.Model):
     inspection_result = models.CharField(verbose_name= 'Inspection Result', max_length=15, db_column = 'Inspection_Result')
     shift = models.IntegerField( db_column = 'Shift')
     report_text = models.CharField(max_length=75, verbose_name='Report Text', db_column = 'Report_Text')
+    id = models.CharField(max_length=36, primary_key=True)
