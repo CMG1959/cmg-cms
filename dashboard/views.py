@@ -187,7 +187,7 @@ class IndexView(TemplateView):
 
 class OrderListJson(BaseDatatableView):
     model = ProductionSummary
-    columns = ['date_created', 'inspection_type',  'job_number', 'item_number',
+    columns = ['date_created', 'inspection_type',  'job_number', 'item_number', 'item_description',
                'test_name', 'inspection_result', 'report_text']
     order_columns = ['-date_created', 'inspection_type', 'job_number', 'item_number', '', 'inspection_result',
                      '']
