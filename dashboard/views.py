@@ -189,7 +189,7 @@ class OrderListJson(BaseDatatableView):
     model = ProductionSummary
     columns = ['date_created', 'inspection_type',  'job_number', 'item_number',
                'test_name', 'inspection_result', 'report_text']
-    order_columns = ['date_created', 'inspection_type', 'job_number', 'item_number', '', 'inspection_result',
+    order_columns = ['-date_created', 'inspection_type', 'job_number', 'item_number', '', 'inspection_result',
                      '']
     max_display_length = 500
 
