@@ -20,7 +20,7 @@ import datetime
 from equipment.models import EquipmentInfo
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.db.models import Q
-
+import pytz
 
 def view_errorLog(request):
     if errorLogTime.objects.first():
@@ -195,7 +195,9 @@ class OrderListJson(BaseDatatableView):
 
     def render_column(self, row, column):
         if column == 'date_created':
-            return '{0}'.format(row.date_created.strftime('%Y-%m-%d %H:%M:%S'))
+            local_tz = pytz.get_localzone()
+            time_obj = row.date_created.replace(tzinfo=pytz.utc).astimezone(local_tz)
+            return '{0}'.format(time_obj.strftime('%Y-%m-%d %H:%M:%S'))
         else:
             return super(OrderListJson, self).render_column(row, column)
 
