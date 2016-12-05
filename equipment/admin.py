@@ -12,7 +12,7 @@ class EquipInfoAdmin(admin.ModelAdmin):
 class PMAdmin(admin.ModelAdmin):
     list_display = ('equipment_type', 'pm_frequency', 'pm_item')
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'20'})},
+        models.CharField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
 
@@ -20,7 +20,7 @@ class EquipmentPMAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier']
     list_display = ('Date_Performed', 'equipment_ID', 'employee', 'pm_frequency')
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'20'})},
+        models.CharField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
 
@@ -29,7 +29,7 @@ class EquipmentRepairAdmin(admin.ModelAdmin):
     search_fields = ['equipment_ID__part_identifier','po_num']
     list_display = ('Date_Performed', 'equipment_ID',  'employee', 'po_num')
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'20'})},
+        models.CharField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
         models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
     }
 
