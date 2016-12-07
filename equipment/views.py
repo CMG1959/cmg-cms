@@ -97,7 +97,7 @@ def view_pm_form(request, equip_info_id, pm_type_id):
 
         lastPM = EquipmentPM.objects.filter(equipment_ID__id=equip_info_id).order_by('-dateCreated')[:3]
 
-        PMinfo = PM.objects.get(id=pm_type_id)
+        #PMinfo = PM.objects.get(id=pm_type_id)
 
         form = equipmentPMForm(
             initial={'equipment_ID': equip_info.id,
