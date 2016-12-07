@@ -78,7 +78,7 @@ class PM(models.Model):
     # This is for adding PM information such as grease, inspect, etc
     equipment_type = models.ForeignKey('EquipmentType', verbose_name='Equipment Type')
     pm_frequency = models.ForeignKey('PMFreq', verbose_name='PM Frequency')
-    pm_item = models.CharField(max_length=50)
+    pm_item = models.CharField(max_length=500)
 
     def __unicode__(self):
         return self.pm_item
