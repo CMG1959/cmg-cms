@@ -7,49 +7,87 @@ from inspection.models import *
 class passFailTestAdmin(admin.ModelAdmin):
     search_fields = ['testName', 'isSystemInspection']
     list_display = ('testName', 'isSystemInspection')
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+
 
 class passFailTestCriteriaAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','passFail']
     list_display = ('testName','passFail')
 
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+
+
 class passFailByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+
 class passFailInspectionAdmin(admin.ModelAdmin):
     search_fields = ['passFailTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('passFailTestName','jobID','dateCreated','inspectionResult')
-
-
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class numericTestAdmin(admin.ModelAdmin):
     search_fields = ['testName', 'isSystemInspection']
     list_display = ('testName', 'isSystemInspection')
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class numericTestByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift', 'rangeMin','rangeMax')
-
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class numericInspectionAdmin(admin.ModelAdmin):
     search_fields = ['numericTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('numericTestName','jobID','dateCreated','inspectionResult')
-
-
-
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class textRecordAdmin(admin.ModelAdmin):
     search_fields = ['testName','requireAll', 'isSystemInspection']
     list_display = ('testName','requireAll', 'isSystemInspection')
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class textRecordByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
 
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+
 class textInspectionAdmin(admin.ModelAdmin):
     search_fields = ['textTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('textTestName','jobID','dateCreated','inspectionResult')
-
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 
 #
@@ -70,15 +108,26 @@ class textInspectionAdmin(admin.ModelAdmin):
 class rangeRecordAdmin(admin.ModelAdmin):
     search_fields = ['testName', 'requireAll', 'isSystemInspection']
     list_display = ('testName', 'requireAll', 'isSystemInspection')
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class rangeRecordByPartAdmin(admin.ModelAdmin):
     search_fields = ['testName__testName','item_Number__item_Number']
     list_display = ('testName','item_Number', 'inspections_per_shift')
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 class rangeInspectionAdmin(admin.ModelAdmin):
     search_fields = ['rangeTestName__testName','jobID__jobNumber','dateCreated','inspectionResult']
     list_display = ('rangeTestName','jobID','dateCreated','inspectionResult')
-
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
 
 
 
