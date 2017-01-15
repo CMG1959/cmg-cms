@@ -42,7 +42,7 @@
                             <td> {{ ep.pm }}</td>
                             <td> {{ ep.repair }} </td>
                             <td> {{ ep.hours_worked }} </td>
-                            <td> {{ ep.descEvent }} </td>
+                            <td> {{ ep.descEvent|wordwrap:25 }} </td>
                         </tr>
                     {% endfor %}
                     </tbody>

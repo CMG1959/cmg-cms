@@ -212,3 +212,5 @@ CACHES = {
         }
     }
 }
+
+WORDWRAP_LEN = 25
