@@ -1,5 +1,6 @@
 from django.contrib import admin
-
+from django.db import models
+from django.forms import TextInput, Textarea
 # Register your models here.
 from inspection.models import *
 
