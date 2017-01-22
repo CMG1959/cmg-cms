@@ -1,6 +1,7 @@
 # Create your views here.
 import numpy as np
 import re
+from django import forms
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
@@ -8,6 +9,7 @@ from django.db.models import Avg, Max, Min, StdDev
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+
 
 from models import *
 from dashboard.models import errorLog
@@ -161,12 +163,16 @@ def view_inspection(request):
         if form.is_valid():
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                my_form = form.save(commit=False)
-                my_form.jobID_id = job_number_id
-                my_form.inspectorName = is_user
-                my_form.Passed_Partial = False
-                if not my_form.headCavID:
-                    my_form.headCavID = '-'
+                if inspection_type != 'NumericVF':
+                    my_form = form.save(commit=False)
+                    my_form.jobID_id = job_number_id
+                    my_form.inspectorName = is_user
+                    my_form.Passed_Partial = False
+                    if not my_form.headCavID:
+                        my_form.headCavID = '-'
+                else:
+                    my_form = form
+
 
                 if inspection_type == 'Pass-Fail':
                     my_form.passFailTestName_id = inspection_name_id
@@ -188,25 +194,27 @@ def view_inspection(request):
 
                 elif inspection_type == 'NumericVF':
                     my_form.numericTestName_id = range_info.id
-                    if ((my_form.numVal_1 >= range_info.rangeMin) and (my_form.numVal_1 <= range_info.rangeMax)):
-                        inspectionResult = True
-                    else:
-                        inspectionResult = False
-                    my_form.inspectionResult = inspectionResult
                     timestamp_form_recieved = datetime.datetime.now()
                     for each_cav, measurement in my_form.extra_answers():
+
+                        if ((measurement >= range_info.rangeMin) and (measurement <= range_info.rangeMax)):
+                            inspectionResult = True
+                        else:
+                            inspectionResult = False
+
+                        print my_form
+
                         inspection_entry = numericInspection(
                             numericTestName_id = range_info.id,
                             jobID_id = job_number_id,
-                            machine_operator_id = my_form.machineOperator,
-                            inspectorName_id = my_form.inspectorName,
+                            machineOperator_id = my_form.cleaned_data['machine_operator'],
+                            inspectorName_id = is_user,
                             dateCreated = timestamp_form_recieved,
-                            isFullShot = my_form.is_full_shot,
+                            isFullShot = my_form.cleaned_data['is_full_shot'],
                             numVal_1 = measurement,
                             inspectionResult = inspectionResult,
                             headCavID = each_cav,
                         )
-                        print inspection_entry
 
                 elif inspection_type == 'Text':
                     my_form.textTestName_id = inspection_name_id
@@ -233,6 +241,9 @@ def view_inspection(request):
                 template = loader.get_template('inspection/bad_user.html')
                 context = RequestContext(request)
                 return HttpResponse(template.render(context))
+        else:
+            print form.errors
+            return Http404()
 
                 # except Exception as e:
                 #     raise Http404(str(e))
@@ -277,6 +288,8 @@ def view_inspection(request):
 
                 form = NumericInspectionFormVF(extra=[cav_name for cav_name, cav_id
                                                       in head_cav_id_choices])
+
+
 
                 context_dict_add = {
                     'use_checkbox': True,
@@ -334,17 +347,19 @@ def view_inspection(request):
                 form.fields["machineOperator"].queryset = \
                     Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
             else:
+
+
                 machine_operator_choices = []
                 for each_employee in Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by(
                         'EmpLName'):
                     machine_operator_choices.append((each_employee.id,
                                                      each_employee.__unicode__()))
-
                 if not machine_operator_choices:
                     machine_operator_choices = [(-1,'Error')]
 
+                form.fields['machine_operator'] = forms.ChoiceField(widget=forms.Select(), choices=[])
                 form.fields["machine_operator"].choices = machine_operator_choices
-
+                #form.fields["machine_operator"].widgets.choices = machine_operator_choices
 
 
             if defect_type_choices:

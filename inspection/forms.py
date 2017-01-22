@@ -163,8 +163,8 @@ Reference: https://jacobian.org/writing/dynamic-form-generation/
 
 
 class NumericInspectionFormVF(forms.Form):
-    is_full_shot = forms.BooleanField(label='Is Full Shot?')
-    machine_operator = forms.ChoiceField(label='Machine Operator')
+    is_full_shot = forms.BooleanField(label='Is Full Shot?', required=False)
+    machine_operator = forms.CharField(label='Machine Operator')
 
     def __init__(self, *args, **kwargs):
         extra = kwargs.pop('extra')
