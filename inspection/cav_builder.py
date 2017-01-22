@@ -7,7 +7,7 @@ def get_inspection_type(inspection_type_str):
         return 2
     elif inspection_type_str == 'Integer':
         return 3
-    elif inspection_type_str == ['Numeric', 'NumericVF']:
+    elif inspection_type_str in ['Numeric', 'NumericVF']:
         return 4
     elif inspection_type_str == 'Text':
         return 5
