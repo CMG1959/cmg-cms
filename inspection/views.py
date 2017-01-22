@@ -20,6 +20,8 @@ from production_and_mold_history.models import ProductionHistory
 from forms import jobReportSearch, itemReportSearch, \
     build_inspection_fields, PassFailIns, NumericInspectionForm, TextIns, RangeInspectionForm#, IntIns
 
+from forms import NumericInspectionFormVF
+
 from reports import JobReport
 import collections
 import json
@@ -204,6 +206,13 @@ def view_inspection(request):
             context_dict = {'active_job': active_job,
                             'head_cav_id': '#id_headCavID'}
 
+
+            head_cav_id_choices, defect_type_choices = build_inspection_fields(job_id=job_number_id,
+                                                                            inspection_type=inspection_type,
+                                                                            inspection_id=inspection_name_id,
+                                                                            man_num=request.user.webappemployee.EmpNum)
+
+
             if inspection_type == 'Pass-Fail':
                 test_info = passFailTest.objects.get(id=inspection_name_id)
                 form = PassFailIns()
@@ -231,6 +240,23 @@ def view_inspection(request):
                     'id_result': '#id_inspectionResult',
                 }
 
+            elif inspection_type == 'NumericVF':
+                test_info = numericTest.objects.get(id=inspection_name_id)
+                range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
+                                                           item_Number_id=active_job.item_id)
+
+                form = NumericInspectionFormVF(extra=head_cav_id_choices)
+
+                context_dict_add = {
+                    'use_checkbox': True,
+                    'id_check': '#id_isFullShot',
+                    'idSelect': '#id_headCavID',
+                    'use_minmax': True,
+                    'num_id': '#id_numVal_1',
+                    'min_val': range_info.rangeMin,
+                    'max_val': range_info.rangeMax,
+                    'id_result': '#id_inspectionResult',
+                }
 
             elif inspection_type == 'Text':
                 test_info = textRecord.objects.get(id=inspection_name_id)
@@ -261,7 +287,6 @@ def view_inspection(request):
                     'idSelect': '#id_headCavID',
                 }
 
-
             else:
                 raise Http404("Inspection Type Does Not Exist")
 
@@ -269,14 +294,14 @@ def view_inspection(request):
             if machine_operator:
                 context_dict.update({'machine_operator': machine_operator.id})
 
-            headCavID_choices, defectType_choices = build_inspection_fields(job_id=job_number_id,
+            head_cav_id_choices, defect_type_choices = build_inspection_fields(job_id=job_number_id,
                                                                             inspection_type=inspection_type,
                                                                             inspection_id=inspection_name_id,
                                                                             man_num=request.user.webappemployee.EmpNum)
-            form.fields["headCavID"].widget.choices = headCavID_choices
+            form.fields["headCavID"].widget.choices = head_cav_id_choices
 
-            if defectType_choices:
-                form.fields["defectType"].choices = defectType_choices
+            if defect_type_choices:
+                form.fields["defectType"].choices = defect_type_choices
 
             form.fields["machineOperator"].queryset = \
                 Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')

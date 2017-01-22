@@ -154,3 +154,30 @@ class itemReportSearch(forms.Form):
     date_from = forms.DateField(label="Date From:", required=False)
     date_to = forms.DateField(label="Date To:", required=False)
 
+
+
+'''
+FORMS WITH VARYING NUMBER OF FIELDS
+Reference: https://jacobian.org/writing/dynamic-form-generation/
+'''
+
+
+class NumericInspectionFormVF(forms.Form):
+    is_full_shot = forms.BooleanField(required=True, label='Is Full Shot?')
+    machine_operator = forms.ChoiceField(label='Machine Operator')
+
+    def __init__(self, *args, **kwargs):
+        extra = kwargs.pop('extra')
+        super(NumericInspectionFormVF, self).__init__(*args, **kwargs)
+
+        for i, cavity_id in enumerate(extra):
+            self.fields['cav_%s' % i] = forms.DecimalField(label=cavity_id)
+        # widgets = {
+        #     'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
+        # }
+
+
+    def extra_answers(self):
+        for name, value in self.cleaned_data.items():
+            if name.startswith('cav_'):
+                yield (self.fields[name].label, value)
