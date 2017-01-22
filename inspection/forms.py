@@ -25,7 +25,7 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
         defectType_fields = build_defects(built_inspection['Critera_Array'])
         return headCavID_fields, defectType_fields
 
-    if inspection_type in ['Range', 'Text', 'Float', 'Integer', 'Numeric']:
+    if inspection_type in ['Range', 'Text', 'Float', 'Integer', 'Numeric', 'NumericVF']:
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
         return headCavID_fields, False
 
@@ -163,7 +163,7 @@ Reference: https://jacobian.org/writing/dynamic-form-generation/
 
 
 class NumericInspectionFormVF(forms.Form):
-    is_full_shot = forms.BooleanField(required=True, label='Is Full Shot?')
+    is_full_shot = forms.BooleanField(label='Is Full Shot?')
     machine_operator = forms.ChoiceField(label='Machine Operator')
 
     def __init__(self, *args, **kwargs):
@@ -171,7 +171,7 @@ class NumericInspectionFormVF(forms.Form):
         super(NumericInspectionFormVF, self).__init__(*args, **kwargs)
 
         for i, cavity_id in enumerate(extra):
-            self.fields['cav_%s' % i] = forms.DecimalField(label=cavity_id)
+            self.fields['cav_%s' % i] = forms.DecimalField(label=cavity_id, required=False)
         # widgets = {
         #     'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
         # }
