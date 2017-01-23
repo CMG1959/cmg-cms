@@ -171,7 +171,7 @@ class NumericInspectionFormVF(forms.Form):
         super(NumericInspectionFormVF, self).__init__(*args, **kwargs)
 
         for i, cavity_id in enumerate(extra):
-            self.fields['cav_%s' % i] = forms.DecimalField(label='Measurement: Cavity %s '% cavity_id, required=False)
+            self.fields['cav_%s' % i] = forms.DecimalField(label='Cav %s'% cavity_id, required=False)
         # widgets = {
         #     'headCavID': forms.Select(attrs={'class':'select'}, choices=[(-1,-1)])
         # }
