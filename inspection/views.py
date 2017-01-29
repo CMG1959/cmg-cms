@@ -202,7 +202,8 @@ def view_inspection(request):
                         else:
                             inspectionResult = False
 
-                        print my_form
+                        if each_cav == 'Full Shot':
+                            each_cav = '-'
 
                         inspection_entry = numericInspection(
                             numericTestName_id = range_info.id,
@@ -215,6 +216,8 @@ def view_inspection(request):
                             inspectionResult = inspectionResult,
                             headCavID = each_cav,
                         )
+
+                        inspection_entry.save()
 
                 elif inspection_type == 'Text':
                     my_form.textTestName_id = inspection_name_id
