@@ -20,7 +20,8 @@ from employee.models import Employees, EmployeeAtWorkstation
 from molds.models import Mold, PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import jobReportSearch, itemReportSearch, \
-    build_inspection_fields, PassFailIns, NumericInspectionForm, TextIns, RangeInspectionForm#, IntIns
+    build_inspection_fields, PassFailIns, NumericInspectionForm, TextIns,\
+    RangeInspectionForm, RangeInspectionFormVF #, IntIns
 
 from forms import NumericInspectionFormVF
 
@@ -118,6 +119,8 @@ def view_inspection(request):
                                                                        inspection_id=inspection_name_id,
                                                                        man_num=request.user.webappemployee.EmpNum)
 
+    head_cav_ids = [id for id, label in head_cav_id_choices]
+
     if request.method == 'POST':
 
         # try:
@@ -140,7 +143,8 @@ def view_inspection(request):
             test_info = numericTest.objects.get(id=inspection_name_id)
             range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                        item_Number_id=active_job.item_id)
-            form = NumericInspectionFormVF(request.POST or None, extra=head_cav_id_choices)
+
+            form = NumericInspectionFormVF(request.POST or None, extra=head_cav_ids)
 
 
 
@@ -156,14 +160,23 @@ def view_inspection(request):
             test_info = RangeRecord.objects.get(id=inspection_name_id)
             form = RangeInspectionForm(request.POST)
 
+        elif inspection_type == 'RangeVF':
+            test_info = RangeRecord.objects.get(id=inspection_name_id)
+            range_info = RangeRecordByPart.objects.get(testName_id=inspection_name_id,
+                                                       item_Number_id=active_job.item_id)
+
+            form = RangeInspectionFormVF(request.POST or None, extra=head_cav_ids)
+
         else:
             raise Http404("Inspection Type Does Not Exist")
 
-        print 'Validating form'
+
         if form.is_valid():
+            bulk_save_list = []
+
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
-                if inspection_type != 'NumericVF':
+                if inspection_type[-2:] != 'VF':
                     my_form = form.save(commit=False)
                     my_form.jobID_id = job_number_id
                     my_form.inspectorName = is_user
@@ -193,31 +206,40 @@ def view_inspection(request):
                     my_form.inspectionResult = inspectionResult
 
                 elif inspection_type == 'NumericVF':
-                    my_form.numericTestName_id = range_info.id
+                    #my_form.numericTestName_id = range_info.id
                     timestamp_form_recieved = datetime.datetime.now()
+                    bulk_save_list = []
+
                     for each_cav, measurement in my_form.extra_answers():
+                        print measurement
+                        if measurement:
+                            print 'Any?'
+                            if ((measurement >= range_info.rangeMin) and (measurement <= range_info.rangeMax)):
+                                inspectionResult = True
+                            else:
+                                inspectionResult = False
 
-                        if ((measurement >= range_info.rangeMin) and (measurement <= range_info.rangeMax)):
-                            inspectionResult = True
-                        else:
-                            inspectionResult = False
+                            if each_cav == 'Full Shot':
+                                each_cav = '-'
 
-                        if each_cav == 'Full Shot':
-                            each_cav = '-'
+                            print each_cav
 
-                        inspection_entry = numericInspection(
-                            numericTestName_id = range_info.id,
-                            jobID_id = job_number_id,
-                            machineOperator_id = my_form.cleaned_data['machine_operator'],
-                            inspectorName_id = is_user,
-                            dateCreated = timestamp_form_recieved,
-                            isFullShot = my_form.cleaned_data['is_full_shot'],
-                            numVal_1 = measurement,
-                            inspectionResult = inspectionResult,
-                            headCavID = each_cav,
-                        )
+                            bulk_save_list.append(numericInspection(
+                                numericTestName_id = range_info.id,
+                                jobID_id = job_number_id,
+                                machineOperator_id = my_form.cleaned_data['machine_operator'],
+                                inspectorName_id = is_user.id,
+                                dateCreated = timestamp_form_recieved,
+                                isFullShot = my_form.cleaned_data['is_full_shot'],
+                                numVal_1 = measurement,
+                                inspectionResult = inspectionResult,
+                                headCavID = each_cav,
+                            ))
 
-                        inspection_entry.save()
+                    if bulk_save_list:
+                        print bulk_save_list
+                        numericInspection.objects.bulk_create(bulk_save_list)
+
 
                 elif inspection_type == 'Text':
                     my_form.textTestName_id = inspection_name_id
@@ -227,10 +249,92 @@ def view_inspection(request):
 
                 elif inspection_type == 'Range':
                     my_form.rangeTestName_id = inspection_name_id
+
+                elif inspection_type == 'RangeVF':
+                    '''
+                    Need:
+                        1. Range record id
+                        2. job_id
+                        3. Machine operator (from form)
+                        4. Inspector name (from is_user.id)
+                        5. dateCreated = timestamp_form_recieved
+                        6. is_full_shot (from my_form.cleaned_data['is_full_shot']
+                        7. numVal_1
+                        8. numVal_2
+                        9. headCavID (each_cav)
+                    '''
+
+
+                    timestamp_form_recieved = datetime.datetime.now()
+                    bulk_save_list = []
+
+
+                    entry_dict = {}
+                    for each_cav, measurement in my_form.extra_answers():
+                        '''
+                        Need to sort form answer and retrieve pairs
+                        Dictionary:
+                            key: cav_id
+                            value: dictionary
+                                {
+                                low_measurement: measurement
+                                high_measurement: measurement
+                                }
+                        '''
+                        cav_id = each_cav.rstrip(' Low').rstrip(' High')
+
+                        if cav_id not in entry_dict:
+                            entry_dict[cav_id] = {
+                                'low_measurement': None,
+                                'high_measurement': None
+                            }
+
+                        if ' Low' in each_cav:
+                            key = 'low_measurement'
+                        elif ' High' in each_cav:
+                            key = 'high_measurement'
+                        else:
+                            continue
+
+                        entry_dict[cav_id].update({
+                            key: measurement
+                        })
+
+                    for each_cav, measurement_dict in entry_dict.iteritems():
+
+                        if ((measurement_dict['low_measurement'] >= range_info.rangeMin) and (
+                                    measurement_dict['high_measurement'] <= range_info.rangeMax)):
+                            inspectionResult = True
+                        else:
+                            inspectionResult = False
+
+                        if each_cav == 'Full Shot':
+                            each_cav = '-'
+
+                        if measurement:
+                            bulk_save_list.append(RangeInspection(
+                                rangeTestName_id=range_info.testName_id,
+                                jobID_id=job_number_id,
+                                machineOperator_id=my_form.cleaned_data[
+                                    'machine_operator'],
+                                inspectorName_id=is_user.id,
+                                dateCreated=timestamp_form_recieved,
+                                isFullShot=my_form.cleaned_data['is_full_shot'],
+                                numVal_1=measurement_dict['low_measurement'],
+                                numVal_2=measurement_dict['high_measurement'],
+                                inspectionResult=inspectionResult,
+                                headCavID=each_cav,
+                            ))
+
+                    if bulk_save_list:
+                        RangeInspection.objects.bulk_create(bulk_save_list)
+
+
+
                 else:
                     pass
 
-                if inspection_type != 'NumericVF':
+                if inspection_type[-2:] != 'VF':
                     my_form.save()
                     set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
                     checkFormForLog(my_form, inspectionType=inspection_type,
@@ -289,8 +393,7 @@ def view_inspection(request):
                 range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                            item_Number_id=active_job.item_id)
 
-                form = NumericInspectionFormVF(extra=[cav_name for cav_name, cav_id
-                                                      in head_cav_id_choices])
+                form = NumericInspectionFormVF(extra=head_cav_ids)
 
 
 
@@ -334,6 +437,16 @@ def view_inspection(request):
                     'idSelect': '#id_headCavID',
                 }
 
+            elif inspection_type == 'RangeVF':
+                test_info = RangeRecord.objects.get(id=inspection_name_id)
+                form = RangeInspectionFormVF(extra=head_cav_ids)
+
+                context_dict_add = {
+                    'use_checkbox': True,
+                    'id_check': '#id_isFullShot',
+                    'idSelect': '#id_headCavID'
+                }
+
             else:
                 raise Http404("Inspection Type Does Not Exist")
 
@@ -345,13 +458,11 @@ def view_inspection(request):
             #                                                                 inspection_type=inspection_type,
             #                                                                 inspection_id=inspection_name_id,
             #                                                                 man_num=request.user.webappemployee.EmpNum)
-            if inspection_type != 'NumericVF':
+            if inspection_type not in ['NumericVF', 'RangeVF']:
                 form.fields["headCavID"].widget.choices = head_cav_id_choices
                 form.fields["machineOperator"].queryset = \
                     Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
             else:
-
-
                 machine_operator_choices = []
                 for each_employee in Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by(
                         'EmpLName'):
