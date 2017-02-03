@@ -126,7 +126,7 @@ def createNewStartUpShot(request, jobNo):
                     min_val=0
                     max_val=999999.999
 
-            return render(request, 'startupshot/createStartupShot.html',
+            return render(request, 'startupshot/create_startup_shot.html',
                           {'form': form, 'MattecDict': MattecInfo,
                             'PartInfo': PartInfo,
                             'num_id':'#id_shotWeight',

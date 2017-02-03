@@ -3,7 +3,7 @@
         <div class="panel panel-default">
             <div class="list-group">
                 {% for eachActive in activeInMattec %}
-                    <a class="list-group-item" href="/startupshot/create/{{ eachActive.jobNumber.strip }}/">
+                    <a class="list-group-item" href="{% url 'start_up_shot_create_new' eachActive.jobNumber.strip %}">
                         <h4 class="list-group-item-heading">{{ eachActive.machNo }}</h4>
 
                         <p class="list-group-item-text">{{ eachActive.itemDesc }} </p>
