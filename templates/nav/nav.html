@@ -31,12 +31,12 @@
               <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#" >Inspection<span class="caret"></span></a>
               <ul class="dropdown-menu">
-                  <li><a href="/startupshot/">Startup Shot</a></li>
+                  <li><a href="{% url 'start_up_shot_view_active' %}">Startup Shot</a></li>
                 <li><a href="/inspection/">Inspection Home</a></li>
 {#                  <li><a href="/inspection_v2/">Inspection 2.0 Home</a></li>#}
                 <li role="separator" class="divider"></li>
                 <li class="dropdown-header">Reports</li>
-                  <li><a href="/startupshot/view">Startup Shot Report</a></li>
+                  <li><a href="{% url 'start_up_shot_view' %}">Startup Shot Report</a></li>
                 <li><a href="/inspection/itemReport/">Item Report</a></li>
                 <li><a href="/inspection/jobReport/">Job Report</a></li>
               </ul>

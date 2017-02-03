@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from part.models import Part
 from molds.models import Mold
 from equipment.models import EquipmentInfo
@@ -24,23 +25,21 @@ def index(request):
         form = startupShotLookup(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            part_number = form.cleaned_data['part_Number']
-            redirect_url = '/startupshot/%s/viewCreated' % (part_number)
-            # redirect to a new URL:
-            return HttpResponseRedirect(redirect_url)
+            return HttpResponseRedirect(reverse('start_up_shot_part_entries',
+                                                args=[form.
+                                                cleaned_data['part_Number']]))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = startupShotLookup()
 
-    return render(request, 'startupshot/startUpShotSearch.html', {'form': form})
+    return render(request, 'startupshot/start_up_shot_search.html', {'form': form})
 
 
 @login_required
 def viewActive(request):
     activeInMattec = MattecProd.objects.all().order_by('machNo')
-    template = loader.get_template('startupshot/viewActive.html')
+    template = loader.get_template('startupshot/view_active.html')
     context = RequestContext(request, {
         'activeInMattec': activeInMattec,
     })
@@ -72,9 +71,13 @@ def viewCreatedStartUpShot(request, part_number):
 
 
 @login_required
-def createNewStartUpShot(request, jobNo):
-    MattecInfo = MattecProd.objects.get(jobNumber=jobNo)
-    PartInfo = Part.objects.get(item_Number=MattecInfo.itemNo)
+def create_new_start_up_shot(request):
+    job_number = request.GET.get('job_number', -1)
+    machine_number = request.GET.get('machine_number',-1)
+
+    part_in_mattec = MattecProd.objects.get(jobNumber=job_number,
+                                        machNo=machine_number)
+    part = Part.objects.get(item_Number=part_in_mattec.itemNo)
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -86,22 +89,19 @@ def createNewStartUpShot(request, jobNo):
 
             if is_user:
 
-                newForm = startUpShot(item=Part.objects.get(item_Number=MattecInfo.itemNo), \
-                                      jobNumber=jobNo, \
-                                      moldNumber=Mold.objects.get(mold_number=MattecInfo.moldNumber), \
+                newForm = startUpShot(item=part_info, \
+                                      jobNumber=job_number, \
+                                      moldNumber=Mold.objects.get(mold_number=part_in_mattec.moldNumber), \
                                       inspectorName=is_user,\
                                       machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk), \
                                       shotWeight=form.cleaned_data['shotWeight'], \
-                                      activeCavities=MattecInfo.activeCavities, \
-                                      cycleTime=MattecInfo.cycleTime, \
-                                      machNo=EquipmentInfo.objects.filter(part_identifier=MattecInfo.machNo)[0])
-
-    # add status active
+                                      activeCavities=part_in_mattec.activeCavities, \
+                                      cycleTime=part_in_mattec.cycleTime, \
+                                      machNo=EquipmentInfo.objects.get(part_identifier=part_in_mattec.machNo))
                 newForm.save()
-                # process the data in form.cleaned_data as required
-                redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
                 # redirect to a new URL:
-                return HttpResponseRedirect(redirect_url)
+                return HttpResponseRedirect(reverse('start_up_shot_part_entries',
+                                                args=[part_in_mattec.itemNo.strip()]))
         # if a GET (or any other method) we'll create a blank form
             else:
                 template = loader.get_template('inspection/bad_user.html')
@@ -109,15 +109,15 @@ def createNewStartUpShot(request, jobNo):
                 return HttpResponse(template.render(context))
     else:
         if startUpShot.objects.filter(jobNumber=jobNo).exists():
-            redirect_url = '/startupshot/%s/viewCreated' % (MattecInfo.itemNo.strip())
-            return HttpResponseRedirect(redirect_url)
+            HttpResponseRedirect(reverse('start_up_shot_part_entries',
+                                         args=[part_in_mattec.itemNo.strip()]))
         else:
             form = startupShotForm()
             form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
 
             shotWeightName = startUpShotWeightLinkage.objects.all()[0] #
 
-            rangeInfo = numericTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName, item_Number__item_Number=MattecInfo.itemNo)
+            rangeInfo = numericTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName, item_Number__item_Number=part_in_mattec.itemNo)
 
             if rangeInfo.exists():
                     min_val=rangeInfo[0].rangeMin
@@ -127,8 +127,8 @@ def createNewStartUpShot(request, jobNo):
                     max_val=999999.999
 
             return render(request, 'startupshot/create_startup_shot.html',
-                          {'form': form, 'MattecDict': MattecInfo,
-                            'PartInfo': PartInfo,
+                          {'form': form, 'MattecDict': part_in_mattec,
+                            'part_info': part_info,
                             'num_id':'#id_shotWeight',
                             'min_val':min_val,
                             'max_val':max_val

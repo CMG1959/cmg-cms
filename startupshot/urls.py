@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^(?P<part_number>[0-9]+(-[0-9]+)+)/viewCreated/$',
         views.viewCreatedStartUpShot, name='start_up_shot_part_entries'),
     # ex: /startupshot/123-456789/vote/
-    # url(r'^(?P<part_number>[0-9]+(-[0-9]+)+)/create/$', views.createNewStartUpShot, name='create'),
-    url(r'^create/(?P<jobNo>[0-9]+(.[0-9]+)+)/$',
-        views.createNewStartUpShot, name='start_up_shot_create_new'),
+    # url(r'^(?P<part_number>[0-9]+(-[0-9]+)+)/create/$', views.create_new_start_up_shot, name='create'),
+    url(r'^create$',
+        views.create_new_start_up_shot, name='start_up_shot_create_new'),
 ]
