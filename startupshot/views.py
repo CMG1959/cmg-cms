@@ -128,7 +128,7 @@ def create_new_start_up_shot(request):
 
             return render(request, 'startupshot/create_startup_shot.html',
                           {'form': form, 'MattecDict': part_in_mattec,
-                            'part_info': part_info,
+                            'part_info': part,
                             'num_id':'#id_shotWeight',
                             'min_val':min_val,
                             'max_val':max_val
