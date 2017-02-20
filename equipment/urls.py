@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     ### classes
-    url(r'^?$', views.view_index, name='view_equipmentIndex'),
+    url(r'^$', views.view_index, name='view_equipmentIndex'),
 
     ### types
     url(r'^(?P<equipment_class_id>[^/]+)/?$', views.view_equipment_types, name='view_equipment_types'),

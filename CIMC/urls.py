@@ -19,19 +19,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from shared_router import SharedAPIRootRouter
-from home.views import index
+from django.views.generic import TemplateView
+from home.views import Index
 
-def api_urls():
-    from importlib import import_module
-    for app in settings.INSTALLED_APPS:
-        try:
-            import_module(app + '.urls')
-        except (ImportError, AttributeError):
-            pass
-    return SharedAPIRootRouter.shared_router.urls
 
 urlpatterns = [
-                  url(r'^$', index),
+
                   url(r'^StartupShot/', include('startupshot.urls')),
                   url(r'^admin/', include(admin.site.urls)),
                   url(r'^inspection/', include('inspection.urls')),
@@ -42,6 +35,6 @@ urlpatterns = [
                   url(r'^accounts/login/$', auth_views.login),
                   url(r'^mobile/', include('mobile_views.urls')),
                   url(r'^logout$', auth_views.logout, {'next_page': '/'}),
-                  url(r'^API/', include(api_urls())),
-                  url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+                  url(r'^',  TemplateView.as_view(template_name=
+                                                  "home/index.html")),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
