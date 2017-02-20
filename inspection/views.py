@@ -220,9 +220,7 @@ def view_inspection(request):
                     bulk_save_list = []
 
                     for each_cav, measurement in my_form.extra_answers():
-                        print measurement
                         if measurement:
-                            print 'Any?'
                             if ((measurement >= range_info.rangeMin) and (measurement <= range_info.rangeMax)):
                                 inspectionResult = True
                             else:
@@ -279,6 +277,7 @@ def view_inspection(request):
 
 
                     entry_dict = {}
+                    cav_ids = []
                     for each_cav, measurement in my_form.extra_answers():
                         '''
                         Need to sort form answer and retrieve pairs
@@ -309,7 +308,15 @@ def view_inspection(request):
                             key: measurement
                         })
 
-                    for each_cav, measurement_dict in entry_dict.iteritems():
+                        cav_ids.append(cav_id)
+
+                    cav_ids.sort()
+                    entry_dict_sort = OrderedDict()
+
+                    for each_cav_id in cav_ids:
+                        entry_dict_sort.update({each_cav_id, entry_dict[each_cav_id]})
+
+                    for each_cav, measurement_dict in entry_dict_sort.iteritems():
 
                         if ((measurement_dict['low_measurement'] >= range_info.rangeMin) and (
                                     measurement_dict['high_measurement'] <= range_info.rangeMax)):
@@ -679,7 +686,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         for job_id, job_num in job_id_num:
             partDict['pf'][eachInspection]['inspectionName'] = eachInspection
             partDict['pf'][eachInspection][n] = {}
-            thisInspectionbyJob = thisInspection.filter(jobID_id=job_id).order_by('-dateCreated')
+            thisInspectionbyJob = thisInspection.filter(jobID_id=job_id).order_by('-dateCreated','headCavID')
             partDict['pf'][eachInspection][n]['jobID'] = job_num
             partDict['pf'][eachInspection][n].update(createPFStats(thisInspectionbyJob))
             n += 1
@@ -711,7 +718,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             partDict['numericTest'][eachInspection][n] = {}
             partDict['numericTest'][eachInspection][n]['jobID'] = job_num
 
-            thisInspectionbyJob = thisInspection.filter(jobID_id=job_id).order_by('-dateCreated')
+            thisInspectionbyJob = thisInspection.filter(jobID_id=job_id).order_by('-dateCreated','headCavID')
             active_job = startUpShot.objects.filter(id=job_id).select_related('item')
 
             numericList = []
@@ -738,7 +745,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['range_test'][test_name]['inspectionName']=test_name
 
         this_inspection = RangeInspection.objects.filter(rangeTestName_id=each_range_test.id,
-                                                         dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated')
+                                                         dateCreated__range=(date_from1, date_to1)).order_by('-dateCreated','headCavID')
 
         key = 'rt' + str(k)
         collapse_list.append('#' + key)
@@ -749,7 +756,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
             partDict['range_test'][test_name][n] = {
                 'jobID' : job_num
             }
-            partDict['range_test'][test_name][n].update(createPFStats(this_inspection.filter(jobID_id=job_id).order_by('-dateCreated')))
+            partDict['range_test'][test_name][n].update(createPFStats(this_inspection.filter(jobID_id=job_id).order_by('-dateCreated','headCavID')))
 
         partDict['range_test'][test_name][n] = {}
         partDict['range_test'][test_name][n]['jobID'] = 'Total'

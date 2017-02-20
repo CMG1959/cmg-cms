@@ -194,10 +194,10 @@ class NumericInspectionFormVF(forms.Form):
                     label='Cav %s' % cavity_id, required=False)
 
     def extra_answers(self):
-        for name, value in self.cleaned_data.items():
-            print name
-            if name.startswith('cav_'):
-                yield (self.fields[name].label.lstrip('Cav '), value)
+        pre_sort = [(name,value) for name, value in self.cleaned_data.items()
+                    if name.startswith('cav_')]
+        for name, value in sorted(pre_sort, lambda l:l[0]):
+            yield (self.fields[name].label.lstrip('Cav '), value)
 
 
 class RangeInspectionFormVF(forms.Form):
@@ -221,6 +221,7 @@ class RangeInspectionFormVF(forms.Form):
                     label='Cav %s High' % cavity_id[0], required=False)
 
     def extra_answers(self):
-        for name, value in self.cleaned_data.items():
-            if name.startswith('cav_'):
-                yield (self.fields[name].label.lstrip('Cav '), value)
+        pre_sort = [(name,value) for name, value in self.cleaned_data.items()
+                    if name.startswith('cav_')]
+        for name, value in sorted(pre_sort, lambda l:l[0]):
+            yield (self.fields[name].label.lstrip('Cav '), value)

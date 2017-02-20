@@ -72,6 +72,7 @@ def viewCreatedStartUpShot(request, part_number):
 
 @login_required
 def create_new_start_up_shot(request):
+
     job_number = request.GET.get('job_number')
     machine_number = request.GET.get('machine_number')
 
@@ -83,6 +84,12 @@ def create_new_start_up_shot(request):
     part_in_mattec = MattecProd.objects.get(jobNumber=job_number,
                                         machNo=machine_number)
     part = Part.objects.get(item_Number=part_in_mattec.itemNo)
+    machine_info = EquipmentInfo.objects.get(
+        part_identifier=part_in_mattec.machNo)
+
+    if startUpShot.objects.filter(jobNumber=job_number, machNo=machine_info).exists():
+        return HttpResponseRedirect(reverse('start_up_shot_part_entries',
+                                     args=[part_in_mattec.itemNo.strip()]))
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -102,7 +109,7 @@ def create_new_start_up_shot(request):
                                       shotWeight=form.cleaned_data['shotWeight'], \
                                       activeCavities=part_in_mattec.activeCavities, \
                                       cycleTime=part_in_mattec.cycleTime, \
-                                      machNo=EquipmentInfo.objects.get(part_identifier=part_in_mattec.machNo))
+                                      machNo=machine_info)
                 newForm.save()
                 # redirect to a new URL:
                 return HttpResponseRedirect(reverse('start_up_shot_part_entries',
@@ -114,10 +121,6 @@ def create_new_start_up_shot(request):
         return HttpResponse(template.render(context))
 
     else:
-        if startUpShot.objects.filter(jobNumber=job_number).exists():
-            HttpResponseRedirect(reverse('start_up_shot_part_entries',
-                                         args=[part_in_mattec.itemNo.strip()]))
-
         form = startupShotForm()
         form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
 
