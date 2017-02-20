@@ -20,6 +20,6 @@ urlpatterns = [
     # ### link to view for item report
     # url(r'^itemReport/(?P<itemNumber>[0-9]+(.[0-9]+)+)/$', views.view_itemReport, name='view_itemReport'),
     # ### link to show which inspections can be performed on a given jo
-    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/$', views.view_detailJob, name='view_detailJob'),
+    # url(r'^(?P<jobNumber>[0-9]+(.[0-9]+)+)/$', views.view_job_detail, name='view_job_detail'),
     # url(r'^job_errors/$', views.view_jsonError, name='view_jsonError'),
 ]

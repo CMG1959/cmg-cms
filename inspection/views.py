@@ -9,7 +9,7 @@ from django.db.models import Avg, Max, Min, StdDev
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from django.core.urlresolvers import reverse
 
 from models import *
 from dashboard.models import errorLog
@@ -51,53 +51,62 @@ def view_index(request):
 
 
 @login_required
-def view_detailJob(request, jobNumber):
-    jobNumber = str(jobNumber).strip()
+def view_job_detail(request):
+    job_number = str(request.GET.get('job_number', -1)).strip()
+    machine_number = str(request.GET.get('machine_number',-1)).strip()
+
+    machine = EquipmentInfo.objects.get(part_identifier=machine_number)
 
     try:
-        MattecInfo = MattecProd.objects.get(jobNumber=jobNumber)
-        active_job = startUpShot.objects.filter(jobNumber=jobNumber).last()
-        item_number_id = Part.objects.get(item_Number=MattecInfo.itemNo).id
+        part_in_mattec = MattecProd.objects.get(jobNumber=job_number,
+                                        machNo=machine_number)
 
-        if (str(MattecInfo.machNo)).strip() in ['FAS01', 'OFP01'] or active_job:
-            if (str(MattecInfo.machNo)).strip() not in ['FAS01', 'OFP01']:
+        active_job = startUpShot.objects.filter(jobNumber=job_number,
+                                                machNo=machine).last()
+        item_number_id = active_job.item_id
+
+
+        if machine_number in ['FAS01', 'OFP01'] or active_job:
+            print 'checking'
+            if machine_number not in ['FAS01', 'OFP01']:
                 checkPartInspection(active_job.item)
-            if not active_job and (str(MattecInfo.machNo)).strip() in ['FAS01', 'OFP01']:
+            if not active_job and machine_number in ['FAS01', 'OFP01']:
+
                 active_job = startUpShot(item_id=item_number_id,
-                                         jobNumber=jobNumber,
-                                         moldNumber_id=Mold.objects.get(mold_number=MattecInfo.moldNumber).id,
-                                         activeCavities=MattecInfo.activeCavities,
-                                         machNo_id=EquipmentInfo.objects.get(part_identifier=MattecInfo.machNo).id,
+                                         jobNumber=job_number,
+                                         moldNumber_id=Mold.objects.get(mold_number=part_in_mattec.moldNumber).id,
+                                         activeCavities=part_in_mattec.activeCavities,
+                                         machNo_id=machine.id,
                                          machineOperator_id=0,
                                          inspectorName_id=0,
                                          shotWeight=-1,
                                          cycleTime=-1).save()
 
 
-
-            pf_inspectionType = passFailByPart.objects.filter(item_Number_id=item_number_id,
+            pass_fail_inspection = passFailByPart.objects.filter(item_Number_id=item_number_id,
                                                               testName__isSystemInspection=False)
-            numeric_inspectionType = numericTestByPart.objects.filter(item_Number_id=item_number_id,
+            numeric_inspection = numericTestByPart.objects.filter(item_Number_id=item_number_id,
                                                                     testName__isSystemInspection=False)
-            text_inspectionType = textRecordByPart.objects.filter(item_Number_id=item_number_id,
+            text_inspection = textRecordByPart.objects.filter(item_Number_id=item_number_id,
                                                                   testName__isSystemInspection=False)
             # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number_id=item_number_id,
             #                                                         testName__isSystemInspection=False)
-            range_inspectionType = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
+            range_inspection = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
                                                                     testName__isSystemInspection=False)
-            template = loader.get_template('inspection/detailJob.html')
+            template = loader.get_template('inspection/detail_job.html')
             context = RequestContext(request, {
                 'active_job': active_job,
-                'pf_inspectionType': pf_inspectionType,
-                'numeric_inspectionType': numeric_inspectionType,
-                'text_inspectionType': text_inspectionType,
+                'pf_inspectionType': pass_fail_inspection,
+                'numeric_inspectionType': numeric_inspection,
+                'text_inspectionType': text_inspection,
                 # 'int_inspectionType': int_inspectionType,
-                'range_inspectionType': range_inspectionType
+                'range_inspectionType': range_inspection
             })
             return HttpResponse(template.render(context))
         else:
-            redir_url = '/startupshot/create/%s/' % jobNumber
-            return HttpResponseRedirect(redir_url)
+            redirect_url = '{0}?job_number={1}&machine_number={2}'.format(
+                reverse('start_up_shot_create_new'), job_number, machine_number)
+            return HttpResponseRedirect(redirect_url)
 
     except Exception as e:
         raise Http404(str(e))
@@ -595,11 +604,14 @@ def view_jobReport_pdf(request, jobNumber):
 ####### Section for generating data for plots ###########
 def view_jsonError(job_number, date_from, date_to):
     date_from, date_to = createDateRange(date_from, date_to)
-    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+    pf = passFailInspection.objects.filter(jobID__jobNumber=job_number,
+                                           dateCreated__range=(date_from, date_to),
                                            inspectionResult=0)
-    ni = numericInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+    ni = numericInspection.objects.filter(jobID__jobNumber=job_number,
+                                          dateCreated__range=(date_from, date_to),
                                           inspectionResult=0)
-    ti = textInspection.objects.filter(jobID__jobNumber=job_number, dateCreated__range=(date_from, date_to),
+    ti = textInspection.objects.filter(jobID__jobNumber=job_number,
+                                       dateCreated__range=(date_from, date_to),
                                        inspectionResult=0)
 
     if (not ni.exists()) and (not pf.exists()):

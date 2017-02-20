@@ -31,8 +31,8 @@ def api_urls():
     return SharedAPIRootRouter.shared_router.urls
 
 urlpatterns = [
-                  url(r'^$', 'home.views.index'),
-                  url(r'^startupshot/', include('startupshot.urls')),
+                  url(r'^$', home.views.index),
+                  url(r'^StartupShot/', include('startupshot.urls')),
                   url(r'^admin/', include(admin.site.urls)),
                   url(r'^inspection/', include('inspection.urls')),
                   url(r'^inspection_v2/', include('ins.urls')),

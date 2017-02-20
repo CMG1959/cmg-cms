@@ -2,7 +2,6 @@
 {#{% bootstrap_css %}#}
 {#{% bootstrap_javascript jquery=1 %}#}
 
-<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="utf-8">
@@ -28,7 +27,7 @@
             <div class="panel panel-default">
                 <div class="list-group">
                     {% for each_part in active_parts %}
-                        <a class="list-group-item" href="/inspection/{{ each_part.jobNumber }}">
+                        <a class="list-group-item" href="{% url 'inspection_view_job_machine' %}?job_number={{each_part.jobNumber.strip}}&machine_number={{each_part.machNo.strip}}">
                             <h4 class="list-group-item-heading">{{ each_part.machNo }}</h4>
 
                             <p class="list-group-item-text">{{ each_part.itemDesc }} </p>
