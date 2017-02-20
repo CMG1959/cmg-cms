@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from shared_router import SharedAPIRootRouter
-
+from home.views import index
 
 def api_urls():
     from importlib import import_module
@@ -31,7 +31,7 @@ def api_urls():
     return SharedAPIRootRouter.shared_router.urls
 
 urlpatterns = [
-                  url(r'^$', home.views.index),
+                  url(r'^$', index),
                   url(r'^StartupShot/', include('startupshot.urls')),
                   url(r'^admin/', include(admin.site.urls)),
                   url(r'^inspection/', include('inspection.urls')),
