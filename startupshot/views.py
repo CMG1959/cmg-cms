@@ -72,8 +72,13 @@ def viewCreatedStartUpShot(request, part_number):
 
 @login_required
 def create_new_start_up_shot(request):
-    job_number = request.GET.get('job_number', -1)
-    machine_number = request.GET.get('machine_number',-1)
+    job_number = request.GET.get('job_number')
+    machine_number = request.GET.get('machine_number')
+
+    if not job_number:
+        return Http404("Missing job number")
+    if not machine_number:
+        return Http404("Messing machine number")
 
     part_in_mattec = MattecProd.objects.get(jobNumber=job_number,
                                         machNo=machine_number)
