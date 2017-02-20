@@ -108,7 +108,7 @@ def create_new_start_up_shot(request):
                 context = RequestContext(request)
                 return HttpResponse(template.render(context))
     else:
-        if startUpShot.objects.filter(jobNumber=jobNo).exists():
+        if startUpShot.objects.filter(jobNumber=job_number).exists():
             HttpResponseRedirect(reverse('start_up_shot_part_entries',
                                          args=[part_in_mattec.itemNo.strip()]))
         else:
