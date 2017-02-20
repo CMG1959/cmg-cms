@@ -89,7 +89,7 @@ def create_new_start_up_shot(request):
 
             if is_user:
 
-                newForm = startUpShot(item=part_info, \
+                newForm = startUpShot(item=part, \
                                       jobNumber=job_number, \
                                       moldNumber=Mold.objects.get(mold_number=part_in_mattec.moldNumber), \
                                       inspectorName=is_user,\
