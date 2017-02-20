@@ -108,36 +108,37 @@ def create_new_start_up_shot(request):
                 return HttpResponseRedirect(reverse('start_up_shot_part_entries',
                                                 args=[part_in_mattec.itemNo.strip()]))
         # if a GET (or any other method) we'll create a blank form
-            else:
-                template = loader.get_template('inspection/bad_user.html')
-                context = RequestContext(request)
-                return HttpResponse(template.render(context))
+
+        template = loader.get_template('inspection/bad_user.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
     else:
         if startUpShot.objects.filter(jobNumber=job_number).exists():
             HttpResponseRedirect(reverse('start_up_shot_part_entries',
                                          args=[part_in_mattec.itemNo.strip()]))
+
+        form = startupShotForm()
+        form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
+
+        shotWeightName = startUpShotWeightLinkage.objects.all()[0] #
+
+        rangeInfo = numericTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName, item_Number__item_Number=part_in_mattec.itemNo)
+
+        if rangeInfo.exists():
+                min_val=rangeInfo[0].rangeMin
+                max_val=rangeInfo[0].rangeMax
         else:
-            form = startupShotForm()
-            form.fields["machineOperator"].queryset = Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
+                min_val=0
+                max_val=999999.999
 
-            shotWeightName = startUpShotWeightLinkage.objects.all()[0] #
-
-            rangeInfo = numericTestByPart.objects.filter(testName__testName=shotWeightName.susName.testName, item_Number__item_Number=part_in_mattec.itemNo)
-
-            if rangeInfo.exists():
-                    min_val=rangeInfo[0].rangeMin
-                    max_val=rangeInfo[0].rangeMax
-            else:
-                    min_val=0
-                    max_val=999999.999
-
-            return render(request, 'startupshot/create_startup_shot.html',
-                          {'form': form, 'MattecDict': part_in_mattec,
-                            'part_info': part,
-                            'num_id':'#id_shotWeight',
-                            'min_val':min_val,
-                            'max_val':max_val
-                           })
+        return render(request, 'startupshot/create_startup_shot.html',
+                      {'form': form, 'MattecDict': part_in_mattec,
+                        'part_info': part,
+                        'num_id':'#id_shotWeight',
+                        'min_val':min_val,
+                        'max_val':max_val
+                       })
 
 def get_user_info(man_num):
     try:
