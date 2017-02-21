@@ -63,6 +63,12 @@ def view_job_detail(request):
 
         active_job = startUpShot.objects.filter(jobNumber=job_number,
                                                 machNo=machine).last()
+
+        if not active_job:
+            redirect_url = '{0}?job_number={1}&machine_number={2}'.format(
+                reverse('start_up_shot_create_new'), job_number, machine_number)
+            return HttpResponseRedirect(redirect_url)
+
         item_number_id = active_job.item_id
 
 
