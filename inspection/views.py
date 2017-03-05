@@ -57,65 +57,63 @@ def view_job_detail(request):
 
     machine = EquipmentInfo.objects.get(part_identifier=machine_number)
 
-    try:
-        part_in_mattec = MattecProd.objects.get(jobNumber=job_number,
-                                        machNo=machine_number)
 
-        active_job = startUpShot.objects.filter(jobNumber=job_number,
-                                                machNo=machine).last()
+    part_in_mattec = MattecProd.objects.get(jobNumber=job_number,
+                                    machNo=machine_number)
 
-        if not active_job:
-            redirect_url = '{0}?job_number={1}&machine_number={2}'.format(
-                reverse('start_up_shot_create_new'), job_number, machine_number)
-            return HttpResponseRedirect(redirect_url)
+    active_job = startUpShot.objects.filter(jobNumber=job_number,
+                                            machNo=machine).last()
 
-        item_number_id = active_job.item_id
+    if not active_job:
+        redirect_url = '{0}?job_number={1}&machine_number={2}'.format(
+            reverse('start_up_shot_create_new'), job_number, machine_number)
+        return HttpResponseRedirect(redirect_url)
 
-
-        if machine_number in ['FAS01', 'OFP01'] or active_job:
-            print 'checking'
-            if machine_number not in ['FAS01', 'OFP01']:
-                checkPartInspection(active_job.item)
-            if not active_job and machine_number in ['FAS01', 'OFP01']:
-
-                active_job = startUpShot(item_id=item_number_id,
-                                         jobNumber=job_number,
-                                         moldNumber_id=Mold.objects.get(mold_number=part_in_mattec.moldNumber).id,
-                                         activeCavities=part_in_mattec.activeCavities,
-                                         machNo_id=machine.id,
-                                         machineOperator_id=0,
-                                         inspectorName_id=0,
-                                         shotWeight=-1,
-                                         cycleTime=-1).save()
+    item_number_id = active_job.item_id
 
 
-            pass_fail_inspection = passFailByPart.objects.filter(item_Number_id=item_number_id,
+    if machine_number in ['FAS01', 'OFP01'] or active_job:
+        print 'checking'
+        if machine_number not in ['FAS01', 'OFP01']:
+            checkPartInspection(active_job.item)
+        if not active_job and machine_number in ['FAS01', 'OFP01']:
+
+            active_job = startUpShot(item_id=item_number_id,
+                                     jobNumber=job_number,
+                                     moldNumber_id=Mold.objects.get(mold_number=part_in_mattec.moldNumber).id,
+                                     activeCavities=part_in_mattec.activeCavities,
+                                     machNo_id=machine.id,
+                                     machineOperator_id=0,
+                                     inspectorName_id=0,
+                                     shotWeight=-1,
+                                     cycleTime=-1).save()
+
+
+        pass_fail_inspection = passFailByPart.objects.filter(item_Number_id=item_number_id,
+                                                          testName__isSystemInspection=False)
+        numeric_inspection = numericTestByPart.objects.filter(item_Number_id=item_number_id,
+                                                                testName__isSystemInspection=False)
+        text_inspection = textRecordByPart.objects.filter(item_Number_id=item_number_id,
                                                               testName__isSystemInspection=False)
-            numeric_inspection = numericTestByPart.objects.filter(item_Number_id=item_number_id,
-                                                                    testName__isSystemInspection=False)
-            text_inspection = textRecordByPart.objects.filter(item_Number_id=item_number_id,
-                                                                  testName__isSystemInspection=False)
-            # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number_id=item_number_id,
-            #                                                         testName__isSystemInspection=False)
-            range_inspection = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
-                                                                    testName__isSystemInspection=False)
-            template = loader.get_template('inspection/detail_job.html')
-            context = RequestContext(request, {
-                'active_job': active_job,
-                'pf_inspectionType': pass_fail_inspection,
-                'numeric_inspectionType': numeric_inspection,
-                'text_inspectionType': text_inspection,
-                # 'int_inspectionType': int_inspectionType,
-                'range_inspectionType': range_inspection
-            })
-            return HttpResponse(template.render(context))
-        else:
-            redirect_url = '{0}?job_number={1}&machine_number={2}'.format(
-                reverse('start_up_shot_create_new'), job_number, machine_number)
-            return HttpResponseRedirect(redirect_url)
+        # int_inspectionType = IntegerRecordByPart.objects.filter(item_Number_id=item_number_id,
+        #                                                         testName__isSystemInspection=False)
+        range_inspection = RangeRecordByPart.objects.filter(item_Number_id=item_number_id,
+                                                                testName__isSystemInspection=False)
+        template = loader.get_template('inspection/detail_job.html')
+        context = RequestContext(request, {
+            'active_job': active_job,
+            'pf_inspectionType': pass_fail_inspection,
+            'numeric_inspectionType': numeric_inspection,
+            'text_inspectionType': text_inspection,
+            # 'int_inspectionType': int_inspectionType,
+            'range_inspectionType': range_inspection
+        })
+        return HttpResponse(template.render(context))
+    else:
+        redirect_url = '{0}?job_number={1}&machine_number={2}'.format(
+            reverse('start_up_shot_create_new'), job_number, machine_number)
+        return HttpResponseRedirect(redirect_url)
 
-    except Exception as e:
-        raise Http404(str(e))
 
 ######################################
 #
