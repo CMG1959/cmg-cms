@@ -24,7 +24,7 @@ from home.views import Index
 
 
 urlpatterns = [
-    url(r'^$',  TemplateView.as_view(template_name="home/index.html")),
+    url(r'^$',  Index.as_view()),
     url(r'^StartupShot/', include('startupshot.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^inspection/', include('inspection.urls')),
