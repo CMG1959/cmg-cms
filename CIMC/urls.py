@@ -24,17 +24,15 @@ from home.views import Index
 
 
 urlpatterns = [
-
-                  url(r'^StartupShot/', include('startupshot.urls')),
-                  url(r'^admin/', include(admin.site.urls)),
-                  url(r'^inspection/', include('inspection.urls')),
-                  url(r'^inspection_v2/', include('ins.urls')),
-                  url(r'^equipment/', include('equipment.urls')),
-                  url(r'^dashboard/',include('dashboard.urls')),
-                  url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
-                  url(r'^accounts/login/$', auth_views.login),
-                  url(r'^mobile/', include('mobile_views.urls')),
-                  url(r'^logout$', auth_views.logout, {'next_page': '/'}),
-                  url(r'^$',  TemplateView.as_view(template_name=
-                                                  "home/index.html")),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    url(r'^$',  TemplateView.as_view(template_name="home/index.html")),
+    url(r'^StartupShot/', include('startupshot.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^inspection/', include('inspection.urls')),
+    url(r'^inspection_v2/', include('ins.urls')),
+    url(r'^equipment/', include('equipment.urls')),
+    url(r'^dashboard/',include('dashboard.urls')),
+    url(r'^production_and_mold_history/', include('production_and_mold_history.urls')),
+    url(r'^accounts/login/$', auth_views.login),
+    url(r'^mobile/', include('mobile_views.urls')),
+    url(r'^logout$', auth_views.logout, {'next_page': '/'}),
+    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
