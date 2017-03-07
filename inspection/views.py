@@ -361,7 +361,11 @@ def view_inspection(request):
                                     inspectionName=test_info.testName,
                                     activeJob=active_job, rangeInfo=range_info)
 
-                print 'Got here..'
+                # "{% url 'inspection_view_job_machine' %}?job_number={{each_part.jobNumber.strip}}&machine_number={{each_part.machNo.strip}}"
+                redirect_url = "{0}?job_number={1}&machine_number={2}".format(
+                    reverse('inspection_view_job_machine'),
+                    active_job.jobNumber,
+                    active_job.machNo.part_identifier)
                 redirect_url = '/inspection/%s/' % (active_job.jobNumber)
                 return HttpResponseRedirect(redirect_url)
             else:
