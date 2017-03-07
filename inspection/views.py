@@ -366,7 +366,6 @@ def view_inspection(request):
                     reverse('inspection_view_job_machine'),
                     active_job.jobNumber,
                     active_job.machNo.part_identifier)
-                redirect_url = '/inspection/%s/' % (active_job.jobNumber)
                 return HttpResponseRedirect(redirect_url)
             else:
                 template = loader.get_template('inspection/bad_user.html')
