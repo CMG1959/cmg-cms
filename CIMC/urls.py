@@ -13,6 +13,7 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from django.contrib.auth.decorators import login_required
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
@@ -24,7 +25,7 @@ from home.views import Index
 
 
 urlpatterns = [
-    url(r'^$',  Index.as_view()),
+    url(r'^$', login_required(TemplateView.as_view(template_name="home/index.html"))),
     url(r'^StartupShot/', include('startupshot.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^inspection/', include('inspection.urls')),
