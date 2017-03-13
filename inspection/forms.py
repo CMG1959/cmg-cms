@@ -187,6 +187,7 @@ class NumericInspectionFormVF(forms.Form):
 
         for i, cavity_id in enumerate(extra):
             if cavity_id == '-':
+                self.is_full_shot = True
                 self.fields['cav_%s' % i] = forms.DecimalField(
                     label='Full Shot', required=False)
             else:
@@ -210,6 +211,7 @@ class RangeInspectionFormVF(forms.Form):
 
         for i, cavity_id in enumerate(extra):
             if cavity_id == '-':
+                self.is_full_shot = True
                 self.fields['cav_low_%s' % i] = forms.DecimalField(
                     label='Full Shot Low', required=False)
                 self.fields['cav_high_%s' % i] = forms.DecimalField(
@@ -224,4 +226,56 @@ class RangeInspectionFormVF(forms.Form):
         pre_sort = [(name,value) for name, value in self.cleaned_data.items()
                     if name.startswith('cav_')]
         for name, value in sorted(pre_sort, key = lambda l:l[0]):
+            yield (self.fields[name].label.lstrip('Cav '), value)
+
+
+class TextInspectionForm(forms.Form):
+    is_full_shot = forms.BooleanField(label='Is Full Shot?', required=False)
+    machine_operator = forms.CharField(label='Machine Operator')
+
+    def __init__(self, *args, **kwargs):
+        extra = kwargs.pop('extra')
+        super(TextInspectionForm, self).__init__(*args, **kwargs)
+
+        for i, cavity_id in enumerate(extra):
+            if cavity_id == '-':
+                label = 'Observation'
+                self.is_full_shot = True
+            else:
+                label = 'Cav %s' % i
+            self.fields['cav_%s' % i] = forms.CharField(label=label,
+                                                        required=False,
+                                                        max_length=75)
+
+    def extra_answers(self):
+        pre_sort = [(name, value) for name, value in self.cleaned_data.items()
+                    if name.startswith('cav_')]
+        for name, value in sorted(pre_sort, key=lambda l: l[0]):
+            yield (self.fields[name].label.lstrip('Cav '), value)
+
+class PassFailInspectionForm(forms.Form):
+    machine_operator = forms.CharField(label='Machine Operator')
+
+    def __init__(self, *args, **kwargs):
+        extra = kwargs.pop('extra')
+        defect_type_choices = kwargs.pop('defect_type_choices')
+        super(PassFailInspectionForm, self).__init__(*args, **kwargs)
+
+        for i, cavity_id in enumerate(extra):
+            if cavity_id == '_':
+                label = 'Full Shot'
+            else:
+                label = 'Cav %s' % i
+            self.fields['cav_%s' % i] = forms.MultipleChoiceField(
+                label=label,
+                required=False,
+                widget=forms.CheckboxSelectMultiple,
+                choices=defect_type_choices
+            )
+
+
+    def extra_answers(self):
+        pre_sort = [(name, value) for name, value in self.cleaned_data.items()
+                    if name.startswith('cav_')]
+        for name, value in sorted(pre_sort, key=lambda l: l[0]):
             yield (self.fields[name].label.lstrip('Cav '), value)

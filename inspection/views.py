@@ -21,7 +21,7 @@ from molds.models import Mold, PartIdentifier
 from production_and_mold_history.models import ProductionHistory
 from forms import jobReportSearch, itemReportSearch, \
     build_inspection_fields, PassFailIns, NumericInspectionForm, TextIns,\
-    RangeInspectionForm, RangeInspectionFormVF #, IntIns
+    RangeInspectionForm, RangeInspectionFormVF, PassFailInspectionForm, TextInspectionForm
 
 from forms import NumericInspectionFormVF
 
@@ -73,7 +73,6 @@ def view_job_detail(request):
 
 
     if machine_number in ['FAS01', 'OFP01'] or active_job:
-        print 'checking'
         if machine_number not in ['FAS01', 'OFP01']:
             checkPartInspection(active_job.item)
         if not active_job and machine_number in ['FAS01', 'OFP01']:
@@ -144,36 +143,23 @@ def view_inspection(request):
 
         if inspection_type == 'Pass-Fail':
             test_info = passFailTest.objects.get(id=inspection_name_id)
-            form = PassFailIns(request.POST)
+            form = PassFailInspectionForm(request.POST or None,
+                                          extra=head_cav_ids,
+                                          defect_type_choices=defect_type_choices)
 
         elif inspection_type == 'Numeric':
-            test_info = numericTest.objects.get(id=inspection_name_id)
-            range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
-                                                       item_Number_id=active_job.item_id)
-            form = NumericInspectionForm(request.POST)
-
-        elif inspection_type == 'NumericVF':
             test_info = numericTest.objects.get(id=inspection_name_id)
             range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                        item_Number_id=active_job.item_id)
 
             form = NumericInspectionFormVF(request.POST or None, extra=head_cav_ids)
 
-
-
         elif inspection_type == 'Text':
             test_info = textRecord.objects.get(id=inspection_name_id)
-            form = TextIns(request.POST)
+            form = TextInspectionForm(request.POST or None, extra=head_cav_ids)
 
-        # elif inspection_type == 'Integer':
-        #     test_info = IntegerRecord.objects.get(id=inspection_name_id)
-        #     form = IntIns(request.POST)
 
         elif inspection_type == 'Range':
-            test_info = RangeRecord.objects.get(id=inspection_name_id)
-            form = RangeInspectionForm(request.POST)
-
-        elif inspection_type == 'RangeVF':
             test_info = RangeRecord.objects.get(id=inspection_name_id)
             range_info = RangeRecordByPart.objects.get(testName_id=inspection_name_id,
                                                        item_Number_id=active_job.item_id)
@@ -183,42 +169,58 @@ def view_inspection(request):
         else:
             raise Http404("Inspection Type Does Not Exist")
 
-
         if form.is_valid():
             bulk_save_list = []
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
+            active_machine_operator = None
             if is_user:
-                if inspection_type[-2:] != 'VF':
-                    my_form = form.save(commit=False)
-                    my_form.jobID_id = job_number_id
-                    my_form.inspectorName = is_user
-                    my_form.Passed_Partial = False
-                    if not my_form.headCavID:
-                        my_form.headCavID = '-'
-                else:
-                    my_form = form
+                    # my_form.Passed_Partial = False
+                my_form = form
 
 
                 if inspection_type == 'Pass-Fail':
-                    my_form.passFailTestName_id = inspection_name_id
-                    my_form.save()
-                    form.save_m2m()
-                    if my_form.inspectionResult == False and len(my_form.defectType.all()) < 1:
-                        pf_test_unknown_reason, created = passFailTestCriteria.objects.get_or_create(
-                            testName_id=inspection_name_id,
-                            passFail='Other / Unknown')
-                        my_form.defectType.add(pf_test_unknown_reason)
+                    timestamp_form_recieved = datetime.datetime.now()
+
+                    bulk_save_list = []
+                    for each_cav, measurement in my_form.extra_answers():
+                        print each_cav
+                        new_form = passFailInspection(
+                            passFailTestName_id=test_info.id,
+                            jobID_id=job_number_id,
+                            machineOperator_id=my_form.cleaned_data[
+                                'machine_operator'],
+                            inspectorName_id=is_user.id,
+                            dateCreated=timestamp_form_recieved,
+                            headCavID=each_cav
+                        )
+
+                        if measurement:
+                            if each_cav == 'Full Shot':
+                                each_cav = '-'
+
+                            print measurement
+
+                            new_form.inspectionResult = False
+                            new_form.save()
+
+                            pass_fail_test_critereon = passFailTestCriteria.objects.filter(
+                                id__in = measurement
+                            )
+
+                            error_objects = []
+                            for each_measurement in pass_fail_test_critereon:
+                                new_form.defectType.add(each_measurement)
+
+                        else:
+                            new_form.inspectionResult = True
+                            bulk_save_list.append(new_form)
+
+                    if bulk_save_list:
+                        passFailInspection.objects.bulk_create(bulk_save_list)
+                    active_machine_operator = new_form.machineOperator
 
                 elif inspection_type == 'Numeric':
-                    my_form.numericTestName_id = range_info.id
-                    if ((my_form.numVal_1>= range_info.rangeMin) and (my_form.numVal_1<= range_info.rangeMax)):
-                        inspectionResult = True
-                    else:
-                        inspectionResult = False
-                    my_form.inspectionResult = inspectionResult
-
-                elif inspection_type == 'NumericVF':
                     #my_form.numericTestName_id = range_info.id
                     timestamp_form_recieved = datetime.datetime.now()
                     bulk_save_list = []
@@ -248,20 +250,40 @@ def view_inspection(request):
                             ))
 
                     if bulk_save_list:
-                        print bulk_save_list
                         numericInspection.objects.bulk_create(bulk_save_list)
-
+                        active_machine_operator = bulk_save_list[-1].machineOperator
 
                 elif inspection_type == 'Text':
-                    my_form.textTestName_id = inspection_name_id
+                    timestamp_form_recieved = datetime.datetime.now()
+                    bulk_save_list = []
+
+                    for each_cav, measurement in my_form.extra_answers():
+                        if measurement:
+                            if not re.search('cav_', each_cav):
+                                each_cav = '-'
+
+                            bulk_save_list.append(textInspection(
+                                textTestName_id=test_info.id,
+                                jobID_id=job_number_id,
+                                machineOperator_id=my_form.cleaned_data[
+                                    'machine_operator'],
+                                inspectorName_id=is_user.id,
+                                dateCreated=timestamp_form_recieved,
+                                isFullShot=my_form.cleaned_data['is_full_shot'],
+                                inspectionResult=measurement,
+                                headCavID=each_cav,
+                            ))
+
+                    if bulk_save_list:
+                        textInspection.objects.bulk_create(bulk_save_list)
+                        active_machine_operator = bulk_save_list[
+                            -1].machineOperator
+
 
                 elif inspection_type == 'Integer':
                     my_form.integerTestName_id = inspection_name_id
 
                 elif inspection_type == 'Range':
-                    my_form.rangeTestName_id = inspection_name_id
-
-                elif inspection_type == 'RangeVF':
                     '''
                     Need:
                         1. Range record id
@@ -348,19 +370,18 @@ def view_inspection(request):
 
                     if bulk_save_list:
                         RangeInspection.objects.bulk_create(bulk_save_list)
+                        active_machine_operator = bulk_save_list[
+                            -1].machineOperator
 
 
 
                 else:
                     pass
 
-                if inspection_type[-2:] != 'VF':
-                    my_form.save()
-                    set_new_mach_op(active_job.jobNumber, my_form.machineOperator)
-                    checkFormForLog(my_form, inspectionType=inspection_type,
-                                    inspectionName=test_info.testName,
-                                    activeJob=active_job, rangeInfo=range_info)
-
+                set_new_mach_op(active_job.jobNumber, active_machine_operator)
+                # checkFormForLog(my_form, inspectionType=inspection_type,
+                #                 inspectionName=test_info.testName,
+                #                 activeJob=active_job, rangeInfo=range_info)
                 # "{% url 'inspection_view_job_machine' %}?job_number={{each_part.jobNumber.strip}}&machine_number={{each_part.machNo.strip}}"
                 redirect_url = "{0}?job_number={1}&machine_number={2}".format(
                     reverse('inspection_view_job_machine'),
@@ -386,7 +407,8 @@ def view_inspection(request):
 
             if inspection_type == 'Pass-Fail':
                 test_info = passFailTest.objects.get(id=inspection_name_id)
-                form = PassFailIns()
+                form = PassFailInspectionForm(extra=head_cav_ids,
+                                              defect_type_choices=defect_type_choices)
                 context_dict_add = {
                     'use_checkbox2': True,
                     'id_check': '#id_inspectionResult',
@@ -395,23 +417,6 @@ def view_inspection(request):
                 }
 
             elif inspection_type == 'Numeric':
-                test_info = numericTest.objects.get(id=inspection_name_id)
-                range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
-                                                           item_Number_id=active_job.item_id)
-                form = NumericInspectionForm()
-
-                context_dict_add = {
-                    'use_checkbox': True,
-                    'id_check': '#id_isFullShot',
-                    'idSelect': '#id_headCavID',
-                    'use_minmax': True,
-                    'num_id': '#id_numVal_1',
-                    'min_val': range_info.rangeMin,
-                    'max_val': range_info.rangeMax,
-                    'id_result': '#id_inspectionResult',
-                }
-
-            elif inspection_type == 'NumericVF':
                 test_info = numericTest.objects.get(id=inspection_name_id)
                 range_info = numericTestByPart.objects.get(testName_id=inspection_name_id,
                                                            item_Number_id=active_job.item_id)
@@ -433,34 +438,14 @@ def view_inspection(request):
 
             elif inspection_type == 'Text':
                 test_info = textRecord.objects.get(id=inspection_name_id)
-                form = TextIns()
+                form = TextInspectionForm(extra=head_cav_ids)
                 context_dict_add = {
                     'use_checkbox': True,
                     'id_check': '#id_inspectionResult',
                     'idSelect': '#id_headCavID',
                 }
-
-
-            # elif inspection_type == 'Integer':
-            #     test_info = IntegerRecord.objects.get(id=inspection_name_id)
-            #     form = IntIns()
-            #     context_dict_add = {
-            #         'use_checkbox': True,
-            #         'id_check': '#id_inspectionResult',
-            #         'idSelect': '#id_headCavID',
-            #     }
-
 
             elif inspection_type == 'Range':
-                test_info = RangeRecord.objects.get(id=inspection_name_id)
-                form = RangeInspectionForm()
-                context_dict_add = {
-                    'use_checkbox': True,
-                    'id_check': '#id_inspectionResult',
-                    'idSelect': '#id_headCavID',
-                }
-
-            elif inspection_type == 'RangeVF':
                 test_info = RangeRecord.objects.get(id=inspection_name_id)
                 form = RangeInspectionFormVF(extra=head_cav_ids)
 
@@ -477,31 +462,16 @@ def view_inspection(request):
             if machine_operator:
                 context_dict.update({'machine_operator': machine_operator.id})
 
-            # head_cav_id_choices, defect_type_choices = build_inspection_fields(job_id=job_number_id,
-            #                                                                 inspection_type=inspection_type,
-            #                                                                 inspection_id=inspection_name_id,
-            #                                                                 man_num=request.user.webappemployee.EmpNum)
-            if inspection_type not in ['NumericVF', 'RangeVF']:
-                form.fields["headCavID"].widget.choices = head_cav_id_choices
-                form.fields["machineOperator"].queryset = \
-                    Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by('EmpLName')
-            else:
-                machine_operator_choices = []
-                for each_employee in Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by(
-                        'EmpLName'):
-                    machine_operator_choices.append((each_employee.id,
-                                                     each_employee.__unicode__()))
-                if not machine_operator_choices:
-                    machine_operator_choices = [(-1,'Error')]
+            machine_operator_choices = []
+            for each_employee in Employees.objects.filter(StatusActive=True, IsOpStaff=True).order_by('EmpShift').order_by(
+                    'EmpLName'):
+                machine_operator_choices.append((each_employee.id,
+                                                 each_employee.__unicode__()))
+            if not machine_operator_choices:
+                machine_operator_choices = [(-1,'Error')]
 
-                form.fields['machine_operator'] = forms.ChoiceField(widget=forms.Select(), choices=[])
-                form.fields["machine_operator"].choices = machine_operator_choices
-                #form.fields["machine_operator"].widgets.choices = machine_operator_choices
-
-
-            if defect_type_choices:
-                form.fields["defectType"].choices = defect_type_choices
-
+            form.fields['machine_operator'] = forms.ChoiceField(widget=forms.Select(), choices=[])
+            form.fields["machine_operator"].choices = machine_operator_choices
 
             context_dict.update({'form_title': test_info.testName,
                                  'form': form})
