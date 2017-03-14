@@ -338,7 +338,7 @@ def view_inspection(request):
                     entry_dict_sort = collections.OrderedDict()
 
                     for each_cav_id in cav_ids:
-                        entry_dict_sort.update({each_cav_id, entry_dict[each_cav_id]})
+                        entry_dict_sort.update({each_cav_id: entry_dict[each_cav_id]})
 
                     for each_cav, measurement_dict in entry_dict_sort.iteritems():
 
