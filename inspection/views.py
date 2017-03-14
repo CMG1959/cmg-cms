@@ -468,8 +468,10 @@ def view_inspection(request):
             if not machine_operator_choices:
                 machine_operator_choices = [(-1,'Error')]
 
-            form.fields['machine_operator'] = forms.ChoiceField(widget=forms.Select(), choices=[])
-            form.fields["machine_operator"].choices = machine_operator_choices
+            form.fields['machine_operator'] = forms.ChoiceField(
+                widget=forms.Select(),
+                choices=machine_operator_choices,
+                initial=machine_operator.id)
 
             context_dict.update({'form_title': test_info.testName,
                                  'form': form})
