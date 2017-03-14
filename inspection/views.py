@@ -1,37 +1,33 @@
 # Create your views here.
+import collections
+import datetime
+import json
 import numpy as np
 import re
-import
-
+from decimal import Decimal
 from django import forms
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.template import RequestContext, loader
-from django.shortcuts import render
-from django.db.models import Avg, Max, Min, StdDev
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from django.db.models import Avg, Max, Min, StdDev
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render
+from django.template import RequestContext, loader
+from django.utils import timezone
 
-from models import *
 from dashboard.models import errorLog
-from equipment.models import EquipmentInfo
-from part.models import Part
-from startupshot.models import startUpShot, MattecProd
 from employee.models import Employees, EmployeeAtWorkstation
-from molds.models import Mold, PartIdentifier
-from production_and_mold_history.models import ProductionHistory
+from equipment.models import EquipmentInfo
+from forms import NumericInspectionFormVF
 from forms import jobReportSearch, itemReportSearch, \
     build_inspection_fields, PassFailIns, NumericInspectionForm, TextIns,\
     RangeInspectionForm, RangeInspectionFormVF, PassFailInspectionForm, TextInspectionForm
-
-from forms import NumericInspectionFormVF
-
+from models import *
+from molds.models import Mold, PartIdentifier
+from part.models import Part
+from production_and_mold_history.models import ProductionHistory
 from reports import JobReport
-import collections
-import json
-import datetime
-from decimal import Decimal
+from startupshot.models import startUpShot, MattecProd
 
 
 ######################################
