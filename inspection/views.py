@@ -1,7 +1,7 @@
 # Create your views here.
 import numpy as np
 import re
-import OrderedDict
+import
 
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -339,7 +339,7 @@ def view_inspection(request):
                         cav_ids.append(cav_id)
 
                     cav_ids.sort()
-                    entry_dict_sort = OrderedDict()
+                    entry_dict_sort = collections.OrderedDict()
 
                     for each_cav_id in cav_ids:
                         entry_dict_sort.update({each_cav_id, entry_dict[each_cav_id]})
@@ -1134,7 +1134,6 @@ def get_previous_mach_op(job_number):
         this_machine_operator = EmployeeAtWorkstation.objects.get(workstation=mattec_info.machNo)
         employee_info = this_machine_operator.employee
     except Exception as e:
-        print str(e)
         employee_info = None
     return employee_info
 
