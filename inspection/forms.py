@@ -28,6 +28,7 @@ def build_inspection_fields(job_id, inspection_type, inspection_id, man_num):
                                         inspection_type=inspection_type_int,
                                         inspection_id=inspection_id,
                                         man_num=man_num)
+
     if inspection_type in ['Pass/Fail', 'Pass-Fail']:
         headCavID_fields = build_cavs(built_inspection['Cavs_Array'])
         defectType_fields = build_defects(built_inspection['Critera_Array'])
@@ -242,8 +243,8 @@ class TextInspectionForm(forms.Form):
                 label = 'Observation'
                 self.is_full_shot = True
             else:
-                label = 'Cav %s' % i
-            self.fields['cav_%s' % i] = forms.CharField(label=label,
+                label = 'Cav %s' % cavity_id
+            self.fields['cav_%s' % cavity_id] = forms.CharField(label=label,
                                                         required=False,
                                                         max_length=75)
 
@@ -258,6 +259,7 @@ class PassFailInspectionForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         extra = kwargs.pop('extra')
+
         defect_type_choices = kwargs.pop('defect_type_choices')
         super(PassFailInspectionForm, self).__init__(*args, **kwargs)
 
@@ -265,7 +267,7 @@ class PassFailInspectionForm(forms.Form):
             if cavity_id == '_':
                 label = 'Full Shot'
             else:
-                label = 'Cav %s' % i
+                label = 'Cav %s' % cavity_id
             self.fields['cav_%s' % i] = forms.MultipleChoiceField(
                 label=label,
                 required=False,
