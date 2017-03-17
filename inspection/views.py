@@ -182,7 +182,7 @@ def view_inspection(request):
 
                     bulk_save_list = []
                     for each_cav, measurement in my_form.extra_answers():
-                        print each_cav
+
                         new_form = passFailInspection(
                             passFailTestName_id=test_info.id,
                             jobID_id=job_number_id,
@@ -197,7 +197,7 @@ def view_inspection(request):
                             if each_cav == 'Full Shot':
                                 each_cav = '-'
 
-                            print measurement
+
 
                             new_form.inspectionResult = False
                             new_form.save()
@@ -233,7 +233,7 @@ def view_inspection(request):
                             if each_cav == 'Full Shot':
                                 each_cav = '-'
 
-                            print each_cav
+
 
                             bulk_save_list.append(numericInspection(
                                 numericTestName_id = range_info.id,
@@ -391,7 +391,7 @@ def view_inspection(request):
                 context = RequestContext(request)
                 return HttpResponse(template.render(context))
         else:
-            print form.errors
+
             return Http404()
 
                 # except Exception as e:
