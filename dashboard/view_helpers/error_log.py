@@ -101,6 +101,7 @@ def prepare_bar_chart(aggregate_dict_list, x_id, y_id, name):
         x.append(each_item.get(x_id))
         y.append(each_item.get(y_id))
     return {"data": [{"x": x, "y": y, "type": "bar"}],
-            "layout": {"title": name,
+            "layout": {"autosize": True,
+                       "title": name,
                        "yaxis": {"title": "Count"}}
             }
