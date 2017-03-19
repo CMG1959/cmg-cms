@@ -1,0 +1,75 @@
+
+{% include "nav/nav.html" %}
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href=https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css />
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+
+<div id="errorByTest" style="width: 800px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+<div id="errorByMachine" style="width: 800px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+
+<html>
+    <table class="datatable table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <th>Date</th>
+            <th>Inspection Type</th>
+            <th>Job Number</th>
+            <th>Item Number</th>
+            <th>Item Description</th>
+            <th>Test Name</th>
+            <th>Inspection Result</th>
+            <th>Report Text</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</html>
+
+
+
+
+<script>
+    $(document).ready(function() {
+        var oTable = $('.datatable').dataTable({
+            "pageLength": 25,
+            "order": [[ 0, "desc" ]],
+            "columns": [
+                {"data": "Date_Created"},
+                {"data": "Test_Name"},
+                {"data": "Job_Number"},
+                {"data": "Item_Number"},
+                {"data": "Item_Description"},
+                {"data": "Test_Name"},
+                {"data": "Inspection_Result"},
+                {"data": "Report_Text"},
+            ],
+            "ajax": "{% url 'get_active_error_verbose' %}"
+        });
+        });
+</script>
+
+<script>
+    $(document).ready(function() {
+        Plotly.d3.json( "{% url 'get_active_error_count_by_test' %}", function(error, data){
+            if (error) return console.warn(error);
+            Plotly.newPlot('errorByTest', data.data, data.layout);
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        Plotly.d3.json( "{% url 'get_active_error_count_by_machine' %}", function(error, data){
+            if (error) return console.warn(error);
+            Plotly.newPlot('errorByMachine', data.data, data.layout);
+        });
+    });
+</script>

@@ -23,6 +23,39 @@ from django.db.models import Q
 import pytz
 import tzlocal
 
+from view_helpers.error_log import vh_get_active_error_count_by_test,\
+    vh_get_active_error_count_by_machine, vh_get_active_error_verbose
+
+
+def get_active_error_count_by_test(request):
+    if errorLogTime.objects.first():
+        n_days = errorLogTime.objects.first().number_of_days
+    else:
+        n_days = 1
+    return JsonResponse(vh_get_active_error_count_by_test(n_days))
+
+
+def get_active_error_count_by_machine(request):
+    if errorLogTime.objects.first():
+        n_days = errorLogTime.objects.first().number_of_days
+    else:
+        n_days = 1
+    return JsonResponse(vh_get_active_error_count_by_machine(n_days))
+
+def get_active_error_verbose(request):
+    if errorLogTime.objects.first():
+        n_days = errorLogTime.objects.first().number_of_days
+    else:
+        n_days = 1
+
+    data = vh_get_active_error_verbose(n_days)
+    return JsonResponse({'data': data})
+
+class ErrorLog(TemplateView):
+    template_name = 'dashboard/error_log.html'
+
+
+
 def view_errorLog(request):
     if errorLogTime.objects.first():
         n_days = errorLogTime.objects.first().number_of_days
