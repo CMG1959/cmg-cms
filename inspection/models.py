@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -135,7 +136,7 @@ class numericInspection(models.Model):
                                         related_name='ri_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='ri_inspectorName', blank=True)
-    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+    dateCreated = models.DateTimeField(default=now, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     numVal_1 = models.DecimalField(max_digits=12, decimal_places=3, verbose_name="Measurement", db_column='numVal_1')
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
@@ -195,7 +196,7 @@ class textInspection(models.Model):
                                         related_name='ti_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='ti_inspectorName', blank=True)
-    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+    dateCreated = models.DateTimeField(default=now, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.CharField(verbose_name="Enter Inspection Information:",max_length=75)
     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
@@ -255,7 +256,7 @@ class textInspection(models.Model):
 #                                         related_name='Integer_machineOperator')
 #     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
 #                                       related_name='Integer_inspectorName', blank=True)
-#     dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+#     dateCreated = models.DateTimeField(default=now, verbose_name="Date Created")
 #     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
 #     inspectionResult = models.CharField(max_length=38, verbose_name="Enter Inspection Information:")
 #     headCavID = models.CharField(max_length=8, verbose_name="Cavity Info", null=True, blank=True)
@@ -316,7 +317,7 @@ class RangeInspection(models.Model):
                                         related_name='float_machineOperator')
     inspectorName = models.ForeignKey('employee.Employees', verbose_name="Inspector Name",
                                       related_name='float_inspectorName', blank=True)
-    dateCreated = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
+    dateCreated = models.DateTimeField(default=now, verbose_name="Date Created")
     isFullShot = models.BooleanField(verbose_name="Is Full Shot? (check if true)",default=True)
     inspectionResult = models.BooleanField(verbose_name="Inspection Result (check if passed)",default=False)
     numVal_1 = models.DecimalField(verbose_name="Low", max_digits=12, decimal_places=3, db_column='numVal_1')

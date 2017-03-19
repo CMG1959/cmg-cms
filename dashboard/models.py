@@ -24,6 +24,7 @@ class ProductionSummary(models.Model):
         verbose_name = 'Production Summary'
         verbose_name_plural = 'Production Summary'
         db_table = 'vInspectionSummaryCache'
+        managed = False
 
     inspection_type = models.CharField(verbose_name='Inspection Type', max_length=9, db_column = 'Inspection_Type')
     date_created = models.DateTimeField(verbose_name='Date Created', db_column = 'Date_Created')
