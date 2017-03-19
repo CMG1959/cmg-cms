@@ -1,11 +1,10 @@
 {% include "nav/nav.html" %}
+{% load staticfiles %}
+<script src="{% static "datatables/jquery.js" %}"></script>
+<script src="{% static "datatables/jquery.dataTables.min.js" %}"></script>
+<link rel="stylesheet" type="text/css"  href="{% static "datatables/jquery.dataTables.min.css" %}"/>
 
-
-<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
-<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" type="text/css"
-      href=https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css/>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="{% static "plotly/plotly.min.js" %}"></script>
 
 
 <div class="col-sm-offset-1 col-sm-10 bootcards-cards">
