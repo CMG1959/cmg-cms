@@ -73,7 +73,7 @@
     var d3 = Plotly.d3;
 
 var WIDTH_IN_PERCENT_OF_PARENT = 60,
-    HEIGHT_IN_PERCENT_OF_PARENT = 80;
+    HEIGHT = 300;
 
 var gd3 = d3.select('#errorByTest')
     .append('div')
@@ -81,8 +81,8 @@ var gd3 = d3.select('#errorByTest')
         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
         'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
 
-        height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
-        'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh'
+        height: HEIGHT + ' px',
+        'margin-top': 15 + ' px'
     });
 
 var gd = gd3.node();
@@ -106,17 +106,18 @@ var gd = gd3.node();
     var d3 = Plotly.d3;
 
 var WIDTH_IN_PERCENT_OF_PARENT = 60,
-    HEIGHT_IN_PERCENT_OF_PARENT = 80;
+    HEIGHT = 300;
 
-var gd3 = d3.select('#errorByMachine')
+var gd3 = d3.select('#errorByTest')
     .append('div')
     .style({
         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
         'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
 
-        height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
-        'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh'
+        height: HEIGHT + ' px',
+        'margin-top': 15 + ' px'
     });
+
 
 var gd = gd3.node();
 
