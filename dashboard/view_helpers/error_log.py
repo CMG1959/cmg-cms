@@ -48,7 +48,8 @@ QUERY_ACTIVE_JOB_ERRORS = """
       ,vISC.[Inspection_Result]
       ,vISC.[Shift]
       ,vISC.[Report_Text]
-	 , mp.machNo
+      ,VISC.[HeadCav]
+	 , mp.machNo as 'Workstation'
   FROM [cmg_qms].[dbo].[startupshot_mattecprod] as mp
   JOIN [cmg_qms].[dbo].[vInspectionSummaryCache] as vISC
   ON mp.jobNumber = vISC.Job_Number
@@ -90,7 +91,7 @@ def vh_get_active_error_verbose(n_days):
     error_list = fetch_errors(QUERY_ACTIVE_JOB_ERRORS, n_days)
     for idx, each_error in enumerate(error_list):
         error_list[idx].update({'Date_Created': parse_date_time(each_error.get('Date_Created'))})
-
+    print error_list
     return error_list
 
 

@@ -221,10 +221,10 @@ class IndexView(TemplateView):
 
 class OrderListJson(BaseDatatableView):
     model = ProductionSummary
-    columns = ['date_created', 'inspection_type',  'job_number', 'item_number', 'item_description',
-               'test_name', 'inspection_result', 'report_text']
-    order_columns = ['date_created', 'inspection_type', 'job_number', 'item_number', '', 'inspection_result',
-                     '']
+    columns = ['date_created', 'workstation', 'inspection_type',  'job_number', 'item_number', 'item_description',
+               'test_name', 'inspection_result', 'headcav', 'report_text']
+    order_columns = ['date_created', 'workstation' ,'inspection_type', 'job_number', 'item_number', '', 'inspection_result',
+                     'headcav', '']
     max_display_length = 500
 
     def render_column(self, row, column):

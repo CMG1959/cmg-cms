@@ -28,12 +28,14 @@
                    cellspacing="0" width="100%">
                 <thead>
                 <th>Date</th>
+                <th>Workstation</th>
                 <th>Inspection Type</th>
                 <th>Job Number</th>
                 <th>Item Number</th>
                 <th>Item Description</th>
                 <th>Test Name</th>
                 <th>Inspection Result</th>
+                <th>Cavity</th>
                 <th>Report Text</th>
                 </thead>
                 <tbody>
@@ -53,12 +55,14 @@
             "order": [[ 0, "desc" ]],
             "columns": [
                 {"data": "Date_Created"},
+                {"data": "Workstation"},
                 {"data": "Test_Name"},
                 {"data": "Job_Number"},
                 {"data": "Item_Number"},
                 {"data": "Item_Description"},
                 {"data": "Test_Name"},
                 {"data": "Inspection_Result"},
+                {"data": "HeadCav"},
                 {"data": "Report_Text"},
             ],
             "ajax": "{% url 'get_active_error_verbose' %}"

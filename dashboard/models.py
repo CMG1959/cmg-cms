@@ -37,4 +37,9 @@ class ProductionSummary(models.Model):
     inspection_result = models.CharField(verbose_name= 'Inspection Result', max_length=15, db_column = 'Inspection_Result')
     shift = models.IntegerField( db_column = 'Shift')
     report_text = models.CharField(max_length=75, verbose_name='Report Text', db_column = 'Report_Text')
+    workstation = models.CharField(db_column='Workstation', max_length=25,
+                                   blank=True,
+                                   null=True)  # Field name made lowercase.
+    headcav = models.CharField(db_column='HeadCav', max_length=8, blank=True,
+                               null=True) # Field name made lowercase.
     id = models.CharField(max_length=36, primary_key=True)
