@@ -91,7 +91,6 @@ def vh_get_active_error_verbose(n_days):
     error_list = fetch_errors(QUERY_ACTIVE_JOB_ERRORS, n_days)
     for idx, each_error in enumerate(error_list):
         error_list[idx].update({'Date_Created': parse_date_time(each_error.get('Date_Created'))})
-    print error_list
     return error_list
 
 
