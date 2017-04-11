@@ -109,6 +109,7 @@ PLANT_LOC = config_dict["location"]["loc_id"]
 #         'PASSWORD': '1959Cmg1',
 #
 #     },
+#
 
 DATABASES = {
         'default': config_dict['default_database'],
