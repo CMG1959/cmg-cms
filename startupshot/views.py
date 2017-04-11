@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from decimal import Decimal
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from django.shortcuts import render
@@ -108,7 +109,7 @@ def create_new_start_up_shot(request):
                                       machineOperator=Employees.objects.get(pk=form.cleaned_data['machineOperator'].pk), \
                                       shotWeight=form.cleaned_data['shotWeight'], \
                                       activeCavities=part_in_mattec.activeCavities, \
-                                      cycleTime=part_in_mattec.cycleTime, \
+                                      cycleTime=Decimal(part_in_mattec.cycleTime), \
                                       machNo=machine_info)
                 newForm.save()
                 # redirect to a new URL:
