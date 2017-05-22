@@ -36,4 +36,5 @@ urlpatterns = [
     url(r'^accounts/login/$', auth_views.login),
     url(r'^mobile/', include('mobile_views.urls')),
     url(r'^logout$', auth_views.logout, {'next_page': '/'}),
+    url(r'^JobReportViewer', include('job_report_viewer.urls'))
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

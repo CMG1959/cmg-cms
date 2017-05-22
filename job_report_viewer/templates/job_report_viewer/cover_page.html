@@ -1,0 +1,36 @@
+{% load mathfilters %}
+
+
+<table class="table table-hover">
+    <tbody>
+    {% for each_item in cover_page.job_meta %}
+    <tr>
+        {% for each_cell in each_item %}
+        {% if forloop.counter0 == 0 %}
+        <th>{{each_cell}}</th>
+        {% else %}
+        <td>{{each_cell}}</td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<table class="table table-hover">
+    <tbody>
+        {% for each_item in cover_page.startup_shot_meta %}
+        <tr>
+            {% for each_cell in each_item %}
+            {% if forloop.counter0 == 0 %}
+            <th>{{each_cell}}</th>
+            {% else %}
+            <td>{{each_cell}}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

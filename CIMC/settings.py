@@ -60,6 +60,7 @@ INSTALLED_APPS = (
     'production_and_mold_history',
     'startupshot',
     'supplier',
+    'job_report_viewer',
     'rest_framework',)
 
 MIDDLEWARE_CLASSES = (

@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.views.decorators.cache import cache_page
 from . import views
 
@@ -19,5 +19,5 @@ urlpatterns = [
     url(r'^itemReport/(?P<itemNumber>[0-9]+(.[0-9]+)+)/$', views.view_itemReport, name='view_itemReport'),
     ### link to show which inspections can be performed on a given jo
     url(r'^JobAndWorkstation$', views.view_job_detail, name='inspection_view_job_machine'),
-    url(r'^job_errors/$', views.view_jsonError, name='view_jsonError'),
+    url(r'^job_errors/$', views.view_jsonError, name='view_jsonError')
 ]
