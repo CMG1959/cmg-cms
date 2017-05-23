@@ -1,32 +1,35 @@
-<ul>
-  <li id="coverPage">Cover Page</li>
-    <li>Statistics</li>
-    <li>Inspections</li>
-    <ul>
-        <li>Pass Fail</li>
-            <ul>
-                {% for each_inspection in tree.branch_pass_fail.nodes %}
-                    <li>{{ each_inspection.name }}</li>
-                {% endfor %}
-            </ul>
-         <li>Numeric</li>
-            <ul>
-                {% for each_inspection in tree.branch_numeric.nodes %}
-                    <li>{{ each_inspection.name }}</li>
-                {% endfor %}
-            </ul>
-        <li>Text</li>
-            <ul>
-                {% for each_inspection in tree.branch_text.nodes %}
-                    <li>{{ each_inspection.name }}</li>
-                {% endfor %}
-            </ul>
-        <li>Range</li>
-            <ul>
-                {% for each_inspection in tree.branch_range.nodes %}
-                    <li>{{ each_inspection.name }}</li>
-                {% endfor %}
-            </ul>
-    </ul>
-  <li>Plots</li>
-</ul>
+<!--<ul>-->
+  <!--<li id="coverPage">Cover Page</li>-->
+    <!--<li>Statistics</li>-->
+    <!--<li>Inspections</li>-->
+    <!--<ul>-->
+        <!--<li>Pass Fail</li>-->
+            <!--<ul>-->
+                <!--{% for each_inspection in tree.branch_pass_fail.nodes %}-->
+                    <!--<li>{{ each_inspection.name }}</li>-->
+                <!--{% endfor %}-->
+            <!--</ul>-->
+         <!--<li>Numeric</li>-->
+            <!--<ul>-->
+                <!--{% for each_inspection in tree.branch_numeric.nodes %}-->
+                    <!--<li>{{ each_inspection.name }}</li>-->
+                <!--{% endfor %}-->
+            <!--</ul>-->
+        <!--<li>Text</li>-->
+            <!--<ul>-->
+                <!--{% for each_inspection in tree.branch_text.nodes %}-->
+                    <!--<li>{{ each_inspection.name }}</li>-->
+                <!--{% endfor %}-->
+            <!--</ul>-->
+        <!--<li>Range</li>-->
+            <!--<ul>-->
+                <!--{% for each_inspection in tree.branch_range.nodes %}-->
+                    <!--<li>{{ each_inspection.name }}</li>-->
+                <!--{% endfor %}-->
+            <!--</ul>-->
+    <!--</ul>-->
+  <!--<li>Plots</li>-->
+<!--</ul>-->
+
+<div id="treeContainer"></div>
+

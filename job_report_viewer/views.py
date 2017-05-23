@@ -13,6 +13,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import RequestContext, loader
 from django.utils import timezone
+from django.core.urlresolvers import reverse
 
 from dashboard.models import errorLog
 from employee.models import Employees, EmployeeAtWorkstation
@@ -31,18 +32,16 @@ class JobReportBase(TemplateView):
 
     def get_context_data(self, **kwargs):
         job_number = self.request.GET.get('job_number')
-        start_up_shot = startUpShot.objects.get(jobNumber=job_number)
         context = super(JobReportBase, self).get_context_data(**kwargs)
         context['job_number'] = job_number
-        context['tree'] = TreeBuilder(start_up_shot.item_id)
         return context
 
 class CoverPage(TemplateView):
     template_name = 'job_report_viewer/cover_page.html'
 
     def get_context_data(self, **kwargs):
-        job_number = self.request.GET.get('job_number')
-        start_up_shot = startUpShot.objects.get(jobNumber=job_number)
+        job_number_id = self.request.GET.get('job_number_id')
+        start_up_shot = startUpShot.objects.get(id=job_number_id)
         context = super(CoverPage, self).get_context_data(**kwargs)
         context['cover_page'] = CoverPageBuilder(start_up_shot.item_id, start_up_shot)
         return context
@@ -54,3 +53,14 @@ def plots(request):
     pass
 
 
+def get_tree(request):
+    job_number = request.GET.get('job_number')
+    start_up_shot = startUpShot.objects.get(jobNumber=job_number)
+
+    url_cover_page = reverse('cover_page')
+    url_data_table = reverse('data_table')
+    url_plots = reverse('plots')
+
+    tree = TreeBuilder(start_up_shot.item_id, start_up_shot.id, url_cover_page,
+                       url_data_table, url_plots)
+    return JsonResponse(tree.get_json(), safe=False)

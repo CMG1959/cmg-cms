@@ -2,7 +2,7 @@
   "default_database": {
     "NAME": "cmg_qms",
     "ENGINE": "sql_server.pyodbc",
-    "HOST": "CIMC-SQL1.cimc.local",
+    "HOST": "CIMC-SQL1",
     "PORT": "",
     "USER": "webappUser",
     "PASSWORD": "1959Cmg1",

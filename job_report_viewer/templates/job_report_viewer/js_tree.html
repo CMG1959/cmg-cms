@@ -1,0 +1,31 @@
+<script>
+$(document).ready(function(){
+    $(function() {
+      $('#treeContainer').jstree({
+        'core' : {
+          'data' : {
+            "url" : "{% url 'tree' %}?job_number={{ job_number }}",
+            "dataType" : "json" // needed only if you do not supply JSON headers
+          }
+        }
+      });
+    });
+});
+</script>
+
+<script>
+$(document).ready(function(){
+      $(function() {
+            $('#treeContainer').on("select_node.jstree", function (e, data) {
+            alert("node_id: " + data.node.data.url);
+            if (data.node.data.url != null) {
+                $.get( data.node.data.url, function( data ) {
+                  console.log(data);
+                  $('#dataHolder').html(data);
+                  alert( "Load was performed." );
+                });
+            }
+            });
+        });
+});
+</script>

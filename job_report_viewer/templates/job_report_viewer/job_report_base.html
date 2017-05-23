@@ -9,6 +9,10 @@
 
 {% include "nav/nav.html" %}
 
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default/style.min.css" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/jstree.min.js"></script>
+
 <div class="col-sm-2 bootcards-cards">
     {% include "job_report_viewer/side_navigation.html" %}
 </div>
@@ -38,3 +42,5 @@
         });
     }
 </script>
+
+{% include "job_report_viewer/js_tree.html" %}
