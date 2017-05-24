@@ -47,7 +47,20 @@ class CoverPage(TemplateView):
         return context
 
 def data_table(request):
-    pass
+    template_name = 'job_report_viewer/cover_page.html'
+
+    def get_context_data(self, **kwargs):
+        # http: // cmg - vis01 / JobReportViewer / DataTable?job_number_id = 1167 & primitive_id = 10 & type = Pass - Fail
+        job_number_id = self.request.GET.get('job_number_id')
+        primitive_id = self.request.GET.get('primitive_id')
+        primitive_type = self.request.GET.get('type')
+
+
+        start_up_shot = startUpShot.objects.get(id=job_number_id)
+        context = super(CoverPage, self).get_context_data(**kwargs)
+        context['cover_page'] = CoverPageBuilder(start_up_shot.item_id, start_up_shot)
+        return context
+
 
 def plots(request):
     pass
