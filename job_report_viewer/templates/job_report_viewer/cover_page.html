@@ -7,7 +7,7 @@
     <tr>
         {% for each_cell in each_item %}
         {% if forloop.counter0 == 0 %}
-        <th>{{each_cell}}</th>
+        <td><b>{{each_cell}}</b></td>
         {% else %}
         <td>{{each_cell}}</td>
         {% endif %}
@@ -24,7 +24,7 @@
         <tr>
             {% for each_cell in each_item %}
             {% if forloop.counter0 == 0 %}
-            <th>{{each_cell}}</th>
+            <td><b>{{each_cell}}</b></td>
             {% else %}
             <td>{{each_cell}}</td>
             {% endif %}
