@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Job Report Viewer</title>
-</head>
-<body>
 
+    <style>
+    caption {
+        display: table-caption;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body>
 
 {% include "nav/nav.html" %}
 
@@ -25,8 +32,10 @@
         <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">Job Report: {{job_number}}</h3>
             </div>
-        <div id="dataHolder">
-            <p></p>
+            <div class="modal-body>
+                <div id="dataHolder">
+                    <p></p>
+                </div>
         </div>
     </div>
 </div>
@@ -34,19 +43,5 @@
 
 </body>
 </html>
-
-<script>
-
-    document.getElementById("coverPage").onclick = function() {coverPageLoad()};
-
-    function coverPageLoad() {
-        $( "#dataHolder" ).load( "{% url 'cover_page' %}?job_number={{ job_number }}", function( response, status, xhr ) {
-          if ( status == "error" ) {
-            var msg = "Sorry but there was an error: ";
-            $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-          }
-        });
-    }
-</script>
 
 {% include "job_report_viewer/js_tree.html" %}
