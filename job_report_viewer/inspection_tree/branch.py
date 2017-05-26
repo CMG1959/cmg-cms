@@ -26,6 +26,7 @@ class Node(object):
 
 
 
+
 class Branch(object):
 
     def __init__(self, name):
@@ -37,7 +38,8 @@ class Branch(object):
 
     def to_jstree(self):
         js_tree = {}
-        js_tree.update({'text': self.name, 'children' : [],  "state" : {"opened" : True }})
+        js_tree.update({'text': self.name, 'children': [], "state": {"opened": True}})
+
         for node in self.nodes:
             js_tree['children'].append(node.to_jstree())
         return js_tree
