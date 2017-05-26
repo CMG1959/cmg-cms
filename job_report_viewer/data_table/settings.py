@@ -26,5 +26,9 @@ HEADER_TEXT = [('Machine Operator','machineOperator'),
                ('Date', 'dateCreated'),
                ('Result', 'inspectionResult')]
 
+HEADER_PHL = [('Inspector Name', 'inspectorName'),
+              ('Date', 'dateCreated'),
+              ('Event', 'descEvent')]
+
 INSPECTION_SELECT_RELATED = ['machineOperator', 'inspectorName']
 PREFETCH_PASS_FAIL = ['defectType']

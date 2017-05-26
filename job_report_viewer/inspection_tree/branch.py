@@ -37,7 +37,7 @@ class Branch(object):
 
     def to_jstree(self):
         js_tree = {}
-        js_tree.update({'text': self.name, 'children' : []})
+        js_tree.update({'text': self.name, 'children' : [],  "state" : {"opened" : True }})
         for node in self.nodes:
             js_tree['children'].append(node.to_jstree())
         return js_tree
@@ -55,6 +55,7 @@ class TreeBuilder(object):
         self.branch_numeric = Branch(NUMERIC)
         self.branch_text = Branch(TEXT)
         self.branch_range = Branch(RANGE)
+        self.branch_phl = Branch(PHL)
         self.build_tree(item_number_id, job_number_id)
 
     def get_cover_page(self, item_number_id, job_number_id):
@@ -81,16 +82,22 @@ class TreeBuilder(object):
             new_node = Node(inspection.testName_id, self.job_number_id, inspection.testName.testName, RANGE, self.url_data_table)
             self.branch_range.add_node(new_node)
 
+    def get_phl(self, item_number_id, job_number_id):
+        new_node = Node(item_number_id, job_number_id, 'Production History', PHL, self.url_data_table)
+        self.branch_phl.add_node(new_node)
+
     def build_tree(self, item_number_id, job_number_id):
         self.get_cover_page(item_number_id, job_number_id)
         self.get_pass_fail_inspections(item_number_id, job_number_id)
         self.get_numeric_inspections(item_number_id, job_number_id)
         self.get_text_inspections(item_number_id, job_number_id)
         self.get_range_inspections(item_number_id, job_number_id)
+        self.get_phl(item_number_id, job_number_id)
 
     def get_json(self):
         jstree = []
         jstree.append(self.branch_cover_page.nodes[0].to_jstree())
+        jstree.append(self.branch_phl.nodes[0].to_jstree())
         for each_branch in [self.branch_pass_fail, self.branch_numeric, self.branch_range, self.branch_text]:
             jstree.append(each_branch.to_jstree())
         return jstree

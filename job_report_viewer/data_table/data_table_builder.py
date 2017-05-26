@@ -1,5 +1,7 @@
 from settings import *
 from inspection.models import passFailInspection, numericInspection, textInspection, RangeInspection
+from production_and_mold_history.models  import ProductionHistory
+from startupshot.models import startUpShot
 from job_report_viewer.settings import *
 import tzlocal
 import pytz
@@ -74,21 +76,23 @@ class DataTableBuilder(object):
 
     @classmethod
     def get_range(cls, test_name_id, job_id, header):
-        inspections = RangeInspection.objects.filter(numericTestName_id=test_name_id,
+        inspections = RangeInspection.objects.filter(rangeTestName_id=test_name_id,
                                                        jobID=job_id). \
             select_related(*INSPECTION_SELECT_RELATED)
         return cls.response(inspections, header)
 
     @classmethod
     def get_text(cls, test_name_id, job_id, header):
-        inspections = textInspection.objects.filter(numericTestName_id=test_name_id,
+        inspections = textInspection.objects.filter(textTestName_id=test_name_id,
                                                        jobID=job_id). \
             select_related(*INSPECTION_SELECT_RELATED)
         return cls.response(inspections, header)
 
     @classmethod
-    def get_phl(cls):
-        pass
+    def get_phl(cls, job_id, header):
+        startup_shot = startUpShot.objects.get(id=job_id)
+        inspections = ProductionHistory.objects.filter(jobNumber=startup_shot.jobNumber).select_related('inspectorName')
+        return cls.response(inspections, header )
 
     @classmethod
     def get_data(cls, test_name_id, job_id, get_type):
@@ -101,6 +105,6 @@ class DataTableBuilder(object):
         elif get_type == TEXT:
             return cls.get_text(test_name_id, job_id, HEADER_TEXT)
         elif get_type == PHL:
-            pass
+            return cls.get_phl(job_id, HEADER_PHL)
         else:
             pass
