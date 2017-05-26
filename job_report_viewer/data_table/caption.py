@@ -45,6 +45,8 @@ class Caption(object):
             return cls.get_text(primitive_id)
         elif table_type == COVER:
             return COVER
+        elif table_type == PHL:
+            return PHL
         elif table_type == STATISTICS:
             return 'N-A'
         else:
