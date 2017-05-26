@@ -14,6 +14,8 @@ $(document).ready(function(){
 </script>
 
 <script>
+
+
 $(document).ready(function(){
       $(function() {
             $('#treeContainer').on("select_node.jstree", function (e, data) {
@@ -21,9 +23,9 @@ $(document).ready(function(){
             if (data.node.data.url != null) {
                 $.get( data.node.data.url, function(tableData) {
                   console.log(tableData);
-                  if (tableData.html){$('#dataHolder').html(tableData)};
-                  if (tableData.js) {
-                    loadTableData(url);
+                  if (tableData.html){$('#dataHolder').html(tableData.html)};
+                  if (tableData.data) {
+                    loadTableData(tableData.data);
                   }
                 });
             }
@@ -33,11 +35,11 @@ $(document).ready(function(){
 </script>
 
 <script>
-   function loadTableData(url) {
+   function loadTableData(data) {
         var oTable = $('.datatable').dataTable({
-            "pageLength": 25,
-            "order": [[ 0, "desc" ]],
-            "ajax": url
+            "pageLength": 15,
+            "order": [[ 2, "desc" ]],
+            "data": data
         });
         }
 </script>

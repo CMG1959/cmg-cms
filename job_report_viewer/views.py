@@ -12,6 +12,7 @@ from django.db.models import Avg, Max, Min, StdDev
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import RequestContext, loader
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
@@ -26,6 +27,7 @@ from startupshot.models import startUpShot, MattecProd
 from job_report_viewer.inspection_tree.branch import TreeBuilder
 from inspection_coverpage.cover import CoverPageBuilder
 from django.http import JsonResponse
+from data_table.data_table_builder import DataTableBuilder
 
 class JobReportBase(TemplateView):
     template_name = 'job_report_viewer/job_report_base.html'
@@ -36,8 +38,20 @@ class JobReportBase(TemplateView):
         context['job_number'] = job_number
         return context
 
+def cover_page(request):
+    template_name = 'job_report_viewer/cover_page.html'
+
+    job_number_id = request.GET.get('job_number_id')
+    start_up_shot = startUpShot.objects.get(id=job_number_id)
+    cover_page_data = CoverPageBuilder(start_up_shot.item_id, start_up_shot)
+
+    html_context = render_to_string(template_name, {'cover_page': cover_page_data})
+    js_context = None
+
+    return JsonResponse({'html': html_context, 'js': js_context})
+
 class CoverPage(TemplateView):
-    template_name = 'job_report_viewer/cover_page.html'
+    template_name = 'job_report_viewer/data_table_base.html'
 
     def get_context_data(self, **kwargs):
         job_number_id = self.request.GET.get('job_number_id')
@@ -46,20 +60,20 @@ class CoverPage(TemplateView):
         context['cover_page'] = CoverPageBuilder(start_up_shot.item_id, start_up_shot)
         return context
 
-def data_table(request):
-    template_name = 'job_report_viewer/cover_page.html'
+def data_table_view(request):
+    template_name = 'job_report_viewer/data_table_base.html'
 
-    def get_context_data(self, **kwargs):
-        # http: // cmg - vis01 / JobReportViewer / DataTable?job_number_id = 1167 & primitive_id = 10 & type = Pass - Fail
-        job_number_id = self.request.GET.get('job_number_id')
-        primitive_id = self.request.GET.get('primitive_id')
-        primitive_type = self.request.GET.get('type')
+    # http: // cmg - vis01 / JobReportViewer / DataTable?job_number_id = 1167 & primitive_id = 10 & type = Pass - Fail
+    job_number_id = request.GET.get('job_number_id')
+    primitive_id = request.GET.get('primitive_id')
+    primitive_type = request.GET.get('type')
 
+    data_table_builder = DataTableBuilder.get_data(primitive_id, job_number_id, primitive_type)
 
-        start_up_shot = startUpShot.objects.get(id=job_number_id)
-        context = super(CoverPage, self).get_context_data(**kwargs)
-        context['cover_page'] = CoverPageBuilder(start_up_shot.item_id, start_up_shot)
-        return context
+    html_context = render_to_string(template_name, {'table_headers': data_table_builder['table_headers']})
+
+    return JsonResponse({'html': html_context, 'data': data_table_builder['data']})
+
 
 
 def plots(request):

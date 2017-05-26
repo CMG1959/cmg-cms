@@ -36,7 +36,7 @@ class Employees(models.Model):
 class EmployeeAtWorkstation(models.Model):
     class Meta:
         verbose_name = 'Employee at workstation'
-        verbose_name = 'Employee at workstation'
+        verbose_name_plural = 'Employee at workstation'
 
     employee = models.ForeignKey('Employees', verbose_name='Employee')
     workstation = models.CharField(max_length=20, verbose_name="Workstation", unique=True)

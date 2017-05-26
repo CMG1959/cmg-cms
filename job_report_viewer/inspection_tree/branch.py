@@ -1,13 +1,8 @@
 from inspection.models import (passFailByPart, numericTestByPart,
     textRecordByPart, RangeRecordByPart)
 from collections import OrderedDict
+from job_report_viewer.settings import NUMERIC, PASS_FAIL, PHL, RANGE, TEXT, COVER, STATISTICS
 
-PASS_FAIL = 'Pass-Fail'
-NUMERIC = 'Numeric'
-TEXT = 'Text'
-RANGE = 'Range'
-COVER = 'Cover'
-STATISTICS = 'Statistics'
 
 
 class Node(object):
