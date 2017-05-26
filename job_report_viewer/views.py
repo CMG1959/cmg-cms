@@ -28,6 +28,7 @@ from job_report_viewer.inspection_tree.branch import TreeBuilder
 from inspection_coverpage.cover import CoverPageBuilder
 from django.http import JsonResponse
 from data_table.data_table_builder import DataTableBuilder
+from data_table.caption import Caption
 
 class JobReportBase(TemplateView):
     template_name = 'job_report_viewer/job_report_base.html'
@@ -70,7 +71,8 @@ def data_table_view(request):
 
     data_table_builder = DataTableBuilder.get_data(primitive_id, job_number_id, primitive_type)
 
-    html_context = render_to_string(template_name, {'table_headers': data_table_builder['table_headers']})
+    html_context = render_to_string(template_name, {'table_headers': data_table_builder['table_headers'],
+                                                    'caption': Caption.get(primitive_type, primitive_id)})
 
     return JsonResponse({'html': html_context, 'data': data_table_builder['data']})
 
