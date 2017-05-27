@@ -46,11 +46,12 @@ class Branch(object):
 
 class TreeBuilder(object):
 
-    def __init__(self, item_number_id, job_number_id, cover_page_url, data_table_url, plots_url):
+    def __init__(self, item_number_id, job_number_id, cover_page_url, data_table_url, plots_url, summary_url):
         self.job_number_id = job_number_id
         self.item_number_id = item_number_id
         self.url_cover_page = cover_page_url
         self.url_data_table = data_table_url
+        self.url_summary = summary_url
         self.url_plots = plots_url
         self.branch_cover_page = Branch(COVER)
         self.branch_pass_fail = Branch(PASS_FAIL)
@@ -58,6 +59,7 @@ class TreeBuilder(object):
         self.branch_text = Branch(TEXT)
         self.branch_range = Branch(RANGE)
         self.branch_phl = Branch(PHL)
+        self.branch_statistics = Branch(STATISTICS)
         self.build_tree(item_number_id, job_number_id)
 
     def get_cover_page(self, item_number_id, job_number_id):
@@ -88,18 +90,21 @@ class TreeBuilder(object):
         new_node = Node(item_number_id, job_number_id, 'Production History', PHL, self.url_data_table)
         self.branch_phl.add_node(new_node)
 
+    def get_summary(self, item_number_id, job_number_id):
+        new_node = Node(item_number_id, job_number_id, 'Summary', STATISTICS, self.url_summary)
+        self.branch_statistics.add_node(new_node)
+
     def build_tree(self, item_number_id, job_number_id):
-        self.get_cover_page(item_number_id, job_number_id)
-        self.get_pass_fail_inspections(item_number_id, job_number_id)
-        self.get_numeric_inspections(item_number_id, job_number_id)
-        self.get_text_inspections(item_number_id, job_number_id)
-        self.get_range_inspections(item_number_id, job_number_id)
-        self.get_phl(item_number_id, job_number_id)
+        for anon_func in [self.get_cover_page, self.get_pass_fail_inspections,
+                          self.get_numeric_inspections, self.get_text_inspections,
+                          self.get_range_inspections, self.get_phl, self.get_summary]:
+            anon_func(item_number_id, job_number_id)
 
     def get_json(self):
         jstree = []
         jstree.append(self.branch_cover_page.nodes[0].to_jstree())
+        jstree.append(self.branch_statistics.nodes[0].to_jstree())
         jstree.append(self.branch_phl.nodes[0].to_jstree())
         for each_branch in [self.branch_pass_fail, self.branch_numeric, self.branch_range, self.branch_text]:
-            jstree.append(each_branch.to_jstree())
+            jstree.extend(each_branch.to_jstree())
         return jstree

@@ -28,6 +28,7 @@ from job_report_viewer.inspection_tree.branch import TreeBuilder
 from inspection_coverpage.cover import CoverPageBuilder
 from django.http import JsonResponse
 from data_table.data_table_builder import DataTableBuilder
+from inspection_summary.summary import InspectionSummary
 from data_table.caption import Caption
 
 class JobReportBase(TemplateView):
@@ -76,7 +77,21 @@ def data_table_view(request):
 
     return JsonResponse({'html': html_context, 'data': data_table_builder['data']})
 
+def data_table_summary_view(request):
+    template_name = 'job_report_viewer/data_table_base.html'
 
+    # http: // cmg - vis01 / JobReportViewer / DataTable?job_number_id = 1167 & primitive_id = 10 & type = Pass - Fail
+    job_number_id = request.GET.get('job_number_id')
+    primitive_id = request.GET.get('primitive_id')
+    primitive_type = request.GET.get('type')
+
+    data_table_builder = InspectionSummary.get_data(job_number_id)
+
+    # html_context = render_to_string(template_name, {'table_headers': data_table_builder['table_headers'],
+    #                                                 'caption': Caption.get(primitive_type, primitive_id)})
+
+    # return JsonResponse({'html': html_context, 'data': data_table_builder['data']})
+    return JsonResponse(data_table_builder)
 
 def plots(request):
     pass
@@ -89,7 +104,8 @@ def get_tree(request):
     url_cover_page = reverse('cover_page')
     url_data_table = reverse('data_table')
     url_plots = reverse('plots')
+    url_summary = reverse('data_table_summary')
 
     tree = TreeBuilder(start_up_shot.item_id, start_up_shot.id, url_cover_page,
-                       url_data_table, url_plots)
+                       url_data_table, url_plots, url_summary)
     return JsonResponse(tree.get_json(), safe=False)
