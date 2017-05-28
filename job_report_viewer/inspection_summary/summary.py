@@ -9,24 +9,46 @@ import datetime
 from django.db.models import Count, StdDev, Avg
 from decimal import Decimal
 
-INSPECTION_RESULT = 'inspectionResult'
+
+class Summary(object):
+    def __init__(self, name, inspection_type):
+        self.name = name
+        self.inspection_type = inspection_type
+        self.number_passed = 0
+        self.number_failed = 0
+        self.total = 0
+
+    def add_aggregation(self, inspection_result, count):
+        if inspection_result:
+            self.number_passed = count
+        elif not inspection_result:
+            self.number_failed = count
+        else:
+            pass
+
+        self.total = self.number_failed + self.number_passed
+
+    def get_report(self):
+        return {report_name: getattr(self, name) for report_name, name in REPORT}
+
 
 class InspectionSummary(object):
 
     @classmethod
-    def response(cls, queryset, settings_list):
-        db_cols = settings_list[0]
-        print queryset
-        formatted_list = queryset
-        return formatted_list
+    def response(self, queryset, inspection_col_name, inspection_type):
+        queryset_dict = {}
+        for each_query in queryset:
+            inspection_name = each_query.get(inspection_col_name)
 
-    @classmethod
-    def get_headers(cls, settings_list):
-        return [x[0] for x in settings_list]
+            if inspection_name not in queryset_dict:
+                queryset_dict[inspection_name] = \
+                    Summary(inspection_name, inspection_type)
 
-    @classmethod
-    def agg_count(cls, queryset):
-        pass
+            queryset_dict[inspection_name].add_aggregation(
+                each_query.get(INSPECTION_RESULT),
+                each_query.get('count_of')
+            )
+        return [v.get_report() for k,v in queryset_dict.iteritems()]
 
     @classmethod
     def get_numeric(cls, job_id):
@@ -34,7 +56,7 @@ class InspectionSummary(object):
             filter(jobID=job_id).\
             values(*INSPECTION_NUMERIC).\
             annotate(count_of=Count(INSPECTION_RESULT))
-        return cls.response(inspections, INSPECTION_NUMERIC)
+        return cls.response(inspections, INSPECTION_NUMERIC[0], NUMERIC)
 
     @classmethod
     def get_pass_fail(cls, job_id):
@@ -42,34 +64,40 @@ class InspectionSummary(object):
             filter(jobID = job_id).\
             values(*INSPECTION_PASS_FAIL).\
             annotate(count_of=Count(INSPECTION_RESULT))
-        return cls.response(inspections, INSPECTION_PASS_FAIL)
+        return cls.response(inspections, INSPECTION_PASS_FAIL[0], PASS_FAIL)
 
     @classmethod
     def get_range(cls, job_id):
         inspections = RangeInspection.objects.\
             filter(jobID=job_id).\
-            values(*INSPECTION_RANGE)
-        return cls.response(inspections, INSPECTION_RANGE)
+            values(*INSPECTION_RANGE).\
+            annotate(count_of=Count(INSPECTION_RESULT))
+        return cls.response(inspections, INSPECTION_RANGE[0], RANGE)
 
     @classmethod
     def get_text(cls, job_id):
         inspections = textInspection.objects.\
             filter(jobID=job_id).\
-            values(*INSPECTION_TEXT)
-        return cls.response(inspections, INSPECTION_TEXT)
+            values(*INSPECTION_TEXT).\
+            annotate(count_of=Count(INSPECTION_RESULT))
 
-    @classmethod
-    def get_phl(cls, job_id, header):
-        startup_shot = startUpShot.objects.get(id=job_id)
-        inspections = ProductionHistory.objects.filter(jobNumber=startup_shot.jobNumber).select_related('inspectorName')
-        return cls.response(inspections, header )
+        [each_inspection.update({'inspectionResult': True})
+            for each_inspection in inspections]
+
+        return cls.response(inspections, INSPECTION_TEXT[0], TEXT)
 
     @classmethod
     def get_data(cls, job_id):
-        inspections = {}
+        inspections = []
         for anon_func, func_type in [(cls.get_numeric, NUMERIC ),
                                       (cls.get_pass_fail, PASS_FAIL),
                                       (cls.get_range, RANGE),
                                       (cls.get_text, TEXT)]:
-            inspections.update({func_type: anon_func(job_id)})
+            inspections.extend(anon_func(job_id))
         return inspections
+
+    @classmethod
+    def get_table(cls, inspections):
+        header = [name for name, attr_ref in REPORT]
+        body = [[each_inspection[name] for name in header] for each_inspection in inspections]
+        return {'data': body, 'table_headers': header}

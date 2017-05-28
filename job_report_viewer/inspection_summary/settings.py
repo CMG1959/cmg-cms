@@ -16,3 +16,10 @@ INSPECTION_SELECT_RELATED = ['machineOperator', 'inspectorName']
 PREFETCH_PASS_FAIL = ['defectType']
 
 TEST_NAME = 'Test Name'
+
+
+REPORT = [('Name', 'name'),
+          ('Inspection Type', 'inspection_type'),
+          ('Number Passed', 'number_passed'),
+          ('Number Failed', 'number_failed'),
+          ('Total', 'total')]

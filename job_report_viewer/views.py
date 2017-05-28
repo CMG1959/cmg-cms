@@ -80,18 +80,18 @@ def data_table_view(request):
 def data_table_summary_view(request):
     template_name = 'job_report_viewer/data_table_base.html'
 
-    # http: // cmg - vis01 / JobReportViewer / DataTable?job_number_id = 1167 & primitive_id = 10 & type = Pass - Fail
     job_number_id = request.GET.get('job_number_id')
     primitive_id = request.GET.get('primitive_id')
     primitive_type = request.GET.get('type')
 
-    data_table_builder = InspectionSummary.get_data(job_number_id)
+    summary = InspectionSummary.get_data(job_number_id)
+    summary_builder = InspectionSummary.get_table(summary)
 
-    # html_context = render_to_string(template_name, {'table_headers': data_table_builder['table_headers'],
-    #                                                 'caption': Caption.get(primitive_type, primitive_id)})
+    html_context = render_to_string(template_name, {'table_headers': summary_builder['table_headers'],
+                                                    'caption': 'Inspection Summary'})
 
-    # return JsonResponse({'html': html_context, 'data': data_table_builder['data']})
-    return JsonResponse(data_table_builder)
+    return JsonResponse({'html': html_context, 'data': summary_builder['data']})
+
 
 def plots(request):
     pass
