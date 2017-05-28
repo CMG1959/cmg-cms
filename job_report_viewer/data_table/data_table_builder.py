@@ -21,9 +21,7 @@ class DataTableBuilder(object):
     @classmethod
     def response(cls, queryset, settings_list):
         db_cols = [x[1] for x in settings_list]
-        formatted_queryset = list(queryset.values(*db_cols))
         formatted_queryset = list(queryset)
-        print queryset
         formatted_list = cls.format_queryset(formatted_queryset, db_cols)
         return {'data': formatted_list,
                 'table_headers': cls.get_headers(settings_list)}
