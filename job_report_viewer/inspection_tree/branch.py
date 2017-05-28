@@ -25,8 +25,6 @@ class Node(object):
                 'children': self.children }
 
 
-
-
 class Branch(object):
 
     def __init__(self, name):
@@ -106,5 +104,5 @@ class TreeBuilder(object):
         jstree.append(self.branch_statistics.nodes[0].to_jstree())
         jstree.append(self.branch_phl.nodes[0].to_jstree())
         for each_branch in [self.branch_pass_fail, self.branch_numeric, self.branch_range, self.branch_text]:
-            jstree.extend(each_branch.to_jstree())
+            jstree.append(each_branch.to_jstree())
         return jstree
