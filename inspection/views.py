@@ -430,7 +430,8 @@ def view_inspection(request):
                 'min_val': range_info.rangeMin,
                 'max_val': range_info.rangeMax,
                 'id_result': '#id_inspectionResult',
-                'use_calculator': True,
+                'use_calculator': True if len(head_cav_ids) == 1 else False,
+                'id_numeric' : 'id_cav_0',
                 'active_cavities': active_job.activeCavities
             }
 
