@@ -23,3 +23,12 @@ REPORT = [('Name', 'name'),
           ('Number Passed', 'number_passed'),
           ('Number Failed', 'number_failed'),
           ('Total', 'total')]
+
+SUMMARY_NUMERIC_ID = 'numVal_1'
+SUMMARY_NUMERIC = ['numericTestName__testName__testName']
+
+SUMMARY_NUMERIC_REPORT = [('Test Name', SUMMARY_NUMERIC[0]),
+                          ('Min', 'min'),
+                          ('Mean', 'mean'),
+                          ('StdDev', 'std'),
+                          ('Max', 'max')]

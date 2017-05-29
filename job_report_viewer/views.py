@@ -1,35 +1,17 @@
-# Create your views here.
-import collections
-import datetime
-import json
-import re
-from django import forms
-from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
-from django.db.models import Avg, Max, Min, StdDev
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render
-from django.template import RequestContext, loader
+from django.http import  Http404
 from django.template.loader import render_to_string
-from django.utils import timezone
 from django.core.urlresolvers import reverse
 
-from dashboard.models import errorLog
-from employee.models import Employees, EmployeeAtWorkstation
-from equipment.models import EquipmentInfo
-from inspection.models import *
-from molds.models import Mold, PartIdentifier
-from part.models import Part
-from production_and_mold_history.models import ProductionHistory
-from startupshot.models import startUpShot, MattecProd
+from startupshot.models import startUpShot
 from job_report_viewer.inspection_tree.branch import TreeBuilder
 from inspection_coverpage.cover import CoverPageBuilder
 from django.http import JsonResponse
 from data_table.data_table_builder import DataTableBuilder
 from inspection_summary.summary import InspectionSummary
+from inspection_summary.numeric_summary import NumericInspectionSummary
 from data_table.caption import Caption
+from settings import STATISTICS, NUMERIC_STATISTICS
 
 class JobReportBase(TemplateView):
     template_name = 'job_report_viewer/job_report_base.html'
@@ -84,8 +66,15 @@ def data_table_summary_view(request):
     primitive_id = request.GET.get('primitive_id')
     primitive_type = request.GET.get('type')
 
-    summary = InspectionSummary.get_data(job_number_id)
-    summary_builder = InspectionSummary.get_table(summary)
+    if primitive_type == STATISTICS:
+        use_cls = InspectionSummary
+    elif primitive_type == NUMERIC_STATISTICS:
+        use_cls = NumericInspectionSummary
+    else:
+        return Http404
+
+    summary = use_cls.get_data(job_number_id)
+    summary_builder = use_cls.get_table(summary)
 
     html_context = render_to_string(template_name, {'table_headers': summary_builder['table_headers'],
                                                     'caption': 'Inspection Summary'})

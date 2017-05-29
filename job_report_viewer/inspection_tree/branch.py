@@ -1,7 +1,7 @@
 from inspection.models import (passFailByPart, numericTestByPart,
     textRecordByPart, RangeRecordByPart)
 from collections import OrderedDict
-from job_report_viewer.settings import NUMERIC, PASS_FAIL, PHL, RANGE, TEXT, COVER, STATISTICS
+from job_report_viewer.settings import NUMERIC, PASS_FAIL, PHL, RANGE, TEXT, COVER, STATISTICS, NUMERIC_STATISTICS
 
 
 
@@ -92,6 +92,9 @@ class TreeBuilder(object):
         new_node = Node(item_number_id, job_number_id, 'Summary', STATISTICS, self.url_summary)
         self.branch_statistics.add_node(new_node)
 
+        new_node = Node(item_number_id, job_number_id, 'Numeric Summary', NUMERIC_STATISTICS, self.url_summary)
+        self.branch_statistics.add_node(new_node)
+
     def build_tree(self, item_number_id, job_number_id):
         for anon_func in [self.get_cover_page, self.get_pass_fail_inspections,
                           self.get_numeric_inspections, self.get_text_inspections,
@@ -101,7 +104,7 @@ class TreeBuilder(object):
     def get_json(self):
         jstree = []
         jstree.append(self.branch_cover_page.nodes[0].to_jstree())
-        jstree.append(self.branch_statistics.nodes[0].to_jstree())
+        jstree.append(self.branch_statistics.to_jstree())
         jstree.append(self.branch_phl.nodes[0].to_jstree())
         for each_branch in [self.branch_pass_fail, self.branch_numeric, self.branch_range, self.branch_text]:
             jstree.append(each_branch.to_jstree())
