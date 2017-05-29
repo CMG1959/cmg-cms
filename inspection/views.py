@@ -421,8 +421,6 @@ def view_inspection(request):
 
             form = NumericInspectionFormVF(extra=head_cav_ids)
 
-
-
             context_dict_add = {
                 'use_checkbox': True,
                 'id_check': '#id_isFullShot',
@@ -432,6 +430,8 @@ def view_inspection(request):
                 'min_val': range_info.rangeMin,
                 'max_val': range_info.rangeMax,
                 'id_result': '#id_inspectionResult',
+                'use_calculator': True,
+                'active_cavities': active_job.activeCavities
             }
 
         elif inspection_type == 'Text':
