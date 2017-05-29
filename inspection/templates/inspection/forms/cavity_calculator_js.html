@@ -1,5 +1,4 @@
 <script>
-    $( document ).ready(function() {
         /* Latest compiled and minified JavaScript included as External Resource */
 
         function updateResult() {
@@ -9,7 +8,7 @@
           if ((observedValue) && (cavitiesSampled)) {
             resultValue = observedValue / cavitiesSampled;
             document.getElementById('resultValue').value = round(resultValue, 3);
-            document.getElementById({{id_numeric}}).value = round(resultValue, 3);
+            document.getElementById('{{id_numeric}}').value = round(resultValue, 3);
             console.log(resultValue);
           }
         }
@@ -32,5 +31,4 @@
           value = value.toString().split('e');
           return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
         }
-});
 </script>
