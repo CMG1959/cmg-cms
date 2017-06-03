@@ -15,20 +15,9 @@
 <script src="{% static "datatables/jquery.dataTables.min.js" %}"></script>
 <link rel="stylesheet" type="text/css"  href="{% static "datatables/jquery.dataTables.min.css" %}"/>
 
-<script type="text/javascript">
-function show_sidebar()
-{
-document.getElementById('wrapper').style.visibility="visible";
-}
-
-function hide_sidebar()
-{
-document.getElementById('wrapper').style.visibility="hidden";
-}
-</script>
 
 
-<div class="col-sm-2 bootcards-cards"  id="wrapper" onMouseOver="show_sidebar()" onMouseOut="hide_sidebar()">
+<div class="col-sm-2 bootcards-cards"  id="wrapper">
     {% include "job_report_viewer/side_navigation.html" %}
 </div>
 
