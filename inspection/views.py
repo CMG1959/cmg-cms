@@ -700,13 +700,8 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
 
             numericList = []
             for eachShot in thisInspectionbyJob:
-                # if its a full shot and we do not want to report the raw data (take average)
-                if ((eachShot.isFullShot) and (not eachInspection1.testName.calcAvg)):
-                    numericList.append(eachShot.numVal_1/ active_job[0].activeCavities)
-                    totalNumericList.append(numericList[-1])
-                else:
-                    numericList.append(eachShot.numVal_1)
-                    totalNumericList.append(numericList[-1])
+                numericList.append(eachShot.numVal_1)
+                totalNumericList.append(numericList[-1])
 
             partDict['numericTest'][eachInspection][n]['numericStats'] = calc_numeric_stats(numericList)
             n += 1
@@ -866,10 +861,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
 
         numericList = []
         for eachShot in context_dic['numericTests'][key]:
-            if ((eachShot.isFullShot) and (not each_numeric_inspection.testName.calcAvg)):
-                numericList.append(eachShot.numVal_1/ active_job[0].activeCavities)
-            else:
-                numericList.append(eachShot.numVal_1)
+            numericList.append(eachShot.numVal_1)
 
         context_dic['numericTestSummary'][key]['numericStats'] = calc_numeric_stats(numericList)
 

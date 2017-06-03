@@ -108,10 +108,7 @@ class JobReport:
 
             numericList = []
             for eachShot in self.numeric_inspections[each_inspection.testName.testName]:
-                if ((eachShot.isFullShot) and (not each_inspection.testName.calcAvg)):
-                    numericList.append(eachShot.numVal_1 / self.startup_shot.activeCavities)
-                else:
-                    numericList.append(float(eachShot.numVal_1))
+                numericList.append(float(eachShot.numVal_1))
 
             result_dict, result_list = self.__calc_range_stats(numericList)
 
