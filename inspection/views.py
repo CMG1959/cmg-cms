@@ -495,7 +495,7 @@ def view_inspection(request):
 
 
 @login_required
-def view_jobReportSearch(request):
+def job_report_search(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -508,16 +508,14 @@ def view_jobReportSearch(request):
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
 
+            this_start_up_shot = startUpShot.objects.filter(jobNumber=job_number)
+            workstation = this_start_up_shot[0].machNo
+
             if report_type == 'htmlReport':
                 context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
-                template = loader.get_template('inspection/reports/jobReport.html')
-                context = RequestContext(request, context_dic)
-                return HttpResponse(template.render(context))
-            elif report_type == 'htmlReport_noplot':
-                context_dic = createJobReportDict(job_number, date_from=date_from, date_to=date_to)
-                template = loader.get_template('inspection/reports/jobReport_noplot.html')
-                context = RequestContext(request, context_dic)
-                return HttpResponse(template.render(context))
+                redirect_url = '{0}?job_number={1}&workstation={2}'.\
+                                   format(reverse('job_report_base'), job_number, workstation)
+                return HttpResponseRedirect(redirect_url)
             else:
                 if startUpShot.objects.filter(jobNumber=job_number).exists():
                     my_report = JobReport(job_number=job_number, date_from=date_from, date_to=date_to)

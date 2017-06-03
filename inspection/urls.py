@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^$', views.view_index, name='inspection_index'),
     url(r'^entry/', views.view_inspection, name='inspection_entry'),
     ### link to job report
-    url(r'^JobReport/$', views.view_jobReportSearch, name='inspection_job_report'),
+    url(r'^JobReport/$', views.job_report_search, name='inspection_job_report'),
     ### link to item report
     url(r'^ItemReport/$',views.view_itemReportSearch, name='inspection_item_report'),
     ### link to view for job report

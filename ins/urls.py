@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^record_step$', views.view_record_step, name='view_record_step'),
     # url(r'^entry/', views.view_inspection, name='inspection_entry'),
     # ### link to job report
-    # url(r'^jobReport/$', views.view_jobReportSearch, name='view_jobReportSearch'),
+    # url(r'^jobReport/$', views.job_report_search, name='job_report_search'),
     # ### link to item report
     # url(r'^itemReport/$', views.view_itemReportSearch, name='view_itemReportSearch'),
     # ### link to view for job report
