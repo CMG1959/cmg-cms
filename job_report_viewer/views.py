@@ -18,8 +18,10 @@ class JobReportBase(TemplateView):
 
     def get_context_data(self, **kwargs):
         job_number = self.request.GET.get('job_number')
+        workstation = self.request.GET.get('workstation')
         context = super(JobReportBase, self).get_context_data(**kwargs)
         context['job_number'] = job_number
+        context['workstation'] = workstation
         return context
 
 def cover_page(request):
@@ -88,7 +90,10 @@ def plots(request):
 
 def get_tree(request):
     job_number = request.GET.get('job_number')
-    start_up_shot = startUpShot.objects.get(jobNumber=job_number)
+    workstation = request.GET.get('workstation')
+
+    start_up_shot = startUpShot.objects.get(jobNumber=job_number,
+                                            machNo__part_identifier=workstation)
 
     url_cover_page = reverse('cover_page')
     url_data_table = reverse('data_table')

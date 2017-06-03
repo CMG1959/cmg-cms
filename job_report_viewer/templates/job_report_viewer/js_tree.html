@@ -4,7 +4,7 @@ $(document).ready(function(){
       $('#treeContainer').jstree({
         'core' : {
           'data' : {
-            "url" : "{% url 'tree' %}?job_number={{ job_number }}",
+            "url" : "{% url 'tree' %}?job_number={{ job_number }}&workstation={{ workstation }}",
             "dataType" : "json" // needed only if you do not supply JSON headers
           }
         }
