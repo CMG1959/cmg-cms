@@ -36,9 +36,9 @@ class JobReport:
     '''
 
     def __init__(self, job_number, date_from=None, date_to=None):
+        self.job_number = job_number
         self.job_number_id = startUpShot.objects.get(
             jobNumber=self.job_number).id
-        self.job_number = job_number
         self.date_from = date_from
         self.date_to = date_to
         self.inspection_date_range = {}
@@ -59,19 +59,23 @@ class JobReport:
     def _get_inspection_summary(self):
         inspections = InspectionSummary.get_data(self.job_number_id)
         table_data = InspectionSummary.get_table(inspections)
+        wrapped_data = map(self._wrap_text, table_data['data'])
+
         self.inspection_summarized.append(table_data['table_headers'])
-        self.inspection_summarized.extend(table_data['data'])
-        # for row in table_data['data']:
-        #     self.inspection_summarized.append(row)
+        self.inspection_summarized.extend(wrapped_data)
+
 
     def _get_numeric_summary(self):
         inspections = NumericInspectionSummary.get_numeric(self.job_number_id)
         table_data = NumericInspectionSummary.get_table(inspections)
+        wrapped_data = map(self._wrap_text, table_data['data'])
 
         self.numeric_inspection_summarized.append(table_data['table_headers'])
-        self.numeric_inspection_summarized.extend(table_data['data'])
+        self.numeric_inspection_summarized.extend(wrapped_data)
 
-
+    def _wrap_text(self, row):
+        row[0] = textwrap.fill(row[0], 30)#.replace('\n', '<br />\n')
+        return row
 
     def __get_job_ids(self):
         self.start_up_shot_ids = [each_id.id for each_id in
@@ -164,6 +168,7 @@ class JobReport:
     def __build_report(self):
         self.__get_startup_shot()
         self._get_inspection_summary()
+        self._get_numeric_summary()
         self.__get_date_range()
         self.__get_job_info()
 
@@ -229,14 +234,15 @@ class JobReport:
         Story.append(t)
         Story.append(my_spacer)
 
-        ptext = 'Summary of Numeric Inspections'
-        Story.append(Paragraph(ptext, self.styles['Center']))
-        Story.append(caption_spacer)
-        t = Table(self.numeric_inspection_summarized)
-        t.setStyle(TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
-                               ]))
-        Story.append(t)
-        Story.append(my_spacer)
+        if self.numeric_inspection_summarized:
+            ptext = 'Summary of Numeric Inspections'
+            Story.append(Paragraph(ptext, self.styles['Center']))
+            Story.append(caption_spacer)
+            t = Table(self.numeric_inspection_summarized)
+            t.setStyle(TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
+                                   ]))
+            Story.append(t)
+            Story.append(my_spacer)
 
         #
         # ptext = 'Production History Log'
