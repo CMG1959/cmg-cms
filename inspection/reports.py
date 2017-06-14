@@ -114,13 +114,13 @@ class JobReport:
                           max_date=Max('dateCreated'))
             my_inspection.append(qset['min_date'])
             my_inspection.append(qset['max_date'])
-
+        my_inspection = filter(None, my_inspection)
         if my_inspection:
             self.report_date_end = max(my_inspection)
             self.report_date_start = min(my_inspection)
         else:
             self.report_date_end = 'No Inspections'
-            self.report_date_start = self.report_date_end
+            self.report_date_start = 'No Inspections'
 
     def __make_local_str(self, date_time_obj):
         loc_time = timezone.localtime(date_time_obj)
