@@ -7,6 +7,19 @@ urlpatterns = [
     ### classes
     url(r'^$', views.view_index, name='view_equipmentIndex'),
 
+    url(r'^Reports$', views.EquipmentReportBase.as_view(), name='equipment_report_base'),
+
+    url(r'^Reports/Tree$', views.get_tree, name='equipment_report_tree'),
+
+    url(r'^API/Device/(?P<equipment_id>[^/]+)$', views.api_device,
+        name='equipment_api_device'),
+
+    url(r'^API/PreventativeMaintenance/(?P<equipment_id>[^/]+)$',
+        views.api_preventative_maintenance, name='equipment_api_pm'),
+
+    url(r'^API/Repair/(?P<equipment_id>[^/]+)$', views.api_repair,
+        name='equipment_api_repair'),
+
     ### types
     url(r'^(?P<equipment_class_id>[^/]+)/?$', views.view_equipment_types, name='view_equipment_types'),
 

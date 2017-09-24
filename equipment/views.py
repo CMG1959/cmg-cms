@@ -2,12 +2,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from django.http import JsonResponse
+from django.core.urlresolvers import reverse
+from django.views.generic import TemplateView
+from django.template.loader import render_to_string
 
 from employee.models import Employees
 
 from models import EquipmentType, EquipmentInfo, PM, PMFreq, EquipmentPM, EquipmentRepair, EquipmentClass
 from forms import equipmentPMForm, equipmentRepairForm
+from tree import Tree, Node
+
 
 # Create your views here.
 @login_required
@@ -52,7 +57,7 @@ def view_equipment_info(request, equip_name_id):
     equip_info = EquipmentInfo.objects.get(id=equip_name_id)
 
     PMinfo = PM.objects.filter(equipment_type=equip_info.equipment_type).values('pm_frequency__pm_frequency','pm_frequency__id').distinct()
-    print PMinfo
+
     template = loader.get_template('equipment/equipment_info.html')
     context = RequestContext(request, {
         # 'equipment_class_id': equipment_class_id,
@@ -133,6 +138,7 @@ def view_repair_form(request, equip_info_id):
     equip_info = EquipmentInfo.objects.get(id = equip_info_id)
 
     # if this is a POST request we need to process the form data
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = equipmentRepairForm(request.POST)
@@ -147,8 +153,8 @@ def view_repair_form(request, equip_info_id):
                 my_form = form.save(commit=False)
                 my_form.employee = is_user
                 my_form.save()
-
                 return HttpResponseRedirect(redirect_url)
+
 
             else:
                 template = loader.get_template('inspection/bad_user.html')
@@ -161,7 +167,6 @@ def view_repair_form(request, equip_info_id):
             initial={'equipment_ID': equip_info.id,
                      },
         )
-
     return render(request, 'equipment/forms/repair.html', {'form': form, 'equip_info': equip_info})
 
 
@@ -183,4 +188,117 @@ def get_user_info(man_num):
     except Employees.DoesNotExist:
         this_user = None
     return this_user
-    
+
+class EquipmentReportBase(TemplateView):
+    template_name = 'equipment/reports/report.html'
+
+    def get_context_data(self, **kwargs):
+        equipment_id = self.request.GET.get('equipment_id')
+        equipment_information = EquipmentInfo.objects.get(id=equipment_id)
+        context = super(EquipmentReportBase, self).get_context_data(**kwargs)
+        context['equipment_information'] = equipment_information
+        context['equipment_id'] = equipment_id
+        return context
+
+
+def get_tree(request):
+    equipment_id = request.GET.get('equipment_id')
+
+
+
+    node_cover_page = Node('Cover Page', 'cover_page',
+                           reverse('equipment_api_device', kwargs={'equipment_id':equipment_id}), equipment_id)
+
+    node_repair = Node('Repair', 'repair',
+                           reverse('equipment_api_repair', kwargs={'equipment_id':equipment_id}), equipment_id)
+
+    node_pm = Node('PM', 'pm',
+                           reverse('equipment_api_pm', kwargs={'equipment_id':equipment_id}), equipment_id)
+
+    tree = [x.to_jstree() for x in [node_cover_page, node_pm, node_repair]]
+
+    return JsonResponse(tree, safe=False)
+
+
+def api_device(request, equipment_id):
+    equipment_information = EquipmentInfo.objects.get(id=equipment_id)
+    data = {
+        'equipment_type': equipment_information.equipment_type.equipment_type,
+        'alias': equipment_information.part_identifier,
+        'manufacturer_name': equipment_information.manufacturer_name.manufacturer_name,
+        'serial_number': equipment_information.serial_number,
+        'date_of_manufacture': equipment_information.date_of_manufacture
+    }
+
+    device_html = render_to_string('equipment/reports/modules/cover_page.html', {
+        'cover_page': [(k.replace('_',' ').title(), v) for k,v in data.iteritems()]
+    })
+
+    return_dict = {
+        'html': device_html,
+        'data': None
+    }
+    return JsonResponse(return_dict)
+
+
+def api_preventative_maintenance(request, equipment_id):
+    key_value_pairs = [
+        ('employee__EmpLMName', 'employee'),
+        ('Date_Performed', 'date_performed'),
+        ('pm_frequency__pm_frequency', 'pm_frequency'),
+        ('logged_pm__pm_item', 'pm_tasks'),
+        ('comments', 'comments'),
+    ]
+
+    output_list = []
+    for row in EquipmentPM.objects.filter(
+            equipment_ID=equipment_id).values(*[x[0] for x in key_value_pairs]).\
+            order_by('Date_Performed').reverse():
+        output_list.append([row[x[0]] for x in key_value_pairs])
+
+    return_dict = {
+        'html': get_data_table_html('Preventative Maintenance',
+                                    [x[1].replace('_',' ').title() for x in
+                                     key_value_pairs]),
+        'data': output_list
+    }
+
+    return JsonResponse(return_dict)
+
+def api_repair(request, equipment_id):
+
+    key_value_pairs = [
+        ('employee__EmpLMName', 'employee'),
+        ('Date_Performed', 'date_performed'),
+        ('po_num', 'po'),
+        ('part_supplier__supplier_name', 'supplier'),
+        ('part_name', 'part_name'),
+        ('part_number', 'part_number'),
+        ('part_cost', 'part_cost'),
+        ('part_quantity', 'part_quantity'),
+        ('comments', 'comments')
+    ]
+
+    output_list = []
+    for row in EquipmentRepair.objects.filter(
+        equipment_ID=equipment_id).values(*[x[0] for x in key_value_pairs]).\
+        order_by('Date_Performed').reverse():
+        output_list.append([row[x[0]] for x in key_value_pairs])
+
+    return_dict = {
+        'html': get_data_table_html('Preventative Maintenance',
+                                    [x[1].replace('_',' ').title() for x in
+                                     key_value_pairs]),
+        'data' : output_list
+    }
+
+    return JsonResponse(return_dict)
+
+
+def get_data_table_html(caption, headers):
+    device_html = render_to_string('equipment/reports/modules/data_table_base.html',
+                                   {
+                                       'caption': caption,
+                                       'table_headers': headers
+                                   })
+    return device_html

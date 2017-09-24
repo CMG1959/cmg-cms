@@ -20,6 +20,11 @@
                     <h3 class="panel-title pull-left"></h3>
                 </div>
                 <div class="list-group">
+                    <a class="list-group-item" href="{% url 'equipment_report_base' %}?equipment_id={{equip_info.id}}">
+                                <h4 class="list-group-item-heading">Equipment Report (beta)</h4>
+                                <p class="list-group-item-text">Report for preventative maintenance and repairs (where applicable)</p>
+                            </a>
+
                     {% if PM_info %}
                         {% for each_PM in PM_info %}
                         <a class="list-group-item" href="/equipment/view_equipment/pm_form/{{ equip_info.id }}/{{ each_PM.pm_frequency__id }}/">

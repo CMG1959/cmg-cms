@@ -28,7 +28,9 @@ from django.db.models import Min, Max
 from job_report_viewer.inspection_summary.summary import InspectionSummary
 from job_report_viewer.inspection_summary.numeric_summary import \
     NumericInspectionSummary
-
+from job_report_viewer.data_table.data_table_builder import DataTableBuilder
+from job_report_viewer.data_table.settings import HEADER_PHL
+from job_report_viewer.settings import PHL
 
 class JobReport:
     '''
@@ -46,6 +48,7 @@ class JobReport:
         self.extended_tables = OrderedDict()
         self.inspection_summarized = []
         self.numeric_inspection_summarized = []
+        self.production_history_log = []
         self.__get_job_ids()
         self.date_range = self.__create_date_range()
         self.item_number = self.__get_item_number()
@@ -72,6 +75,14 @@ class JobReport:
 
         self.numeric_inspection_summarized.append(table_data['table_headers'])
         self.numeric_inspection_summarized.extend(wrapped_data)
+
+    def _get_phl(self):
+        observations = DataTableBuilder.get_data(None, self.job_number_id, PHL)
+        wrapped_data = map(self._wrap_text, observations['data'])
+
+        self.production_history_log.append(observations['table_headers'])
+        self.production_history_log.extend(wrapped_data)
+
 
     def _wrap_text(self, row):
         row[0] = textwrap.fill(row[0], 30)#.replace('\n', '<br />\n')
@@ -241,6 +252,17 @@ class JobReport:
             t = Table(self.numeric_inspection_summarized)
             t.setStyle(TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
                                    ]))
+            Story.append(t)
+            Story.append(my_spacer)
+
+        if self.production_history_log:
+            ptext = 'Production History Log'
+            Story.append(Paragraph(ptext, self.styles['Center']))
+            Story.append(caption_spacer)
+            t = Table(self.production_history_log)
+            t.setStyle(
+                TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
+                            ]))
             Story.append(t)
             Story.append(my_spacer)
 
