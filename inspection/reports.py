@@ -84,9 +84,15 @@ class JobReport:
         self.production_history_log.extend(wrapped_data)
 
 
+
     def _wrap_text(self, row):
-        row[0] = textwrap.fill(row[0], 30)#.replace('\n', '<br />\n')
-        return row
+        new_row = []
+        for x in row:
+            if isinstance(x, basestring):
+                new_row.append(textwrap.fill(x,30))
+            else:
+                new_row.append(x)
+        return new_row
 
     def __get_job_ids(self):
         self.start_up_shot_ids = [each_id.id for each_id in
@@ -242,6 +248,7 @@ class JobReport:
         Story.append(caption_spacer)
         t = Table(self.inspection_summarized)
         t.setStyle(TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
+                               ('VALIGN', (0, 1), (-1, -1), 'TOP')
                                ]))
         Story.append(t)
         Story.append(my_spacer)
@@ -252,6 +259,7 @@ class JobReport:
             Story.append(caption_spacer)
             t = Table(self.numeric_inspection_summarized)
             t.setStyle(TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
+                                   ('VALIGN', (0, 1), (-1, -1), 'TOP')
                                    ]))
             Story.append(t)
             Story.append(my_spacer)
@@ -263,6 +271,7 @@ class JobReport:
             t = Table(self.production_history_log)
             t.setStyle(
                 TableStyle([('LINEABOVE', (0, 1), (-1, 1), 1, colors.black),
+                            ('VALIGN', (0, 1), (-1, -1), 'TOP')
                             ]))
             Story.append(t)
             Story.append(my_spacer)
