@@ -180,6 +180,7 @@ class JobReport:
         self.__get_startup_shot()
         self._get_inspection_summary()
         self._get_numeric_summary()
+        self._get_phl()
         self.__get_date_range()
         self.__get_job_info()
 
