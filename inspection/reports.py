@@ -32,6 +32,12 @@ from job_report_viewer.data_table.data_table_builder import DataTableBuilder
 from job_report_viewer.data_table.settings import HEADER_PHL
 from job_report_viewer.settings import PHL
 
+class ConditionalSpacer(Spacer):
+
+    def wrap(self, availWidth, availHeight):
+        height = min(self.height, availHeight-1e-8)
+        return (availWidth, height)
+
 class JobReport:
     '''
     A class for generating both html and inspection reports
@@ -210,7 +216,7 @@ class JobReport:
         tmp = StringIO()
 
         doc = SimpleDocTemplate(tmp)
-        my_spacer = Spacer(1, 1 * inch)
+        my_spacer = ConditionalSpacer(1, 1 * inch)
         caption_spacer = Spacer(1, 0.25 * inch)
 
         Story = []
