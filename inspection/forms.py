@@ -115,7 +115,7 @@ class passFailInspectionForm(forms.ModelForm):
 class numericInspectionForm(forms.ModelForm):
     class Meta:
         model = numericInspection
-        fields = ['numericTestName', 'jobID', 'machineOperator', 'isFullShot',
+        fields = ['numeric_test_name_id', 'jobID', 'machineOperator', 'isFullShot',
                   'headCavID', 'numVal_1']
 
         widgets = {

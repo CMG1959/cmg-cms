@@ -59,7 +59,7 @@ class DataTableBuilder(object):
 
     @classmethod
     def get_numeric(cls, test_name_id, job_id, header):
-        inspections = numericInspection.objects.filter(numericTestName_id=test_name_id,
+        inspections = numericInspection.objects.filter(numeric_test_name_id=test_name_id,
                                                         jobID=job_id). \
             select_related(*INSPECTION_SELECT_RELATED)
         return cls.response(inspections, header)

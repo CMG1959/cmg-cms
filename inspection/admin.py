@@ -58,8 +58,8 @@ class numericTestByPartAdmin(admin.ModelAdmin):
     }
 
 class numericInspectionAdmin(admin.ModelAdmin):
-    search_fields = ['numericTestName__testName__testName','jobID__jobNumber','dateCreated','inspectionResult']
-    list_display = ('numericTestName','jobID','dateCreated','inspectionResult')
+    search_fields = ['numeric_test_name_id__testName','jobID__jobNumber','dateCreated','inspectionResult']
+    list_display = ('numeric_test_name_id','jobID','dateCreated','inspectionResult')
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},

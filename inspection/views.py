@@ -219,7 +219,7 @@ def view_inspection(request):
                     active_machine_operator = new_form.machineOperator
 
                 elif inspection_type == 'Numeric':
-                    #my_form.numericTestName_id = range_info.id
+
                     timestamp_form_recieved = datetime.datetime.now()
                     bulk_save_list = []
 
@@ -236,7 +236,7 @@ def view_inspection(request):
 
 
                             bulk_save_list.append(numericInspection(
-                                numericTestName_id = range_info.id,
+                                numeric_test_name_id = test_info,
                                 jobID_id = job_number_id,
                                 machineOperator_id = my_form.cleaned_data['machine_operator'],
                                 inspectorName_id = is_user.id,
@@ -607,7 +607,7 @@ def view_jsonError(job_number, date_from, date_to):
     for eachpf in pf:
         production_errors.append(eachpf.passFailTestName.testName)
     for eachni in ni:
-        production_errors.append(eachni.numericTestName.testName.testName)
+        production_errors.append(eachni.numeric_test_name_id.testName)
     for eachti in ti:
         production_errors.append(eachti.textTestName.testName)
 
@@ -680,7 +680,7 @@ def createItemReportDict(itemNumber, date_from=None, date_to=None):
         partDict['numericTest'][eachInspection] = collections.OrderedDict()
         partDict['numericTest'][eachInspection]['inspectionName'] = eachInspection
 
-        thisInspection = numericInspection.objects.filter(numericTestName_id=eachInspection1.id,
+        thisInspection = numericInspection.objects.filter(numeric_test_name_id=eachInspection1.testName_id,
                                                           dateCreated__range=(date_from1, date_to1)).order_by(
             '-dateCreated')
         n = 0
@@ -847,7 +847,7 @@ def createJobReportDict(jobNumber, date_from=None, date_to=None):
         key = 'rt' + str(n)
         collapse_list.append('#' + key)
         context_dic['numericTests'][key] = numericInspection.objects.filter(
-            numericTestName_id=each_numeric_inspection.id,
+            numeric_test_name_id=each_numeric_inspection.testName_id,
             jobID__in=job_id_keys,
             dateCreated__range=(date_from, date_to)).order_by('-dateCreated')
         context_dic['numericTestSummary'][key] = {}

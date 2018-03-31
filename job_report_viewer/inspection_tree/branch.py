@@ -71,7 +71,7 @@ class TreeBuilder(object):
 
     def get_numeric_inspections(self, item_number_id, job_number_id):
         for inspection in numericTestByPart.objects.filter(item_Number_id=item_number_id).order_by('testName__testName'):
-            new_node = Node(inspection.id, self.job_number_id, inspection.testName.testName, NUMERIC, self.url_data_table)
+            new_node = Node(inspection.testName_id, self.job_number_id, inspection.testName.testName, NUMERIC, self.url_data_table)
             self.branch_numeric.add_node(new_node)
 
     def get_text_inspections(self, item_number_id, job_number_id):

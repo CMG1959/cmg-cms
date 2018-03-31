@@ -94,7 +94,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CIMC.wsgi.application'
 
-config_dict = json.load(open(os.path.join(SETTINGS_DIR, 'config.json')))
+config_dict = json.load(open(os.path.join(SETTINGS_DIR, 'config.json.cmg')))
 PLANT_LOC = config_dict["location"]["loc_id"]
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

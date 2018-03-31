@@ -1,13 +1,13 @@
 from job_report_viewer.settings import *
-from inspection.models import (passFailTest, numericTestByPart,
+from inspection.models import (passFailTest, numericTest,
     textRecord, RangeRecord)
 
 class Caption(object):
 
     @classmethod
     def get_numeric(cls, primitive_id):
-        inspection_instance = numericTestByPart.objects.get(id=primitive_id)
-        return inspection_instance.testName.testName
+        inspection_instance = numericTest.objects.get(id=primitive_id)
+        return inspection_instance.testName
 
     @classmethod
     def get_pass_fail(cls, primitive_id):
