@@ -1,6 +1,6 @@
 INSPECTION_RESULT = 'inspectionResult'
 
-INSPECTION_NUMERIC = ['numericTestName__testName__testName', INSPECTION_RESULT ]
+INSPECTION_NUMERIC = ['numeric_test_name_id__testName', INSPECTION_RESULT ]
 
 INSPECTION_PASS_FAIL = ['passFailTestName__testName', INSPECTION_RESULT]
 
@@ -25,7 +25,7 @@ REPORT = [('Name', 'name'),
           ('Total', 'total')]
 
 SUMMARY_NUMERIC_ID = 'numVal_1'
-SUMMARY_NUMERIC = ['numericTestName__testName__testName']
+SUMMARY_NUMERIC = ['numeric_test_name_id__testName']
 
 SUMMARY_NUMERIC_REPORT = [('Test Name', SUMMARY_NUMERIC[0]),
                           ('Min', 'min'),
