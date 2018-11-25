@@ -14,6 +14,7 @@ from equipment.models import EquipmentInfo
 from .models import ProductionHistory, MoldHistory, MaintenanceRequests
 import datetime
 from django.utils import timezone
+from sql_sp import call_phl_insert_sp
 
 @login_required
 def view_index(request):
@@ -88,6 +89,7 @@ def view_mold_form(request):
         return render(request, 'phl/forms/moldLookup.html', {'form': form, 'activeInMattec':activeInMattec})
 
 
+
 @login_required
 def view_specific_phl_form(request, jobNo):
 
@@ -107,6 +109,7 @@ def view_specific_phl_form(request, jobNo):
 
             is_user = get_user_info(request.user.webappemployee.EmpNum)
             if is_user:
+
                 # process the data in form.cleaned_data as required
                 newForm = ProductionHistory(
                     inspectorName=is_user,
@@ -121,6 +124,62 @@ def view_specific_phl_form(request, jobNo):
 
                 if form.cleaned_data['notifyToolroom']:
                     pass
+
+                redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
+                # redirect to a new URL:
+                return HttpResponseRedirect(redirect_url)
+            else:
+                template = loader.get_template('inspection/bad_user.html')
+                context = RequestContext(request)
+                return HttpResponse(template.render(context))
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = phlForm()
+
+        context = RequestContext(request, {
+            'form': form,
+            'active_job': active_job,
+            'list_many': True
+        })
+        return render(request, 'phl/forms/phlForm.html', context)
+
+
+@login_required
+def view_specific_phl_form_sp(request, jobNo):
+
+    active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
+    mattec_prod = MattecProd.objects.filter(jobNumber=jobNo)
+    sta = 0 # preset machine number
+    if mattec_prod[0]:
+        machInfo = EquipmentInfo.objects.filter(part_identifier=mattec_prod[0].machNo, is_active=True)
+        if machInfo:
+            sta = machInfo[0].id
+
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = phlForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+
+            is_user = get_user_info(request.user.webappemployee.EmpNum)
+            if is_user:
+                args = (
+                    is_user.DeviceToken, # Device Token
+                    sta, # STA Name
+                    datetime.datetime.utcnow(), # UTC Time Now
+                    form.cleaned_data['descEvent'], # Event Description
+                    jobNo.strip(), # Job Number
+                    0, # Copy MHL
+                    0, # Copy EHL
+                    0 # Is Mold PM
+                )
+
+                try:
+                    result = call_phl_insert_sp(args)
+                except Exception as e:
+                    raise Http404(str(e))
 
                 redirect_url = '/production_and_mold_history/production_report/%s' % (jobNo)
                 # redirect to a new URL:
