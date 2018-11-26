@@ -152,10 +152,12 @@ def view_specific_phl_form_sp(request, jobNo):
     active_job = startUpShot.objects.filter(jobNumber=jobNo).select_related('item')
     mattec_prod = MattecProd.objects.filter(jobNumber=jobNo)
     sta = 0 # preset machine number
+    sta_name = None
     if mattec_prod[0]:
         machInfo = EquipmentInfo.objects.filter(part_identifier=mattec_prod[0].machNo, is_active=True)
         if machInfo:
             sta = machInfo[0].id
+            sta_name = machInfo[0].part_identifier
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -167,8 +169,8 @@ def view_specific_phl_form_sp(request, jobNo):
             if is_user:
                 args = (
                     is_user.DeviceToken, # Device Token
-                    sta, # STA Name
-                    datetime.datetime.utcnow(), #.strftime('%Y-%m-%d %H:%M:%S'), # UTC Time Now
+                    sta_name, # STA Name
+                    datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'), # UTC Time Now
                     form.cleaned_data['descEvent'], # Event Description
                     jobNo.strip(), # Job Number
                     0, # Copy MHL

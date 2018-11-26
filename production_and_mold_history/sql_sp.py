@@ -2,8 +2,12 @@ from django.db import connection
 
 def call_phl_insert_sp(var):
     cursor = connection.cursor()
-    stmt = 'exec [dbo].[PHL_Insert]({})'.format(','.join(['?']*len(var)))
-    result = cursor.execute(stmt, (var)).fetchone()
+    stmt = '''\
+        DECLARE @ret int
+        EXEC @ret = dbo.PHL_Insert {}
+        SELECT @ret
+    '''.format(','.join(['%s']*len(var)))
+    result = cursor.execute(stmt, params=var).fetchone()[0]
     cursor.close()
     return result
 
