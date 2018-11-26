@@ -168,7 +168,7 @@ def view_specific_phl_form_sp(request, jobNo):
                 args = (
                     is_user.DeviceToken, # Device Token
                     sta, # STA Name
-                    datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'), # UTC Time Now
+                    datetime.datetime.utcnow(), #.strftime('%Y-%m-%d %H:%M:%S'), # UTC Time Now
                     form.cleaned_data['descEvent'], # Event Description
                     jobNo.strip(), # Job Number
                     0, # Copy MHL

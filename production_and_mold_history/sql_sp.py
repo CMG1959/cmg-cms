@@ -3,7 +3,7 @@ from django.db import connection
 def call_phl_insert_sp(var):
     cursor = connection.cursor()
     stmt = 'exec PHL_Insert {}'.format(','.join(['?']*len(var)))
-    result = cursor.execute(stmt, var).fetchone()
+    result = cursor.execute(stmt, *var).fetchone()
     cursor.close()
     return result
 
