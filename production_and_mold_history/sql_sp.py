@@ -2,8 +2,10 @@ from django.db import connection
 
 def call_phl_insert_sp(var):
     cursor = connection.cursor()
-    cursor.callproc("PHL_Insert", (var,))
-    return fn_generic(cursor)
+    stmt = 'exec PHL_Insert {}'.format(','.join(['?']*len(var)))
+    result = cursor.execute(stmt, var).fetchone()
+    cursor.close()
+    return result
 
 
 def fn_generic(cursor):

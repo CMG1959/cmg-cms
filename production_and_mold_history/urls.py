@@ -10,7 +10,7 @@ urlpatterns = [
     ### link to view specific production history log
     url(r'^production/(?P<jobNo>[0-9]+(.[0-9]+)+)$', views.view_specific_phl_form, name='view_specific_phl_form'),
     ### link to view specific production history log with sp
-    url(r'^production/sp/(?P<jobNo>[0-9]+(.[0-9]+)+)$', views.view_specific_phl_form_sp, name='view_specific_phl_form_sp'),
+    url(r'^production/(?P<jobNo>[0-9]+(.[0-9]+)+)$', views.view_specific_phl_form_sp, name='view_specific_phl_form_sp'),
     ### link to create mold history log item
     url(r'^mold$', views.view_mold_form, name='view_mold_form'),
     ### link to view specific mold history log
