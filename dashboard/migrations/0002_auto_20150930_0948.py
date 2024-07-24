@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inspection', '0006_auto_20150827_0843'),
+        ('dashboard', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='rangetestbypart',
-            name='rangeMax',
-            field=models.DecimalField(default=9999999, verbose_name=b'Maximum Value', max_digits=12, decimal_places=3),
+            model_name='errorlog',
+            name='inspectionName',
+            field=models.CharField(max_length=75, verbose_name=b'Inspection Name'),
         ),
     ]
