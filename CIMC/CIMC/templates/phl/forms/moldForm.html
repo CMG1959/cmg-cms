@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Mold Maintenance Log [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    {% include "phl/subtemplates/moldInfo.html" %}
+
+    <div class="panel panel-default ">
+            {% include "project_form_templates/gen_form.html" %}
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
+
+
+{% load static %}
+<script src="{% static "jquery-ui/external/jquery/jquery.js" %}"></script>
+<script src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
+<link href="{% static "jquery-ui/jquery-ui.min.css" %}" rel="stylesheet">
+
+
+<script>
+    $(function() {
+    $( "#id_Date_Performed" ).datepicker({
+      defaultDate: new Date(),
+      changeMonth: true,
+      changeYear: true
+    }).datepicker("setDate", new Date());;
+  });
+</script>

@@ -1,0 +1,14 @@
+{% if activeInMattec %}
+    <div class="bootcards-list">
+        <div class="panel panel-default">
+            <div class="list-group">
+                {% for eachActive in activeInMattec %}
+                    <a class="list-group-item" href="{% url 'start_up_shot_create_new' %}?job_number={{eachActive.jobNumber.strip}}&machine_number={{eachActive.machNo.strip}}">
+                        <h4 class="list-group-item-heading">{{ eachActive.machNo }}</h4>
+                        <p class="list-group-item-text">{{ eachActive.itemDesc }} </p>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

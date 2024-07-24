@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Production History Log [{{ request.user.username }}]</title>
+</head>
+<body>
+
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    {% if active_job %}
+        {% include "inspection/subTemplates/subJobInfo.html" %}
+    {% else %}
+        <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> Warning!</h3>
+        </div>
+        <div class="panel-body">
+            No startup shot created yet.
+        </div>
+        </div>
+    {% endif %}
+
+
+    <div class="panel panel-default ">
+
+<div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> Production History Log </h3>
+            </div>
+            {% include "project_form_templates/gen_form.html" %}
+    </div>
+</div>
+
+
+</body>
+</html>

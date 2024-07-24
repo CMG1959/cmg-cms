@@ -1,0 +1,31 @@
+
+
+{% if inspection_regime %}
+
+
+    <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">{{ inspection_regime.inspection_name_short }}</h3>
+            </div>
+            <div class="panel-body">
+
+                <div id="jstree">
+                  <ul>
+                      {% for foo in inspection_tree.children %}
+                        <li class="jstree-open">
+                            {{ foo.text  }}
+                            <ul>
+                                <li id="{{ uut_id }}{{ foo.id }}">
+                                    <a href="/inspection_v2/record_step?uut_id={{uut_id}}&inspection_id={{ foo.id }}" class="jstree-clicked">Add New!</a>
+                                </li>
+                            </ul>
+                        </li>
+                      {% endfor %}
+                  </ul>
+                </div>
+
+            </div>
+        </div>
+
+
+{% endif %}

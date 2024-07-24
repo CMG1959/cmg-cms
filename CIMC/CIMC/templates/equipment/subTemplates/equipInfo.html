@@ -1,0 +1,39 @@
+
+
+{% if equip_info %}
+<div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Equipment Information</h3>
+                </div>
+        <div class="panel-body">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Equipment Type</th>
+            <th>Name</th>
+            <th>Manufacturer Name</th>
+            <th>Serial Number</th>
+            <th>Date of Manufacture</th>
+        </tr>
+        </thead>
+        <tr>
+            <td>
+                {{ equip_info.equipment_type }}
+            </td>
+            <td>
+                {{ equip_info.part_identifier }}
+            </td>
+            <td>
+                {{ equip_info.manufacturer_name }}
+            </td>
+            <td>
+                {{ equip_info.serial_number }}
+            </td>
+            <td>
+                {{ equip_info.date_of_manufacture }}
+            </td>
+        </tr>
+    </table>
+    </div>
+    </div>
+{% endif %}

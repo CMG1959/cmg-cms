@@ -1,0 +1,17 @@
+{
+  "default_database": {
+    "NAME": "cmg_qms",
+    "ENGINE": "sql_server.pyodbc",
+    "HOST": "CMG-SQL1",
+    "PORT": "",
+    "USER": "webappUser",
+    "PASSWORD": "1959Cmg1",
+    "OPTIONS": {
+      "driver": "SQL Server Native Client 11.0"
+    }
+  },
+  "location": {
+    "loc_id":"10",
+    "loc_description": "CMG Somerville"
+  }
+}

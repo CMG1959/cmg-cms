@@ -1,0 +1,44 @@
+{% if value.testName %}
+    {% if value.textDict %}
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> {{ value.testName }} </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr id={{ value.html_id }}>
+                        <th>Job Number</th>
+                        <th>Machine Operator</th>
+                        <th>Inspector</th>
+                        <th>Date</th>
+                        <th>{{ value.testName }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ep in value.textDict %}
+                        <tr>
+                        <td>
+                            {{ ep.jobID }}
+                        </td>
+                            <td>
+                                {{ ep.machineOperator }}
+                            </td>
+                            <td>
+                                {{ ep.inspectorName }}
+                            </td>
+                            <td>
+                                {{ ep.dateCreated }}
+                            </td>
+                            <td>
+                                {{ ep.inspectionResult }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+{% endif %}
+

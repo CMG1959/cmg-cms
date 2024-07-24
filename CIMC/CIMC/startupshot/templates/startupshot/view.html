@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Startup Shot [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% load mathfilters %}
+{#{% load bootstrap3 %}#}
+{#{% bootstrap_css %}#}
+{#{% bootstrap_javascript jquery=1 %}#}
+{% include "nav/nav.html" %}
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default ">
+        <div class="panel-body">
+
+            {% if different_shot_list %}
+                <div>
+                    <table class="table table-hover">
+                        {% if item %}
+                            <caption style="text-align:center">Start Up Shot Log for Part: {{ item.item_Number }}
+                                - {{ item.item_Description }}</caption>
+                        {% endif %}
+                        <thead>
+                        <tr>
+                            <th>Job Number</th>
+                            <th>Date Created</th>
+                            <th>Operator Name</th>
+                            <th>Inspector Name</th>
+                            <th>Shot Weight</th>
+                            <th>Active Cavities</th>
+                            <th>Average Part Weight</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for eachJob in different_shot_list %}
+                            <tr>
+                                <td>{{ eachJob.jobNumber }}</td>
+                                <td>{{ eachJob.dateCreated }}</td>
+                                <td>{{ eachJob.machineOperator }}</td>
+                                <td>{{ eachJob.inspectorName }}</td>
+                                <td>{{ eachJob.shotWeight }}</td>
+                                <td>{{ eachJob.activeCavities }}</td>
+                                {% with  eachJob.shotWeight|div:eachJob.activeCavities as avgptWeight  %}
+                                <td>{{ avgptWeight|floatformat:3 }}</td>
+                                {% endwith %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                </div>
+            {% else %}
+                <p>No jobs recorded.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Startup Shot Search [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% load staticfiles %}
+
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% include "project_form_templates/gen_form.html" %}
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

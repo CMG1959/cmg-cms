@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Part Report [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+
+    {% with partDict.headerDict as headerDict %}
+    {% include "reportHeaderFooter/reportHeader.html" %}
+    {% endwith %}
+
+            {% if partDict.activeJob %}
+                {% with partDict.activeJob as active_job %}
+                    {% include "inspection/subTemplates/subJobInfo.html" %}
+                {% endwith %}
+            {% endif %}
+
+
+    {% for key,value in partDict.pf.items %}
+            {% with value as pfSummaryDict %}
+                {% include "inspection/subTemplates/subPFItemSummary.html" %}
+            {% endwith %}
+    {% endfor %}
+
+    {% for key,value in partDict.numericTest.items %}
+            {% with value as numericSummaryDict %}
+                {% include "inspection/subTemplates/subNumericItemSummary.html" %}
+            {% endwith %}
+    {% endfor %}
+
+    {% for key,value in partDict.range_test.items %}
+            {% with value as range_summary_dict %}
+                {% include "inspection/subTemplates/subRangeItemSummary.html" %}
+            {% endwith %}
+    {% endfor %}
+
+    {% for key,value in partDict.textTests.items %}
+        {% include "inspection/subTemplates/subTextInspectionIR.html"  %}
+    {% endfor %}
+
+    {% with partDict.phl as phl  %}
+        {% with partDict.useJobNo as useJobNo %}
+            {% include "inspection/subTemplates/subComments.html" %}
+        {% endwith %}
+    {% endwith %}
+
+
+
+</div>
+
+
+</body>
+</html>
+
+{% include "inspection/subTemplates/js_helpers/collapse_tables.html" %}
+
+
+<script>
+$(function() {
+    var collapse_list = {{ partDict.collapse_list|safe }};
+    for (var i = 0; i < collapse_list.length; i++) {
+        $(collapse_list[i]).click();
+    }
+});
+</script>

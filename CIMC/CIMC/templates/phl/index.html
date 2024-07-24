@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Production and Mold History Log [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default ">
+        <div class="panel-body">
+            <p>Welcome to the Production History Log Page!</p>
+        </div>
+    </div>
+
+
+    <div class="bootcards-list">
+        <div class="panel panel-default">
+            <div class="list-group">
+
+                <a class="list-group-item" href="/production_and_mold_history/production">
+                    <h4 class="list-group-item-heading">Record</h4>
+                    <p class="list-group-item-text">Record production related observation</p>
+                </a>
+
+                <a class="list-group-item" href="/production_and_mold_history/mold">
+                    <h4 class="list-group-item-heading">Record</h4>
+                    <p class="list-group-item-text">Record toolroom event</p>
+                </a>
+
+                <a class="list-group-item" href="/production_and_mold_history/production_report">
+                    <h4 class="list-group-item-heading">Report</h4>
+                    <p class="list-group-item-text">View production history log</p>
+                </a>
+
+                <a class="list-group-item" href="/production_and_mold_history/mold_report">
+                    <h4 class="list-group-item-heading">Report</h4>
+                    <p class="list-group-item-text">View mold history log</p>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

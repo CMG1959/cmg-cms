@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Preventative Maintenance Form [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+
+{% include "nav/nav.html" %}
+
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    {% include "equipment/subTemplates/equipInfo.html" %}
+
+    <div class="panel panel-default ">
+        <div class="panel-body">
+            {% include "project_form_templates/gen_form.html" %}
+            {% bootstrap_button "Clone Me" button_class="btn-primary" name="clone_me" %}
+
+            </div>
+    </div>
+
+    {% include "equipment/subTemplates/pm_subreport.html" %}
+
+
+
+</div>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+{% if pm_id %}
+
+
+    <script>
+        $(document).ready(function () {
+            {% with pm_id|add:' option' as idSelectopt %}
+                $('{{ idSelectopt }}').prop('selected', true);
+            {% endwith %}
+        });
+    </script>
+
+{% endif %}
+
+
+{% include 'equipment/forms/date_picker.html' %}
+
+<script>
+        $("button[name='clone_me']").click(function() {
+            var current_url = $(location).attr('href');
+            var made_up_shit = $("form").serializeArray();
+
+
+            var posting = $.post(current_url, made_up_shit);
+            posting.done(function( data ) {
+                // open up a modal dialog
+{#                alert("Record saved!");#}
+            $('<div></div>')
+            .html('<div><h6>Do you want to enter another PM?</h6></div>')
+            .dialog({
+                modal: true,
+                title: 'Repeat PM for Another Machine?',
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: false,
+                buttons: {
+                    Yes: function () {
+                        $(this).dialog("close");
+                    },
+                    No: function () {
+                        $(this).dialog("close");
+                        window.location.replace('/equipment/')
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).remove();
+                }
+            });
+            });
+
+            console.log(posting);
+        });
+
+</script>

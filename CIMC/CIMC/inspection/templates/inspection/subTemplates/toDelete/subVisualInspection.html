@@ -1,0 +1,47 @@
+{% if visualInspection %}
+    <div class="panel panel-default">
+    <div class="panel-body">
+    <table class="table table-hover">
+        <caption style="text-align:center">Visual Inspection Log</caption>
+        <thead>
+        <tr>
+            <th>Date Created</th>
+            <th>Machine Operator</th>
+            <th>Inspector Name</th>
+            <th>Cavity ID</th>
+            <th>Inspection Result</th>
+            <th>Defect Codes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ep in visualInspection %}
+
+            <tr>
+                <td>
+                    {{ ep.dateCreated }}
+                </td>
+                <td>
+                    {{ ep.machineOperator }}
+                </td>
+                <td>
+                    {{ ep.inspectorName }}
+                </td>
+                <td>
+                    {{ ep.headCavID }}
+                </td>
+                <td>
+                    {{ ep.inspectionResult|yesno:"Pass,Fail,Fail" }}
+                </td>
+                <td>
+                    {% for dt in ep.defectType.all %} {{ dt.defectType }}. {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    </div>
+{% endif %}
+
+
+

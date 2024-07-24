@@ -1,0 +1,6 @@
+*.name
+*.iml
+*.xml
+*.pyc
+CIMC/config.json
+*/config.json

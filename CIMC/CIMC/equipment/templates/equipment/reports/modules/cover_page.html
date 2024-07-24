@@ -1,0 +1,19 @@
+{% load mathfilters %}
+<p>
+</p>
+<table class="table table-bordered table-striped table-hover">
+    <tbody>
+    {% for each_item in cover_page %}
+    <tr>
+        {% for each_cell in each_item %}
+        {% if forloop.counter0 == 0 %}
+        <td><b>{{each_cell}}</b></td>
+        {% else %}
+        <td>{{each_cell}}</td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<p></p>

@@ -1,0 +1,67 @@
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Part Inspection Form [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+<script src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
+<link href="{% static "jquery-ui/jquery-ui.min.css" %}" rel="stylesheet">
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+
+
+            {% include "inspection/subTemplates/subJobInfo.html" %}
+
+
+    <div class="panel panel-default" id="form_div">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{ form_title }}</h3>
+        </div>
+            {% include "project_form_templates/gen_form.html" %}
+
+    </div>
+</div>
+
+
+{% include "inspection/forms/modal_cavity_calculator.html" %}
+
+
+{% include "inspection/forms/cavity_calculator_js.html" %}
+
+</body>
+</html>
+
+{% if use_checkbox %}
+    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock.html" %}
+{% endif %}
+
+{% if use_checkbox2 %}
+    {% include "inspection/subTemplates/js_helpers/subcheckBoxSelectLock2.html" %}
+{% endif %}
+
+{% if use_minmax %}
+    {% include "inspection/subTemplates/js_helpers/subMinMaxChecker.html" %}
+{% endif %}
+
+{% if id_result %}
+    {% include "inspection/subTemplates/js_helpers/subCheckRange.html" %}
+{% endif %}
+
+{% include "inspection/subTemplates/js_helpers/check_head_cav.html" %}
+
+{% if machine_operator %}
+    <script>
+        $("#id_machineOperator").val("{{ machine_operator }}");
+        $("#id_machineOperator").selectmenu("refresh");
+    </script>
+{% endif %}
+

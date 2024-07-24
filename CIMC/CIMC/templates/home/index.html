@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Home [{{ request.user.username }}]</title>
+    <title>My Home Page</title>
+    {#    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" media="screen" />#}
+</head>
+
+{% include "nav/nav.html" %}
+
+<body>
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default">
+        <div style="text-align:center">
+            <img src="{% static "images/CMGlogo-white-BG.jpg" %}" style="height:200px">
+
+            <h1>Welcome to the CMG Intranet</h1>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

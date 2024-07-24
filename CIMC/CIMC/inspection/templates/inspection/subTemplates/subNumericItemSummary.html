@@ -1,0 +1,36 @@
+{% if numericSummaryDict %}
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> {{ numericSummaryDict.inspectionName }} </h3>
+        </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+            <tr id={{ numericSummaryDict.html_id }}>
+                <th>Job Number</th>
+                <th>Total Inspections</th>
+                <th>Min</th>
+                <th>Avg</th>
+                <th>Std Dev</th>
+                <th>Max</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key,value in numericSummaryDict.items %}
+                <tr>
+                {% if value.jobID %}
+                    <td> {{ value.jobID }}</td>
+                    <td> {{ value.numericStats.numericList__count }}</td>
+                    <td> {{ value.numericStats.numericList__min }} </td>
+                    <td> {{ value.numericStats.numericList__avg }} </td>
+                    <td> {{ value.numericStats.numericList__stddev }} </td>
+                    <td> {{ value.numericStats.numericList__max }} </td>
+                {% endif %}
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+{% endif %}

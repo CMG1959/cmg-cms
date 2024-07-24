@@ -1,0 +1,138 @@
+{% include "nav/nav.html" %}
+{% load staticfiles %}
+<script src="{% static "datatables/jquery.js" %}"></script>
+<script src="{% static "datatables/jquery.dataTables.min.js" %}"></script>
+<link rel="stylesheet" type="text/css"  href="{% static "datatables/jquery.dataTables.min.css" %}"/>
+
+<script src="{% static "plotly/plotly.min.js" %}"></script>
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="errorByTest">
+                <!-- Plotly chart will be drawn inside this DIV --></div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="errorByMachine">
+                <!-- Plotly chart will be drawn inside this DIV --></div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="datatable table table-striped table-bordered"
+                   cellspacing="0" width="100%">
+                <thead>
+                <th>Date</th>
+                <th>Workstation</th>
+                <th>Inspection Type</th>
+                <th>Job Number</th>
+                <th>Item Number</th>
+                <th>Item Description</th>
+                <th>Test Name</th>
+                <th>Inspection Result</th>
+                <th>Cavity</th>
+                <th>Report Text</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        var oTable = $('.datatable').dataTable({
+            "pageLength": 25,
+            "order": [[ 0, "desc" ]],
+            "columns": [
+                {"data": "Date_Created"},
+                {"data": "Workstation"},
+                {"data": "Test_Name"},
+                {"data": "Job_Number"},
+                {"data": "Item_Number"},
+                {"data": "Item_Description"},
+                {"data": "Test_Name"},
+                {"data": "Inspection_Result"},
+                {"data": "HeadCav"},
+                {"data": "Report_Text"},
+            ],
+            "ajax": "{% url 'get_active_error_verbose' %}"
+        });
+        });
+
+</script>
+
+<script>
+    $(document).ready(function() {
+    var d3 = Plotly.d3;
+
+var WIDTH_IN_PERCENT_OF_PARENT = 60,
+    HEIGHT = 300;
+
+var gd3 = d3.select('#errorByTest')
+    .append('div')
+    .style({
+        width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+        'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
+
+        height: HEIGHT + ' px',
+        'margin-top': 15 + ' px'
+    });
+
+var gd = gd3.node();
+
+        d3.json( "{% url 'get_active_error_count_by_test' %}", function(error, data){
+            if (error) return console.warn(error);
+            Plotly.newPlot(gd, data.data, data.layout);
+        });
+
+        window.onresize = function() {
+    Plotly.Plots.resize(gd);
+};
+
+    });
+
+</script>
+
+
+<script>
+    $(document).ready(function() {
+    var d3 = Plotly.d3;
+
+var WIDTH_IN_PERCENT_OF_PARENT = 60,
+    HEIGHT = 300;
+
+var gd3 = d3.select('#errorByMachine')
+    .append('div')
+    .style({
+        width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+        'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
+
+        height: HEIGHT + ' px',
+        'margin-top': 15 + ' px'
+    });
+
+
+var gd = gd3.node();
+
+
+        d3.json( "{% url 'get_active_error_count_by_machine' %}", function(error, data){
+            if (error) return console.warn(error);
+            Plotly.newPlot(gd, data.data, data.layout);
+        });
+
+                window.onresize = function() {
+        Plotly.Plots.resize(gd);
+        };
+    });
+
+</script>

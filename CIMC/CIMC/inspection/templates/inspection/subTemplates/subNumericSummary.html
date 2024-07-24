@@ -1,0 +1,39 @@
+{% load mathfilters %}
+
+{% if numericSummaryDict %}
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> Numeric Test Summary </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Numeric Test Name</th>
+                    <th>Total Inspections</th>
+                    <th>Min</th>
+                    <th>Average</th>
+                    <th>Std Dev</th>
+                    <th>Max</th>
+                </tr>
+                </thead>
+            <tbody>
+            {% for key,value in numericSummaryDict.items %}
+                <tr>
+                <td> {{ value.numericName }} </td>
+                <td> {{ value.numericStats.numericList__count }}</td>
+                <td> {{ value.numericStats.numericList__min }}</td>
+                <td> {{ value.numericStats.numericList__avg }}</td>
+                <td> {{ value.numericStats.numericList__stddev }}</td>
+                <td> {{ value.numericStats.numericList__max }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+      <div class="panel-footer">
+        <small>Note: The resulting statistics take cavitation into account if a full shot was entered.</small>
+    </div>
+    </div>
+{% endif %}
+

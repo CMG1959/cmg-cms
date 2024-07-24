@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Part Inspection List [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default ">
+        <div class="panel-body">
+            <p>Welcome to the CMG Inspection Page! The following machines are active:</p>
+
+        </div>
+    </div>
+
+
+    {% if active_parts %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    {% for each_part in active_parts %}
+                        <a class="list-group-item" href="/inspection_v2/view?job_number={{ each_part.jobNumber.strip }}">
+                            <h4 class="list-group-item-heading">{{ each_part.machNo }}</h4>
+                            <p class="list-group-item-text">{{ each_part.itemDesc }} </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+
+</body>
+</html>

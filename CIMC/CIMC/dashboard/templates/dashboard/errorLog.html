@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Error Log [{{ request.user.username }}]</title>
+</head>
+
+<style>
+#chartdiv {
+	width		: 100%;
+	height		: 350px;
+	font-size	: 11px;
+}
+
+#chartdiv2 {
+	width		: 100%;
+	height		: 350px;
+	font-size	: 11px;
+}
+</style>
+
+<body>
+
+
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+ <div class="panel panel-default">
+     <div class="panel-body">
+        <div id="chartdiv"></div>
+    </div>
+ </div>
+
+<div class="panel panel-default">
+     <div class="panel-body">
+        <div id="chartdiv2"></div>
+    </div>
+ </div>
+
+{% if prodErrors %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <caption style="text-align:center">Error Log</caption>
+                <thead>
+                <tr>
+                    <th>Shift</th>
+                    <th>Date</th>
+                    <th>Machine</th>
+                    <th>Part Description</th>
+                    <th>Inspection Name</th>
+                    <th>Error Description</th>
+                </tr>
+                </thead>
+            <tbody>
+            {% for eachProdError in prodErrors %}
+                {% if eachProdError.jobNumber == '000000.000' %}
+                <tr>
+                {% else %}
+                <tr class='clickable-row' data-href='/inspection/jobReport/{{ eachProdError.jobID }}/' >
+                {% endif %}
+                <td>
+                    {{ eachProdError.shiftID }}
+                </td>
+                <td>
+                    {{ eachProdError.dateCreated }}
+                </td>
+                <td>
+                    {{ eachProdError.machNo }}
+                </td>
+                <td>
+                    {{ eachProdError.partDesc }}
+                </td>
+                <td>
+                    {{ eachProdError.inspectionName }}
+                </td>
+                <td>
+                    {{ eachProdError.errorDescription }}
+                </td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+</div>
+</body>
+</html>
+
+<script>
+   jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
+
+
+{% load staticfiles %}
+<script src="{% static "amcharts_3/amcharts/amcharts.js" %}"></script>
+<script src="{% static "amcharts_3/amcharts/serial.js" %}"></script>
+<script src="{% static "amcharts_3/amcharts/themes/light.js" %}"></script>
+<script src="{% static "bootcard/js/bootcards.min.js" %}"></script>
+
+
+
+<script>
+   $.ajax({
+  dataType: "json",
+  url: "/dashboard/jsonError/",
+  success: function(result){
+
+      console.log(result['errors']);
+      console.log(result['mach']);
+      myBarChart(result['errors'], "chartdiv", "error_count", "error_name");
+      myBarChart(result['mach'], "chartdiv2", "mach_count", "mach_name");
+  }
+});
+</script>
+
+
+
+
+<script>
+    function myBarChart(my_JSON, chartID, y_axis_id, x_axis_id) {
+var chart = AmCharts.makeChart( chartID, {
+  "type": "serial",
+  "theme": "light",
+  "dataProvider": my_JSON,
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": y_axis_id
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": x_axis_id,
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20,
+      "autoWrap": true
+  },
+  "export": {
+    "enabled": true
+  }
+
+}) }
+</script>
+
+
+

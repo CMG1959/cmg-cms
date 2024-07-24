@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Mold History Log [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+{% include "nav/nav.html" %}
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+
+    {% include "phl/subtemplates/moldInfo.html" %}
+
+    {% if MHL %}
+        <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> Mold History Log </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Inspector Name</th>
+                        <th>Date Performed</th>
+                        <th>PM</th>
+                        <th>Repair</th>
+                        <th>Hours Worked</th>
+                        <th>Description of Event</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ep in MHL %}
+                        <tr>
+                            <td> {{ ep.inspectorName }} </td>
+                            <td> {{ ep.Date_Performed }} </td>
+                            <td> {{ ep.pm }}</td>
+                            <td> {{ ep.repair }} </td>
+                            <td> {{ ep.hours_worked }} </td>
+                            <td> {{ ep.descEvent|wordwrap:25 }} </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+
+</body>
+</html>

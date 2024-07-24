@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="{% static "bootstrap/bootstrap.min.css" %}" rel="stylesheet">
+
+</head>
+<body>
+
+{% if active_parts %}
+    <table class="table table-responsive">
+        <caption style="text-align:center">Part Weights</caption>
+        <thead>
+        <tr>
+            <th>Machine Number</th>
+            <th>TMM</th>
+            <th>Startup</th>
+            <th>Average</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key,value in active_parts.items %}
+            <tr class={{ value.alertLevel }}>
+                <td>
+                    {{ value.machID }}
+                </td>
+                <td>
+                    {{ value.tmmWeight }}
+                </td>
+                <td>
+                    {{ value.startWeight }}
+                </td>
+                <td>
+                    {{ value.avgPartWeight }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+
+</body>
+</html>
+
+
+<script src="{% static "jquery/jquery.js" %}"></script>
+<script src="{% static "bootstrap/bootstrap.min.js" %}"></script>

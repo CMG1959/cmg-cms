@@ -1,0 +1,8 @@
+NUMERIC = 'Numeric'
+PASS_FAIL = 'Pass-Fail'
+RANGE = 'Range'
+TEXT = 'Text'
+PHL = 'PHL'
+COVER = 'Cover'
+STATISTICS = 'Statistics'
+NUMERIC_STATISTICS = 'Numeric-Statistics'

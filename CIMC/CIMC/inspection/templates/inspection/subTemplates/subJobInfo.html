@@ -1,0 +1,139 @@
+{% load mathfilters %}
+
+{% if active_job %}
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> Part Information</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Item #</th>
+                    <th>Description</th>
+                    <th>TMM Part Weight (g)</th>
+                    <th>TMM Cycle (s)</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% if list_many %}
+                            <tr>
+                            <td>{{ active_job.0.item.item_Number }}</td>
+                            <td>{{ active_job.0.item.item_Description }}</td>
+                            <td>{{ active_job.0.item.exp_part_weight }}</td>
+                            <td>{{ active_job.0.item.exp_cycle_time }}</td>
+                            </tr>
+                    {% else %}
+                        <tr>
+                        <td>{{ active_job.item.item_Number }}</td>
+                        <td>{{ active_job.item.item_Description }}</td>
+                        <td>{{ active_job.item.exp_part_weight }}</td>
+                        <td>{{ active_job.item.exp_cycle_time }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">Start Up Shot Information</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Machine Operator</th>
+                    <th>Inspector</th>
+                    <th>Job Number</th>
+                    <th>Shot Weight</th>
+                    <th>Active Cavitation</th>
+                    <th>Average Part Weight (g)</th>
+                    <th>Machine Number</th>
+                    <th>Cycle Time (s)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if active_job %}
+                    {% if list_many %}
+                        {% for foo in active_job %}
+                            <tr>
+                                <td> {{ foo.machineOperator }}</td>
+                                <td> {{ foo.inspectorName }}</td>
+                                <td>{{ foo.jobNumber }} </td>
+                                <td>{{ foo.shotWeight }}</td>
+                                <td>{{ foo.activeCavities }}</td>
+                                {% with  foo.shotWeight|div:foo.activeCavities as avgptWeight  %}
+                                        <td>{{ avgptWeight|floatformat:3 }}</td>
+                                        {% endwith %}
+                                <td>{{ foo.machNo }}</td>
+                                <td>{{ foo.cycleTime }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td> {{ active_job.machineOperator }}</td>
+                            <td> {{ active_job.inspectorName }}</td>
+                            <td>{{ active_job.jobNumber }} </td>
+                            <td>{{ active_job.shotWeight }}</td>
+                            <td>{{ active_job.activeCavities }}</td>
+                            {% with  active_job.shotWeight|div:active_job.activeCavities as avgptWeight  %}
+                                    <td>{{ avgptWeight|floatformat:3 }}</td>
+                                    {% endwith %}
+                            <td>{{ active_job.machNo }}</td>
+                            <td>{{ active_job.cycleTime }}</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> Mold Information</h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Job Number</th>
+                    <th>Mold ID</th>
+                    <th>Mold Description</th>
+                    <th>Total Cavities</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% if active_job %}
+                    {% if list_many %}
+                        {% for foo in active_job %}
+                            <tr>
+                                <td> {{ foo.jobNumber }}</td>
+                                <td>{{ foo.moldNumber }}</td>
+                                <td>{{ foo.moldNumber.mold_description }}</td>
+                                <td>{{ foo.moldNumber.num_cavities }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td> {{ active_job.jobNumber }}</td>
+                            <td>{{ active_job.moldNumber }}</td>
+                            <td>{{ active_job.moldNumber.mold_description }}</td>
+                            <td>{{ active_job.moldNumber.num_cavities }}</td>
+                        </tr>
+                    {% endif %}
+
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endif %}
+

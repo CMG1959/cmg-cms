@@ -1,0 +1,49 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    {% if MattecDict %}
+        <table class="table table-hover">
+            <caption style="text-align:center">Startup Shot</caption>
+            <thead>
+            <tr>
+                <th>Machine Number</th>
+                <th>Item Number</th>
+                <th>Item Description</th>
+                <th>Job Number</th>
+                <th>Mold Number</th>
+                <th>Active Cavities</th>
+                <th>MATTEC Cycle Time</th>
+                <th>TMM Cycle Time</th>
+                <th>TMM Part Weight</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {{ MattecDict.machNo }}
+                </td>
+                <td>
+                    {{ MattecDict.itemNo }}
+                </td>
+                <td>
+                    {{ MattecDict.itemDesc }}
+                </td>
+                <td>
+                    {{ MattecDict.jobNumber }}
+                </td>
+                <td>
+                    {{ MattecDict.moldNumber }}
+                </td>
+                <td>
+                    {{ MattecDict.activeCavities }}
+                </td>
+                <td> {{ MattecDict.cycleTime }}</td>
+                <td> {{ PartInfo.exp_cycle_time }}</td>
+                <td> {{ PartInfo.exp_part_weight }}</td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+
+        </div>
+</div>

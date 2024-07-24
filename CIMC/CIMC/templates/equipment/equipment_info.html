@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Equipment Information [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    {% include "equipment/subTemplates/equipInfo.html" %}
+
+
+{% if PM_info %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left"></h3>
+                </div>
+                <div class="list-group">
+                    <a class="list-group-item" href="{% url 'equipment_report_base' %}?equipment_id={{equip_info.id}}">
+                                <h4 class="list-group-item-heading">Equipment Report (beta)</h4>
+                                <p class="list-group-item-text">Report for preventative maintenance and repairs (where applicable)</p>
+                            </a>
+
+                    {% if PM_info %}
+                        {% for each_PM in PM_info %}
+                        <a class="list-group-item" href="/equipment/view_equipment/pm_form/{{ equip_info.id }}/{{ each_PM.pm_frequency__id }}/">
+                            <h4 class="list-group-item-heading">Record </h4>
+                            <p class="list-group-item-text">{{ each_PM.pm_frequency__pm_frequency }} Preventative
+                                Maintenance</p>
+                        </a>
+                    {% endfor %}
+                    {% endif %}
+                <a class="list-group-item" href="/equipment/view_equipment/repair_form/{{ equip_info.id }}/">
+                            <h4 class="list-group-item-heading">Record </h4>
+                            <p class="list-group-item-text">Record a repair</p>
+                        </a>
+
+                <a class="list-group-item" href="/equipment/view_equipment/view_repair_report/{{ equip_info.id }}/">
+                            <h4 class="list-group-item-heading">Report </h4>
+                            <p class="list-group-item-text">View repair Log</p>
+                        </a>
+
+                <a class="list-group-item" href="/equipment/view_equipment/view_pm_report/{{ equip_info.id }}/">
+                            <h4 class="list-group-item-heading">Report </h4>
+                            <p class="list-group-item-text">View PM Log</p>
+                        </a>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+</body>
+</html>

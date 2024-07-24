@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Mold Lookup [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+
+    <div class="panel panel-default ">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">Search for mold </h3>
+        </div>
+        {% include "project_form_templates/gen_form.html" %}
+    </div>
+
+    {% if activeInMattec %}
+        <div class="bootcards-list">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Active Molds </h3>
+                </div>
+                <div class="list-group">
+                    {% for eachActive in activeInMattec %}
+                        <a class="list-group-item"
+                           href="/production_and_mold_history/mold/{{ eachActive.moldNumber }}">
+                            <h4 class="list-group-item-heading">{{ eachActive.machNo }}</h4>
+                            <p class="list-group-item-text">{{ eachActive.moldNumber }} </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
+
+{% include "date_templates/date_range.html" %}

@@ -1,0 +1,64 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Inspection Entry [{{ request.user.username }}]</title>
+</head>
+<body>
+
+{% include "nav/nav.html" %}
+
+
+<div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+
+    {% include "ins/modules/job_high_level.html" %}
+
+    {% include "ins/modules/inspection_tree.html" %}
+
+
+</div>
+
+
+
+<div id="my_modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+</body>
+</html>
+
+<link href="{% static "js-tree/themes/default/style.min.css" %}" rel="stylesheet">
+
+<script src="{% static "js-tree/jstree.min.js" %}"></script>
+
+<script>
+    $('#jstree').jstree();
+</script>
+
+<script>
+    $("#jstree").bind("select_node.jstree", function (e, data) {
+         var href = data.node.a_attr.href;
+{#         document.location.href = href;#}
+        $( "#my_modal" ).load( href );
+        $('#my_modal').modal('toggle');
+    });
+</script>

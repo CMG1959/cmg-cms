@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMG QMS - Production Events Log [{{ request.user.username }}]</title>
+</head>
+
+
+<body>
+
+
+{% include "nav/nav.html" %}
+
+{% if prodErrors %}
+    <div class="col-sm-offset-1 col-sm-10 bootcards-cards">
+    <div class="panel panel-default">
+    <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">Production Events Log</h3>
+            </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Station</th>
+                    <th>Part</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+            <tbody>
+            {% for eachProdError in prodErrors %}
+                {% if eachProdError.jobNumber == '000000.000' %}
+                <tr>
+                {% else %}
+                <tr class='clickable-row' data-href='/inspection/jobReport/{{ eachProdError.jobNumber }}/' >
+                {% endif %}
+                <td>
+                    {{ eachProdError.dateCreated }}
+                </td>
+                <td>
+                    {{ eachProdError.inspectorName }}
+                </td>
+                <td>
+                    {{ eachProdError.machNo }}
+                </td>
+                <td>
+                    {{ eachProdError.item_Description }}
+                </td>
+                <td>
+                    {{ eachProdError.descEvent }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+</div>
+</body>
+</html>
+
+<script>
+   jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>

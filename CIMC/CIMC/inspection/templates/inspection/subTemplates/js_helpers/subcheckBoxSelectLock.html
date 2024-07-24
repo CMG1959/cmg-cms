@@ -1,0 +1,19 @@
+<script>
+    $(document).ready(function(){
+        $('{{idSelect}}').prop('disabled', 'disabled');
+    });
+    $('{{ id_check }}').change(function () {
+        if ($(this).prop('checked')){
+            {% with idSelect|add:' option' as idSelectopt %}
+            $('{{ idSelectopt }}').prop('selected', false);
+            {% endwith %}
+
+            $('{{idSelect}}').prop('disabled', 'disabled');
+
+        }
+        else {
+            $('{{idSelect}}').prop('disabled', false);
+        }
+        });
+
+</script>

@@ -1,0 +1,71 @@
+{% if InspectionDates %}
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left"> Job Dates} </h3>
+        </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="col-sm-2">Job Started</th>
+                <th class="col-sm-2">Job Ended</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {{ InspectionDates.dateCreated__min|date:"M d, Y" }}
+                </td>
+                <td>
+                    {{ InspectionDates.dateCreated__max|date:"M d, Y" }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+{% endif %}
+
+
+
+                {% with pfSummary as pfSummaryDict %}
+                    {% include "inspection/subTemplates/subPFSummary.html" %}
+                {% endwith %}
+
+
+                {% with numericTestSummary as numericSummaryDict %}
+                    {% include "inspection/subTemplates/subNumericSummary.html" %}
+                {% endwith %}
+
+
+                {% with range_summary as range_summary_dict %}
+                    {% include "inspection/subTemplates/subRangeSummary.html" %}
+                {% endwith %}
+
+{% for key,value in pf.items %}
+    {% with value as pfDict %}
+        {% include "inspection/subTemplates/subPFInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+{% for key,value in numericTests.items %}
+    {% with value as numericDict %}
+        {% include "inspection/subTemplates/subNumericInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+
+{% for key,value in range_tests.items %}
+    {% with value as range_dict %}
+        {% include "inspection/subTemplates/subRangeInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+{% for key,value in textTests.items %}
+    {% with value as textDict %}
+            {%  include "inspection/subTemplates/subTextInspection.html" %}
+    {% endwith %}
+{% endfor %}
+
+
+
